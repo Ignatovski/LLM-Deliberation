@@ -6,9 +6,9 @@ def format_history(agent_name, history, window=6):
     for slot in history["rounds"][-window:]: 
         slot_str = ''
         if agent_name == slot['agent']:  
-            slot_str = f'. You ({slot['agent']}): {slot['public_answer']}'                     
+            slot_str = f". You ({slot['agent']}): {slot['public_answer']}"                     
         else:
-            slot_str = f'. {slot['agent']}: {slot['public_answer']}'
+            slot_str = f". {slot['agent']}: {slot['public_answer']}"
         personalized_history.append(slot_str)        
     personalized_history_string = ' \n '.join(personalized_history) 
     
@@ -20,6 +20,5 @@ def format_history(agent_name, history, window=6):
 def build_first_slot(deal='A1,B1,C4,D1,E5',name='SportCo'):
     initial_prompt = f" The negotiation now begins. As a representative of {name}, you are now talking to the other parties. Use two to three short sentences overall. This is round: 0. To start, propose the following deal: {deal}. Enclose the deal between: <DEAL> </DEAL> format. "
     return initial_prompt
-
 
 

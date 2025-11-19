@@ -333,13 +333,17 @@ class PolynomialRoundPrompts:
         if last_plan:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
 
+        last_x = history["rounds"][-1]["public_answer"] if history["rounds"] else ""
+        current_x_hint = f"Current shared x (after limits) is {history['content'].get('polynomial_state', {}).get('x', self.initial_x)}."
         prompt += (
             "Work in three sections:\n"
-            "1. Use <SCRATCHPAD>...</SCRATCHPAD> for private reasoning/calculations.\n"
+            f"1. Use <SCRATCHPAD>...</SCRATCHPAD> for private reasoning/calculations. Begin by noting the current x: {current_x_hint}\n"
             "2. In <ANSWER>...</ANSWER>, provide your public response with a numeric proposal like: <VALUE>42</VALUE>\n"
             "   - Only include the number between the VALUE tags, no other text or symbols\n"
             "   - Example: <VALUE>42</VALUE> is correct\n"
             "   - Example: <VALUE>x = 42</VALUE> is incorrect\n"
+            "   - IMPORTANT: keep your proposal within the current <VALUE> plus or minus the configured step size "
+            "(`--max_step`, default 2)\n"
         )
         if not final_round:
             prompt += (
