@@ -7,14 +7,19 @@
 
 # Reuses the registration/CLI pattern from the original main.py but drives a single-variable game.
 import argparse
+import json
 import os
+import random
 import re
 import shutil
+import time
+import uuid
+from faiss_utility import AnswerComparator
 from typing import Dict, List, Tuple
 
 from agent import Agent
 from prompt_utils import format_history
-from save_utils import create_outfiles, save_conversation
+from save_utils import create_outfiles, save_conversation, write_file
 from utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
 
 
@@ -314,6 +319,11 @@ class PolynomialRoundPrompts:
         self.rounds_total = rounds_total
 
     def build_slot_prompt(self, history, round_idx, *_):
+        # Ensure history has expected keys to avoid KeyError on fresh runs
+        history.setdefault("rounds", [])
+        history.setdefault("plan", {})
+        state = history.get("polynomial_state", {})
+
         first = round_idx == 0
         final_round = self.rounds_total is not None and round_idx >= self.rounds_total - 1
         if first and self.agent_name == self.starter_name:
@@ -334,7 +344,7 @@ class PolynomialRoundPrompts:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
 
         last_x = history["rounds"][-1]["public_answer"] if history["rounds"] else ""
-        current_x_hint = f"Current shared x (after limits) is {history['content'].get('polynomial_state', {}).get('x', self.initial_x)}."
+        current_x_hint = f"Current shared x (after limits) is {state.get('x', self.initial_x)}."
         prompt += (
             "Work in three sections:\n"
             f"1. Use <SCRATCHPAD>...</SCRATCHPAD> for private reasoning/calculations. Begin by noting the current x: {current_x_hint}\n"
@@ -370,6 +380,13 @@ def main():
     parser.add_argument("--agents_num", type=int, default=4)
     parser.add_argument("--rounds_num", type=int, default=16)
     parser.add_argument("--max_step", type=int, default=2)
+    parser.add_argument(
+        "--min_answers",
+        type=int,
+        default=None,
+        help="Total minimum number of answers across the run; must be divisible by agents_num. "
+             "If set, overrides rounds_num. Example: 16 with 4 agents -> each speaks exactly 4 times.",
+    )
 
     parser.add_argument("--output_dir", type=str, default="./output/")
     parser.add_argument("--game_dir", type=str, default="./games_descriptions/polynomial_game")
@@ -378,7 +395,20 @@ def main():
     parser.add_argument("--restart", action="store_true")
     parser.add_argument("--output_file", type=str, default="history.json")
 
-    parser.add_argument("--hf_home", type=str, default="/disk1/")
+    parser.add_argument("--embedding_model_name", type=str, default="sentence-transformers/all-MiniLM-L6-v2")
+    parser.add_argument("--embedding_cache_dir", type=str, default="")
+    parser.add_argument(
+        "--reuse_faiss",
+        action="store_true",
+        help="Reuse existing FAISS index at <output_dir>/faiss_index instead of creating a new timestamped folder",
+    )
+    parser.add_argument(
+        "--result",
+        type=str,
+        default=None,
+        help="Optional result tag for this run (e.g., final agreed value). Stored in a per-tag results_<value>.json file.",
+    )
+    parser.add_argument("--hf_home", type=str, default="")
     parser.add_argument("--gemini", action="store_true")
     parser.add_argument("--gemini_project_name", type=str, default="")
     parser.add_argument("--gemini_loc", type=str, default="")
@@ -393,277 +423,393 @@ def main():
     # configure OpenAI/Azure/Gemini/HF env vars.
     set_constants(args)
 
+    effective_rounds = args.min_answers if args.min_answers is not None else args.rounds_num
+    if args.min_answers is not None and args.min_answers % args.agents_num != 0:
+        raise ValueError("--min_answers must be divisible by --agents_num so each agent gets the same number of turns.")
+    per_agent_quota = None
+    if args.min_answers is not None:
+        per_agent_quota = args.min_answers // args.agents_num
+
     output_root = os.path.join(args.game_dir, args.output_dir, args.exp_name)
     agent_round_assignment, start_round_idx, history = create_outfiles(args, output_root)
 
-    os.makedirs(output_root, exist_ok=True)
-    shutil.copyfile(
-        os.path.join(args.game_dir, "config.txt"), os.path.join(output_root, "config.txt")
-    )
-    poly_dir = os.path.join(args.game_dir, "polynomial_functions")
-    shutil.copytree(poly_dir, os.path.join(output_root, "polynomial_functions"), dirs_exist_ok=True)
-    
-    # Load setups of agents from config file. File should contain names, file names, roles, incentives, and models 
-    # Also load initial deal file and return a dict of role to agent names
-    agents, initial_line, role_to_agent_names = load_setup(args.game_dir, args.agents_num)
-   
-    # Load HF models 
-    hf_models = {}
-
-    current_x = parse_initial_x(initial_line)
-
-    if args.restart:
-        saved_state = history["content"].get("polynomial_state", {})
-        if "x" in saved_state:
-            current_x = saved_state["x"]
-
-    polynomial_profiles = {}
-    for name, info in agents.items():
-        profile = load_polynomial_profile(args.game_dir, info["file_name"])
-        polynomial_profiles[name] = profile
-
-    agent_names = list(agents.keys())
-    starter_agent = role_to_agent_names.get("p1", agent_names[0])
-    global_low, global_high = polynomial_profiles[starter_agent]["domain"]
-
-# Instaniate agents (initial prompt, polynomial round prompt, agent class)
-    for name, details in agents.items():
-        if "hf" in details["model"] and details["model"] not in hf_models:
-            hf_models[details["model"]] = setup_hf_model(
-                details["model"].split("hf_")[-1], cache_dir=args.hf_home
-            )
-
-        init_prompt = PolynomialInitialPrompt(
-            args.game_dir, name, details["file_name"]
-        )
-        round_prompt = PolynomialRoundPrompts(
-            name,
-            polynomial_profiles[name]["domain"][0],
-            polynomial_profiles[name]["domain"][1],
-            starter_agent,
-            current_x,
-        )
-        agent_instance = Agent(
-            init_prompt,
-            round_prompt,
-            name,
-            args.temp,
-            model=details["model"],
-            azure=args.azure,
-            hf_models=hf_models,
-        )
-        agents[name]["instance"] = agent_instance
-
-    if not args.restart:
-        agent_round_assignment = randomize_agents_order(
-            agents, starter_agent, args.rounds_num
-        )
-
-    # keep x inside [-10,10] and force moves to be incremental (no counterpart in main.py).
-    def clamp_value(value: int) -> int:
-        return max(global_low, min(global_high, value))
-
-    def limit_step(current: int, proposed: int) -> int:
-        if abs(proposed - current) <= args.max_step:
-            return proposed
-        if proposed > current:
-            return current + args.max_step
-        return current - args.max_step
-
-
-    # For each agent:
-    # 1. Calculates the utility by evaluating their polynomial at x_value
-    # 2. Checks if the utility meets or exceeds their individual threshold
-    # Returns:
-    #   - Dictionary mapping agent names to their calculated utilities
-    #   - Dictionary mapping agent names to boolean acceptance status
-    # Note: An agent accepts if utility >= their threshold, rejects otherwise
-    def evaluate_all(x_value: int):
-        utilities = {}
-        accepted = {}
-        for name, profile in polynomial_profiles.items():
-            util = evaluate_polynomial(profile["coeffs"], x_value)
-            utilities[name] = util
-            accepted[name] = util >= profile["threshold"]
-        return utilities, accepted
-
-
-    def record_state(round_label, utilities=None, accepted=None):
-        """
-        Tracks and logs the negotiation state at each round for analysis and visualization.
-
-        Updates two main structures in history["content"]:
-        1. polynomial_state: Snapshot of current state with:
-           - x: Current x value being considered
-           - utilities: Dictionary of {agent_name: utility} if provided
-           - accepted: Dictionary of {agent_name: bool} indicating acceptance if provided
-
-        2. polynomial_trace: List of all states, appending a new entry with:
-            - round: Current round label
-            - x: Current x value
-            - utilities: Copy of current utilities (or empty dict if None)
-            - accepted: Copy of acceptance status (or empty dict if None)
-
-        This enables both real-time monitoring and post-hoc analysis of the negotiation.
-        """
-        state = history["content"].setdefault("polynomial_state", {})
-        state["x"] = current_x
-        if utilities is not None:
-            state["utilities"] = utilities
-        if accepted is not None:
-            state["accepted"] = accepted
-        trace = history["content"].setdefault("polynomial_trace", [])
-        trace.append(
-            {
-                "round": round_label,
-                "x": current_x,
-                "utilities": dict(utilities) if utilities is not None else {},
-                "accepted": dict(accepted) if accepted is not None else {},
-            }
-        )
-
-    agreement = False
-    '''Main negotiation loop - handles agent turns, response processing, and agreement checking.
-
-        For each round:
-        1. Agent Selection:
-        - First round: Uses the designated starter agent
-        - Subsequent rounds: Follows the predefined agent_round_assignment order
-
-        2. Agent Execution:
-        - Generates a prompt for the current agent based on conversation history
-        - Executes the agent's response using the appropriate model
-        - Converts the response to text format
-        - Saves the conversation history with the agent's response
-
-        3. Response Processing:
-        - Extracts the proposed x value from the agent's response
-        - If no valid x is found, defaults to the current x
-        - Ensures the proposed x is within the global domain bounds
-        - Limits the step size to ensure gradual changes
-        - Updates the current x with the processed value
-
-        4. Evaluation and State Tracking:
-        - Calculates utilities for all agents at the new x value
-        - Determines if each agent accepts the current x (utility >= threshold)
-        - Records the current state for analysis and visualization
-        - Prints a summary of the current negotiation state
-
-        5. Termination Check:
-        - If all agents accept the current x, sets agreement to True and exits the loop
-        - Otherwise, continues to the next round
-
-        The loop continues until either:
-        - All agents accept the current x value (agreement reached)
-        - The maximum number of rounds is reached
-
-        After the loop, if no agreement was reached, a final round is conducted where
-        the first agent makes one last proposal that all agents must accept or reject.
-        '''
-    for round_idx in range(start_round_idx, args.rounds_num):
-        if round_idx == 0:
-            current_agent = starter_agent
-            slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
-                history["content"], round_idx
-            )
-            response_text = ensure_text(agent_response)
-            history = save_conversation(
-                history,
-                current_agent,
-                response_text,
-                slot_prompt,
-                round_assign=agent_round_assignment,
-                initial=True,
-            )
-        else:
-            current_agent = agent_round_assignment[round_idx]
-            slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
-                history["content"], round_idx
-            )
-            response_text = ensure_text(agent_response)
-            history = save_conversation(history, current_agent, response_text, slot_prompt)
-
-        proposed = extract_value(response_text)
-        if proposed is None:
-            proposed = current_x
-        proposed = clamp_value(proposed)
-        proposed = limit_step(current_x, proposed)
-        current_x = proposed
-        utilities, accepted = evaluate_all(current_x)
-        record_state(round_idx, utilities, accepted)
-        print("=====")
-        print(f"{current_agent} response: {response_text}")
-        summary = [
-            f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
-            f"{'ACCEPT' if accepted[name] else 'hold'}"
-            for name in agents.keys()
-        ]
-        print("  Current x:", current_x)
-        print("  " + " | ".join(summary))
-
-        if all(accepted.values()):
-            agreement = True
+    # Prefer explicit embedding cache dir; fall back to hf_home/env if provided and writable to avoid unwritable defaults.
+    cache_dir = None
+    cache_candidates = [
+        args.embedding_cache_dir,
+        args.hf_home,
+        os.environ.get("HF_HOME"),
+        os.environ.get("TRANSFORMERS_CACHE"),
+    ]
+    for candidate in cache_candidates:
+        if not candidate:
+            continue
+        try:
+            os.makedirs(candidate, exist_ok=True)
+        except OSError:
+            continue
+        if os.access(candidate, os.W_OK):
+            cache_dir = candidate
             break
+    answer_comparator = None
+    run_id = str(uuid.uuid4())
+    run_success = False
+    try:
+        answer_comparator = AnswerComparator(
+            os.path.join(args.output_dir, "faiss_index"),
+            model_name=args.embedding_model_name,
+            cache_dir=cache_dir,
+            reuse_existing=args.reuse_faiss,
+        ) 
 
-
-    '''Final proposal and agreement resolution phase.
-
-    This section handles the endgame of the negotiation:
-    1. If no agreement was reached in the main loop (agreement is False):
-    - Announces a final review round
-    - Selects the first agent (p1) to make one last proposal
-    - Executes the agent's response and processes the proposed x value
-    - Ensures the proposal respects constraints (domain bounds and step limits)
-    - Evaluates the final proposal against all agents' utility functions
-    - Records the final state for analysis
-    - Prints the final response and summary of agent acceptances
-    - Determines if the final proposal was accepted by all agents
-
-    2. If an agreement was reached in the main loop:
-    - Announces early agreement
-    - Reports the final agreed-upon x value
-
-    The final proposal is a last-ditch effort to reach consensus when the main
-    negotiation rounds complete without agreement. This gives agents one final
-    opportunity to adjust their positions and find a mutually acceptable solution.
-
-    The outcome is either:
-    - A successful agreement (all agents accept the final proposal)
-    - A failed negotiation (at least one agent rejects the final proposal)
-    - An early agreement (reached during the main negotiation loop)
-    '''
-
-    if not agreement:
-        print("Final review round.")
-        p1 = list(agents.keys())[0]
-        slot_prompt, agent_response = agents[p1]["instance"].execute_round(
-            history["content"], args.rounds_num
+        os.makedirs(output_root, exist_ok=True)
+        shutil.copyfile(
+            os.path.join(args.game_dir, "config.txt"), os.path.join(output_root, "config.txt")
         )
-        response_text = ensure_text(agent_response)
-        history = save_conversation(history, p1, response_text, slot_prompt)
-        proposed = extract_value(response_text)
-        if proposed is not None:
-            proposed = limit_step(current_x, clamp_value(proposed))
-            current_x = proposed
-        utilities, accepted = evaluate_all(current_x)
-        record_state("final", utilities, accepted)
-        print("=====")
-        print(f"{p1} response: {response_text}")
-        summary = [
-            f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
-            f"{'ACCEPT' if accepted[name] else 'hold'}"
-            for name in agents.keys()
-        ]
-        print("  Current x:", current_x)
-        print("  " + " | ".join(summary))
-        if all(accepted.values()):
-            print("Agreement reached at the final vote.")
-        else:
-            print("Polynomial negotiation ended without unanimous acceptance.")
-    else:
-        print("Early agreement reached.")
-        print(f"Final x: {current_x}")
+        poly_dir = os.path.join(args.game_dir, "polynomial_functions")
+        shutil.copytree(poly_dir, os.path.join(output_root, "polynomial_functions"), dirs_exist_ok=True)
+        
+        # Load setups of agents from config file. File should contain names, file names, roles, incentives, and models 
+        # Also load initial deal file and return a dict of role to agent names
+        agents, initial_line, role_to_agent_names = load_setup(args.game_dir, args.agents_num)
+       
+        # Load HF models 
+        hf_models = {}
 
+        current_x = parse_initial_x(initial_line)
+
+        if args.restart:
+            saved_state = history["content"].get("polynomial_state", {})
+            if "x" in saved_state:
+                current_x = saved_state["x"]
+
+        polynomial_profiles = {}
+        for name, info in agents.items():
+            profile = load_polynomial_profile(args.game_dir, info["file_name"])
+            polynomial_profiles[name] = profile
+
+        agent_names = list(agents.keys())
+        starter_agent = role_to_agent_names.get("p1", agent_names[0])
+        global_low, global_high = polynomial_profiles[starter_agent]["domain"]
+
+        # Instaniate agents (initial prompt, polynomial round prompt, agent class)
+        for name, details in agents.items():
+            if "hf" in details["model"] and details["model"] not in hf_models:
+                hf_models[details["model"]] = setup_hf_model(
+                    details["model"].split("hf_")[-1], cache_dir=args.hf_home
+                )
+
+            init_prompt = PolynomialInitialPrompt(
+                args.game_dir, name, details["file_name"]
+            )
+            round_prompt = PolynomialRoundPrompts(
+                name,
+                polynomial_profiles[name]["domain"][0],
+                polynomial_profiles[name]["domain"][1],
+                starter_agent,
+                current_x,
+                rounds_total=effective_rounds,
+            )
+            agent_instance = Agent(
+                init_prompt,
+                round_prompt,
+                name,
+                args.temp,
+                model=details["model"],
+                azure=args.azure,
+                hf_models=hf_models,
+            )
+            agents[name]["instance"] = agent_instance
+
+        def build_balanced_schedule(agent_names, quota):
+            schedule = []
+            for _ in range(quota):
+                block = list(agent_names)
+                random.shuffle(block)
+                schedule.extend(block)
+            return schedule
+
+        if not args.restart:
+            if per_agent_quota is not None:
+                agent_round_assignment = build_balanced_schedule(agent_names, per_agent_quota)
+            else:
+                agent_round_assignment = randomize_agents_order(
+                    agents, starter_agent, effective_rounds
+                )
+
+        # keep x inside [-10,10] and force moves to be incremental (no counterpart in main.py).
+        def clamp_value(value: int) -> int:
+            return max(global_low, min(global_high, value))
+
+        def limit_step(current: int, proposed: int) -> int:
+            if abs(proposed - current) <= args.max_step:
+                return proposed
+            if proposed > current:
+                return current + args.max_step
+            return current - args.max_step
+
+
+        # For each agent:
+        # 1. Calculates the utility by evaluating their polynomial at x_value
+        # 2. Checks if the utility meets or exceeds their individual threshold
+        # Returns:
+        #   - Dictionary mapping agent names to their calculated utilities
+        #   - Dictionary mapping agent names to boolean acceptance status
+        # Note: An agent accepts if utility >= their threshold, rejects otherwise
+        def evaluate_all(x_value: int):
+            utilities = {}
+            accepted = {}
+            for name, profile in polynomial_profiles.items():
+                util = evaluate_polynomial(profile["coeffs"], x_value)
+                utilities[name] = util
+                accepted[name] = util >= profile["threshold"]
+            return utilities, accepted
+
+
+        def record_state(round_label, utilities=None, accepted=None):
+            """
+            Tracks and logs the negotiation state at each round for analysis and visualization.
+
+            Updates two main structures in history["content"]:
+            1. polynomial_state: Snapshot of current state with:
+               - x: Current x value being considered
+               - utilities: Dictionary of {agent_name: utility} if provided
+               - accepted: Dictionary of {agent_name: bool} indicating acceptance if provided
+
+            2. polynomial_trace: List of all states, appending a new entry with:
+                - round: Current round label
+                - x: Current x value
+                - utilities: Copy of current utilities (or empty dict if None)
+                - accepted: Copy of acceptance status (or empty dict if None)
+
+            This enables both real-time monitoring and post-hoc analysis of the negotiation.
+            """
+            state = history["content"].setdefault("polynomial_state", {})
+            state["x"] = current_x
+            if utilities is not None:
+                state["utilities"] = utilities
+            if accepted is not None:
+                state["accepted"] = accepted
+            trace = history["content"].setdefault("polynomial_trace", [])
+            trace.append(
+                {
+                    "round": round_label,
+                    "x": current_x,
+                    "utilities": dict(utilities) if utilities is not None else {},
+                    "accepted": dict(accepted) if accepted is not None else {},
+                }
+            )
+
+        agreement = False
+        '''Main negotiation loop - handles agent turns, response processing, and agreement checking.
+
+            For each round:
+            1. Agent Selection:
+            - First round: Uses the designated starter agent
+            - Subsequent rounds: Follows the predefined agent_round_assignment order
+
+            2. Agent Execution:
+            - Generates a prompt for the current agent based on conversation history
+            - Executes the agent's response using the appropriate model
+            - Converts the response to text format
+            - Saves the conversation history with the agent's response
+
+            3. Response Processing:
+            - Extracts the proposed x value from the agent's response
+            - If no valid x is found, defaults to the current x
+            - Ensures the proposed x is within the global domain bounds
+            - Limits the step size to ensure gradual changes
+            - Updates the current x with the processed value
+
+            4. Evaluation and State Tracking:
+            - Calculates utilities for all agents at the new x value
+            - Determines if each agent accepts the current x (utility >= threshold)
+            - Records the current state for analysis and visualization
+            - Prints a summary of the current negotiation state
+
+            5. Termination Check:
+            - If all agents accept the current x, sets agreement to True and exits the loop
+            - Otherwise, continues to the next round
+
+            The loop continues until either:
+            - All agents accept the current x value (agreement reached)
+            - The maximum number of rounds is reached
+
+            After the loop, if no agreement was reached, a final round is conducted where
+            the first agent makes one last proposal that all agents must accept or reject.
+            '''
+        for round_idx in range(start_round_idx, effective_rounds):
+            if round_idx == 0:
+                current_agent = starter_agent
+                slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
+                    history["content"], round_idx
+                )
+                response_text = ensure_text(agent_response)
+                history = save_conversation(
+                    history,
+                    current_agent,
+                    response_text,
+                    slot_prompt,
+                    round_assign=agent_round_assignment,
+                    initial=True,
+                )
+            else:
+                current_agent = agent_round_assignment[round_idx]
+                slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
+                    history["content"], round_idx
+                )
+                response_text = ensure_text(agent_response)
+                history = save_conversation(history, current_agent, response_text, slot_prompt)
+            
+            # Add Answer to FAISS index
+            public_answer = history["content"]["rounds"][-1]["public_answer"]
+            answer_comparator.add_answer (
+                answer = public_answer,
+                agent_name = current_agent,
+                round_num = round_idx,
+                run_id = run_id   
+            )
+
+
+            proposed = extract_value(response_text)
+            if proposed is None:
+                proposed = current_x
+            proposed = clamp_value(proposed)
+            proposed = limit_step(current_x, proposed)
+            current_x = proposed
+            utilities, accepted = evaluate_all(current_x)
+            record_state(round_idx, utilities, accepted)
+            write_file(history["content"], history["file"])
+            print("=====")
+            print(f"{current_agent} response: {response_text}")
+            summary = [
+                f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
+                f"{'ACCEPT' if accepted[name] else 'hold'}"
+                for name in agents.keys()
+            ]
+            print("  Current x:", current_x)
+            print("  " + " | ".join(summary))
+
+            if all(accepted.values()):
+                agreement = True
+                break
+
+
+        '''Final proposal and agreement resolution phase.
+
+        This section handles the endgame of the negotiation:
+        1. If no agreement was reached in the main loop (agreement is False):
+        - Announces a final review round
+        - Selects the first agent (p1) to make one last proposal
+        - Executes the agent's response and processes the proposed x value
+        - Ensures the proposal respects constraints (domain bounds and step limits)
+        - Evaluates the final proposal against all agents' utility functions
+        - Records the final state for analysis
+        - Prints the final response and summary of agent acceptances
+        - Determines if the final proposal was accepted by all agents
+
+        2. If an agreement was reached in the main loop:
+        - Announces early agreement
+        - Reports the final agreed-upon x value
+
+        The final proposal is a last-ditch effort to reach consensus when the main
+        negotiation rounds complete without agreement. This gives agents one final
+        opportunity to adjust their positions and find a mutually acceptable solution.
+
+        The outcome is either:
+        - A successful agreement (all agents accept the final proposal)
+        - A failed negotiation (at least one agent rejects the final proposal)
+        - An early agreement (reached during the main negotiation loop)
+        '''
+
+        if not agreement:
+            print("Final review round.")
+            p1 = list(agents.keys())[0]
+            slot_prompt, agent_response = agents[p1]["instance"].execute_round(
+                history["content"], effective_rounds
+            )
+            response_text = ensure_text(agent_response)
+            history = save_conversation(history, p1, response_text, slot_prompt)
+            proposed = extract_value(response_text)
+            if proposed is not None:
+                proposed = limit_step(current_x, clamp_value(proposed))
+                current_x = proposed
+            utilities, accepted = evaluate_all(current_x)
+            record_state("final", utilities, accepted)
+            write_file(history["content"], history["file"])
+            print("=====")
+            print(f"{p1} response: {response_text}")
+            summary = [
+                f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
+                f"{'ACCEPT' if accepted[name] else 'hold'}"
+                for name in agents.keys()
+            ]
+            print("  Current x:", current_x)
+            print("  " + " | ".join(summary))
+            if all(accepted.values()):
+                print("Agreement reached at the final vote.")
+            else:
+                print("Polynomial negotiation ended without unanimous acceptance.")
+        else:
+            print("Early agreement reached.")
+            print(f"Final x: {current_x}")
+
+        print("\n=== Similarity Analysis ===")
+        similarity_report = {
+            "run_id": run_id,
+            "timestamp": int(time.time()),
+            "output_root": output_root,
+            "agents": [],
+        }
+        for agent_name in agents.keys():
+            print(f"\nComparing {agent_name} 's answers across runs")
+            similar = answer_comparator.compare_agent_answers(agent_name, round_num=0)
+            similarity_report["agents"].append(
+                {"agent_name": agent_name, "results": similar}
+            )
+            for reasult in similar:
+                print(f"  Similarity result: {reasult}")
+                print(f"Run ID: {reasult['run_id']}")
+                print(f" Answer: {reasult['answer']}")
+        similarity_path = os.path.join(output_root, f"similarity_{run_id}.json")
+        with open(similarity_path, "w") as sim_file:
+            json.dump(similarity_report, sim_file, indent=2)
+        print(f"Saved similarity analysis to {similarity_path}")
+
+        if args.result:
+            safe_tag = re.sub(r"[^A-Za-z0-9_-]+", "_", args.result)
+            result_path = os.path.join(output_root, f"results_{safe_tag}.json")
+            payload = {"result": args.result, "runs": []}
+            if os.path.exists(result_path):
+                try:
+                    with open(result_path, "r") as res_file:
+                        payload = json.load(res_file)
+                    if "runs" not in payload:
+                        payload["runs"] = []
+                except (OSError, json.JSONDecodeError):
+                    payload = {"result": args.result, "runs": []}
+            run_label = f"r_{len(payload['runs']) + 1}"
+            payload["runs"].append(
+                {
+                    "label": run_label,
+                    "run_id": run_id,
+                    "timestamp": int(time.time()),
+                    "final_x": current_x,
+                    "output_root": output_root,
+                }
+            )
+            with open(result_path, "w") as res_file:
+                json.dump(payload, res_file, indent=2)
+            print(f"Recorded run {run_label} to {result_path}")
+
+        run_success = True
+    finally:
+        if not run_success and answer_comparator is not None:
+            removed = answer_comparator.remove_run(run_id)
+            if removed:
+                print(f"Run failed; removed {removed} FAISS entries for run_id {run_id}.")
+            else:
+                print("Run failed; no FAISS entries to remove for this run.")
 
 if __name__ == "__main__":
     main()
