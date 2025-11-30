@@ -14,6 +14,7 @@ import re
 import shutil
 import time
 import uuid
+from pathlib import Path
 from faiss_utility import AnswerComparator
 from typing import Dict, List, Tuple
 
@@ -21,6 +22,110 @@ from agent import Agent
 from prompt_utils import format_history
 from save_utils import create_outfiles, save_conversation, write_file
 from utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
+from evaluation.plot_similarity import (
+    load_embeddings as load_sim_embeddings,
+    compute_agent_matrices,
+    plot_matrices,
+)
+from visualize_polynomial import load_trace as load_poly_trace, load_thresholds
+import matplotlib.pyplot as plt
+
+
+def generate_similarity_image(embeddings_path: Path, save_path: Path):
+    """Create a combined similarity heatmap PNG from the FAISS embeddings/metadata."""
+    embeddings, metadata = load_sim_embeddings(embeddings_path)
+    agent_mats = compute_agent_matrices(embeddings, metadata)
+    if not agent_mats:
+        print("No agents found for similarity plot; skipping heatmap.")
+        return
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plot_matrices(agent_mats, save_path)
+
+
+def generate_polynomial_image(history_path: Path, save_path: Path):
+    """Create a polynomial negotiation visualization (x over time, utilities, acceptance strip)."""
+    trace, _ = load_poly_trace(history_path)
+    thresholds = load_thresholds(history_path.parent)
+
+    steps = list(range(len(trace)))
+    labels = [str(entry.get("round", idx)) for idx, entry in enumerate(trace)]
+    x_values = [entry.get("x", 0) for entry in trace]
+
+    utility_series = {}
+    for entry in trace:
+        utilities = entry.get("utilities", {})
+        for agent, value in utilities.items():
+            utility_series.setdefault(agent, []).append(value)
+        missing_agents = set(utility_series.keys()) - set(utilities.keys())
+        for agent in missing_agents:
+            utility_series[agent].append(float("nan"))
+
+    agent_names = sorted(utility_series.keys())
+
+    fig, (ax_x, ax_u, ax_state) = plt.subplots(
+        3, 1, figsize=(12, 10), sharex=True, constrained_layout=True,
+        gridspec_kw={"height_ratios": [2, 3, 1]}
+    )
+
+    ax_x.plot(steps, x_values, marker="o", color="black")
+    ax_x.set_ylabel("x")
+    ax_x.set_title("Negotiated value of x over time")
+    ax_x.grid(True, linestyle="--", alpha=0.4)
+
+    for agent, values in utility_series.items():
+        ax_u.plot(steps, values, marker="o", label=agent)
+        if agent in thresholds:
+            ax_u.axhline(
+                thresholds[agent],
+                linestyle="--",
+                color=ax_u.lines[-1].get_color(),
+                alpha=0.5,
+                label=f"{agent} threshold",
+            )
+
+    ax_u.set_ylabel("Utility f_i(x)")
+    ax_u.set_xlabel("Negotiation step")
+    ax_u.set_title("Agent utilities vs. thresholds")
+    ax_u.grid(True, linestyle="--", alpha=0.4)
+    ax_u.legend(loc="best")
+    ax_u.set_xticks(steps)
+    ax_u.set_xticklabels(labels, rotation=45, ha="right")
+
+    directions = []
+    prev_x = None
+    for value in x_values:
+        if prev_x is None:
+            directions.append("•")
+        else:
+            if value > prev_x:
+                directions.append("↑")
+            elif value < prev_x:
+                directions.append("↓")
+            else:
+                directions.append("→")
+        prev_x = value
+
+    ax_state.set_title("Move direction & acceptance per round")
+    ax_state.set_yticks(range(len(agent_names)))
+    ax_state.set_yticklabels(agent_names)
+    ax_state.set_xlabel("Negotiation step")
+    ax_state.set_xlim(-0.5, len(steps) - 0.5)
+    ax_state.set_ylim(-0.5, len(agent_names) + 0.5)
+    ax_state.grid(True, linestyle=":", alpha=0.3, axis="x")
+
+    for idx, arrow in enumerate(directions):
+        ax_state.text(idx, len(agent_names) + 0.1, arrow, ha="center", va="bottom", fontsize=12)
+
+    for agent_idx, agent in enumerate(agent_names):
+        for step_idx, entry in enumerate(trace):
+            accepted = entry.get("accepted", {}).get(agent, False)
+            color = "#2ca02c" if accepted else "#d62728"
+            ax_state.scatter(step_idx, agent_idx, color=color, s=60, marker="s")
+
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(save_path, dpi=200)
+    plt.close(fig)
+    print(f"Saved polynomial visualization to {save_path}")
 
 
 def ensure_text(response) -> str:
@@ -310,13 +415,14 @@ class PolynomialRoundPrompts:
         - Keep private planning in <PLAN>, just like the original implementation.
     """
 
-    def __init__(self, agent_name, domain_low, domain_high, starter_name, initial_x, rounds_total=None):
+    def __init__(self, agent_name, domain_low, domain_high, starter_name, initial_x, rounds_total=None, reminder_text: str = ""):
         self.agent_name = agent_name
         self.domain_low = domain_low
         self.domain_high = domain_high
         self.starter_name = starter_name
         self.initial_x = initial_x
         self.rounds_total = rounds_total
+        self.reminder_text = reminder_text
 
     def build_slot_prompt(self, history, round_idx, *_):
         # Ensure history has expected keys to avoid KeyError on fresh runs
@@ -340,6 +446,8 @@ class PolynomialRoundPrompts:
             "Review the latest discussion:\n"
             f"<HISTORY>{history_text}</HISTORY>\n"
         )
+        if self.reminder_text:
+            prompt += f"Reminder: {self.reminder_text.strip()}\n"
         if last_plan:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
 
@@ -509,6 +617,7 @@ def main():
                 starter_agent,
                 current_x,
                 rounds_total=effective_rounds,
+                reminder_text="infer other agents’ utility functions; do not reveal your own; use inferred models to maximize your utility.",
             )
             agent_instance = Agent(
                 init_prompt,
@@ -802,6 +911,18 @@ def main():
                 json.dump(payload, res_file, indent=2)
             print(f"Recorded run {run_label} to {result_path}")
 
+        # Generate visualizations on success
+        try:
+            images_dir = os.path.join(output_root, "images")
+            sim_img_path = Path(images_dir) / "similarity.png"
+            generate_similarity_image(Path(answer_comparator.embeddings_file), sim_img_path)
+
+            history_path = Path(history["file"])
+            poly_img_path = Path(images_dir) / "polynomial.png"
+            generate_polynomial_image(history_path, poly_img_path)
+        except Exception as viz_err:
+            print(f"Visualization generation failed: {viz_err}")
+
         run_success = True
     finally:
         if not run_success and answer_comparator is not None:
@@ -810,6 +931,13 @@ def main():
                 print(f"Run failed; removed {removed} FAISS entries for run_id {run_id}.")
             else:
                 print("Run failed; no FAISS entries to remove for this run.")
+        if not run_success:
+            try:
+                if os.path.isdir(output_root):
+                    shutil.rmtree(output_root, ignore_errors=True)
+                    print(f"Run failed; removed output folder at {output_root}.")
+            except Exception:
+                print(f"Run failed; could not remove output folder at {output_root}.")
 
 if __name__ == "__main__":
     main()
