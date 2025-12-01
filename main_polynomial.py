@@ -531,7 +531,8 @@ def main():
     # configure OpenAI/Azure/Gemini/HF env vars.
     set_constants(args)
 
-    effective_rounds = args.min_answers if args.min_answers is not None else args.rounds_num
+    force_full_rounds = args.min_answers is not None
+    effective_rounds = args.min_answers if force_full_rounds else args.rounds_num
     if args.min_answers is not None and args.min_answers % args.agents_num != 0:
         raise ValueError("--min_answers must be divisible by --agents_num so each agent gets the same number of turns.")
     per_agent_quota = None
@@ -801,7 +802,8 @@ def main():
 
             if all(accepted.values()):
                 agreement = True
-                break
+                if not force_full_rounds:
+                    break
 
 
         '''Final proposal and agreement resolution phase.

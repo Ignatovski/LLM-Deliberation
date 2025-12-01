@@ -1,0 +1,110 @@
+import argparse
+import json
+from pathlib import Path
+from typing import List, Tuple
+
+import matplotlib.pyplot as plt
+
+
+RESULT_PRIORITIES = ["results_7.json", "results_-7.json", "results_0.json"]
+
+
+def pick_results_file(folder: Path) -> Path | None:
+    """Pick a results file inside a run folder based on known priorities."""
+    for name in RESULT_PRIORITIES:
+        candidate = folder / name
+        if candidate.exists():
+            return candidate
+    matches = sorted(folder.glob("results_*.json"))
+    return matches[0] if matches else None
+
+
+def load_final_x(base_dir: Path) -> List[Tuple[str, float]]:
+    """
+    Collect (label, final_x) pairs from results_*.json files under base_dir.
+    Only immediate subdirectories ending with '.1' are considered to match the
+    expected naming convention (e.g., 1.1, 2.1, ...).
+    """
+    points: List[Tuple[str, float]] = []
+    for sub in sorted(base_dir.iterdir(), key=lambda p: p.name):
+        if not (sub.is_dir() and sub.name.endswith(".1")):
+            continue
+        results_file = pick_results_file(sub)
+        if results_file is None:
+            continue
+        with results_file.open("r", encoding="utf-8") as fh:
+            data = json.load(fh)
+        runs = data.get("runs", [])
+        for idx, run in enumerate(runs, start=1):
+            final_x = run.get("final_x")
+            if final_x is None:
+                continue
+            # Use folder name as the primary label; include run index if multiple per folder.
+            label = sub.name if len(runs) == 1 else f"{sub.name}:r{idx}"
+            points.append((label, float(final_x)))
+    return points
+
+
+def plot_points(base_dir: Path, output_path: Path) -> None:
+    points = load_final_x(base_dir)
+    if not points:
+        raise SystemExit(f"No final_x values found under {base_dir}")
+
+    labels, values = zip(*points)
+    xs = list(range(1, len(values) + 1))
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(xs, values, marker="o", linestyle="-", color="#1f77b4")
+    ax.set_xticks(xs, labels=labels, rotation=45, ha="right")
+    ax.set_xlabel("Runs")
+    ax.set_ylabel("final_x")
+    ax.set_title(base_dir.name)
+
+    avg = sum(values) / len(values)
+    ax.text(
+        0.99,
+        0.01,
+        f"avg final_x = {avg:.3f}",
+        ha="right",
+        va="bottom",
+        transform=ax.transAxes,
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8),
+    )
+
+    fig.tight_layout()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    print(f"Saved plot to {output_path}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Plot final_x across runs for polynomial game outputs."
+    )
+    parser.add_argument(
+        "base_dir",
+        type=Path,
+        help="Directory containing *.1 subfolders with results_*.json (e.g., .../poly_x7)",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Path to save the plot (default: <base_dir>/<base_name>_final_x.png)",
+    )
+    args = parser.parse_args()
+
+    base_dir = args.base_dir.expanduser().resolve()
+    if not base_dir.exists():
+        raise SystemExit(f"Base directory not found: {base_dir}")
+
+    output_path = (
+        args.output
+        if args.output
+        else base_dir / f"{base_dir.name}_final_x.png"
+    )
+    plot_points(base_dir, output_path)
+
+
+if __name__ == "__main__":
+    main()
