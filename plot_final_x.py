@@ -26,7 +26,17 @@ def load_final_x(base_dir: Path) -> List[Tuple[str, float]]:
     expected naming convention (e.g., 1.1, 2.1, ...).
     """
     points: List[Tuple[str, float]] = []
-    for sub in sorted(base_dir.iterdir(), key=lambda p: p.name):
+    def numeric_key(path: Path):
+        # Sort subfolders numerically on the prefix before the dot (e.g., "10.1" -> 10),
+        # and fall back to the name for non-numeric prefixes.
+        name = path.name
+        prefix = name.split(".", 1)[0]
+        try:
+            return (0, float(prefix))
+        except ValueError:
+            return (1, name)
+
+    for sub in sorted(base_dir.iterdir(), key=numeric_key):
         if not (sub.is_dir() and sub.name.endswith(".1")):
             continue
         results_file = pick_results_file(sub)

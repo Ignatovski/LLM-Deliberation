@@ -20,7 +20,7 @@ def setup_hf_model(model_name,cache_dir='/disk1/', max_new_tokens=7000):
     return model, tokenizer, pipeline_gen 
 
 
-def load_setup(game_dir, agents_num):
+def load_setup(game_dir, agents_num, config_file="config.txt"):
     '''
     load config files of the experiments (<game_dir>/config.txt)
     The config file is organized as: one line per agent. 
@@ -40,7 +40,11 @@ def load_setup(game_dir, agents_num):
         intial deal: deal to kick off, add as input in initial_deal_file 
         role_to_agents: dict of roles (veto) to agent names 
     '''
-    with open(os.path.join(game_dir,'config.txt'), 'r') as f:
+    cfg_path = config_file
+    if not os.path.isabs(cfg_path):
+        cfg_path = os.path.join(game_dir, cfg_path)
+
+    with open(cfg_path, 'r') as f:
         agents_config_file = f.readlines()
         
 
@@ -71,6 +75,10 @@ def set_constants(args):
         vertexai.init(project=args.gemini_project_name, location=args.gemini_loc)
         
     openai.api_key = args.api_key
+    if getattr(args, "anthropic_api", None):
+        os.environ["ANTHROPIC_API_KEY"] = args.anthropic_api
+    if getattr(args, "anthropic_base_url", None):
+        os.environ["ANTHROPIC_BASE_URL"] = args.anthropic_base_url
 
     os.environ['TRANSFORMERS_CACHE'] = args.hf_home
     os.environ['HF_HOME'] = args.hf_home
@@ -94,4 +102,3 @@ def randomize_agents_order(agents, p1, rounds):
 
     
     
-

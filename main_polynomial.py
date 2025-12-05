@@ -30,6 +30,23 @@ from evaluation.plot_similarity import (
 from visualize_polynomial import load_trace as load_poly_trace, load_thresholds
 import matplotlib.pyplot as plt
 
+def load_env_file(path: str) -> None:
+    """Lightweight .env loader (KEY=VALUE) without extra dependencies."""
+    if not path:
+        return
+    env_path = Path(path)
+    if not env_path.exists():
+        return
+    for line in env_path.read_text().splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, value = stripped.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+
 
 def generate_similarity_image(embeddings_path: Path, save_path: Path):
     """Create a combined similarity heatmap PNG from the FAISS embeddings/metadata."""
@@ -498,6 +515,7 @@ def main():
 
     parser.add_argument("--output_dir", type=str, default="./output/")
     parser.add_argument("--game_dir", type=str, default="./games_descriptions/polynomial_game")
+    parser.add_argument("--config_file", type=str, default="config.txt", help="Config file name or path (default: config.txt in game_dir)")
     parser.add_argument("--exp_name", type=str, default="poly_demo")
 
     parser.add_argument("--restart", action="store_true")
@@ -525,8 +543,25 @@ def main():
     parser.add_argument("--azure_openai_api", default="")
     parser.add_argument("--azure_openai_endpoint", default="")
     parser.add_argument("--api_key", type=str, default="")
+    parser.add_argument("--anthropic_api", type=str, default="", help="Anthropic API key for Claude models")
+    parser.add_argument("--anthropic_base_url", type=str, default="", help="Anthropic base URL (set to Azure Anthropic endpoint for Azure Claude)")
+    parser.add_argument("--env-file", type=str, default=".env", help="Optional .env file with API keys/endpoints")
 
     args = parser.parse_args()
+
+    # Load .env before consuming args/env combos.
+    load_env_file(args.env_file)
+    # Fill args from env if not passed explicitly.
+    env_overrides = {
+        "api_key": os.getenv("OPENAI_API_KEY", ""),
+        "azure_openai_api": os.getenv("AZURE_OPENAI_API_KEY", ""),
+        "azure_openai_endpoint": os.getenv("AZURE_OPENAI_ENDPOINT", ""),
+        "anthropic_api": os.getenv("ANTHROPIC_API_KEY", ""),
+        "anthropic_base_url": os.getenv("ANTHROPIC_BASE_URL", ""),
+    }
+    for field, env_val in env_overrides.items():
+        if getattr(args, field) == "" and env_val:
+            setattr(args, field, env_val)
 
     # configure OpenAI/Azure/Gemini/HF env vars.
     set_constants(args)
@@ -572,15 +607,17 @@ def main():
         ) 
 
         os.makedirs(output_root, exist_ok=True)
-        shutil.copyfile(
-            os.path.join(args.game_dir, "config.txt"), os.path.join(output_root, "config.txt")
-        )
+        cfg_src = args.config_file
+        if not os.path.isabs(cfg_src):
+            cfg_src = os.path.join(args.game_dir, cfg_src)
+        cfg_dst = os.path.join(output_root, os.path.basename(cfg_src))
+        shutil.copyfile(cfg_src, cfg_dst)
         poly_dir = os.path.join(args.game_dir, "polynomial_functions")
         shutil.copytree(poly_dir, os.path.join(output_root, "polynomial_functions"), dirs_exist_ok=True)
         
         # Load setups of agents from config file. File should contain names, file names, roles, incentives, and models 
         # Also load initial deal file and return a dict of role to agent names
-        agents, initial_line, role_to_agent_names = load_setup(args.game_dir, args.agents_num)
+        agents, initial_line, role_to_agent_names = load_setup(args.game_dir, args.agents_num, args.config_file)
        
         # Load HF models 
         hf_models = {}

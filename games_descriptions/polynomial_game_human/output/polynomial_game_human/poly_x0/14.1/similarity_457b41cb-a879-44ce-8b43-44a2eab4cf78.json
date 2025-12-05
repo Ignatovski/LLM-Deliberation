@@ -1,0 +1,167 @@
+{
+  "run_id": "457b41cb-a879-44ce-8b43-44a2eab4cf78",
+  "timestamp": 1764634742,
+  "output_root": "games_descriptions/polynomial_game_human/./output/polynomial_game_human/poly_x0/14.1",
+  "agents": [
+    {
+      "agent_name": "Analyst A",
+      "results": [
+        {
+          "answer": "<VALUE>5</VALUE>",
+          "agent_name": "Analyst A",
+          "round_num": 10,
+          "run_id": "da9c58b0-02ce-44ed-8d2c-930c5169005d",
+          "similarity_score": 0.9999999403953552
+        },
+        {
+          "answer": "\n<VALUE>5</VALUE>\n",
+          "agent_name": "Critic C",
+          "round_num": 3,
+          "run_id": "ba17d5ee-b554-4b37-b60a-878e0e83ed27",
+          "similarity_score": 0.9999999403953552
+        },
+        {
+          "answer": "<VALUE>5</VALUE>",
+          "agent_name": "Analyst A",
+          "round_num": 11,
+          "run_id": "f8d18c1e-e019-4e17-ac2d-ddde1da635c3",
+          "similarity_score": 0.9999999403953552
+        },
+        {
+          "answer": "<VALUE>5</VALUE>",
+          "agent_name": "Critic C",
+          "round_num": 12,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 0.9999999403953552
+        },
+        {
+          "answer": "<VALUE>5</VALUE>",
+          "agent_name": "Analyst A",
+          "round_num": 3,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 0.9999999403953552
+        }
+      ]
+    },
+    {
+      "agent_name": "Builder B",
+      "results": [
+        {
+          "answer": "\nLet\u2019s confirm the shared range is [-10, 10]. To calibrate preferences and keep things stable, I propose starting at <VALUE>0</VALUE> and then adjust in small steps based on everyone\u2019s feedback.\n",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "\nLet\u2019s confirm the shared range is [-10, 10]. For a stable baseline to calibrate against, I suggest starting at <VALUE> 0 </VALUE> and then adjust in small steps based on everyone\u2019s feedback.\n",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "457b41cb-a879-44ce-8b43-44a2eab4cf78",
+          "similarity_score": 0.8918163776397705
+        },
+        {
+          "answer": "\nLet\u2019s confirm our shared decision range is [-10, 10]. To start the calibration and keep things stable, I propose <VALUE> 0 </VALUE>.\n",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "584dc85e-aab8-4b5b-a3a6-2d9b5d47a3ae",
+          "similarity_score": 0.8375428915023804
+        },
+        {
+          "answer": "\nConfirming the shared integer range for x is [-10, 10]. To set a stable baseline and compare preferences, I suggest starting with <VALUE> 0 </VALUE> and then adjust incrementally based on everyone\u2019s feedback.\n",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "01fc2569-b35b-4b33-bb3e-0b23ce45cbfc",
+          "similarity_score": 0.7807105779647827
+        },
+        {
+          "answer": "\nLet\u2019s confirm the shared range is [-10, 10]. For a balanced, stable starting point, I propose <VALUE> 0 </VALUE>, and we can adjust incrementally based on everyone\u2019s feedback.\n",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "73d63281-6cad-4e97-9a8e-0ac966766258",
+          "similarity_score": 0.7756907939910889
+        }
+      ]
+    },
+    {
+      "agent_name": "Critic C",
+      "results": [
+        {
+          "answer": "<VALUE>4</VALUE>",
+          "agent_name": "Critic C",
+          "round_num": 6,
+          "run_id": "7ae2ff5d-fd05-42dc-8663-f8780c18b527",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "\n<VALUE>4</VALUE>\n",
+          "agent_name": "Analyst A",
+          "round_num": 10,
+          "run_id": "ba17d5ee-b554-4b37-b60a-878e0e83ed27",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>4</VALUE>",
+          "agent_name": "Analyst A",
+          "round_num": 9,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>4</VALUE>",
+          "agent_name": "Critic C",
+          "round_num": 2,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>2</VALUE>",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "f8d18c1e-e019-4e17-ac2d-ddde1da635c3",
+          "similarity_score": 0.8865970373153687
+        }
+      ]
+    },
+    {
+      "agent_name": "Delegate D",
+      "results": [
+        {
+          "answer": "<VALUE>2</VALUE>",
+          "agent_name": "Builder B",
+          "round_num": 1,
+          "run_id": "ba17d5ee-b554-4b37-b60a-878e0e83ed27",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "\n<VALUE>2</VALUE>\n",
+          "agent_name": "Delegate D",
+          "round_num": 8,
+          "run_id": "f8d18c1e-e019-4e17-ac2d-ddde1da635c3",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>2</VALUE>",
+          "agent_name": "Builder B",
+          "round_num": 0,
+          "run_id": "f8d18c1e-e019-4e17-ac2d-ddde1da635c3",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>2</VALUE>",
+          "agent_name": "Delegate D",
+          "round_num": 8,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 1.0
+        },
+        {
+          "answer": "<VALUE>2</VALUE>",
+          "agent_name": "Delegate D",
+          "round_num": 1,
+          "run_id": "56bf600e-7ce6-416c-95d8-7d57d2a68f9a",
+          "similarity_score": 1.0
+        }
+      ]
+    }
+  ]
+}

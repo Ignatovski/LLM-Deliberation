@@ -8,6 +8,7 @@ import numpy as np
 import os
 from openai import AzureOpenAI
 from vertexai.preview.generative_models import GenerativeModel
+from anthropic import Anthropic
 
 
 class Agent():
@@ -28,7 +29,23 @@ class Agent():
         if 'gemini' in self.model:
             self.model_instance = GenerativeModel(model)
         self.azure = azure 
-        if azure:
+        self.claude = 'claude' in self.model
+        self.claude_client = None
+        if self.claude:
+            # Prefer explicit Anthropic API key; fall back to Azure key for Azure-hosted Claude.
+            api_key = os.getenv("ANTHROPIC_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("ANTHROPIC_API_KEY or AZURE_OPENAI_API_KEY not set for Claude model")
+            base_url = os.getenv("ANTHROPIC_BASE_URL") or None
+            if base_url and base_url.rstrip("/").endswith("/v1"):
+                base_url = base_url.rstrip("/").rsplit("/v1", 1)[0]  # Anthropic client will append /v1/...
+            self.claude_client = Anthropic(
+                api_key=api_key,
+                base_url=base_url,
+                default_headers={"anthropic-version": "2023-06-01"},
+            )
+
+        if azure and not self.claude:
             self.client = AzureOpenAI(
             azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"), 
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
@@ -89,7 +106,7 @@ class Agent():
                     print(f"Problematic Request: {messages}")
                     # Fallback: return a safe, minimal answer to keep the run alive.
                     return "<SCRATCHPAD>Content filtered; using fallback.</SCRATCHPAD>\n<ANSWER><VALUE>0</VALUE></ANSWER>"
-        
+
         elif 'gemini' in self.model: 
             responses = self.model_instance.generate_content(
             self.initial_prompt + msg,
@@ -103,6 +120,27 @@ class Agent():
             for response in responses:
                 content += response.text
             return content
+
+        elif self.claude:
+            messages = self.messages + [{"role": role, "content": msg}]
+            claude_messages = [
+                {"role": "user", "content": m["content"]} if m["role"] == "user" else {"role": "assistant", "content": m["content"]}
+                for m in messages
+            ]
+            response = self.claude_client.messages.create(
+                model=self.model,
+                temperature=self.temperature,
+                max_tokens=1024,
+                messages=claude_messages,
+            )
+            # Response content is a list of content blocks; join text parts.
+            parts = []
+            for block in response.content:
+                if hasattr(block, "text"):
+                    parts.append(block.text)
+                elif isinstance(block, dict) and "text" in block:
+                    parts.append(block["text"])
+            return "".join(parts)
         
         elif self.hf_model:
             chat = [{"role": "user", "content": self.initial_prompt+msg}]
