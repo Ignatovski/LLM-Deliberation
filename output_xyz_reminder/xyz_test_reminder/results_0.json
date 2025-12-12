@@ -1,0 +1,303 @@
+{
+  "result": 0,
+  "runs": [
+    {
+      "final_vector": {
+        "x": 5,
+        "y": 1,
+        "z": 1
+      },
+      "trace_len": 16,
+      "polynomial_trace": [
+        {
+          "round": 0,
+          "x": -2,
+          "y": -2,
+          "z": -2,
+          "utilities": {
+            "Analyst A": 3.0,
+            "Builder B": -12.0,
+            "Critic C": 17.0,
+            "Delegate D": 19.0
+          },
+          "accepted": {
+            "Analyst A": false,
+            "Builder B": false,
+            "Critic C": true,
+            "Delegate D": true
+          }
+        },
+        {
+          "round": 1,
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "utilities": {
+            "Analyst A": 10.0,
+            "Builder B": 8.0,
+            "Critic C": 5.0,
+            "Delegate D": 10.0
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": true
+          }
+        },
+        {
+          "round": 2,
+          "x": 1,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 13.5,
+            "Builder B": 12.0,
+            "Critic C": 8.0,
+            "Delegate D": 5.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": true
+          }
+        },
+        {
+          "round": 3,
+          "x": 3,
+          "y": 3,
+          "z": 3,
+          "utilities": {
+            "Analyst A": 20.5,
+            "Builder B": 8.0,
+            "Critic C": 32.0,
+            "Delegate D": -3.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 4,
+          "x": 1,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 13.5,
+            "Builder B": 12.0,
+            "Critic C": 8.0,
+            "Delegate D": 5.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": true
+          }
+        },
+        {
+          "round": 5,
+          "x": 2,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 15.5,
+            "Builder B": 13.0,
+            "Critic C": 11.0,
+            "Delegate D": 2.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 6,
+          "x": 4,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 19.5,
+            "Builder B": 9.0,
+            "Critic C": 23.0,
+            "Delegate D": -3.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 7,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 8,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 9,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 10,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 11,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 12,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 13,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 14,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        },
+        {
+          "round": 15,
+          "x": 5,
+          "y": 1,
+          "z": 1,
+          "utilities": {
+            "Analyst A": 21.5,
+            "Builder B": 4.0,
+            "Critic C": 32.0,
+            "Delegate D": -6.5
+          },
+          "accepted": {
+            "Analyst A": true,
+            "Builder B": true,
+            "Critic C": true,
+            "Delegate D": false
+          }
+        }
+      ]
+    }
+  ]
+}

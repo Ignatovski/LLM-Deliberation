@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM History Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #111827;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --accent: #7c3aed;
+      --accent-2: #22d3ee;
+      --card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #eab308;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 25%),
+                  radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.18), transparent 28%),
+                  radial-gradient(circle at 50% 90%, rgba(124, 58, 237, 0.12), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+      max-width: 1100px;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+
+    .tabbar {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+      margin: 12px 0 4px;
+    }
+
+    .tabbar button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.1s ease, color 0.1s ease;
+    }
+
+    .tabbar button.active {
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #0b0f19;
+      font-weight: 600;
+    }
+
+    .control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: transparent;
+      border: none;
+      min-width: 260px;
+      flex: 0 0 auto;
+    }
+
+    .control label {
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+      min-width: 110px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 220px;
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 10px;
+    }
+
+    select, button {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    select {
+      width: 100%;
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    button {
+      border: none;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #0b0f19;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+    }
+
+    .stat {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .tag.success { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
+    .tag.danger { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
+    .tag.warn { border-color: rgba(234, 179, 8, 0.3); color: var(--warning); }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .round {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+
+    .round-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .round-title {
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      font-size: 15px;
+    }
+
+    .vector {
+      font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .utilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .utility {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 13px;
+    }
+
+    .acceptance {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .answer {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      white-space: pre-line;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .pill {
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+
+    .chart-card canvas { width: 100% !important; }
+
+    .error {
+      padding: 10px 12px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 10px;
+      color: #fecdd3;
+      margin: 10px 0;
+    }
+
+    .details-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-block {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 12px;
+    }
+
+    .detail-block h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    .detail-body {
+      white-space: pre-wrap;
+      line-height: 1.45;
+      font-size: 13px;
+      color: var(--text);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    @media (max-width: 900px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .controls { flex-direction: column; }
+      .control { width: 100%; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="title">
+        <h1>History Explorer</h1>
+        <p class="subtitle">Visualize agent rounds, utilities, and accepted moves from the JSON log.</p>
+      </div>
+      <div class="controls">
+        <div class="control" style="max-width: 320px; flex: 0 0 auto;">
+          <label for="folderFiles">JSON in this folder</label>
+          <select id="folderFiles">
+            <option value="">—</option>
+          </select>
+        </div>
+        <div class="control" style="max-width: 260px; flex: 0 0 auto;">
+          <label for="fileInput">Upload JSON</label>
+          <input id="fileInput" type="file" accept="application/json">
+        </div>
+        <div class="control" style="max-width: 200px; flex: 0 0 auto;">
+          <label for="agentFilter">Filter agent</label>
+          <select id="agentFilter">
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div id="error"></div>
+
+    <div class="grid" id="summary"></div>
+
+    <div class="card chart-card">
+      <div class="flex-between">
+        <h3>Trajectory</h3>
+        <div class="tag">x / y / z over rounds</div>
+      </div>
+      <canvas id="traceChart" height="120"></canvas>
+    </div>
+
+    <div class="tabbar">
+      <button id="tabRounds" class="active">Rounds</button>
+      <button id="tabDetails">Scratchpad / Plan</button>
+    </div>
+
+    <div class="card" id="panelRounds">
+      <div class="flex-between">
+        <h3>Rounds</h3>
+        <div class="tag warn" id="roundCountTag"></div>
+      </div>
+      <div class="timeline" id="rounds"></div>
+    </div>
+
+    <div class="card" id="panelDetails" style="display:none;">
+      <div class="flex-between">
+        <h3>Scratchpad & Plans</h3>
+        <div class="tag warn" id="detailCountTag"></div>
+      </div>
+      <div class="details-grid" id="details"></div>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      data: null,
+      combined: [],
+      chart: null,
+      filterAgent: 'all',
+      view: 'rounds'
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    const formatVector = (vec) => vec ? `(${vec.join(', ')})` : '—';
+    const escapeHtml = (str) => (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+    const renderError = (msg) => {
+      el('error').innerHTML = msg ? `<div class="error">${msg}</div>` : '';
+    };
+
+    const combineRounds = (data) => {
+      const rounds = data.rounds || [];
+      const traces = data.polynomial_trace || [];
+      return rounds.map((r, idx) => ({
+        ...r,
+        trace: traces[idx],
+        vector: traces[idx] ? [traces[idx].x, traces[idx].y, traces[idx].z] : null
+      }));
+    };
+
+    const renderSummary = (data) => {
+      const finalVec = data.polynomial_state?.vector || [];
+      const totalRounds = data.finished_rounds ?? (data.rounds?.length || 0);
+      const agents = Array.from(new Set(data.rounds?.map(r => r.agent) || []));
+      const acceptedLast = data.polynomial_trace?.[data.polynomial_trace.length - 1]?.accepted || {};
+      const summaryEl = el('summary');
+
+      summaryEl.innerHTML = `
+        <div class="card">
+          <h3>Final vector</h3>
+          <div class="stat">${formatVector(finalVec)}</div>
+          <div class="muted">From polynomial_state</div>
+        </div>
+        <div class="card">
+          <h3>Rounds completed</h3>
+          <div class="stat">${totalRounds}</div>
+          <div class="muted">finished_rounds</div>
+        </div>
+        <div class="card">
+          <h3>Agents</h3>
+          <div class="stat">${agents.length}</div>
+          <div class="muted">${agents.join(', ')}</div>
+        </div>
+        <div class="card">
+          <h3>Last acceptance</h3>
+          <div class="utilities">
+            ${Object.entries(acceptedLast).map(([agent, ok]) => `
+              <span class="tag ${ok ? 'success' : 'danger'}">${agent}: ${ok ? 'yes' : 'no'}</span>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    };
+
+    const renderAgentFilter = (data) => {
+      const select = el('agentFilter');
+      const agents = Array.from(new Set((data.rounds || []).map(r => r.agent)));
+      select.innerHTML = '<option value="all">All</option>' + agents.map(a => `<option value="${a}">${a}</option>`).join('');
+    };
+
+    const populateFolderFiles = async () => {
+      // Always include bundled files so they show even without directory listing
+      const bundled = [
+        { value: 'history_17_43_22.json', label: 'history_17_43_22.json (bundled in viewer/)' }
+      ];
+
+      let links = [];
+      try {
+        const res = await fetch('.');
+        const text = await res.text();
+        const doc = new DOMParser().parseFromString(text, 'text/html');
+        links = Array.from(doc.querySelectorAll('a'))
+          .map(a => a.getAttribute('href'))
+          .filter(h => h && h.toLowerCase().endsWith('.json'))
+          .map(h => ({ value: h, label: h }));
+      } catch (err) {
+        // ignore fetch failure; we still show bundled entries
+      }
+
+      // Merge bundled + discovered, dedup by value
+      const merged = [...bundled, ...links].reduce((acc, item) => {
+        if (!acc.some(x => x.value === item.value)) acc.push(item);
+        return acc;
+      }, []);
+
+      const select = el('folderFiles');
+      if (!merged.length) {
+        select.innerHTML = '<option value="">(no json files found)</option>';
+        return;
+      }
+      select.innerHTML = merged.map(({ value, label }) => `<option value="${value}">${label}</option>`).join('');
+      // auto-load first entry
+      if (merged[0]) {
+        loadUrl(merged[0].value);
+      }
+    };
+
+    const loadUrl = async (url) => {
+      if (!url) return;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
+        const json = await res.json();
+        hydrate(json);
+      } catch (err) {
+        renderError('Could not load JSON: ' + err.message);
+      }
+    };
+
+    const renderRounds = () => {
+      const container = el('rounds');
+      const filtered = state.combined.filter(r => state.filterAgent === 'all' || r.agent === state.filterAgent);
+      el('roundCountTag').textContent = `${filtered.length} shown`;
+
+      container.innerHTML = filtered.map(r => {
+        const util = r.trace?.utilities || {};
+        const accepted = r.trace?.accepted || {};
+        const proposal = r.vector ? `<div class="vector">Proposed <strong>${formatVector(r.vector)}</strong></div>` : '';
+        return `
+          <div class="round">
+            <div class="round-header">
+              <div class="round-title">Round ${r.trace?.round ?? '?'} — ${r.agent}</div>
+              <span class="pill">${r.trace ? 'from trace' : 'from round'}</span>
+            </div>
+            ${proposal}
+            <div class="utilities">
+              ${Object.entries(util).map(([agent, val]) => `<span class="utility"><strong>${agent}</strong>: ${val}</span>`).join('')}
+            </div>
+            <div class="acceptance">
+              ${Object.entries(accepted).map(([agent, ok]) => `<span class="tag ${ok ? 'success' : 'danger'}">${agent}: ${ok ? 'accepted' : 'rejected'}</span>`).join('')}
+            </div>
+            <div class="answer">
+              <strong>Public answer:</strong>\n${(r.public_answer || '').trim() || '—'}
+            </div>
+          </div>
+        `;
+      }).join('') || '<div class="muted">No rounds to show.</div>';
+    };
+
+    const renderDetails = () => {
+      const container = el('details');
+      const filtered = state.combined.filter(r => state.filterAgent === 'all' || r.agent === state.filterAgent);
+      el('detailCountTag').textContent = `${filtered.length} shown`;
+      container.innerHTML = filtered.map(r => `
+        <div class="detail-block">
+          <div class="flex-between">
+            <div class="round-title">Round ${r.trace?.round ?? '?'} — ${r.agent}</div>
+            <span class="pill">${r.trace ? 'from trace' : 'from round'}</span>
+          </div>
+          <div class="vector" style="margin:8px 0 10px;">${formatVector(r.vector || [])}</div>
+          <div class="detail-section">
+            <h4>Prompt</h4>
+            <div class="detail-body">${escapeHtml(r.prompt)}</div>
+          </div>
+          <div class="detail-section" style="margin-top:10px;">
+            <h4>Full Answer</h4>
+            <div class="detail-body">${escapeHtml(r.full_answer)}</div>
+          </div>
+          <div class="detail-section" style="margin-top:10px;">
+            <h4>Public Answer</h4>
+            <div class="detail-body">${escapeHtml(r.public_answer)}</div>
+          </div>
+        </div>
+      `).join('') || '<div class="muted">No details to show.</div>';
+    };
+
+    const renderChart = () => {
+      const trace = state.data?.polynomial_trace || [];
+      const labels = trace.map(t => `R${t.round}`);
+      const x = trace.map(t => t.x);
+      const y = trace.map(t => t.y);
+      const z = trace.map(t => t.z);
+
+      if (state.chart) state.chart.destroy();
+      const ctx = el('traceChart').getContext('2d');
+      state.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'x', data: x, borderColor: '#7c3aed', tension: 0.25, fill: false },
+            { label: 'y', data: y, borderColor: '#22d3ee', tension: 0.25, fill: false },
+            { label: 'z', data: z, borderColor: '#f59e0b', tension: 0.25, fill: false }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+    };
+
+    const hydrate = (data) => {
+      state.data = data;
+      state.combined = combineRounds(data);
+      renderAgentFilter(data);
+      renderSummary(data);
+      renderRounds();
+      renderDetails();
+      renderChart();
+      renderError('');
+    };
+
+    const loadFromFile = (file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          hydrate(json);
+        } catch (err) {
+          renderError('Invalid JSON file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    el('agentFilter').addEventListener('change', (e) => {
+      state.filterAgent = e.target.value;
+      renderRounds();
+      renderDetails();
+    });
+
+    el('fileInput').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) loadFromFile(file);
+    });
+
+    el('folderFiles').addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val) loadUrl(val);
+    });
+
+    el('tabRounds').addEventListener('click', () => {
+      state.view = 'rounds';
+      el('tabRounds').classList.add('active');
+      el('tabDetails').classList.remove('active');
+      el('panelRounds').style.display = '';
+      el('panelDetails').style.display = 'none';
+    });
+
+    el('tabDetails').addEventListener('click', () => {
+      state.view = 'details';
+      el('tabDetails').classList.add('active');
+      el('tabRounds').classList.remove('active');
+      el('panelDetails').style.display = '';
+      el('panelRounds').style.display = 'none';
+    });
+
+    // initial load
+    populateFolderFiles();
+  </script>
+</body>
+</html>

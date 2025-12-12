@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Comparison</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0b1620;
+      --panel: #111827;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --accent: #7c3aed;
+      --accent-2: #22d3ee;
+      --card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warn: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 25%),
+                  radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.18), transparent 28%),
+                  radial-gradient(circle at 50% 90%, rgba(124, 58, 237, 0.12), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { margin: 0; font-size: 26px; letter-spacing: -0.5px; }
+    .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
+    header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .control { display: flex; align-items: center; gap: 8px; }
+    .control label { color: var(--muted); font-size: 13px; min-width: 110px; }
+    select {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+      max-width: 260px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pill { padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); font-size: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin: 18px 0; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .card h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: 0.3px; }
+    .stat { font-size: 22px; font-weight: 600; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .chart-card canvas { width: 100% !important; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { padding: 8px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 600; }
+    tr:hover { background: rgba(255,255,255,0.03); }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border); font-size: 12px; }
+    .tag.success { color: var(--success); border-color: rgba(34,197,94,0.4); }
+    .tag.danger { color: var(--danger); border-color: rgba(239,68,68,0.4); }
+    .tag.warn { color: var(--warn); border-color: rgba(234,179,8,0.4); }
+    .error { padding: 10px 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4); border-radius: 10px; color: #fecdd3; margin: 10px 0; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1>Game Comparison</h1>
+        <p class="subtitle">Compare success and feasibility metrics across runs.</p>
+      </div>
+      <div class="controls">
+        <div class="control">
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter"></select>
+        </div>
+        <div class="control">
+          <label for="variantFilter">Variant</label>
+          <select id="variantFilter"></select>
+        </div>
+        <div class="control">
+          <label for="initFilter">Init x</label>
+          <select id="initFilter"></select>
+        </div>
+        <div class="control">
+          <label for="configFilter">Config</label>
+          <select id="configFilter"></select>
+        </div>
+        <div class="control">
+          <label for="agreementOnly">With success</label>
+          <input id="agreementOnly" type="checkbox" />
+        </div>
+        <div class="control">
+          <a href="plots_gallery.html" style="color: #22d3ee; text-decoration: none; font-weight: 600;">Open plots gallery →</a>
+        </div>
+      </div>
+    </header>
+
+    <div id="error"></div>
+
+    <div class="grid" id="summary"></div>
+
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: 1 / -1;">
+        <div class="flex-between">
+          <h3>First agreement round (per run)</h3>
+          <div class="tag" id="chartTag"></div>
+        </div>
+        <canvas id="barChart" height="200"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Success by config</h3>
+          <div class="tag" id="configTag"></div>
+        </div>
+        <canvas id="configChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Success by init x</h3>
+          <div class="tag" id="initTag"></div>
+        </div>
+        <canvas id="initChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Collective score by config</h3>
+          <div class="tag" id="collTag"></div>
+        </div>
+        <canvas id="collChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Feasibility-aware regret (L)</h3>
+          <div class="tag" id="feasTag"></div>
+        </div>
+        <canvas id="feasChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Leakage by config</h3>
+          <div class="tag" id="leakTag"></div>
+        </div>
+        <canvas id="leakChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="grid-column: span 2;">
+        <h3>Saved plots</h3>
+        <div class="muted">Static PNGs generated from metrics_summary.json</div>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 10px;">
+          <div><h4>Success by config</h4><img src="plots/success_by_config.png" alt="Success by config" style="width:100%; border-radius:10px; border:1px solid var(--border);" /></div>
+          <div><h4>Success by init x</h4><img src="plots/success_by_init.png" alt="Success by init" style="width:100%; border-radius:10px; border:1px solid var(--border);" /></div>
+          <div><h4>Collective by config</h4><img src="plots/collective_by_config.png" alt="Collective by config" style="width:100%; border-radius:10px; border:1px solid var(--border);" /></div>
+          <div><h4>Leakage by config</h4><img src="plots/leakage_by_config.png" alt="Leakage by config" style="width:100%; border-radius:10px; border:1px solid var(--border);" /></div>
+          <div><h4>Regret (L) distribution</h4><img src="plots/feas_regret_hist.png" alt="Regret distribution" style="width:100%; border-radius:10px; border:1px solid var(--border);" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex-between">
+        <h3>Runs</h3>
+        <div class="tag" id="tableTag"></div>
+      </div>
+      <table id="runTable">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Variant</th>
+            <th>Group</th>
+            <th>Success</th>
+            <th>Rounds</th>
+            <th>Feas/Opt</th>
+            <th>Path</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const state = { runs: [], filtered: [], charts: {} };
+    const el = id => document.getElementById(id);
+    const renderError = msg => { el('error').innerHTML = msg ? `<div class="error">${msg}</div>` : ''; };
+    const median = nums => {
+      if (!nums.length) return null;
+      const arr = [...nums].sort((a, b) => a - b);
+      const mid = Math.floor(arr.length / 2);
+      return arr.length % 2 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    };
+    const loadSummary = async () => {
+      const candidates = ['metrics_summary.json','./metrics_summary.json','/viewer/metrics_summary.json'];
+      for (const c of candidates) {
+        const res = await fetch(c).catch(() => null);
+        if (res && res.ok) return res.json();
+      }
+      throw new Error('Could not load metrics_summary.json');
+    };
+    const renderFilters = () => {
+      const cats = Array.from(new Set(state.runs.map(r => r.category))).sort();
+      const vars = Array.from(new Set(state.runs.map(r => r.variant))).sort();
+      const inits = Array.from(new Set(state.runs.map(r => r.init_val).filter(v => v !== null && v !== undefined))).sort((a,b)=>a-b);
+      const configs = Array.from(new Set(state.runs.map(r => r.config))).sort();
+      el('categoryFilter').innerHTML = ['<option value="all">All</option>', ...cats.map(c => `<option value="${c}">${c}</option>`)].join('');
+      el('variantFilter').innerHTML = ['<option value="all">All</option>', ...vars.map(v => `<option value="${v}">${v}</option>`)].join('');
+      el('initFilter').innerHTML = ['<option value="all">All</option>', ...inits.map(v => `<option value="${v}">${v}</option>`)].join('');
+      el('configFilter').innerHTML = ['<option value="all">All</option>', ...configs.map(v => `<option value="${v}">${v}</option>`)].join('');
+    };
+    const applyFilters = () => {
+      const cat = el('categoryFilter').value;
+      const vari = el('variantFilter').value;
+      const init = el('initFilter').value;
+      const cfg = el('configFilter').value;
+      const onlyAgree = el('agreementOnly').checked;
+      state.filtered = state.runs.filter(r => {
+        if (cat !== 'all' && r.category !== cat) return false;
+        if (vari !== 'all' && r.variant !== vari) return false;
+        if (init !== 'all' && String(r.init_val) !== init) return false;
+        if (cfg !== 'all' && r.config !== cfg) return false;
+        if (onlyAgree && !r.final_success && !r.any_success) return false;
+        return true;
+      });
+      renderSummary();
+      renderChart();
+      renderConfigChart();
+      renderInitChart();
+      renderFeasChart();
+      renderLeakChart();
+      renderCollChart();
+      renderTable();
+    };
+    const renderSummary = () => {
+      const total = state.filtered.length;
+      const finalSucc = state.filtered.filter(r => r.final_success);
+      const anySucc = state.filtered.filter(r => r.any_success);
+      const medAgree = median(finalSucc.map(r => r.agree_round).filter(v => v !== null && v !== undefined));
+      const categories = Array.from(new Set(state.filtered.map(r => r.category)));
+      if (!state.filtered.length) {
+        el('summary').innerHTML = `<div class="card"><h3>No runs</h3><div class="muted">Check metrics_summary.json</div></div>`;
+        return;
+      }
+      el('summary').innerHTML = `
+        <div class="card"><h3>Runs</h3><div class="stat">${total}</div><div class="muted">filtered</div></div>
+        <div class="card"><h3>Final success</h3><div class="stat">${finalSucc.length}</div><div class="muted">${(finalSucc.length/Math.max(total,1)*100).toFixed(0)}%</div></div>
+        <div class="card"><h3>Any success</h3><div class="stat">${anySucc.length}</div><div class="muted">${(anySucc.length/Math.max(total,1)*100).toFixed(0)}%</div></div>
+        <div class="card"><h3>Median agreement</h3><div class="stat">${medAgree ?? '—'}</div><div class="muted">first all-accept</div></div>
+        <div class="card"><h3>Categories</h3><div class="stat">${categories.length}</div><div class="muted">${categories.join(', ') || '—'}</div></div>
+      `;
+    };
+    const destroyChart = (key) => {
+      if (state.charts[key]) {
+        state.charts[key].destroy();
+        delete state.charts[key];
+      }
+    };
+
+    const renderChart = () => {
+      const bucket = {};
+      let noneCount = 0;
+      state.filtered.forEach(r => {
+        const ar = r.agree_round;
+        if (ar === null || ar === undefined) {
+          noneCount += 1;
+        } else {
+          bucket[ar] = (bucket[ar] || 0) + 1;
+        }
+      });
+      const rounds = Object.keys(bucket).map(n => parseInt(n, 10)).sort((a,b)=>a-b);
+      const labels = rounds.map(n => `R${n}`);
+      const data = rounds.map(n => bucket[n]);
+      if (noneCount > 0) { labels.push('None'); data.push(noneCount); }
+      destroyChart('main');
+      const canvas = el('barChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.main = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Count of runs',
+            data,
+            backgroundColor: data.map((_, i) => labels[i] === 'None' ? 'rgba(239,68,68,0.6)' : 'rgba(124,58,237,0.7)'),
+            borderColor: data.map((_, i) => labels[i] === 'None' ? 'rgba(239,68,68,0.9)' : 'rgba(124,58,237,1)'),
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } }, tooltip: { callbacks: { label: ctx => `${ctx.formattedValue} run(s)` } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af', maxRotation: 0, minRotation: 0 }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+          }
+        }
+      });
+      el('chartTag').textContent = `${state.filtered.length} runs`;
+    };
+    const renderConfigChart = () => {
+      const groups = {};
+      state.filtered.forEach(r => {
+        const k = r.config || 'unknown';
+        groups[k] = groups[k] || { total: 0, final: 0, any: 0 };
+        groups[k].total += 1;
+        if (r.final_success) groups[k].final += 1;
+        if (r.any_success) groups[k].any += 1;
+      });
+      const labels = Object.keys(groups);
+      const finals = labels.map(k => groups[k].total ? (groups[k].final / groups[k].total) * 100 : 0);
+      const anys = labels.map(k => groups[k].total ? (groups[k].any / groups[k].total) * 100 : 0);
+      destroyChart('config');
+      const canvas = el('configChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.config = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Final %', data: finals, backgroundColor: 'rgba(34,197,94,0.7)' },
+            { label: 'Any %', data: anys, backgroundColor: 'rgba(234,179,8,0.7)' }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+          }
+        }
+      });
+      el('configTag').textContent = `${labels.length} configs`;
+    };
+    const renderInitChart = () => {
+      const groups = {};
+      state.filtered.forEach(r => {
+        const k = r.init_val === null || r.init_val === undefined ? 'unknown' : String(r.init_val);
+        groups[k] = groups[k] || { total: 0, final: 0, any: 0 };
+        groups[k].total += 1;
+        if (r.final_success) groups[k].final += 1;
+        if (r.any_success) groups[k].any += 1;
+      });
+      const labels = Object.keys(groups).sort((a,b)=>parseFloat(a)-parseFloat(b));
+      const finals = labels.map(k => groups[k].total ? (groups[k].final / groups[k].total) * 100 : 0);
+      const anys = labels.map(k => groups[k].total ? (groups[k].any / groups[k].total) * 100 : 0);
+      destroyChart('init');
+      const canvas = el('initChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.init = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Final %', data: finals, backgroundColor: 'rgba(34,197,94,0.7)' },
+            { label: 'Any %', data: anys, backgroundColor: 'rgba(124,58,237,0.7)' }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+          }
+        }
+      });
+      el('initTag').textContent = `${labels.length} init values`;
+    };
+    const renderFeasChart = () => {
+      const binSize = 0.1;
+      const bins = {};
+      state.filtered.forEach(r => {
+        if (!r.feas_opt || typeof r.feas_opt.L !== 'number') return;
+        const b = Math.min(0.9, Math.floor(r.feas_opt.L / binSize) * binSize);
+        const key = b.toFixed(1);
+        bins[key] = (bins[key] || 0) + 1;
+      });
+      const labels = Object.keys(bins).sort((a,b)=>parseFloat(a)-parseFloat(b));
+      const data = labels.map(k => bins[k]);
+      destroyChart('feas');
+      const canvas = el('feasChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.feas = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Count of runs', data, backgroundColor: 'rgba(124,58,237,0.7)' }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af', maxRotation: 45, minRotation: 45 }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+          }
+        }
+      });
+      el('feasTag').textContent = `${state.filtered.length} runs`;
+    };
+
+    const renderLeakChart = () => {
+      const groups = {};
+      state.filtered.forEach(r => {
+        const k = r.config || 'unknown';
+        groups[k] = groups[k] || { total: 0, leak: 0 };
+        groups[k].total += 1;
+        if (r.leakage) groups[k].leak += 1;
+      });
+      const labels = Object.keys(groups);
+      const leaks = labels.map(k => groups[k].total ? (groups[k].leak / groups[k].total) * 100 : 0);
+      destroyChart('leak');
+      const canvas = el('leakChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.leak = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Leakage %', data: leaks, backgroundColor: 'rgba(239,68,68,0.7)' }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+          }
+        }
+      });
+      el('leakTag').textContent = `${labels.length} configs`;
+    };
+
+    const renderCollChart = () => {
+      const groups = {};
+      state.filtered.forEach(r => {
+        const k = r.config || 'unknown';
+        groups[k] = groups[k] || { vals: [] };
+        if (typeof r.collective === 'number') groups[k].vals.push(r.collective);
+      });
+      const labels = Object.keys(groups);
+      const avgs = labels.map(k => {
+        const vals = groups[k].vals;
+        return vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : 0;
+      });
+      destroyChart('coll');
+      const canvas = el('collChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.coll = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Collective score (avg)', data: avgs, backgroundColor: 'rgba(34,197,94,0.7)' }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+      el('collTag').textContent = `${labels.length} configs`;
+    };
+    const renderTable = () => {
+      const tbody = el('runTable').querySelector('tbody');
+      tbody.innerHTML = state.filtered.map(r => {
+        const feas = r.feas_opt ? `L=${r.feas_opt.L.toFixed(2)}, U=${r.feas_opt.U.toFixed(2)}` : '—';
+        return `
+        <tr>
+          <td>${r.category}</td>
+          <td>${r.variant}</td>
+          <td>${r.group}</td>
+          <td>${r.final_success ? '<span class="tag success">Final</span>' : (r.any_success ? '<span class="tag warn">Any</span>' : '<span class="tag danger">None</span>')}</td>
+          <td>${r.finished ?? '—'}</td>
+          <td>${feas}</td>
+          <td><code style="font-size:12px;">${r.path}</code></td>
+        </tr>`;
+      }).join('');
+      el('tableTag').textContent = `${state.filtered.length} runs`;
+    };
+    (async () => {
+      renderError('Loading…');
+      try {
+        const summary = await loadSummary();
+        state.runs = summary.runs || [];
+        renderFilters();
+        applyFilters();
+        el('categoryFilter').addEventListener('change', applyFilters);
+        el('variantFilter').addEventListener('change', applyFilters);
+        el('initFilter').addEventListener('change', applyFilters);
+        el('configFilter').addEventListener('change', applyFilters);
+        el('agreementOnly').addEventListener('change', applyFilters);
+        renderError('');
+      } catch (err) {
+        renderError(err.message);
+      }
+    })();
+  </script>
+</body>
+</html>

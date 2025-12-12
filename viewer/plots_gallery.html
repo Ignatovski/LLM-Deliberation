@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Plots Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1620;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --border: rgba(255,255,255,0.08);
+      --card: rgba(255,255,255,0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 25%),
+                  radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.18), transparent 28%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+    }
+    .page { max-width: 1200px; margin: 0 auto; }
+    h1 { margin: 0 0 6px; letter-spacing: -0.5px; }
+    .subtitle { margin: 0 0 16px; color: var(--muted); }
+    .stack { display: flex; flex-direction: column; gap: 18px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .card h3 { margin: 0 0 8px; font-size: 16px; }
+    .img-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.02); }
+    .img-wrap img { width: 100%; display: block; }
+    .muted { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Saved Plots Gallery</h1>
+    <p class="subtitle">Static PNGs generated from metrics_summary.json (no interaction required).</p>
+
+    <div class="stack">
+      <div class="card">
+        <h3>Success by config</h3>
+        <div class="img-wrap"><img src="plots/success_by_config.png" alt="Success by config"></div>
+      </div>
+      <div class="card">
+        <h3>Success by init x</h3>
+        <div class="img-wrap"><img src="plots/success_by_init.png" alt="Success by init"></div>
+      </div>
+      <div class="card">
+        <h3>Collective score by config</h3>
+        <div class="img-wrap"><img src="plots/collective_by_config.png" alt="Collective by config"></div>
+      </div>
+      <div class="card">
+        <h3>Leakage by config</h3>
+        <div class="img-wrap"><img src="plots/leakage_by_config.png" alt="Leakage by config"></div>
+      </div>
+      <div class="card">
+        <h3>Regret (L) distribution</h3>
+        <div class="img-wrap"><img src="plots/feas_regret_hist.png" alt="Regret distribution"></div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:14px;">Files served from viewer/plots/*.png. Regenerate via the Python script if metrics change.</p>
+  </div>
+</body>
+</html>

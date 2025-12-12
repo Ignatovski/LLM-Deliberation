@@ -182,13 +182,15 @@ class PolynomialXYZInitialPrompt:
 
 class PolynomialXYZRoundPrompts:
     def __init__(self, agent_name: str, domain: Tuple[int, int], starter_name: str, initial_vec: Tuple[int, int, int],
-                 rounds_total: int | None = None, max_step: int = 2):
+                 rounds_total: int | None = None, max_step: int = 2, personal_text: str | None = None, reminder_text: str = ""):
         self.agent_name = agent_name
         self.domain = domain
         self.starter_name = starter_name
         self.initial_vec = initial_vec
         self.rounds_total = rounds_total
         self.max_step = max_step
+        self.personal_text = personal_text.strip() if personal_text else None
+        self.reminder_text = reminder_text.strip()
 
     def build_slot_prompt(self, history, round_idx, *_):
         history.setdefault("rounds", [])
@@ -214,6 +216,8 @@ class PolynomialXYZRoundPrompts:
             f"Current shared vector: {cur_vec}\n"
             f"Recent history:\n<HISTORY>{history_text}</HISTORY>\n"
         )
+        if self.reminder_text:
+            prompt += f"Reminder: {self.reminder_text}\n"
         if last_plan:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
 
@@ -257,6 +261,10 @@ def build_agents(game_dir: str, agents_cfg: Dict[str, dict], temp: float, rounds
         profile = load_multivar_profile(game_dir, cfg["file_name"])
         profiles[agent_name] = profile
 
+        personal_path = Path(game_dir) / "individual_instructions" / "cooperative" / f"{cfg['file_name']}.txt"
+        with personal_path.open("r") as fh:
+            personal_text = fh.read()
+
         init_prompt = PolynomialXYZInitialPrompt(game_dir, agent_name, cfg["file_name"])
         round_prompt = PolynomialXYZRoundPrompts(
             agent_name,
@@ -265,6 +273,8 @@ def build_agents(game_dir: str, agents_cfg: Dict[str, dict], temp: float, rounds
             initial_vec=initial_vec,
             rounds_total=rounds_num,
             max_step=max_step,
+            personal_text=personal_text,
+            reminder_text="infer other agents' utility functions; do not reveal your own; use inferred models to maximize your utility.",
         )
         round_prompts[agent_name] = round_prompt
 
