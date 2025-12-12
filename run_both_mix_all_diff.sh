@@ -1,0 +1,157 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Batch runner for the mixed-model config (gpt + claude + llama + gpt-mini)
+# across all polynomial games using config_mix_all_diff.txt.
+
+GAME_DIRS=(
+  "games_descriptions/polynomial_game"
+  "games_descriptions/polynomial_game_all_AI"
+  "games_descriptions/polynomial_game_human"
+)
+SEEDS=(-7 0 7)
+
+# Load .env if present
+ENV_FILE="${ENV_FILE:-.env}"
+if [[ -f "${ENV_FILE}" ]]; then
+  # shellcheck disable=SC2046
+  export $(grep -v '^#' "${ENV_FILE}" | grep -E '^[A-Za-z_][A-Za-z0-9_]*=' | xargs -d '\n')
+fi
+
+OPENAI_API="${OPENAI_API:-${OPENAI_API_KEY:-${OPENROUTER_API_KEY:-}}}"
+OPENAI_BASE_URL="${OPENAI_BASE_URL:-${OPENAI_API_BASE:-}}"
+ANTHROPIC_API="${ANTHROPIC_API:-${ANTHROPIC_API_KEY:-}}"
+ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-}"
+AZURE_API="${AZURE_OPENAI_API_KEY:-}"
+AZURE_ENDPOINT="${AZURE_OPENAI_ENDPOINT:-}"
+USE_AZURE=0
+
+OUTPUT_BASE="./output_mix_all_diff"
+TEMP=1
+SUFFIX=1
+START=1
+END=15
+MAX_RETRIES=3
+
+usage() {
+  cat <<EOF
+Usage:
+  OPENAI_API=<key> [OPENAI_BASE_URL=<url>] [ANTHROPIC_API=<key>] [ANTHROPIC_BASE_URL=<url>] \\
+  bash run_both_mix_all_diff.sh [options]
+
+Options:
+  --openai_api <key>         OpenAI-compatible API key (for gpt/llama entries)
+  --openai_base_url <url>    OpenAI-compatible base URL
+  --anthropic_api <key>      Anthropic API key (for claude entries)
+  --anthropic_base_url <url> Anthropic base URL
+  --azure                    Use Azure client for OpenAI-compatible calls
+  --azure_api <key>          Azure OpenAI API key
+  --azure_endpoint <url>     Azure OpenAI endpoint, e.g., https://your-resource.openai.azure.com/
+  --help|-h                  Show this help
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --openai_api) OPENAI_API="$2"; shift 2 ;;
+    --openai_base_url) OPENAI_BASE_URL="$2"; shift 2 ;;
+    --anthropic_api) ANTHROPIC_API="$2"; shift 2 ;;
+    --anthropic_base_url) ANTHROPIC_BASE_URL="$2"; shift 2 ;;
+    --azure) USE_AZURE=1; shift 1 ;;
+    --azure_api) AZURE_API="$2"; shift 2 ;;
+    --azure_endpoint) AZURE_ENDPOINT="$2"; shift 2 ;;
+    --help|-h) usage; exit 0 ;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+if [[ -z "${OPENAI_API}" && "${USE_AZURE}" -eq 0 ]]; then
+  echo "Error: OPENAI_API / OPENAI_API_KEY / OPENROUTER_API_KEY not provided." >&2
+  exit 1
+fi
+if [[ "${USE_AZURE}" -eq 1 && ( -z "${AZURE_API}" || -z "${AZURE_ENDPOINT}" ) ]]; then
+  echo "Error: --azure requires --azure_api and --azure_endpoint (or AZURE_OPENAI_API_KEY/AZURE_OPENAI_ENDPOINT envs)." >&2
+  exit 1
+fi
+if [[ -z "${ANTHROPIC_API}" ]]; then
+  echo "Warning: ANTHROPIC_API not provided; claude rows will fail." >&2
+fi
+
+export OPENAI_API_KEY="${OPENAI_API}"
+if [[ -n "${OPENAI_BASE_URL}" ]]; then
+  export OPENAI_BASE_URL
+fi
+export ANTHROPIC_API_KEY="${ANTHROPIC_API}"
+if [[ -n "${ANTHROPIC_BASE_URL}" ]]; then
+  export ANTHROPIC_BASE_URL
+fi
+if [[ "${USE_AZURE}" -eq 1 ]]; then
+  export AZURE_OPENAI_API_KEY="${AZURE_API}"
+  export AZURE_OPENAI_ENDPOINT="${AZURE_ENDPOINT}"
+fi
+
+if command -v conda >/dev/null 2>&1; then
+  # shellcheck disable=SC1091
+  source "$(conda info --base)/etc/profile.d/conda.sh"
+  conda activate llm_deli || true
+fi
+
+# Normalize output base to an absolute path
+mkdir -p "${OUTPUT_BASE}"
+OUTPUT_BASE_ABS="$(cd "${OUTPUT_BASE}" && pwd)"
+
+run_game() {
+  local game_dir="$1"
+  (
+    set -e
+    local config_mix="${game_dir}/config_mix_all_diff.txt"
+    local initial="${game_dir}/initial_deal.txt"
+    local initial_backup="${initial}.bak"
+    local output_root="${OUTPUT_BASE_ABS}/$(basename "${game_dir}")"
+
+    if [[ ! -f "${config_mix}" ]]; then
+      echo "Missing ${config_mix}" >&2
+      exit 1
+    fi
+    if [[ ! -f "${initial}" ]]; then
+      echo "Missing ${initial}" >&2
+      exit 1
+    fi
+
+    mkdir -p "${output_root}"
+    cp "${initial}" "${initial_backup}"
+    trap 'mv -f "${initial_backup}" "${initial}"' EXIT
+
+    local config_basename
+    config_basename="$(basename "${config_mix}")"
+
+    for seed in "${SEEDS[@]}"; do
+      echo "[$(basename "${game_dir}")] Running mix-all-diff seed ${seed}"
+      printf "<VALUE>%s</VALUE>\n" "${seed}" > "${initial}"
+      local out_dir="${output_root}/poly_x${seed}"
+
+      python runs/run_batch_polynomial.py \
+        --exp-prefix "" --suffix "${SUFFIX}" --start "${START}" --end "${END}" --max-retries "${MAX_RETRIES}" \
+        -- --game_dir "${game_dir}" \
+           --config_file "${config_basename}" \
+           --output_dir "${out_dir}" \
+           --temp "${TEMP}" \
+           --reuse_faiss \
+           --result "${seed}" \
+           --min_answers 16 \
+           $([[ "${USE_AZURE}" -eq 1 ]] && printf '%s' "--azure --azure_openai_api ${AZURE_API} --azure_openai_endpoint ${AZURE_ENDPOINT}") \
+           $([[ "${USE_AZURE}" -eq 0 ]] && printf '%s' "--api_key ${OPENAI_API}") \
+           $([[ -n "${ANTHROPIC_API}" ]] && printf '%s' "--anthropic_api ${ANTHROPIC_API}") \
+           $([[ -n "${ANTHROPIC_BASE_URL}" ]] && printf '%s' "--anthropic_base_url ${ANTHROPIC_BASE_URL}")
+
+      # Generate final_x plot for this seed
+      python plot_final_x.py "${out_dir}" || true
+    done
+  )
+}
+
+for dir in "${GAME_DIRS[@]}"; do
+  run_game "${dir}"
+done
+
+echo "Mixed-model runs complete for seeds: ${SEEDS[*]}."

@@ -55,10 +55,12 @@ def load_final_x(base_dir: Path) -> List[Tuple[str, float]]:
     return points
 
 
-def plot_points(base_dir: Path, output_path: Path) -> None:
+def plot_points(base_dir: Path, output_path: Path) -> bool:
     points = load_final_x(base_dir)
     if not points:
-        raise SystemExit(f"No final_x values found under {base_dir}")
+        return False
+    # Force a consistent visual scale across plots to spot differences quickly.
+    y_min, y_max = -10, 10
 
     labels, values = zip(*points)
     xs = list(range(1, len(values) + 1))
@@ -69,6 +71,8 @@ def plot_points(base_dir: Path, output_path: Path) -> None:
     ax.set_xlabel("Runs")
     ax.set_ylabel("final_x")
     ax.set_title(base_dir.name)
+    ax.set_ylim(y_min, y_max)
+    ax.grid(True, linestyle="--", alpha=0.3)
 
     avg = sum(values) / len(values)
     ax.text(
@@ -86,6 +90,7 @@ def plot_points(base_dir: Path, output_path: Path) -> None:
     fig.savefig(output_path, dpi=150)
     plt.close(fig)
     print(f"Saved plot to {output_path}")
+    return True
 
 
 def main() -> None:
@@ -102,18 +107,44 @@ def main() -> None:
         type=Path,
         help="Path to save the plot (default: <base_dir>/<base_name>_final_x.png)",
     )
+    parser.add_argument(
+        "--recursive",
+        action="store_true",
+        help=(
+            "If base_dir only contains subfolders (e.g., poly_x0, poly_x7), "
+            "plot each of them automatically."
+        ),
+    )
     args = parser.parse_args()
 
     base_dir = args.base_dir.expanduser().resolve()
     if not base_dir.exists():
         raise SystemExit(f"Base directory not found: {base_dir}")
 
+    if args.recursive and args.output is not None:
+        raise SystemExit("--output cannot be combined with --recursive (ambiguous)")
+
     output_path = (
         args.output
         if args.output
         else base_dir / f"{base_dir.name}_final_x.png"
     )
-    plot_points(base_dir, output_path)
+    plotted = plot_points(base_dir, output_path)
+    if plotted:
+        return
+
+    # If nothing was found and the user asked for recursion, try immediate subfolders.
+    if not args.recursive:
+        raise SystemExit(f"No final_x values found under {base_dir}")
+
+    child_dirs = [p for p in sorted(base_dir.iterdir()) if p.is_dir()]
+    any_plotted = False
+    for child in child_dirs:
+        child_output = child / f"{child.name}_final_x.png"
+        if plot_points(child, child_output):
+            any_plotted = True
+    if not any_plotted:
+        raise SystemExit(f"No final_x values found under {base_dir} or its subfolders")
 
 
 if __name__ == "__main__":

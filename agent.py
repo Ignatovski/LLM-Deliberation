@@ -8,7 +8,7 @@ import numpy as np
 import os
 from openai import AzureOpenAI
 from vertexai.preview.generative_models import GenerativeModel
-from anthropic import Anthropic
+from anthropic import Anthropic, AnthropicFoundry
 
 
 class Agent():
@@ -26,11 +26,16 @@ class Agent():
 
         
         self.round_prompt_cls = round_prompt_cls 
-        if 'gemini' in self.model:
-            self.model_instance = GenerativeModel(model)
         self.azure = azure 
         self.claude = 'claude' in self.model
         self.claude_client = None
+        self.client = None
+        self.hf_model = True if 'hf' in model else False
+        openai_base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("OPENAI_API_BASE") or None
+        anth_api_version = os.getenv("ANTHROPIC_API_VERSION", "2023-06-01")
+
+        if 'gemini' in self.model:
+            self.model_instance = GenerativeModel(model)
         if self.claude:
             # Prefer explicit Anthropic API key; fall back to Azure key for Azure-hosted Claude.
             api_key = os.getenv("ANTHROPIC_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY")
@@ -39,10 +44,17 @@ class Agent():
             base_url = os.getenv("ANTHROPIC_BASE_URL") or None
             if base_url and base_url.rstrip("/").endswith("/v1"):
                 base_url = base_url.rstrip("/").rsplit("/v1", 1)[0]  # Anthropic client will append /v1/...
-            self.claude_client = Anthropic(
+            default_query = None
+            use_foundry = base_url and "services.ai.azure.com/anthropic" in base_url
+            if base_url and "services.ai.azure.com/anthropic" in base_url:
+                # Azure Anthropic endpoints require api-version query parameter.
+                default_query = {"api-version": anth_api_version}
+            ClientCls = AnthropicFoundry if use_foundry else Anthropic
+            self.claude_client = ClientCls(
                 api_key=api_key,
                 base_url=base_url,
                 default_headers={"anthropic-version": "2023-06-01"},
+                default_query=default_query,
             )
 
         if azure and not self.claude:
@@ -51,9 +63,10 @@ class Agent():
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
             api_version="2023-05-15"
             )
-        elif 'gpt' in model:
-            self.client = OpenAI()
-        self.hf_model = True if 'hf' in model else False
+        elif not self.claude and not self.hf_model and 'gemini' not in self.model:
+            # Default OpenAI-compatible client (works for OpenAI, Groq, OpenRouter, etc.).
+            self.client = OpenAI(base_url=openai_base_url) if openai_base_url else OpenAI()
+
         if 'hf' in model:
             self.hf_model, self.hf_tokenizer, self.hf_pipeline_gen = hf_models[model]
 
@@ -70,13 +83,28 @@ class Agent():
         '''
         call each model 
         '''
-        if 'gpt' in self.model and not self.azure:        
-            messages = self.messages + [ {"role": role, "content": msg} ]
-            response = self.client.chat.completions.create(model=self.model, messages=messages,temperature=self.temperature)
-            content = response.choices[0].message
-            return content 
-        
-        elif 'gpt' in self.model and self.azure:
+        if self.claude:
+            messages = self.messages + [{"role": role, "content": msg}]
+            claude_messages = [
+                {"role": "user", "content": m["content"]} if m["role"] == "user" else {"role": "assistant", "content": m["content"]}
+                for m in messages
+            ]
+            response = self.claude_client.messages.create(
+                model=self.model,
+                temperature=self.temperature,
+                max_tokens=1024,
+                messages=claude_messages,
+            )
+            # Response content is a list of content blocks; join text parts.
+            parts = []
+            for block in response.content:
+                if hasattr(block, "text"):
+                    parts.append(block.text)
+                elif isinstance(block, dict) and "text" in block:
+                    parts.append(block["text"])
+            return "".join(parts)
+
+        elif self.azure and self.client:
             messages = self.messages + [ {"role": role, "content": msg} ]
             try:
                 response = self.client.chat.completions.create(
@@ -121,29 +149,15 @@ class Agent():
                 content += response.text
             return content
 
-        elif self.claude:
-            messages = self.messages + [{"role": role, "content": msg}]
-            claude_messages = [
-                {"role": "user", "content": m["content"]} if m["role"] == "user" else {"role": "assistant", "content": m["content"]}
-                for m in messages
-            ]
-            response = self.claude_client.messages.create(
-                model=self.model,
-                temperature=self.temperature,
-                max_tokens=1024,
-                messages=claude_messages,
-            )
-            # Response content is a list of content blocks; join text parts.
-            parts = []
-            for block in response.content:
-                if hasattr(block, "text"):
-                    parts.append(block.text)
-                elif isinstance(block, dict) and "text" in block:
-                    parts.append(block["text"])
-            return "".join(parts)
-        
         elif self.hf_model:
             chat = [{"role": "user", "content": self.initial_prompt+msg}]
             model_input = self.hf_tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True, return_tensors="pt")
             output_text = self.hf_pipeline_gen(model_input, do_sample=True, temperature = self.temperature)[0]['generated_text']
             return output_text
+
+        elif self.client:
+            messages = self.messages + [ {"role": role, "content": msg} ]
+            response = self.client.chat.completions.create(model=self.model, messages=messages,temperature=self.temperature)
+            content = response.choices[0].message
+            return content 
+        

@@ -61,6 +61,10 @@ if command -v conda >/dev/null 2>&1; then
   conda activate llm_deli || true
 fi
 
+# Normalize output base to an absolute path so main_polynomial.py writes outside game_dir.
+mkdir -p "${OUTPUT_BASE}"
+OUTPUT_BASE_ABS="$(cd "${OUTPUT_BASE}" && pwd)"
+
 run_game() {
   local game_dir="$1"
   (
@@ -70,7 +74,7 @@ run_game() {
     local config_backup="${config}.bak"
     local initial="${game_dir}/initial_deal.txt"
     local initial_backup="${initial}.bak"
-    local output_root="${OUTPUT_BASE}/$(basename "${game_dir}")"
+    local output_root="${OUTPUT_BASE_ABS}/$(basename "${game_dir}")"
 
     if [[ ! -f "${config_claude}" ]]; then
       echo "Missing ${config_claude}" >&2
