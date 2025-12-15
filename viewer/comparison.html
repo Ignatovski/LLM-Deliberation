@@ -8,30 +8,28 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #0b1620;
-      --panel: #111827;
-      --muted: #9ca3af;
-      --text: #e5e7eb;
-      --accent: #7c3aed;
-      --accent-2: #22d3ee;
-      --card: rgba(255, 255, 255, 0.04);
-      --border: rgba(255, 255, 255, 0.08);
-      --success: #22c55e;
-      --danger: #ef4444;
-      --warn: #eab308;
+      --bg: #ffffff;
+      --panel: #f8fafc;
+      --muted: #475569;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --accent-2: #0ea5e9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warn: #d97706;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 25%),
-                  radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.18), transparent 28%),
-                  radial-gradient(circle at 50% 90%, rgba(124, 58, 237, 0.12), transparent 30%),
-                  var(--bg);
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      line-height: 1.5;
     }
-    .page { max-width: 1200px; margin: 0 auto; padding: 32px 20px 64px; }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px; }
     h1 { margin: 0; font-size: 26px; letter-spacing: -0.5px; }
     .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 14px; }
     header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
@@ -41,7 +39,7 @@
     select {
       border-radius: 8px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
+      background: #ffffff;
       color: var(--text);
       padding: 10px 12px;
       font-size: 14px;
@@ -50,23 +48,24 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .pill { padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); font-size: 12px; }
+    .pill { padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); font-size: 12px; background: var(--panel); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin: 18px 0; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-    .card h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: 0.3px; }
-    .stat { font-size: 22px; font-weight: 600; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 12px 28px rgba(15,23,42,0.06); }
+    .card h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: 0.3px; color: var(--text); }
+    .stat { font-size: 22px; font-weight: 600; color: var(--accent); }
     .muted { color: var(--muted); font-size: 13px; }
-    .chart-card canvas { width: 100% !important; }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .chart-card canvas { width: 100% !important; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; }
     th, td { padding: 8px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
-    th { color: var(--muted); font-weight: 600; }
-    tr:hover { background: rgba(255,255,255,0.03); }
-    .tag { display: inline-block; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border); font-size: 12px; }
-    .tag.success { color: var(--success); border-color: rgba(34,197,94,0.4); }
-    .tag.danger { color: var(--danger); border-color: rgba(239,68,68,0.4); }
-    .tag.warn { color: var(--warn); border-color: rgba(234,179,8,0.4); }
-    .error { padding: 10px 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4); border-radius: 10px; color: #fecdd3; margin: 10px 0; }
+    th { color: var(--muted); font-weight: 600; background: var(--panel); }
+    tr:hover { background: #f8fafc; }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border); font-size: 12px; background: var(--panel); color: var(--text); }
+    .tag.success { color: var(--success); border-color: rgba(22,163,74,0.35); background: rgba(22,163,74,0.08); }
+    .tag.danger { color: var(--danger); border-color: rgba(220,38,38,0.35); background: rgba(220,38,38,0.08); }
+    .tag.warn { color: var(--warn); border-color: rgba(217,119,6,0.35); background: rgba(217,119,6,0.08); }
+    .error { padding: 10px 12px; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.35); border-radius: 10px; color: var(--danger); margin: 10px 0; }
     .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    a { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -94,11 +93,15 @@
           <select id="configFilter"></select>
         </div>
         <div class="control">
+          <label for="modelFilter">Model mix</label>
+          <select id="modelFilter"></select>
+        </div>
+        <div class="control">
           <label for="agreementOnly">With success</label>
           <input id="agreementOnly" type="checkbox" />
         </div>
         <div class="control">
-          <a href="plots_gallery.html" style="color: #22d3ee; text-decoration: none; font-weight: 600;">Open plots gallery →</a>
+          <a href="plots_gallery.html" style="text-decoration: none; font-weight: 600;">Open plots gallery →</a>
         </div>
       </div>
     </header>
@@ -106,6 +109,9 @@
     <div id="error"></div>
 
     <div class="grid" id="summary"></div>
+    <div class="grid" id="utilSummary"></div>
+    <div class="grid" id="ownSummary"></div>
+    <div class="grid" id="wrongSummary"></div>
 
     <div class="grid">
       <div class="card chart-card" style="grid-column: 1 / -1;">
@@ -113,7 +119,7 @@
           <h3>First agreement round (per run)</h3>
           <div class="tag" id="chartTag"></div>
         </div>
-        <canvas id="barChart" height="200"></canvas>
+        <canvas id="barChart" height="260"></canvas>
       </div>
       <div class="card chart-card" style="grid-column: span 2;">
         <div class="flex-between">
@@ -150,6 +156,34 @@
         </div>
         <canvas id="leakChart" height="180"></canvas>
       </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Final utility by agent</h3>
+          <div class="tag" id="utilTag"></div>
+        </div>
+        <canvas id="utilChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Own score by agent</h3>
+          <div class="tag" id="ownTag"></div>
+        </div>
+        <canvas id="ownChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Collective score vs final x</h3>
+          <div class="tag" id="collXTag"></div>
+        </div>
+        <canvas id="collXChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Wrong deals by config</h3>
+          <div class="tag" id="wrongTag"></div>
+        </div>
+        <canvas id="wrongChart" height="180"></canvas>
+      </div>
     </div>
 
     <div class="grid">
@@ -180,6 +214,9 @@
             <th>Success</th>
             <th>Rounds</th>
             <th>Feas/Opt</th>
+            <th>Utilities</th>
+            <th>Own scores</th>
+            <th>Wrong?</th>
             <th>Path</th>
           </tr>
         </thead>
@@ -191,6 +228,27 @@
   <script>
     const state = { runs: [], filtered: [], charts: {} };
     const el = id => document.getElementById(id);
+    const colors = {
+      text: '#0f172a',
+      muted: '#475569',
+      grid: '#e2e8f0',
+      accent: '#2563eb',
+      accent2: '#0ea5e9',
+      green: '#16a34a',
+      amber: '#f59e0b',
+      red: '#dc2626',
+      purple: '#7c3aed',
+      gray: '#94a3b8'
+    };
+    Chart.defaults.font.family = "'Space Grotesk', 'Inter', system-ui, sans-serif";
+    Chart.defaults.color = colors.text;
+    Chart.defaults.borderColor = colors.grid;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.boxWidth = 10;
+    Chart.defaults.plugins.legend.labels.color = colors.muted;
+    Chart.defaults.plugins.tooltip.backgroundColor = colors.text;
+    Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
+    Chart.defaults.plugins.tooltip.bodyColor = '#ffffff';
     const renderError = msg => { el('error').innerHTML = msg ? `<div class="error">${msg}</div>` : ''; };
     const median = nums => {
       if (!nums.length) return null;
@@ -198,35 +256,76 @@
       const mid = Math.floor(arr.length / 2);
       return arr.length % 2 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
     };
+    const fmtUtilityCell = (scores) => {
+      if (!scores || typeof scores !== 'object') return '—';
+      const entries = Object.entries(scores).filter(([, v]) => typeof v === 'number');
+      if (!entries.length) return '—';
+      return entries
+        .map(([k, v]) => {
+          const num = Number.isFinite(v) ? v : null;
+          if (num === null) return `${k}: —`;
+          const str = Math.abs(num % 1) < 1e-6 ? num.toFixed(0) : num.toFixed(2);
+          return `${k}: ${str}`;
+        })
+        .join('<br>');
+    };
+    const fmtOwnCell = (scores) => fmtUtilityCell(scores);
+    const getCollective = (run) => {
+      if (typeof run.collective === 'number') return run.collective;
+      const scores = run.scores || {};
+      const vals = Object.values(scores).filter(v => typeof v === 'number');
+      return vals.length ? vals.reduce((s, v) => s + v, 0) : null;
+    };
+    const fmtWrong = (run) => {
+      if (!run) return { label: '—', reasons: [] };
+      const isWrong = !!run.wrong_deal;
+      const reasons = Array.isArray(run.wrong_reasons) ? run.wrong_reasons : [];
+      return { label: isWrong ? 'Wrong' : 'OK', reasons };
+    };
     const loadSummary = async () => {
-      const candidates = ['metrics_summary.json','./metrics_summary.json','/viewer/metrics_summary.json'];
+      const candidates = [
+        'metrics_summary.json',
+        './metrics_summary.json',
+        '/viewer/metrics_summary.json',
+        'summarys/metrics_summary.generated.json',
+        '../summarys/metrics_summary.generated.json',
+      ];
       for (const c of candidates) {
         const res = await fetch(c).catch(() => null);
         if (res && res.ok) return res.json();
       }
       throw new Error('Could not load metrics_summary.json');
     };
+    const norm = (v) => {
+      if (v === null || v === undefined) return null;
+      return typeof v === 'string' ? v.trim() : v;
+    };
     const renderFilters = () => {
       const cats = Array.from(new Set(state.runs.map(r => r.category))).sort();
       const vars = Array.from(new Set(state.runs.map(r => r.variant))).sort();
       const inits = Array.from(new Set(state.runs.map(r => r.init_val).filter(v => v !== null && v !== undefined))).sort((a,b)=>a-b);
       const configs = Array.from(new Set(state.runs.map(r => r.config))).sort();
+      const models = Array.from(new Set(state.runs.map(r => norm(r.model_mix) || 'unknown'))).sort();
       el('categoryFilter').innerHTML = ['<option value="all">All</option>', ...cats.map(c => `<option value="${c}">${c}</option>`)].join('');
       el('variantFilter').innerHTML = ['<option value="all">All</option>', ...vars.map(v => `<option value="${v}">${v}</option>`)].join('');
       el('initFilter').innerHTML = ['<option value="all">All</option>', ...inits.map(v => `<option value="${v}">${v}</option>`)].join('');
       el('configFilter').innerHTML = ['<option value="all">All</option>', ...configs.map(v => `<option value="${v}">${v}</option>`)].join('');
+      el('modelFilter').innerHTML = ['<option value="all">All</option>', ...models.map(v => `<option value="${v}">${v}</option>`)].join('');
     };
     const applyFilters = () => {
       const cat = el('categoryFilter').value;
       const vari = el('variantFilter').value;
       const init = el('initFilter').value;
       const cfg = el('configFilter').value;
+      const mdl = el('modelFilter').value;
       const onlyAgree = el('agreementOnly').checked;
       state.filtered = state.runs.filter(r => {
+        const rModel = norm(r.model_mix) || 'unknown';
         if (cat !== 'all' && r.category !== cat) return false;
         if (vari !== 'all' && r.variant !== vari) return false;
         if (init !== 'all' && String(r.init_val) !== init) return false;
         if (cfg !== 'all' && r.config !== cfg) return false;
+        if (mdl !== 'all' && rModel !== mdl) return false;
         if (onlyAgree && !r.final_success && !r.any_success) return false;
         return true;
       });
@@ -237,6 +336,13 @@
       renderFeasChart();
       renderLeakChart();
       renderCollChart();
+      renderCollByXChart();
+      renderUtilityChart();
+      renderOwnChart();
+      renderWrongChart();
+      renderUtilitySummary();
+      renderOwnSummary();
+      renderWrongSummary();
       renderTable();
     };
     const renderSummary = () => {
@@ -290,17 +396,17 @@
           datasets: [{
             label: 'Count of runs',
             data,
-            backgroundColor: data.map((_, i) => labels[i] === 'None' ? 'rgba(239,68,68,0.6)' : 'rgba(124,58,237,0.7)'),
-            borderColor: data.map((_, i) => labels[i] === 'None' ? 'rgba(239,68,68,0.9)' : 'rgba(124,58,237,1)'),
-            borderWidth: 1,
-            borderRadius: 4
+            backgroundColor: data.map((_, i) => labels[i] === 'None' ? 'rgba(220,38,38,0.85)' : 'rgba(37,99,235,0.85)'),
+            borderColor: data.map((_, i) => labels[i] === 'None' ? '#dc2626' : '#1d4ed8'),
+            borderWidth: 1.2,
+            borderRadius: 2
           }]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } }, tooltip: { callbacks: { label: ctx => `${ctx.formattedValue} run(s)` } } },
+          plugins: { legend: { labels: { color: colors.muted } }, tooltip: { callbacks: { label: ctx => `${ctx.formattedValue} run(s)` } } },
           scales: {
-            x: { ticks: { color: '#9ca3af', maxRotation: 0, minRotation: 0 }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+            x: { ticks: { color: colors.muted, maxRotation: 0, minRotation: 0 }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, beginAtZero: true }
           }
         }
       });
@@ -327,15 +433,15 @@
         data: {
           labels,
           datasets: [
-            { label: 'Final %', data: finals, backgroundColor: 'rgba(34,197,94,0.7)' },
-            { label: 'Any %', data: anys, backgroundColor: 'rgba(234,179,8,0.7)' }
+            { label: 'Final %', data: finals, backgroundColor: 'rgba(22,163,74,0.8)', borderColor: '#16a34a', borderWidth: 1 },
+            { label: 'Any %', data: anys, backgroundColor: 'rgba(59,130,246,0.8)', borderColor: '#2563eb', borderWidth: 1 }
           ]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
-            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: 100 }
           }
         }
       });
@@ -362,15 +468,15 @@
         data: {
           labels,
           datasets: [
-            { label: 'Final %', data: finals, backgroundColor: 'rgba(34,197,94,0.7)' },
-            { label: 'Any %', data: anys, backgroundColor: 'rgba(124,58,237,0.7)' }
+            { label: 'Final %', data: finals, backgroundColor: 'rgba(22,163,74,0.8)', borderColor: '#16a34a', borderWidth: 1 },
+            { label: 'Any %', data: anys, backgroundColor: 'rgba(14,165,233,0.8)', borderColor: '#0ea5e9', borderWidth: 1 }
           ]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
-            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: 100 }
           }
         }
       });
@@ -395,13 +501,13 @@
         type: 'bar',
         data: {
           labels,
-          datasets: [{ label: 'Count of runs', data, backgroundColor: 'rgba(124,58,237,0.7)' }]
+          datasets: [{ label: 'Count of runs', data, backgroundColor: 'rgba(37,99,235,0.85)', borderColor: '#2563eb', borderWidth: 1 }]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
-            x: { ticks: { color: '#9ca3af', maxRotation: 45, minRotation: 45 }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+            x: { ticks: { color: colors.muted, maxRotation: 45, minRotation: 45 }, grid: { color: colors.grid } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, beginAtZero: true }
           }
         }
       });
@@ -426,13 +532,13 @@
         type: 'bar',
         data: {
           labels,
-          datasets: [{ label: 'Leakage %', data: leaks, backgroundColor: 'rgba(239,68,68,0.7)' }]
+          datasets: [{ label: 'Leakage %', data: leaks, backgroundColor: 'rgba(220,38,38,0.8)', borderColor: '#dc2626', borderWidth: 1 }]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
-            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMax: 100 }
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: 100 }
           }
         }
       });
@@ -444,7 +550,8 @@
       state.filtered.forEach(r => {
         const k = r.config || 'unknown';
         groups[k] = groups[k] || { vals: [] };
-        if (typeof r.collective === 'number') groups[k].vals.push(r.collective);
+        const coll = getCollective(r);
+        if (typeof coll === 'number') groups[k].vals.push(coll);
       });
       const labels = Object.keys(groups);
       const avgs = labels.map(k => {
@@ -459,22 +566,227 @@
         type: 'bar',
         data: {
           labels,
-          datasets: [{ label: 'Collective score (avg)', data: avgs, backgroundColor: 'rgba(34,197,94,0.7)' }]
+          datasets: [{ label: 'Collective score (avg)', data: avgs, backgroundColor: 'rgba(14,165,233,0.8)', borderColor: '#0ea5e9', borderWidth: 1 }]
         },
         options: {
-          plugins: { legend: { labels: { color: '#e5e7eb' } } },
+          plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
-            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
-            y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
       el('collTag').textContent = `${labels.length} configs`;
     };
+    const renderCollByXChart = () => {
+      const byX = {};
+      state.filtered.forEach(r => {
+        const x = r.final_x;
+        const coll = getCollective(r);
+        if (typeof x !== 'number' || typeof coll !== 'number') return;
+        byX[x] = byX[x] || { vals: [] };
+        byX[x].vals.push(coll);
+      });
+      const labels = Object.keys(byX).map(v => parseFloat(v)).sort((a,b)=>a-b);
+      const avgs = labels.map(x => {
+        const vals = byX[x].vals;
+        return vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : 0;
+      });
+      destroyChart('collX');
+      const canvas = el('collXChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.collX = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels.map(x => `x=${x}`),
+          datasets: [{
+            label: 'Avg collective score (Σ utilities)',
+            data: avgs,
+            backgroundColor: 'rgba(37,99,235,0.85)',
+            borderColor: '#2563eb',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('collXTag').textContent = labels.length ? `${labels.length} final x values` : 'No data';
+    };
+    const renderUtilityChart = () => {
+      const agents = {};
+      state.filtered.forEach(r => {
+        const scores = r.scores || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agents[agent] = agents[agent] || { sum: 0, count: 0 };
+          agents[agent].sum += val;
+          agents[agent].count += 1;
+        });
+      });
+      const labels = Object.keys(agents);
+      const avgs = labels.map(a => agents[a].sum / Math.max(agents[a].count, 1));
+      destroyChart('util');
+      const canvas = el('utilChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const palette = ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#0ea5e9', '#7c3aed', '#111827'];
+      state.charts.util = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Average final utility',
+            data: avgs,
+            backgroundColor: labels.map((_, i) => palette[i % palette.length]),
+            borderColor: colors.grid,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('utilTag').textContent = labels.length ? `${labels.length} agents` : 'No utility data';
+    };
+    const renderOwnChart = () => {
+      const agents = {};
+      state.filtered.forEach(r => {
+        const scores = r.own_scores || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agents[agent] = agents[agent] || { sum: 0, count: 0 };
+          agents[agent].sum += val;
+          agents[agent].count += 1;
+        });
+      });
+      const labels = Object.keys(agents);
+      const avgs = labels.map(a => agents[a].sum / Math.max(agents[a].count, 1));
+      destroyChart('own');
+      const canvas = el('ownChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const palette = ['#7c3aed', '#0ea5e9', '#16a34a', '#f59e0b', '#dc2626', '#2563eb', '#111827'];
+      state.charts.own = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Average own score (proposals)',
+            data: avgs,
+            backgroundColor: labels.map((_, i) => palette[i % palette.length]),
+            borderColor: colors.grid,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('ownTag').textContent = labels.length ? `${labels.length} agents` : 'No own-score data';
+    };
+    const renderWrongChart = () => {
+      const groups = {};
+      state.filtered.forEach(r => {
+        const cfg = r.config || 'unknown';
+        groups[cfg] = groups[cfg] || { total: 0, wrong: 0 };
+        groups[cfg].total += 1;
+        if (r.wrong_deal) groups[cfg].wrong += 1;
+      });
+      const labels = Object.keys(groups);
+      const perc = labels.map(cfg => {
+        const g = groups[cfg];
+        return g.total ? (g.wrong / g.total) * 100 : 0;
+      });
+      destroyChart('wrong');
+      const canvas = el('wrongChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.wrong = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: '% wrong deals',
+            data: perc,
+            backgroundColor: 'rgba(220,38,38,0.8)',
+            borderColor: '#dc2626',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: 100 }
+          }
+        }
+      });
+      el('wrongTag').textContent = `${labels.length} configs`;
+    };
+    const renderUtilitySummary = () => {
+      const agents = {};
+      state.filtered.forEach(r => {
+        const scores = r.scores || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agents[agent] = agents[agent] || { sum: 0, count: 0 };
+          agents[agent].sum += val;
+          agents[agent].count += 1;
+        });
+      });
+      const cards = Object.entries(agents).map(([agent, stats]) => {
+        const avg = stats.count ? stats.sum / stats.count : null;
+        const display = avg === null ? '—' : (Math.abs(avg % 1) < 1e-6 ? avg.toFixed(0) : avg.toFixed(2));
+        return `<div class="card"><h3>${agent}</h3><div class="stat">${display}</div><div class="muted">avg final utility (filtered)</div></div>`;
+      });
+      el('utilSummary').innerHTML = cards.join('');
+    };
+    const renderOwnSummary = () => {
+      const agents = {};
+      state.filtered.forEach(r => {
+        const scores = r.own_scores || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agents[agent] = agents[agent] || { sum: 0, count: 0 };
+          agents[agent].sum += val;
+          agents[agent].count += 1;
+        });
+      });
+      const cards = Object.entries(agents).map(([agent, stats]) => {
+        const avg = stats.count ? stats.sum / stats.count : null;
+        const display = avg === null ? '—' : (Math.abs(avg % 1) < 1e-6 ? avg.toFixed(0) : avg.toFixed(2));
+        return `<div class="card"><h3>${agent}</h3><div class="stat">${display}</div><div class="muted">avg own score (proposals)</div></div>`;
+      });
+      el('ownSummary').innerHTML = cards.join('');
+    };
+    const renderWrongSummary = () => {
+      const total = state.filtered.length;
+      const wrong = state.filtered.filter(r => r.wrong_deal);
+      el('wrongSummary').innerHTML = `
+        <div class="card"><h3>Wrong deals</h3><div class="stat">${wrong.length}</div><div class="muted">${total ? Math.round((wrong.length/total)*100) : 0}% of filtered</div></div>
+      `;
+    };
     const renderTable = () => {
       const tbody = el('runTable').querySelector('tbody');
       tbody.innerHTML = state.filtered.map(r => {
         const feas = r.feas_opt ? `L=${r.feas_opt.L.toFixed(2)}, U=${r.feas_opt.U.toFixed(2)}` : '—';
+        const utilities = fmtUtilityCell(r.scores);
+        const own = fmtOwnCell(r.own_scores);
+        const wrong = fmtWrong(r);
         return `
         <tr>
           <td>${r.category}</td>
@@ -483,6 +795,9 @@
           <td>${r.final_success ? '<span class="tag success">Final</span>' : (r.any_success ? '<span class="tag warn">Any</span>' : '<span class="tag danger">None</span>')}</td>
           <td>${r.finished ?? '—'}</td>
           <td>${feas}</td>
+          <td>${utilities}</td>
+          <td>${own}</td>
+          <td><span class="tag ${wrong.label === 'Wrong' ? 'danger' : 'success'}" title="${wrong.reasons.join(', ') || ''}">${wrong.label}</span></td>
           <td><code style="font-size:12px;">${r.path}</code></td>
         </tr>`;
       }).join('');
@@ -499,6 +814,7 @@
         el('variantFilter').addEventListener('change', applyFilters);
         el('initFilter').addEventListener('change', applyFilters);
         el('configFilter').addEventListener('change', applyFilters);
+        el('modelFilter').addEventListener('change', applyFilters);
         el('agreementOnly').addEventListener('change', applyFilters);
         renderError('');
       } catch (err) {

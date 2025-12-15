@@ -7,30 +7,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b1620;
-      --muted: #9ca3af;
-      --text: #e5e7eb;
-      --border: rgba(255,255,255,0.08);
-      --card: rgba(255,255,255,0.04);
+      --bg: #ffffff;
+      --muted: #475569;
+      --text: #0f172a;
+      --border: #e2e8f0;
+      --card: #ffffff;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 25%),
-                  radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.18), transparent 28%),
-                  var(--bg);
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       padding: 32px 16px 48px;
+      line-height: 1.5;
     }
     .page { max-width: 1200px; margin: 0 auto; }
     h1 { margin: 0 0 6px; letter-spacing: -0.5px; }
     .subtitle { margin: 0 0 16px; color: var(--muted); }
     .stack { display: flex; flex-direction: column; gap: 18px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-    .card h3 { margin: 0 0 8px; font-size: 16px; }
-    .img-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.02); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 12px 28px rgba(15,23,42,0.06); }
+    .card h3 { margin: 0 0 8px; font-size: 16px; color: var(--text); }
+    .img-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; }
     .img-wrap img { width: 100%; display: block; }
     .muted { color: var(--muted); font-size: 13px; }
   </style>
