@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Mix Behavior Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #f8fafc;
+      --muted: #475569;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Space Grotesk','Inter',system-ui,sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+    h1 { margin: 0 0 6px; letter-spacing: -0.5px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0 16px; }
+    button { border: 1px solid var(--border); background: #fff; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--text); }
+    button.active { border-color: var(--accent); color: var(--accent); }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: 0 12px 28px rgba(15,23,42,0.06); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin: 14px 0; }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border); font-size: 12px; background: var(--panel); color: var(--text); }
+    .chart-card canvas { width: 100% !important; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+    .caption { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .section { margin-top: 18px; }
+    .section h2 { margin: 0 0 6px; font-size: 18px; letter-spacing: -0.2px; }
+    .section .muted { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Model Mix Behavior Gallery</h1>
+  <p class="muted">Compare agreement and utility trajectories across agent mixes and categories.</p>
+  <div class="row">
+    <div id="presetRow"></div>
+    <div id="catRow"></div>
+  </div>
+  <div class="muted" id="status"></div>
+
+  <div class="grid" id="summary"></div>
+
+  <div class="section">
+    <h2>Agreement & Failure</h2>
+    <div class="muted">Whether agreements happen and what total utility they achieve.</div>
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Agreements by summed utility</h3>
+          <div class="tag" id="agreeUtilTag"></div>
+        </div>
+        <canvas id="agreeUtilChart" height="180"></canvas>
+        <div class="caption">X: summed group utility at final x (integer). Y: run count for agreements at that total utility. Interpretation: shows how often each total-utility outcome is reached.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Total group utility (final x, raw)</h3>
+          <div class="tag" id="collRawTag"></div>
+        </div>
+        <canvas id="collRawChart" height="180"></canvas>
+        <div class="caption">X: summed group utility at final x (integer). Y: run count (includes failures). Interpretation: total payoff at the final x (no BATNA applied).</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Agreement vs failure</h3>
+          <div class="tag" id="agreeRateTag"></div>
+        </div>
+        <canvas id="agreeRateChart" height="180"></canvas>
+        <div class="caption">X: outcome. Y: run count (agreement vs no agreement). Interpretation: higher “agreement” means more cooperative runs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Agreement Timing & Value</h2>
+    <div class="muted">When agreements happen and which x values are chosen.</div>
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Agreement x by round (counts)</h3>
+          <div class="tag" id="agreeXTag"></div>
+        </div>
+        <canvas id="agreeXChart" height="180"></canvas>
+        <div class="caption">X: round index (t0, t1, …). Y: run count (stacked by agreed x) using only each run’s first agreement. Interpretation: shows when agreement happens and which x is chosen.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>First agreement round (per run)</h3>
+          <div class="tag" id="chartTag"></div>
+        </div>
+        <canvas id="barChart" height="180"></canvas>
+        <div class="caption">X: round index (t0, t1, …, or None). Y: run count for first agreement round. Interpretation: earlier peaks mean faster convergence.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Utility Comparisons</h2>
+    <div class="muted">Self vs collective incentives and realized outcomes.</div>
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Per-agent own score (avg)</h3>
+          <div class="tag" id="ownTag"></div>
+        </div>
+        <canvas id="ownChart" height="180"></canvas>
+        <div class="caption">X: agent. Y: average OwnScore across runs. Interpretation: higher bars mean more self-favoring proposals on average.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Per-agent final utility (avg)</h3>
+          <div class="tag" id="utilTag"></div>
+        </div>
+        <canvas id="utilChart" height="180"></canvas>
+        <div class="caption">X: agent. Y: average realized utility across runs (0 on failures). Interpretation: higher bars mean better outcomes.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Own vs collective (proposals)</h3>
+          <div class="tag" id="propTag"></div>
+        </div>
+        <canvas id="propChart" height="180"></canvas>
+        <div class="caption">X: agent. Y: average utility on proposals (own vs collective). Interpretation: big gaps suggest self-interest over group benefit.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Proposal Distributions</h2>
+    <div class="muted">Full distributions of proposal utilities.</div>
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Own score distribution (all proposals)</h3>
+          <div class="tag" id="ownAllTag"></div>
+        </div>
+        <canvas id="ownAllChart" height="180"></canvas>
+        <div class="caption">X: own utility (integer). Y: proposal count (stacked by agent). Interpretation: shows the full distribution of self-utility across proposals.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Collective score distribution (all proposals)</h3>
+          <div class="tag" id="collAllTag"></div>
+        </div>
+        <canvas id="collAllChart" height="180"></canvas>
+        <div class="caption">X: collective utility (integer). Y: proposal count (stacked by agent). Interpretation: higher values indicate more group-friendly proposals.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const mixLabels = {
+      'gpt-5x4': 'GPT-5 x4',
+      'Llama-3.3-70B-Instructx4': 'Llama x4',
+      'claude-sonnet-4-5x4': 'Claude x4',
+      'claude-sonnet-4-5x2+gpt-5x2': '2 GPT + 2 Claude',
+      'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2': 'Llama + Claude + GPT mix'
+    };
+    const presetMixes = [
+      'gpt-5x4',
+      'Llama-3.3-70B-Instructx4',
+      'claude-sonnet-4-5x4',
+      'claude-sonnet-4-5x2+gpt-5x2',
+      'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2'
+    ];
+    const categories = [
+      { label: 'All categories', value: 'all' },
+      { label: 'Uniform', value: 'Uniform' },
+      { label: 'All Human', value: 'All Human' },
+      { label: 'All AI', value: 'All AI' }
+    ];
+    const state = { runs: [], filtered: [], charts: {}, mix: presetMixes[0], category: 'all' };
+    const el = id => document.getElementById(id);
+    const colors = { text:'#0f172a', muted:'#475569', grid:'#e2e8f0', red:'#b91c1c', redLight:'#ef4444', blue:'#2563eb', green:'#16a34a' };
+    Chart.defaults.color = colors.text;
+    Chart.defaults.borderColor = colors.grid;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.boxWidth = 10;
+
+    const loadSummary = async () => {
+      const res = await fetch('metrics_summary.json');
+      if (!res.ok) throw new Error('metrics_summary.json not found');
+      const data = await res.json();
+      state.runs = data.runs || [];
+    };
+
+    const applyFilter = () => {
+      state.filtered = state.runs.filter(r => {
+        const mixOk = (r.model_mix || '') === state.mix;
+        const catOk = state.category === 'all' ? true : (r.category === state.category);
+        return mixOk && catOk;
+      });
+    };
+
+    const destroy = key => { if (state.charts[key]) { state.charts[key].destroy(); delete state.charts[key]; } };
+
+    const renderSummary = () => {
+      const total = state.filtered.length;
+      const finalSucc = state.filtered.filter(r => r.final_success).length;
+      const anySucc = state.filtered.filter(r => r.any_success).length;
+      el('summary').innerHTML = `
+        <div class="card"><h3>Runs</h3><div class="stat">${total}</div><div class="muted">filtered</div></div>
+        <div class="card"><h3>Final success</h3><div class="stat">${finalSucc}</div><div class="muted">${total?Math.round(finalSucc/total*100):0}%</div></div>
+        <div class="card"><h3>Any success</h3><div class="stat">${anySucc}</div><div class="muted">${total?Math.round(anySucc/total*100):0}%</div></div>
+      `;
+    };
+
+    const renderBar = () => {
+      const bucket = {};
+      let none = 0;
+      state.filtered.forEach(r => {
+        const ar = r.agree_round;
+        if (ar === null || ar === undefined) none += 1;
+        else bucket[ar] = (bucket[ar] || 0) + 1;
+      });
+      const rounds = Object.keys(bucket).map(n=>parseInt(n,10)).sort((a,b)=>a-b);
+      const labels = rounds.map(n=>`t${n}`);
+      const data = rounds.map(n=>bucket[n]);
+      if (none>0){ labels.push('None'); data.push(none); }
+      destroy('bar');
+      const ctx = el('barChart').getContext('2d');
+      state.charts.bar = new Chart(ctx, {
+        type:'bar',
+        data:{ labels, datasets:[{ label:'Count of runs', data, backgroundColor: data.map((_,i)=>labels[i]==='None'?'rgba(220,38,38,0.8)':'rgba(37,99,235,0.85)'), borderColor: data.map((_,i)=>labels[i]==='None'?'#dc2626':'#1d4ed8'), borderWidth:1 }]},
+        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
+      });
+      el('chartTag').textContent = `${state.filtered.length} runs`;
+    };
+
+    const renderAgreeUtil = () => {
+      // Count agreements by summed total utility (integers only)
+      const bucket = {};
+      state.filtered.forEach(r => {
+        if (!r.final_success) return;
+        const coll = r.collective_raw;
+        if (typeof coll === 'number') {
+          const key = Math.round(coll);
+          bucket[key] = (bucket[key] || 0) + 1;
+        }
+      });
+      const labels = Object.keys(bucket).map(k=>parseInt(k,10)).sort((a,b)=>a-b);
+      const data = labels.map(k=>bucket[k] || 0);
+      destroy('agreeUtil');
+      const ctx = el('agreeUtilChart').getContext('2d');
+      state.charts.agreeUtil = new Chart(ctx,{
+        type:'bar',
+        data:{ labels: labels.map(v=>v.toString()), datasets:[{ label:'Count of agreements', data, backgroundColor:'rgba(37,99,235,0.85)', borderColor:'#2563eb', borderWidth:1 }]},
+        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
+      });
+      el('agreeUtilTag').textContent = `${data.reduce((a,b)=>a+b,0)} agreements`;
+
+      destroy('agreeRate');
+      const rateCtx = el('agreeRateChart').getContext('2d');
+      const success = state.filtered.filter(r => r.final_success).length;
+      const fail = state.filtered.length - success;
+      state.charts.agreeRate = new Chart(rateCtx,{
+        type:'bar',
+        data:{ labels:['Agreement','No agreement'], datasets:[{ label:'Run count', data:[success, fail], backgroundColor:['rgba(16,185,129,0.85)','rgba(239,68,68,0.8)'], borderColor:['#10b981','#ef4444'], borderWidth:1 }]},
+        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}, beginAtZero:true } } }
+      });
+      el('agreeRateTag').textContent = `${state.filtered.length} runs`;
+    };
+
+    const renderCollectiveRaw = () => {
+      const bucket = {};
+      state.filtered.forEach(r => {
+        const coll = r.collective_raw;
+        if (typeof coll !== 'number') return;
+        const key = Math.round(coll);
+        bucket[key] = (bucket[key] || 0) + 1;
+      });
+      const labels = Object.keys(bucket).map(k=>parseInt(k,10)).sort((a,b)=>a-b);
+      const data = labels.map(k=>bucket[k] || 0);
+      destroy('collRaw');
+      const ctx = el('collRawChart').getContext('2d');
+      state.charts.collRaw = new Chart(ctx,{
+        type:'bar',
+        data:{ labels: labels.map(v=>v.toString()), datasets:[{ label:'Count of runs', data, backgroundColor:'rgba(16,185,129,0.85)', borderColor:'#10b981', borderWidth:1 }]},
+        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
+      });
+      el('collRawTag').textContent = data.length ? `${data.reduce((a,b)=>a+b,0)} runs` : 'No data';
+    };
+
+    const renderAgreeX = () => {
+      const maxRounds = 15;
+      const buckets = Array.from({ length: maxRounds }, () => ({}));
+      state.filtered.forEach(r => {
+        const xs = Array.isArray(r.agreement_x) ? r.agreement_x : [];
+        let firstIdx = null;
+        let firstVal = null;
+        for (let i = 0; i < Math.min(maxRounds, xs.length); i++) {
+          const v = xs[i];
+          if (typeof v === 'number') { firstIdx = i; firstVal = v; break; }
+        }
+        if (firstIdx === null || firstVal === null) return;
+        buckets[firstIdx][firstVal] = (buckets[firstIdx][firstVal] || 0) + 1;
+      });
+      // Build stacked datasets per x value across rounds.
+      const xValues = new Set();
+      buckets.forEach(b => Object.keys(b).forEach(k => xValues.add(k)));
+      const xValsSorted = Array.from(xValues).map(v=>parseFloat(v)).sort((a,b)=>a-b);
+      const labels = Array.from({ length: maxRounds }, (_, i) => `t${i}`);
+      const datasets = xValsSorted.map((xVal, idx) => ({
+        label: `x=${xVal}`,
+        data: buckets.map(b => b[xVal] || 0),
+        backgroundColor: `hsl(${(idx*60)%360} 70% 60% / 0.8)`,
+        borderWidth: 0
+      }));
+      destroy('agreeX');
+      const ctx = el('agreeXChart').getContext('2d');
+      state.charts.agreeX = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } }, tooltip: { mode: 'index', intersect: false } },
+          responsive: true,
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: state.filtered.length }
+          }
+        }
+      });
+      el('agreeXTag').textContent = `${state.filtered.length} runs`;
+    };
+
+
+    const calcAgentMeans = (runs, field) => {
+      const agg = {};
+      runs.forEach(r => {
+        const scores = r[field] || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agg[agent] = agg[agent] || { sum: 0, count: 0 };
+          agg[agent].sum += val;
+          agg[agent].count += 1;
+        });
+      });
+      return agg;
+    };
+
+    const renderOwnChart = () => {
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(state.filtered, 'own_scores');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      destroy('own');
+      const canvas = el('ownChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.own = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Avg OwnScore across runs',
+              data: avgs,
+              backgroundColor: 'rgba(124,58,237,0.8)',
+              borderColor: colors.grid,
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('ownTag').textContent = labels.length ? `${labels.length} agents` : 'No data';
+    };
+
+    const renderUtilChart = () => {
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(state.filtered, 'scores');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      destroy('util');
+      const canvas = el('utilChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.util = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Avg Utility across runs',
+              data: avgs,
+              backgroundColor: 'rgba(37,99,235,0.8)',
+              borderColor: colors.grid,
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('utilTag').textContent = labels.length ? `${labels.length} agents` : 'No data';
+    };
+
+    const renderProposalChart = () => {
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const own = calcAgentMeans(state.filtered, 'proposal_own_avg');
+      const coll = calcAgentMeans(state.filtered, 'proposal_collective_avg');
+      const labels = order.filter(a => own[a] || coll[a]);
+      const ownAvgs = labels.map(a => own[a] ? own[a].sum / Math.max(own[a].count,1) : null);
+      const collAvgs = labels.map(a => coll[a] ? coll[a].sum / Math.max(coll[a].count,1) : null);
+      destroy('prop');
+      const canvas = el('propChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.prop = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Own score (proposed)', data: ownAvgs, backgroundColor: 'rgba(59,130,246,0.75)', borderColor: '#2563eb', borderWidth: 1 },
+            { label: 'Collective score (proposed)', data: collAvgs, backgroundColor: 'rgba(16,185,129,0.75)', borderColor: '#10b981', borderWidth: 1 }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('propTag').textContent = labels.length ? `${labels.length} agents` : 'No data';
+    };
+
+    const buildAgentHistogram = (valuesByAgent, binSize = 1) => {
+      const all = [];
+      Object.values(valuesByAgent).forEach(vals => {
+        vals.forEach(v => { if (typeof v === 'number') all.push(v); });
+      });
+      if (!all.length) return { labels: [], datasets: [] };
+      const minVal = Math.floor(Math.min(...all));
+      const maxVal = Math.ceil(Math.max(...all));
+      const bins = [];
+      for (let b = minVal; b <= maxVal; b += binSize) bins.push(b);
+      const labels = bins.map(b => b.toString());
+      const colorsByAgent = {
+        'Analyst A': 'rgba(59,130,246,0.75)',
+        'Builder B': 'rgba(124,58,237,0.75)',
+        'Critic C': 'rgba(16,185,129,0.75)',
+        'Delegate D': 'rgba(239,68,68,0.7)'
+      };
+      const datasets = Object.entries(valuesByAgent).map(([agent, vals]) => {
+        const counts = new Array(bins.length).fill(0);
+        vals.forEach(v => {
+          if (typeof v !== 'number') return;
+          const idx = Math.min(bins.length - 1, Math.max(0, Math.round(v) - minVal));
+          counts[idx] += 1;
+        });
+        return {
+          label: agent,
+          data: counts,
+          backgroundColor: colorsByAgent[agent] || 'rgba(100,116,139,0.7)',
+          borderWidth: 0
+        };
+      });
+      return { labels, datasets };
+    };
+
+    const renderOwnAll = () => {
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const valuesByAgent = {};
+      state.filtered.forEach(r => {
+        const perAgent = r.own_scores_all || {};
+        order.forEach(a => {
+          const vals = perAgent[a];
+          if (!Array.isArray(vals)) return;
+          valuesByAgent[a] = (valuesByAgent[a] || []).concat(vals);
+        });
+      });
+      const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
+      destroy('ownAll');
+      const ctx = el('ownAllChart').getContext('2d');
+      state.charts.ownAll = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } }, tooltip: { mode: 'index', intersect: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const total = Object.values(valuesByAgent).reduce((s, vals) => s + (vals ? vals.length : 0), 0);
+      el('ownAllTag').textContent = total ? `${total} proposals` : 'No data';
+    };
+
+    const renderCollectiveAll = () => {
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const valuesByAgent = {};
+      state.filtered.forEach(r => {
+        const perAgent = r.collective_scores_all || {};
+        order.forEach(a => {
+          const vals = perAgent[a];
+          if (!Array.isArray(vals)) return;
+          valuesByAgent[a] = (valuesByAgent[a] || []).concat(vals);
+        });
+      });
+      const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
+      destroy('collAll');
+      const ctx = el('collAllChart').getContext('2d');
+      state.charts.collAll = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } }, tooltip: { mode: 'index', intersect: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const total = Object.values(valuesByAgent).reduce((s, vals) => s + (vals ? vals.length : 0), 0);
+      el('collAllTag').textContent = total ? `${total} proposals` : 'No data';
+    };
+
+    const renderAll = () => {
+      renderSummary();
+      renderBar();
+      renderAgreeUtil();
+      renderCollectiveRaw();
+      renderAgreeX();
+      renderOwnChart();
+      renderUtilChart();
+      renderProposalChart();
+      renderOwnAll();
+      renderCollectiveAll();
+    };
+
+    const renderPresets = () => {
+      const row = el('presetRow');
+      row.innerHTML = presetMixes.map(mix => {
+        const label = mixLabels[mix] || mix;
+        return `<button data-val="${mix}" class="${state.mix===mix?'active':''}">${label}</button>`;
+      }).join('');
+      row.querySelectorAll('button').forEach(btn => {
+        btn.onclick = () => {
+          state.mix = btn.dataset.val;
+          renderPresets();
+          applyFilter();
+          renderAll();
+          el('status').textContent = `${state.filtered.length} runs for ${state.mix} | category: ${state.category}`;
+        };
+      });
+    };
+    const renderCategories = () => {
+      const row = el('catRow');
+      row.innerHTML = categories.map(c => `<button data-val="${c.value}" class="${state.category===c.value?'active':''}">${c.label}</button>`).join('');
+      row.querySelectorAll('button').forEach(btn => {
+        btn.onclick = () => {
+          state.category = btn.dataset.val;
+          renderCategories();
+          renderPresets();
+          applyFilter();
+          renderAll();
+          el('status').textContent = `${state.filtered.length} runs for ${state.mix} | category: ${state.category}`;
+        };
+      });
+    };
+
+    (async () => {
+      el('status').textContent = 'Loading summary...';
+      await loadSummary();
+      applyFilter();
+      renderPresets();
+      renderCategories();
+      renderAll();
+      el('status').textContent = `${state.filtered.length} runs for ${state.mix} | category: ${state.category}`;
+    })();
+  </script>
+</body>
+</html>

@@ -103,6 +103,9 @@
         <div class="control">
           <a href="plots_gallery.html" style="text-decoration: none; font-weight: 600;">Open plots gallery →</a>
         </div>
+        <div class="control">
+          <a href="behavior_gallery.html" style="text-decoration: none; font-weight: 600;">Open behavior gallery →</a>
+        </div>
       </div>
     </header>
 
@@ -183,6 +186,20 @@
           <div class="tag" id="wrongTag"></div>
         </div>
         <canvas id="wrongChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Agreement utility by round (avg)</h3>
+          <div class="tag" id="agreeUtilTag"></div>
+        </div>
+        <canvas id="agreeUtilChart" height="180"></canvas>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div class="flex-between">
+          <h3>Agreement x by round (avg)</h3>
+          <div class="tag" id="agreeXTag"></div>
+        </div>
+        <canvas id="agreeXChart" height="180"></canvas>
       </div>
     </div>
 
@@ -340,6 +357,8 @@
       renderUtilityChart();
       renderOwnChart();
       renderWrongChart();
+      renderAgreeUtilChart();
+      renderAgreeXChart();
       renderUtilitySummary();
       renderOwnSummary();
       renderWrongSummary();
@@ -736,6 +755,112 @@
         }
       });
       el('wrongTag').textContent = `${labels.length} configs`;
+    };
+    const renderAgreeUtilChart = () => {
+      const maxRounds = 15;
+      const sums = new Array(maxRounds).fill(0);
+      const counts = new Array(maxRounds).fill(0);
+      state.filtered.forEach(r => {
+        const curve = Array.isArray(r.agreement_curve) ? r.agreement_curve : [];
+        for (let i = 0; i < Math.min(maxRounds, curve.length); i++) {
+          const v = curve[i];
+          if (typeof v === 'number') {
+            sums[i] += v;
+            counts[i] += 1;
+          }
+        }
+      });
+      const labels = Array.from({ length: maxRounds }, (_, i) => `R${i}`);
+      const avgs = sums.map((s, i) => (counts[i] ? s / counts[i] : 0));
+      destroyChart('agreeUtil');
+      const canvas = el('agreeUtilChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.agreeUtil = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Avg summed utility (agreement or 0)',
+            data: avgs,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37,99,235,0.12)',
+            fill: true,
+            tension: 0.25
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('agreeUtilTag').textContent = `${state.filtered.length} runs`;
+    };
+    const renderAgreeXChart = () => {
+      const maxRounds = 15;
+      const sums = new Array(maxRounds).fill(0);
+      const counts = new Array(maxRounds).fill(0);
+      state.filtered.forEach(r => {
+        const xs = Array.isArray(r.agreement_x) ? r.agreement_x : [];
+        for (let i = 0; i < Math.min(maxRounds, xs.length); i++) {
+          const v = xs[i];
+          if (typeof v === 'number') {
+            sums[i] += v;
+            counts[i] += 1;
+          }
+        }
+      });
+      const labels = Array.from({ length: maxRounds }, (_, i) => `R${i}`);
+      const avgs = sums.map((s, i) => (counts[i] ? s / counts[i] : null));
+      destroyChart('agreeX');
+      const canvas = el('agreeXChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      state.charts.agreeX = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Avg agreed x (when present)',
+              data: avgs,
+              borderColor: '#16a34a',
+              backgroundColor: 'rgba(22,163,74,0.12)',
+              spanGaps: true,
+              tension: 0.25
+            },
+            {
+              label: 'x = 2',
+              data: new Array(labels.length).fill(2),
+              borderColor: '#b91c1c',
+              borderWidth: 1,
+              borderDash: [],
+              fill: false,
+              pointRadius: 0
+            },
+            {
+              label: 'x = -2',
+              data: new Array(labels.length).fill(-2),
+              borderColor: '#ef4444',
+              borderWidth: 1,
+              borderDash: [6, 4],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('agreeXTag').textContent = `${state.filtered.length} runs`;
     };
     const renderUtilitySummary = () => {
       const agents = {};

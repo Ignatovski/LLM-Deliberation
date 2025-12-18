@@ -611,7 +611,8 @@ def main():
         if not os.path.isabs(cfg_src):
             cfg_src = os.path.join(args.game_dir, cfg_src)
         cfg_dst = os.path.join(output_root, os.path.basename(cfg_src))
-        shutil.copyfile(cfg_src, cfg_dst)
+        if os.path.abspath(cfg_src) != os.path.abspath(cfg_dst):
+            shutil.copyfile(cfg_src, cfg_dst)
         poly_dir = os.path.join(args.game_dir, "polynomial_functions")
         shutil.copytree(poly_dir, os.path.join(output_root, "polynomial_functions"), dirs_exist_ok=True)
         
@@ -668,17 +669,20 @@ def main():
             )
             agents[name]["instance"] = agent_instance
 
-        def build_balanced_schedule(agent_names, quota):
+        def build_balanced_schedule(agent_names, quota, starter):
             schedule = []
             for _ in range(quota):
                 block = list(agent_names)
                 random.shuffle(block)
                 schedule.extend(block)
+            if schedule and starter in schedule and schedule[0] != starter:
+                starter_idx = schedule.index(starter)
+                schedule[0], schedule[starter_idx] = schedule[starter_idx], schedule[0]
             return schedule
 
         if not args.restart:
             if per_agent_quota is not None:
-                agent_round_assignment = build_balanced_schedule(agent_names, per_agent_quota)
+                agent_round_assignment = build_balanced_schedule(agent_names, per_agent_quota, starter_agent)
             else:
                 agent_round_assignment = randomize_agents_order(
                     agents, starter_agent, effective_rounds
@@ -786,12 +790,12 @@ def main():
             the first agent makes one last proposal that all agents must accept or reject.
             '''
         for round_idx in range(start_round_idx, effective_rounds):
+            current_agent = agent_round_assignment[round_idx]
+            slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
+                history["content"], round_idx
+            )
+            response_text = ensure_text(agent_response)
             if round_idx == 0:
-                current_agent = starter_agent
-                slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
-                    history["content"], round_idx
-                )
-                response_text = ensure_text(agent_response)
                 history = save_conversation(
                     history,
                     current_agent,
@@ -801,11 +805,6 @@ def main():
                     initial=True,
                 )
             else:
-                current_agent = agent_round_assignment[round_idx]
-                slot_prompt, agent_response = agents[current_agent]["instance"].execute_round(
-                    history["content"], round_idx
-                )
-                response_text = ensure_text(agent_response)
                 history = save_conversation(history, current_agent, response_text, slot_prompt)
             
             # Add Answer to FAISS index
@@ -911,7 +910,7 @@ def main():
         }
         for agent_name in agents.keys():
             print(f"\nComparing {agent_name} 's answers across runs")
-            similar = answer_comparator.compare_agent_answers(agent_name, round_num=0)
+            similar = answer_comparator.compare_agent_answers(agent_name, round_num=0, run_id=run_id)
             similarity_report["agents"].append(
                 {"agent_name": agent_name, "results": similar}
             )

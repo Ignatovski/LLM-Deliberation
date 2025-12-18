@@ -171,32 +171,50 @@ class AnswerComparator:
             results.append(result) 
         return results
                 
-    def compare_agent_answers(self, agent_name: str, round_num: int, k: int = 5) -> List[Dict[str, Any]]:
-            """
-            Compare agent's answers across different runs 
+    def compare_agent_answers(
+        self,
+        agent_name: str,
+        round_num: int,
+        k: int = 5,
+        run_id: str | None = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        Compare an agent's answers across different runs.
 
-            Args:
-                agent_name: Name of the agent 
-                round_num: Round number to compare
-                k: Number of similar answers to return
-                
-            Returns:
-                List of similar answers with metadata 
-            """
-            # Find all answers for this agent in this round
-            query = None
-            # Prefer the requested round_num; if not found, fall back to the agent's first stored answer.
-            for meta in self.metadata:
-                if meta['agent_name'] == agent_name and meta['round_num'] == round_num:
-                    query = meta['answer']
+        Args:
+            agent_name: Name of the agent.
+            round_num: Round number to compare.
+            k: Number of similar answers to return.
+            run_id: If provided, use this run's answer as the query and exclude it from results.
+
+        Returns:
+            List of similar answers with metadata.
+        """
+        query = None
+        if run_id:
+            for meta in reversed(self.metadata):
+                if (
+                    meta.get("agent_name") == agent_name
+                    and meta.get("round_num") == round_num
+                    and meta.get("run_id") == run_id
+                ):
+                    query = meta.get("answer")
                     break
-            if query is None:
-                for meta in self.metadata:
-                    if meta['agent_name'] == agent_name:
-                        query = meta['answer']
-                        break
-            
-            if query is None:
-                return []
-            
-            return self.find_similar_answers(query, k)
+        if query is None:
+            for meta in reversed(self.metadata):
+                if meta.get("agent_name") == agent_name and meta.get("round_num") == round_num:
+                    query = meta.get("answer")
+                    break
+        if query is None:
+            for meta in reversed(self.metadata):
+                if meta.get("agent_name") == agent_name:
+                    query = meta.get("answer")
+                    break
+
+        if query is None:
+            return []
+
+        candidates = self.find_similar_answers(query, k + 1 if run_id else k)
+        if run_id:
+            candidates = [c for c in candidates if c.get("run_id") != run_id]
+        return candidates[:k]

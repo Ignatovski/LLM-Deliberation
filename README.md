@@ -154,6 +154,202 @@ history['content']["rounds"].append({'agent':agent_name, 'prompt': prompt, 'full
 ---
 
 ## Evaluation 
+### Notation and Experimental Structure
+
+We consider a repeated multi-party negotiation game executed over multiple independent runs.
+
+---
+
+### Agents and Utilities
+
+- **N**  
+  Number of agents participating in a negotiation.
+
+- **i, j ∈ {1,…,N}**  
+  Agent indices.
+
+- **uᵢ(x)**  
+  Utility of agent *i* for a proposed deal *x*.
+
+- **τᵢ**  
+  Acceptance threshold of agent *i* (minimum utility required to accept a deal).
+
+- **BATNAᵢ**  
+  Best Alternative To a Negotiated Agreement for agent *i*  
+  (utility received if no agreement is reached).
+
+  In our setup:
+
+  $$
+  \text{BATNA}_i = 0 \quad \forall i
+  $$
+
+---
+
+### Game Structure
+
+- **𝓧**  
+  Feasible deal space (e.g. x ∈ [−10, 10]).
+
+- **r ∈ {1,…,R}**  
+  Run index (one independent execution of the game).
+
+- **R = 15**  
+  Total number of runs.
+
+- **t ∈ {1,…,Tᵣ}**  
+  Round (public answer) index within run *r*.
+
+- **Tᵣ ∈ {15,16}**  
+  Number of rounds (public answers) in run *r*.
+
+- **xᵣ,ₜ ∈ 𝓧**  
+  Deal proposed at round *t* of run *r*.
+
+---
+
+### Proposal Sets
+
+- **𝓟ᵢʳ** *(capital P)*  
+  Set of all proposals made by agent *i* in run *r*:
+
+  $$
+  \mathcal{P}_i^{(r)} =
+  \{ x_{r,t} \mid \text{agent } i \text{ proposed } x \text{ at round } t \}
+  $$
+
+- **|𝓟ᵢʳ|**  
+  Number of proposals made by agent *i* in run *r*.
+
+- **x ∈ 𝓟ᵢʳ** *(lowercase x)*  
+  A single proposal made by agent *i*.
+
+---
+
+### Agreement and Outcomes
+
+- **xᵣ\***  
+  Final proposed deal in run *r*.
+
+- **Agreement condition**
+
+  $$
+  \forall i:\; u_i(x_{r,t}) \ge \tau_i
+  $$
+
+- **Final success**
+
+  $$
+  \text{FinalSuccess}_r =
+  \mathbb{1}\left[
+  \forall i:\; u_i(x_r^\*) \ge \tau_i
+  \right]
+  $$
+
+- **Any success**
+
+  $$
+  \text{AnySuccess}_r =
+  \mathbb{1}\left[
+  \exists t:\; \forall i:\; u_i(x_{r,t}) \ge \tau_i
+  \right]
+  $$
+
+---
+
+### Realized Utility
+
+- **Utilityᵢʳ**  
+  Realized utility of agent *i* in run *r*:
+
+  $$
+  \text{Utility}_i^{(r)} =
+  \begin{cases}
+  u_i(x_r^\*), & \text{if agreement is reached} \\
+  0, & \text{otherwise}
+  \end{cases}
+  $$
+
+---
+
+### Proposal-Based Metrics
+
+#### Own Score
+
+- **OwnScoreᵢʳ**  
+  Average utility of the proposals made by agent *i* for itself:
+
+  $$
+  \text{OwnScore}_i^{(r)} =
+  \frac{1}{|\mathcal{P}_i^{(r)}|}
+  \sum_{x \in \mathcal{P}_i^{(r)}} u_i(x)
+  $$
+
+- Interpretation:  
+  Measures how strongly an agent prioritizes its **own utility** when proposing deals.
+
+---
+
+#### Collective Score
+
+- **CollectiveScoreᵢʳ**  
+  Average utility of all agents for the proposals made by agent *i*:
+
+  $$
+  \text{CollectiveScore}_i^{(r)} =
+  \frac{1}{|\mathcal{P}_i^{(r)}|}
+  \sum_{x \in \mathcal{P}_i^{(r)}}
+  \frac{1}{N} \sum_{j=1}^{N} u_j(x)
+  $$
+
+- Interpretation:  
+  Measures the **social impact** of the agent’s proposals.
+
+---
+
+### Wrong Deals
+
+- **WrongDealᵢʳ(x)**  
+  Indicator for proposals that the agent itself would reject:
+
+  $$
+  \text{WrongDeal}_i^{(r)}(x) =
+  \mathbb{1}[\, u_i(x) < \tau_i \,]
+  $$
+
+---
+
+### Aggregation Across Runs
+
+- **Average own score across runs**
+
+  $$
+  \overline{\text{OwnScore}}_i =
+  \frac{1}{R} \sum_{r=1}^{R} \text{OwnScore}_i^{(r)}
+  $$
+
+- **Average collective score across runs**
+
+  $$
+  \overline{\text{CollectiveScore}}_i =
+  \frac{1}{R} \sum_{r=1}^{R} \text{CollectiveScore}_i^{(r)}
+  $$
+
+---
+
+### Interpretation Summary
+
+- **Capital symbols** (𝓟, R) → sets or repetitions  
+- **Lowercase symbols** (x, t) → individual proposals or rounds  
+- **Own score** → self-interest in proposals  
+- **Collective score** → impact on the group  
+- **Final success** → whether self-interest is exercised prudently under the risk of zero payoff (BATNA = 0)
+
+---
+
+**One-line takeaway:**  
+Capital symbols represent collections (runs, proposal sets), while lowercase symbols represent individual proposals, rounds, and utilities.
+
 1- `evaluation/evaluate_deals.ipynb`:
 - Measures metrics: any success rate, final success rate, and ratio of wrong scores. Change the following according to the game:
   ```python
@@ -220,5 +416,4 @@ booktitle={The Thirty-eight Conference on Neural Information Processing Systems 
 year={2024},
 }
 ```
-
 
