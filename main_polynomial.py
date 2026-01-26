@@ -523,6 +523,7 @@ def main():
 
     parser.add_argument("--embedding_model_name", type=str, default="sentence-transformers/all-MiniLM-L6-v2")
     parser.add_argument("--embedding_cache_dir", type=str, default="")
+    parser.add_argument("--skip_similarity", action="store_true", help="Skip FAISS similarity tracking to avoid embedding downloads.")
     parser.add_argument(
         "--reuse_faiss",
         action="store_true",
@@ -599,12 +600,13 @@ def main():
     run_id = str(uuid.uuid4())
     run_success = False
     try:
-        answer_comparator = AnswerComparator(
-            os.path.join(args.output_dir, "faiss_index"),
-            model_name=args.embedding_model_name,
-            cache_dir=cache_dir,
-            reuse_existing=args.reuse_faiss,
-        ) 
+        if not args.skip_similarity:
+            answer_comparator = AnswerComparator(
+                os.path.join(args.output_dir, "faiss_index"),
+                model_name=args.embedding_model_name,
+                cache_dir=cache_dir,
+                reuse_existing=args.reuse_faiss,
+            )
 
         os.makedirs(output_root, exist_ok=True)
         cfg_src = args.config_file
@@ -809,12 +811,13 @@ def main():
             
             # Add Answer to FAISS index
             public_answer = history["content"]["rounds"][-1]["public_answer"]
-            answer_comparator.add_answer (
-                answer = public_answer,
-                agent_name = current_agent,
-                round_num = round_idx,
-                run_id = run_id   
-            )
+            if answer_comparator:
+                answer_comparator.add_answer(
+                    answer=public_answer,
+                    agent_name=current_agent,
+                    round_num=round_idx,
+                    run_id=run_id,
+                )
 
 
             proposed = extract_value(response_text)
@@ -828,6 +831,7 @@ def main():
             write_file(history["content"], history["file"])
             print("=====")
             print(f"{current_agent} response: {response_text}")
+            print(f"{current_agent} public answer: {public_answer}")
             summary = [
                 f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
                 f"{'ACCEPT' if accepted[name] else 'hold'}"
@@ -886,6 +890,8 @@ def main():
             write_file(history["content"], history["file"])
             print("=====")
             print(f"{p1} response: {response_text}")
+            public_answer = history["content"]["rounds"][-1]["public_answer"]
+            print(f"{p1} public answer: {public_answer}")
             summary = [
                 f"{name}: f(x)={utilities[name]:.2f} (>= {polynomial_profiles[name]['threshold']:.2f}) -> "
                 f"{'ACCEPT' if accepted[name] else 'hold'}"
@@ -901,27 +907,28 @@ def main():
             print("Early agreement reached.")
             print(f"Final x: {current_x}")
 
-        print("\n=== Similarity Analysis ===")
-        similarity_report = {
-            "run_id": run_id,
-            "timestamp": int(time.time()),
-            "output_root": output_root,
-            "agents": [],
-        }
-        for agent_name in agents.keys():
-            print(f"\nComparing {agent_name} 's answers across runs")
-            similar = answer_comparator.compare_agent_answers(agent_name, round_num=0, run_id=run_id)
-            similarity_report["agents"].append(
-                {"agent_name": agent_name, "results": similar}
-            )
-            for reasult in similar:
-                print(f"  Similarity result: {reasult}")
-                print(f"Run ID: {reasult['run_id']}")
-                print(f" Answer: {reasult['answer']}")
-        similarity_path = os.path.join(output_root, f"similarity_{run_id}.json")
-        with open(similarity_path, "w") as sim_file:
-            json.dump(similarity_report, sim_file, indent=2)
-        print(f"Saved similarity analysis to {similarity_path}")
+        if answer_comparator:
+            print("\n=== Similarity Analysis ===")
+            similarity_report = {
+                "run_id": run_id,
+                "timestamp": int(time.time()),
+                "output_root": output_root,
+                "agents": [],
+            }
+            for agent_name in agents.keys():
+                print(f"\nComparing {agent_name} 's answers across runs")
+                similar = answer_comparator.compare_agent_answers(agent_name, round_num=0, run_id=run_id)
+                similarity_report["agents"].append(
+                    {"agent_name": agent_name, "results": similar}
+                )
+                for reasult in similar:
+                    print(f"  Similarity result: {reasult}")
+                    print(f"Run ID: {reasult['run_id']}")
+                    print(f" Answer: {reasult['answer']}")
+            similarity_path = os.path.join(output_root, f"similarity_{run_id}.json")
+            with open(similarity_path, "w") as sim_file:
+                json.dump(similarity_report, sim_file, indent=2)
+            print(f"Saved similarity analysis to {similarity_path}")
 
         if args.result:
             safe_tag = re.sub(r"[^A-Za-z0-9_-]+", "_", args.result)
@@ -952,8 +959,9 @@ def main():
         # Generate visualizations on success
         try:
             images_dir = os.path.join(output_root, "images")
-            sim_img_path = Path(images_dir) / "similarity.png"
-            generate_similarity_image(Path(answer_comparator.embeddings_file), sim_img_path)
+            if answer_comparator:
+                sim_img_path = Path(images_dir) / "similarity.png"
+                generate_similarity_image(Path(answer_comparator.embeddings_file), sim_img_path)
 
             history_path = Path(history["file"])
             poly_img_path = Path(images_dir) / "polynomial.png"

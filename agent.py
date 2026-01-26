@@ -58,14 +58,53 @@ class Agent():
             )
 
         if azure and not self.claude:
+            # JSON schema response_format requires Azure API versions 2024-08-01-preview+.
+            # Prefer an explicitly set AZURE_OPENAI_API_VERSION; fall back to OPENAI_API_VERSION
+            # (used by Azure AI Foundry examples); otherwise default to a schema-capable version.
+            requested_api_version = (
+                os.getenv("AZURE_OPENAI_API_VERSION") or os.getenv("OPENAI_API_VERSION") or ""
+            ).strip()
+            required_api_version = "2024-08-01-preview"
+
+            def _api_version_date(ver: str):
+                # Accept formats like "2024-08-01-preview" / "2024-08-01" / "2024-08-01-preview.1".
+                try:
+                    parts = ver.split("-", 3)
+                    y, m, d = int(parts[0]), int(parts[1]), int(parts[2])
+                    return (y, m, d)
+                except Exception:
+                    return None
+
+            req_date = _api_version_date(required_api_version)
+            got_date = _api_version_date(requested_api_version) if requested_api_version else None
+
+            if req_date and got_date and got_date < req_date:
+                # Enforce schema-capable version even if env is outdated.
+                print(
+                    f"[agent] AZURE_OPENAI_API_VERSION={requested_api_version!r} is too old for json_schema; "
+                    f"using {required_api_version!r} instead.",
+                    flush=True,
+                )
+                api_version = required_api_version
+            else:
+                api_version = requested_api_version or required_api_version
+            timeout = float(os.getenv("AZURE_OPENAI_TIMEOUT", "120"))
+            max_retries = int(os.getenv("AZURE_OPENAI_MAX_RETRIES", "2"))
             self.client = AzureOpenAI(
-            azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"), 
-            api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
-            api_version="2023-05-15"
+                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+                api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                api_version=api_version,
+                timeout=timeout,
+                max_retries=max_retries,
             )
         elif not self.claude and not self.hf_model and 'gemini' not in self.model:
             # Default OpenAI-compatible client (works for OpenAI, Groq, OpenRouter, etc.).
-            self.client = OpenAI(base_url=openai_base_url) if openai_base_url else OpenAI()
+            timeout = float(os.getenv("OPENAI_TIMEOUT", "120"))
+            max_retries = int(os.getenv("OPENAI_MAX_RETRIES", "2"))
+            if openai_base_url:
+                self.client = OpenAI(base_url=openai_base_url, timeout=timeout, max_retries=max_retries)
+            else:
+                self.client = OpenAI(timeout=timeout, max_retries=max_retries)
 
         if 'hf' in model:
             self.hf_model, self.hf_tokenizer, self.hf_pipeline_gen = hf_models[model]
@@ -83,6 +122,21 @@ class Agent():
         '''
         call each model 
         '''
+        # common JSON schema for structured outputs
+        json_schema = {
+            "name": "structured_output",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "scratchpad": {"type": "string"},
+                    "answer": {"type": "string"},
+                    "plan": {"type": "string"},
+                },
+                "required": ["scratchpad", "answer", "plan"],
+                "additionalProperties": False,
+            },
+            "strict": True,
+        }
         if self.claude:
             messages = self.messages + [{"role": role, "content": msg}]
             claude_messages = [
@@ -107,12 +161,40 @@ class Agent():
         elif self.azure and self.client:
             messages = self.messages + [ {"role": role, "content": msg} ]
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=self.temperature,
+                print(f"[{self.agent_name}] calling {self.model}...", flush=True)
+                max_tokens_raw = os.getenv("AZURE_OPENAI_MAX_TOKENS") or os.getenv("OPENAI_MAX_TOKENS")
+                max_tokens = int(max_tokens_raw) if max_tokens_raw else None
+                temp = None if self.temperature == 0 else self.temperature
+                reasoning_effort = (
+                    os.getenv("AZURE_OPENAI_REASONING_EFFORT")
+                    or os.getenv("OPENAI_REASONING_EFFORT")
+                    or os.getenv("REASONING_EFFORT")
                 )
-                return response.choices[0].message.content
+                if not reasoning_effort and (self.model.startswith("gpt-5") or self.model.startswith("o1")):
+                    reasoning_effort = "low"
+                kwargs = {
+                    "model": self.model,
+                    "messages": messages,
+                    "response_format": {"type": "json_schema", "json_schema": json_schema},
+                }
+                if max_tokens is not None and max_tokens > 0:
+                    kwargs["max_completion_tokens"] = max_tokens
+                if temp is not None:
+                    kwargs["temperature"] = temp
+                if reasoning_effort:
+                    kwargs["reasoning_effort"] = reasoning_effort
+                response = self.client.chat.completions.create(**kwargs)
+                print(f"[{self.agent_name}] response received", flush=True)
+                content = response.choices[0].message.content
+                if not (content or "").strip():
+                    finish = response.choices[0].finish_reason
+                    rtok = getattr(response.usage.completion_tokens_details, "reasoning_tokens", None) if response.usage else None
+                    print(
+                        f"[{self.agent_name}] empty content (finish_reason={finish}, reasoning_tokens={rtok}); "
+                        f"set AZURE_OPENAI_MAX_TOKENS/OPENAI_MAX_TOKENS higher if this persists.",
+                        flush=True,
+                    )
+                return content
             except BadRequestError as exc:
                 err_code = None
                 if hasattr(exc, "code"):
@@ -157,7 +239,38 @@ class Agent():
 
         elif self.client:
             messages = self.messages + [ {"role": role, "content": msg} ]
-            response = self.client.chat.completions.create(model=self.model, messages=messages,temperature=self.temperature)
-            content = response.choices[0].message
-            return content 
+            print(f"[{self.agent_name}] calling {self.model}...", flush=True)
+            max_tokens_raw = os.getenv("OPENAI_MAX_TOKENS") or os.getenv("AZURE_OPENAI_MAX_TOKENS")
+            max_tokens = int(max_tokens_raw) if max_tokens_raw else None
+            temp = None if self.temperature == 0 else self.temperature
+            reasoning_effort = (
+                os.getenv("OPENAI_REASONING_EFFORT")
+                or os.getenv("REASONING_EFFORT")
+                or os.getenv("AZURE_OPENAI_REASONING_EFFORT")
+            )
+            if not reasoning_effort and (self.model.startswith("gpt-5") or self.model.startswith("o1")):
+                reasoning_effort = "low"
+            kwargs = {
+                "model": self.model,
+                "messages": messages,
+                "response_format": {"type": "json_schema", "json_schema": json_schema},
+            }
+            if max_tokens is not None and max_tokens > 0:
+                kwargs["max_completion_tokens"] = max_tokens
+            if temp is not None:
+                kwargs["temperature"] = temp
+            if reasoning_effort:
+                kwargs["reasoning_effort"] = reasoning_effort
+            response = self.client.chat.completions.create(**kwargs)
+            print(f"[{self.agent_name}] response received", flush=True)
+            content = response.choices[0].message.content
+            if not (content or "").strip():
+                finish = response.choices[0].finish_reason
+                rtok = getattr(response.usage.completion_tokens_details, "reasoning_tokens", None) if response.usage else None
+                print(
+                    f"[{self.agent_name}] empty content (finish_reason={finish}, reasoning_tokens={rtok}); "
+                    f"set OPENAI_MAX_TOKENS higher if this persists.",
+                    flush=True,
+                )
+            return content
         

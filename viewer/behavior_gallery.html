@@ -6,6 +6,7 @@
   <title>Model Mix Behavior Gallery</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
   <style>
     :root {
       --bg: #ffffff;
@@ -30,6 +31,21 @@
     .section { margin-top: 18px; }
     .section h2 { margin: 0 0 6px; font-size: 18px; letter-spacing: -0.2px; }
     .section .muted { margin-bottom: 8px; }
+    .dl-btn { border: 1px solid var(--border); background: #fff; color: var(--muted); font-size: 11px; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
+    .dl-btn:hover { color: var(--text); border-color: var(--accent); }
+    .copy-btn { border: 1px solid var(--border); background: #fff; color: var(--muted); font-size: 11px; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
+    .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+    .bubble { background: #2563eb; color: #fff; font-weight: 700; padding: 6px 10px; border-radius: 999px; font-size: 13px; }
+    .value-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -41,7 +57,67 @@
   </div>
   <div class="muted" id="status"></div>
 
+  <div style="display:flex;justify-content:flex-end;gap:8px;align-items:center;">
+    <button class="copy-btn" id="copySummaryBox">Copy stats</button>
+  </div>
   <div class="grid" id="summary"></div>
+  <div class="grid">
+    <div class="card chart-card" style="grid-column: span 2;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>Success rates (final vs any)</h3>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="dl-btn" id="dlSummary">Download</button>
+          <button class="copy-btn" id="dlSummaryCopy">Copy</button>
+          <div class="tag" id="summaryTag"></div>
+        </div>
+      </div>
+      <canvas id="summaryChart" height="120"></canvas>
+      <div class="caption">X: success metric. Y: run count. Interpretation: shows how often runs reach any feasible deal vs final agreement.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Leakage Evaluation</h2>
+    <div class="muted">LLM-based leakage/invalid checks from eval_all.json.</div>
+    <div class="grid">
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Leakage vs invalid (count)</h3>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlLeak">Download</button>
+            <button class="copy-btn" id="dlLeakCopy">Copy</button>
+            <div class="tag" id="leakTag"></div>
+          </div>
+        </div>
+        <canvas id="leakChart" height="160"></canvas>
+        <div class="caption">X: outcome. Y: count. Leakage bar split into unclosed-answer leakage vs other leakage.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Leakage & invalid rates</h3>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlLeakRate">Download</button>
+            <button class="copy-btn" id="dlLeakRateCopy">Copy</button>
+            <div class="tag" id="leakRateTag"></div>
+          </div>
+        </div>
+        <canvas id="leakRateChart" height="160"></canvas>
+        <div class="caption">X: metric. Y: percent of evaluated public answers in the current filter.</div>
+      </div>
+      <div class="card chart-card" style="grid-column: span 2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Unclosed &lt;ANSWER&gt; leakage by model</h3>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlLeakUnclosedModel">Download</button>
+            <button class="copy-btn" id="dlLeakUnclosedModelCopy">Copy</button>
+            <div class="tag" id="leakUnclosedModelTag"></div>
+          </div>
+        </div>
+        <canvas id="leakUnclosedModelChart" height="160"></canvas>
+        <div class="caption">X: model (per agent mapping for the selected mix). Y: count of unclosed-answer leakage. Uses current filters.</div>
+      </div>
+    </div>
+  </div>
 
   <div class="section">
     <h2>Agreement & Failure</h2>
@@ -50,7 +126,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Agreements by summed utility</h3>
-          <div class="tag" id="agreeUtilTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlAgreeUtil">Download</button>
+            <button class="copy-btn" id="dlAgreeUtilCopy">Copy</button>
+            <div class="tag" id="agreeUtilTag"></div>
+          </div>
         </div>
         <canvas id="agreeUtilChart" height="180"></canvas>
         <div class="caption">X: summed group utility at final x (integer). Y: run count for agreements at that total utility. Interpretation: shows how often each total-utility outcome is reached.</div>
@@ -58,7 +138,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Total group utility (final x, raw)</h3>
-          <div class="tag" id="collRawTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlCollRaw">Download</button>
+            <button class="copy-btn" id="dlCollRawCopy">Copy</button>
+            <div class="tag" id="collRawTag"></div>
+          </div>
         </div>
         <canvas id="collRawChart" height="180"></canvas>
         <div class="caption">X: summed group utility at final x (integer). Y: run count (includes failures). Interpretation: total payoff at the final x (no BATNA applied).</div>
@@ -66,7 +150,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Agreement vs failure</h3>
-          <div class="tag" id="agreeRateTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlAgreeRate">Download</button>
+            <button class="copy-btn" id="dlAgreeRateCopy">Copy</button>
+            <div class="tag" id="agreeRateTag"></div>
+          </div>
         </div>
         <canvas id="agreeRateChart" height="180"></canvas>
         <div class="caption">X: outcome. Y: run count (agreement vs no agreement). Interpretation: higher “agreement” means more cooperative runs.</div>
@@ -80,19 +168,28 @@
     <div class="grid">
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <h3>Agreement x by round (counts)</h3>
-          <div class="tag" id="agreeXTag"></div>
+          <h3>First agreement x (final vs lost)</h3>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <div class="bubble" id="agreeXBubble">–</div>
+            <button class="dl-btn" id="dlAgreeX">Download</button>
+            <button class="copy-btn" id="dlAgreeXCopy">Copy</button>
+            <div class="tag" id="agreeXTag"></div>
+          </div>
         </div>
         <canvas id="agreeXChart" height="180"></canvas>
-        <div class="caption">X: round index (t0, t1, …). Y: run count (stacked by agreed x) using only each run’s first agreement. Interpretation: shows when agreement happens and which x is chosen.</div>
+        <div class="caption">X: agreed x at first agreement. Y: run count. Stacks show whether the first agreement became final or was lost.</div>
       </div>
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <h3>First agreement round (per run)</h3>
-          <div class="tag" id="chartTag"></div>
+          <h3>First agreement round (final vs lost)</h3>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlBar">Download</button>
+            <button class="copy-btn" id="dlBarCopy">Copy</button>
+            <div class="tag" id="chartTag"></div>
+          </div>
         </div>
         <canvas id="barChart" height="180"></canvas>
-        <div class="caption">X: round index (t0, t1, …, or None). Y: run count for first agreement round. Interpretation: earlier peaks mean faster convergence.</div>
+        <div class="caption">X: round index (t0, t1, …, or None). Y: run count. Stacks show whether the first agreement ultimately became the final agreement.</div>
       </div>
     </div>
   </div>
@@ -104,7 +201,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Per-agent own score (avg)</h3>
-          <div class="tag" id="ownTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlOwn">Download</button>
+            <button class="copy-btn" id="dlOwnCopy">Copy</button>
+            <div class="tag" id="ownTag"></div>
+          </div>
         </div>
         <canvas id="ownChart" height="180"></canvas>
         <div class="caption">X: agent. Y: average OwnScore across runs. Interpretation: higher bars mean more self-favoring proposals on average.</div>
@@ -112,7 +213,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Per-agent final utility (avg)</h3>
-          <div class="tag" id="utilTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlUtil">Download</button>
+            <button class="copy-btn" id="dlUtilCopy">Copy</button>
+            <div class="tag" id="utilTag"></div>
+          </div>
         </div>
         <canvas id="utilChart" height="180"></canvas>
         <div class="caption">X: agent. Y: average realized utility across runs (0 on failures). Interpretation: higher bars mean better outcomes.</div>
@@ -120,7 +225,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Own vs collective (proposals)</h3>
-          <div class="tag" id="propTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlProp">Download</button>
+            <button class="copy-btn" id="dlPropCopy">Copy</button>
+            <div class="tag" id="propTag"></div>
+          </div>
         </div>
         <canvas id="propChart" height="180"></canvas>
         <div class="caption">X: agent. Y: average utility on proposals (own vs collective). Interpretation: big gaps suggest self-interest over group benefit.</div>
@@ -135,7 +244,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Own score distribution (all proposals)</h3>
-          <div class="tag" id="ownAllTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlOwnAll">Download</button>
+            <button class="copy-btn" id="dlOwnAllCopy">Copy</button>
+            <div class="tag" id="ownAllTag"></div>
+          </div>
         </div>
         <canvas id="ownAllChart" height="180"></canvas>
         <div class="caption">X: own utility (integer). Y: proposal count (stacked by agent). Interpretation: shows the full distribution of self-utility across proposals.</div>
@@ -143,7 +256,11 @@
       <div class="card chart-card" style="grid-column: span 2;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <h3>Collective score distribution (all proposals)</h3>
-          <div class="tag" id="collAllTag"></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="dl-btn" id="dlCollAll">Download</button>
+            <button class="copy-btn" id="dlCollAllCopy">Copy</button>
+            <div class="tag" id="collAllTag"></div>
+          </div>
         </div>
         <canvas id="collAllChart" height="180"></canvas>
         <div class="caption">X: collective utility (integer). Y: proposal count (stacked by agent). Interpretation: higher values indicate more group-friendly proposals.</div>
@@ -159,6 +276,43 @@
       'claude-sonnet-4-5x2+gpt-5x2': '2 GPT + 2 Claude',
       'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2': 'Llama + Claude + GPT mix'
     };
+    const modelLabels = {
+      'gpt-5': 'GPT-5',
+      'claude-sonnet-4-5': 'Claude 4.5',
+      'Llama-3.3-70B-Instruct': 'Llama 3.3 70B'
+    };
+    const agentModelByMix = {
+      'gpt-5x4': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'gpt-5',
+        'Critic C': 'gpt-5',
+        'Delegate D': 'gpt-5'
+      },
+      'Llama-3.3-70B-Instructx4': {
+        'Analyst A': 'Llama-3.3-70B-Instruct',
+        'Builder B': 'Llama-3.3-70B-Instruct',
+        'Critic C': 'Llama-3.3-70B-Instruct',
+        'Delegate D': 'Llama-3.3-70B-Instruct'
+      },
+      'claude-sonnet-4-5x4': {
+        'Analyst A': 'claude-sonnet-4-5',
+        'Builder B': 'claude-sonnet-4-5',
+        'Critic C': 'claude-sonnet-4-5',
+        'Delegate D': 'claude-sonnet-4-5'
+      },
+      'claude-sonnet-4-5x2+gpt-5x2': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'gpt-5',
+        'Critic C': 'claude-sonnet-4-5',
+        'Delegate D': 'claude-sonnet-4-5'
+      },
+      'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'claude-sonnet-4-5',
+        'Critic C': 'Llama-3.3-70B-Instruct',
+        'Delegate D': 'gpt-5'
+      }
+    };
     const presetMixes = [
       'gpt-5x4',
       'Llama-3.3-70B-Instructx4',
@@ -172,7 +326,8 @@
       { label: 'All Human', value: 'All Human' },
       { label: 'All AI', value: 'All AI' }
     ];
-    const state = { runs: [], filtered: [], charts: {}, mix: presetMixes[0], category: 'all' };
+    const state = { runs: [], filtered: [], charts: {}, mix: presetMixes[0], category: 'all', runByPath: new Map() };
+    const evalState = { raw: [], records: [], filtered: [] };
     const el = id => document.getElementById(id);
     const colors = { text:'#0f172a', muted:'#475569', grid:'#e2e8f0', red:'#b91c1c', redLight:'#ef4444', blue:'#2563eb', green:'#16a34a' };
     Chart.defaults.color = colors.text;
@@ -180,15 +335,133 @@
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
     Chart.defaults.plugins.legend.labels.boxWidth = 10;
 
+    const makeValueLabels = (id, precision = 1) => ({
+      id,
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, dsIndex) => {
+          const meta = chart.getDatasetMeta(dsIndex);
+          meta.data.forEach((elem, idx) => {
+            const val = ds.data[idx];
+            if (val == null || isNaN(val)) return;
+            ctx.save();
+            ctx.fillStyle = colors.text;
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(Number(val).toFixed(precision), elem.x, elem.y - 4);
+            ctx.restore();
+          });
+        });
+      }
+    });
+
     const loadSummary = async () => {
-      const res = await fetch('metrics_summary.json');
+      const res = await fetch('metrics_summary.json?ts=' + Date.now());
       if (!res.ok) throw new Error('metrics_summary.json not found');
       const data = await res.json();
       state.runs = data.runs || [];
     };
 
+    const loadEval = async () => {
+      const res = await fetch('../summarys/leakage/eval_all.json?ts=' + Date.now());
+      if (!res.ok) {
+        evalState.raw = [];
+        evalState.records = [];
+        return;
+      }
+      evalState.raw = await res.json();
+      const mapped = [];
+      evalState.raw.forEach(rec => {
+        const meta = state.runByPath.get(rec.path);
+        if (!meta) return;
+        mapped.push({ ...rec, category: meta.category, model_mix: meta.model_mix });
+      });
+      evalState.records = mapped;
+    };
+    const sanitize = str => (str || 'all').replace(/[^A-Za-z0-9_+.-]/g, '_');
+    const catToken = cat => {
+      if (!cat || cat === 'all') return 'all';
+      if (cat === 'Uniform') return 'uniform';
+      if (cat === 'All AI') return 'all_ai';
+      if (cat === 'All Human') return 'all_human';
+      return sanitize(cat.toLowerCase());
+    };
+    const makeFilename = base => {
+      const cat = catToken(state.category);
+      const mix = sanitize(state.mix || 'all');
+      return `${base}_${cat}_${mix}.png`;
+    };
+    const attachDownload = (btnId, canvasId, base) => {
+      const btn = el(btnId);
+      if (!btn) return;
+      btn.onclick = () => {
+        const canvas = el(canvasId);
+        if (!canvas) return;
+        const link = document.createElement('a');
+        link.download = makeFilename(base);
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+    };
+    const attachCopy = (btnId, canvasId, base) => {
+      const btn = el(btnId);
+      if (!btn) return;
+      btn.onclick = async () => {
+        const canvas = el(canvasId);
+        if (!canvas || !navigator.clipboard || !window.ClipboardItem) {
+          alert('Copy not supported in this browser; use Download instead.');
+          return;
+        }
+        canvas.toBlob(async blob => {
+          if (!blob) return;
+          try {
+            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+            btn.textContent = 'Copied';
+            setTimeout(() => (btn.textContent = 'Copy'), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Copy failed; use Download instead.');
+          }
+        });
+      };
+    };
+    const attachCopySummaryBox = (btnId) => {
+      const btn = el(btnId);
+      if (!btn || !navigator.clipboard) return;
+      btn.onclick = async () => {
+        const total = state.filtered.length;
+        const finalSucc = state.filtered.filter(r => r.final_success).length;
+        const anySucc = state.filtered.filter(r => r.any_success).length;
+        const finalPct = total ? Math.round(finalSucc/total*100) : 0;
+        const anyPct = total ? Math.round(anySucc/total*100) : 0;
+        const cat = state.category === 'all' ? 'All categories' : state.category;
+        const mixLabel = mixLabels[state.mix] || state.mix || 'all mixes';
+        const text = [
+          `Category: ${cat}`,
+          `Mix: ${mixLabel}`,
+          `Runs: ${total}`,
+          `Final success: ${finalSucc} (${finalPct}%)`,
+          `Any success: ${anySucc} (${anyPct}%)`
+        ].join('\\n');
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = 'Copied';
+          setTimeout(() => (btn.textContent = 'Copy stats'), 1200);
+        } catch (err) {
+          console.error(err);
+          alert('Copy failed.');
+        }
+      };
+    };
+
     const applyFilter = () => {
       state.filtered = state.runs.filter(r => {
+        const mixOk = (r.model_mix || '') === state.mix;
+        const catOk = state.category === 'all' ? true : (r.category === state.category);
+        return mixOk && catOk;
+      });
+      evalState.filtered = evalState.records.filter(r => {
         const mixOk = (r.model_mix || '') === state.mix;
         const catOk = state.category === 'all' ? true : (r.category === state.category);
         return mixOk && catOk;
@@ -201,31 +474,150 @@
       const total = state.filtered.length;
       const finalSucc = state.filtered.filter(r => r.final_success).length;
       const anySucc = state.filtered.filter(r => r.any_success).length;
+      const finalPct = total ? Math.round(finalSucc/total*100) : 0;
+      const anyPct = total ? Math.round(anySucc/total*100) : 0;
       el('summary').innerHTML = `
-        <div class="card"><h3>Runs</h3><div class="stat">${total}</div><div class="muted">filtered</div></div>
-        <div class="card"><h3>Final success</h3><div class="stat">${finalSucc}</div><div class="muted">${total?Math.round(finalSucc/total*100):0}%</div></div>
-        <div class="card"><h3>Any success</h3><div class="stat">${anySucc}</div><div class="muted">${total?Math.round(anySucc/total*100):0}%</div></div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>Runs</h3>
+            <button class="copy-btn" id="copyRuns">Copy</button>
+          </div>
+          <div class="stat">${total}</div>
+          <div class="muted">filtered</div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>Final success</h3>
+            <button class="copy-btn" id="copyFinal">Copy</button>
+          </div>
+          <div class="stat">${finalSucc}</div>
+          <div class="muted">${finalPct}%</div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>Any success</h3>
+            <button class="copy-btn" id="copyAny">Copy</button>
+          </div>
+          <div class="stat">${anySucc}</div>
+          <div class="muted">${anyPct}%</div>
+        </div>
       `;
+      // Attach per-card copy buttons
+      const cat = state.category === 'all' ? 'All categories' : state.category;
+      const mixLabel = mixLabels[state.mix] || state.mix || 'all mixes';
+      const copyBtn = (id, text) => {
+        const btn = el(id);
+        if (!btn || !navigator.clipboard) return;
+        btn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied';
+            setTimeout(() => (btn.textContent = 'Copy'), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Copy failed.');
+          }
+        };
+      };
+      copyBtn('copyRuns', `Category: ${cat}\nMix: ${mixLabel}\nRuns: ${total}`);
+      copyBtn('copyFinal', `Category: ${cat}\nMix: ${mixLabel}\nFinal success: ${finalSucc} (${finalPct}%)`);
+      copyBtn('copyAny', `Category: ${cat}\nMix: ${mixLabel}\nAny success: ${anySucc} (${anyPct}%)`);
+    };
+
+    const renderSummaryChart = () => {
+      const total = state.filtered.length || 1;
+      const finalSucc = state.filtered.filter(r => r.final_success).length;
+      const anySucc = state.filtered.filter(r => r.any_success).length;
+      destroy('summaryChart');
+      const ctx = el('summaryChart').getContext('2d');
+      state.charts.summaryChart = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels('summaryValueLabels', 0)],
+        data: {
+          labels: ['Final success', 'Any success'],
+          datasets: [{
+            label: 'Run count',
+            data: [finalSucc, anySucc],
+            backgroundColor: ['rgba(16,185,129,0.85)', 'rgba(59,130,246,0.85)'],
+            borderColor: ['#10b981', '#3b82f6'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins:{legend:{labels:{color:colors.muted}}},
+          scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}, beginAtZero:true } }
+        }
+      });
+      el('summaryTag').textContent = `${state.filtered.length} runs`;
     };
 
     const renderBar = () => {
-      const bucket = {};
+      const maxRound = 15;
+      const finalBucket = {};
+      const lostBucket = {};
       let none = 0;
       state.filtered.forEach(r => {
         const ar = r.agree_round;
-        if (ar === null || ar === undefined) none += 1;
-        else bucket[ar] = (bucket[ar] || 0) + 1;
+        if (ar === null || ar === undefined) {
+          if (!r.any_success) none += 1;
+          return;
+        }
+        if (r.final_success) {
+          finalBucket[ar] = (finalBucket[ar] || 0) + 1;
+        } else {
+          lostBucket[ar] = (lostBucket[ar] || 0) + 1;
+        }
       });
-      const rounds = Object.keys(bucket).map(n=>parseInt(n,10)).sort((a,b)=>a-b);
+      const rounds = Array.from({ length: maxRound + 1 }, (_, i) => i);
       const labels = rounds.map(n=>`t${n}`);
-      const data = rounds.map(n=>bucket[n]);
-      if (none>0){ labels.push('None'); data.push(none); }
+      if (none>0){ labels.push('None'); }
+      const finalData = rounds.map(n=>finalBucket[n] || 0).concat(none>0 ? [0] : []);
+      const lostData = rounds.map(n=>lostBucket[n] || 0).concat(none>0 ? [0] : []);
+      const noneData = rounds.map(()=>0).concat(none>0 ? [none] : []);
+      const totals = labels.map((_, idx) => finalData[idx] + lostData[idx] + noneData[idx]);
+      const yMax = Math.max(5, ...totals);
+      const stackTotals = {
+        id: 'agreeRoundTotals',
+        afterDatasetsDraw(chart) {
+          const { ctx, scales } = chart;
+          const xScale = scales.x;
+          const yScale = scales.y;
+          const stackSums = chart.data.labels.map((_, idx) => chart.data.datasets
+            .reduce((sum, ds) => sum + (Number(ds.data[idx]) || 0), 0));
+          ctx.save();
+          ctx.fillStyle = colors.text;
+          ctx.font = '12px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          stackSums.forEach((total, idx) => {
+            if (!total) return;
+            const x = xScale.getPixelForTick(idx);
+            const y = yScale.getPixelForValue(total);
+            ctx.fillText(total, x, y - 4);
+          });
+          ctx.restore();
+        }
+      };
       destroy('bar');
       const ctx = el('barChart').getContext('2d');
       state.charts.bar = new Chart(ctx, {
         type:'bar',
-        data:{ labels, datasets:[{ label:'Count of runs', data, backgroundColor: data.map((_,i)=>labels[i]==='None'?'rgba(220,38,38,0.8)':'rgba(37,99,235,0.85)'), borderColor: data.map((_,i)=>labels[i]==='None'?'#dc2626':'#1d4ed8'), borderWidth:1 }]},
-        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
+        plugins: [stackTotals],
+        data:{
+          labels,
+          datasets:[
+            { label:'Final agreement', data: finalData, backgroundColor:'rgba(16,185,129,0.85)', borderColor:'#10b981', borderWidth:1 },
+            { label:'Agreement lost', data: lostData, backgroundColor:'rgba(234,179,8,0.8)', borderColor:'#ca8a04', borderWidth:1 },
+            { label:'No agreement', data: noneData, backgroundColor:'rgba(239,68,68,0.8)', borderColor:'#ef4444', borderWidth:1 }
+          ]
+        },
+        options:{
+          plugins:{legend:{labels:{color:colors.muted}}},
+          scales:{
+            x:{ticks:{color:colors.muted}, stacked:true},
+            y:{ticks:{color:colors.muted}, grid:{color:colors.grid}, stacked:true, beginAtZero:true, max: yMax}
+          }
+        }
       });
       el('chartTag').textContent = `${state.filtered.length} runs`;
     };
@@ -245,23 +637,38 @@
       const data = labels.map(k=>bucket[k] || 0);
       destroy('agreeUtil');
       const ctx = el('agreeUtilChart').getContext('2d');
+      const yMax = (state.category === 'all') ? undefined : 15;
       state.charts.agreeUtil = new Chart(ctx,{
         type:'bar',
+        plugins: [makeValueLabels('agreeUtilLabels', 0)],
         data:{ labels: labels.map(v=>v.toString()), datasets:[{ label:'Count of agreements', data, backgroundColor:'rgba(37,99,235,0.85)', borderColor:'#2563eb', borderWidth:1 }]},
-        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
+        options:{
+          plugins:{legend:{labels:{color:colors.muted}}},
+          scales:{
+            x:{ticks:{color:colors.muted}},
+            y:{
+              beginAtZero:true,
+              max: yMax,
+              ticks:{color:colors.muted},
+              grid:{color:colors.grid}
+            }
+          }
+        }
       });
       el('agreeUtilTag').textContent = `${data.reduce((a,b)=>a+b,0)} agreements`;
 
       destroy('agreeRate');
       const rateCtx = el('agreeRateChart').getContext('2d');
       const success = state.filtered.filter(r => r.final_success).length;
-      const fail = state.filtered.length - success;
+      const partial = state.filtered.filter(r => r.any_success && !r.final_success).length;
+      const fail = state.filtered.length - success - partial;
       state.charts.agreeRate = new Chart(rateCtx,{
         type:'bar',
-        data:{ labels:['Agreement','No agreement'], datasets:[{ label:'Run count', data:[success, fail], backgroundColor:['rgba(16,185,129,0.85)','rgba(239,68,68,0.8)'], borderColor:['#10b981','#ef4444'], borderWidth:1 }]},
-        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}, beginAtZero:true } } }
+        plugins: [makeValueLabels('agreeRateLabels', 0)],
+        data:{ labels:['Final agreement','Agreement lost','No agreement'], datasets:[{ label:'Run count', data:[success, partial, fail], backgroundColor:['rgba(16,185,129,0.85)','rgba(234,179,8,0.8)','rgba(239,68,68,0.8)'], borderColor:['#10b981','#ca8a04','#ef4444'], borderWidth:1 }]},
+        options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}, beginAtZero:true, max: Math.max(state.filtered.length, 50) } } }
       });
-      el('agreeRateTag').textContent = `${state.filtered.length} runs`;
+      el('agreeRateTag').textContent = `${state.filtered.length} runs | final: ${success} | lost: ${partial} | none: ${fail}`;
     };
 
     const renderCollectiveRaw = () => {
@@ -278,6 +685,7 @@
       const ctx = el('collRawChart').getContext('2d');
       state.charts.collRaw = new Chart(ctx,{
         type:'bar',
+        plugins: [makeValueLabels('collRawLabels', 0)],
         data:{ labels: labels.map(v=>v.toString()), datasets:[{ label:'Count of runs', data, backgroundColor:'rgba(16,185,129,0.85)', borderColor:'#10b981', borderWidth:1 }]},
         options:{ plugins:{legend:{labels:{color:colors.muted}}}, scales:{ x:{ticks:{color:colors.muted}}, y:{ticks:{color:colors.muted}, grid:{color:colors.grid}} } }
       });
@@ -285,45 +693,83 @@
     };
 
     const renderAgreeX = () => {
-      const maxRounds = 15;
-      const buckets = Array.from({ length: maxRounds }, () => ({}));
+      const finalBucket = {};
+      const lostBucket = {};
       state.filtered.forEach(r => {
         const xs = Array.isArray(r.agreement_x) ? r.agreement_x : [];
         let firstIdx = null;
         let firstVal = null;
-        for (let i = 0; i < Math.min(maxRounds, xs.length); i++) {
+        for (let i = 0; i < xs.length; i++) {
           const v = xs[i];
           if (typeof v === 'number') { firstIdx = i; firstVal = v; break; }
         }
         if (firstIdx === null || firstVal === null) return;
-        buckets[firstIdx][firstVal] = (buckets[firstIdx][firstVal] || 0) + 1;
+        if (r.final_success) {
+          finalBucket[firstVal] = (finalBucket[firstVal] || 0) + 1;
+        } else {
+          lostBucket[firstVal] = (lostBucket[firstVal] || 0) + 1;
+        }
       });
-      // Build stacked datasets per x value across rounds.
       const xValues = new Set();
-      buckets.forEach(b => Object.keys(b).forEach(k => xValues.add(k)));
+      Object.keys(finalBucket).forEach(k => xValues.add(k));
+      Object.keys(lostBucket).forEach(k => xValues.add(k));
       const xValsSorted = Array.from(xValues).map(v=>parseFloat(v)).sort((a,b)=>a-b);
-      const labels = Array.from({ length: maxRounds }, (_, i) => `t${i}`);
-      const datasets = xValsSorted.map((xVal, idx) => ({
-        label: `x=${xVal}`,
-        data: buckets.map(b => b[xVal] || 0),
-        backgroundColor: `hsl(${(idx*60)%360} 70% 60% / 0.8)`,
-        borderWidth: 0
-      }));
+      const labels = xValsSorted.map(v => `x=${v}`);
+      const finalData = xValsSorted.map(v => finalBucket[v] || 0);
+      const lostData = xValsSorted.map(v => lostBucket[v] || 0);
+      const datasets = [
+        {
+          label: 'Final agreement',
+          data: finalData,
+          backgroundColor: 'rgba(16,185,129,0.85)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          stack: 'final'
+        },
+        {
+          label: 'Agreement lost',
+          data: lostData,
+          backgroundColor: 'rgba(234,179,8,0.8)',
+          borderColor: '#ca8a04',
+          borderWidth: 1,
+          stack: 'lost'
+        }
+      ];
       destroy('agreeX');
       const ctx = el('agreeXChart').getContext('2d');
       state.charts.agreeX = new Chart(ctx, {
         type: 'bar',
         data: { labels, datasets },
         options: {
-          plugins: { legend: { labels: { color: colors.muted } }, tooltip: { mode: 'index', intersect: false } },
+          plugins: {
+            legend: { labels: { color: colors.muted } },
+            tooltip: { mode: 'index', intersect: false }
+          },
           responsive: true,
           scales: {
             x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
-            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid }, suggestedMax: state.filtered.length }
+            y: {
+              stacked: true,
+              ticks: { color: colors.muted },
+              grid: { color: colors.grid },
+              suggestedMax: state.filtered.length
+            }
           }
         }
       });
-      el('agreeXTag').textContent = `${state.filtered.length} runs`;
+      const total = state.filtered.length;
+      const finalSucc = state.filtered.filter(r => r.final_success).length;
+      const anySucc = state.filtered.filter(r => r.any_success).length;
+      const noFinal = total - finalSucc;
+      const displayedFinal = finalData.reduce((a,b)=>a+b,0);
+      const displayedLost = lostData.reduce((a,b)=>a+b,0);
+      const displayed = displayedFinal + displayedLost;
+      const bubble = el('agreeXBubble');
+      if (bubble) {
+        bubble.textContent = `${displayed} shown`;
+        bubble.title = `runs: ${total} | final: ${finalSucc} | any: ${anySucc} | no final: ${noFinal} | shown final: ${displayedFinal} | shown lost: ${displayedLost}`;
+      }
+      el('agreeXTag').textContent = `runs: ${total} | final: ${finalSucc} | any: ${anySucc} | no final: ${noFinal} | shown final: ${displayedFinal} | shown lost: ${displayedLost}`;
     };
 
 
@@ -346,12 +792,30 @@
       const filt = calcAgentMeans(state.filtered, 'own_scores');
       const labels = order.filter(a => a in filt);
       const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      const valueLabels = {
+        id: 'ownValueLabels',
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+          chart.getDatasetMeta(0).data.forEach((bar, idx) => {
+            const val = chart.data.datasets[0].data[idx];
+            if (val == null || isNaN(val)) return;
+            ctx.save();
+            ctx.fillStyle = colors.text;
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(val.toFixed(1), bar.x, bar.y - 4);
+            ctx.restore();
+          });
+        }
+      };
       destroy('own');
       const canvas = el('ownChart');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       state.charts.own = new Chart(ctx, {
         type: 'bar',
+        plugins: [valueLabels],
         data: {
           labels,
           datasets: [
@@ -368,7 +832,12 @@
           plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: {
+              beginAtZero: true,
+              max: 50,
+              ticks: { color: colors.muted, stepSize: 5 },
+              grid: { color: colors.grid }
+            }
           }
         }
       });
@@ -386,6 +855,7 @@
       const ctx = canvas.getContext('2d');
       state.charts.util = new Chart(ctx, {
         type: 'bar',
+        plugins: [makeValueLabels('utilValueLabels', 1)],
         data: {
           labels,
           datasets: [
@@ -402,7 +872,12 @@
           plugins: { legend: { labels: { color: colors.muted } } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: {
+              beginAtZero: true,
+              max: 5,
+              ticks: { color: colors.muted, stepSize: 1 },
+              grid: { color: colors.grid }
+            }
           }
         }
       });
@@ -422,6 +897,7 @@
       const ctx = canvas.getContext('2d');
       state.charts.prop = new Chart(ctx, {
         type: 'bar',
+        plugins: [makeValueLabels('propValueLabels', 1)],
         data: {
           labels,
           datasets: [
@@ -532,6 +1008,159 @@
       el('collAllTag').textContent = total ? `${total} proposals` : 'No data';
     };
 
+    const renderLeakageCharts = () => {
+      destroy('leakChart');
+      destroy('leakRateChart');
+      const total = evalState.filtered.length;
+      const leakCount = evalState.filtered.filter(r => r.llm_leak).length;
+      const invalidCount = evalState.filtered.filter(r => r.llm_invalid).length;
+      const unclosed = evalState.filtered.filter(r => r.leakage_due_to_unclosed_answer).length;
+      const otherLeak = Math.max(0, leakCount - unclosed);
+
+      if (!total) {
+        el('leakTag').textContent = 'No eval data';
+        el('leakRateTag').textContent = 'No eval data';
+        return;
+      }
+
+      const leakCtx = el('leakChart').getContext('2d');
+      state.charts.leakChart = new Chart(leakCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Leakage', 'Invalid'],
+          datasets: [
+            {
+              label: 'Leakage: unclosed <ANSWER>',
+              data: [unclosed, 0],
+              backgroundColor: 'rgba(239,68,68,0.8)',
+              borderColor: '#ef4444',
+              borderWidth: 1,
+              stack: 'leak'
+            },
+            {
+              label: 'Leakage: other',
+              data: [otherLeak, 0],
+              backgroundColor: 'rgba(249,115,22,0.8)',
+              borderColor: '#f97316',
+              borderWidth: 1,
+              stack: 'leak'
+            },
+            {
+              label: 'Invalid',
+              data: [0, invalidCount],
+              backgroundColor: 'rgba(37,99,235,0.8)',
+              borderColor: '#2563eb',
+              borderWidth: 1,
+              stack: 'invalid'
+            }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted } },
+            y: { stacked: true, beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('leakTag').textContent = `evals: ${total} | leak: ${leakCount} | invalid: ${invalidCount} | unclosed: ${unclosed}`;
+
+      const leakRate = total ? (leakCount / total) * 100 : 0;
+      const invalidRate = total ? (invalidCount / total) * 100 : 0;
+      const unclosedRate = total ? (unclosed / total) * 100 : 0;
+      const rateCtx = el('leakRateChart').getContext('2d');
+      state.charts.leakRateChart = new Chart(rateCtx, {
+        type: 'bar',
+        plugins: [makeValueLabels('leakRateLabels', 1)],
+        data: {
+          labels: ['Leakage', 'Invalid', 'Leakage (unclosed)'],
+          datasets: [{
+            label: 'Percent',
+            data: [leakRate, invalidRate, unclosedRate],
+            backgroundColor: ['rgba(239,68,68,0.8)','rgba(37,99,235,0.8)','rgba(249,115,22,0.8)'],
+            borderColor: ['#ef4444','#2563eb','#f97316'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: colors.muted } } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      el('leakRateTag').textContent = `leak ${leakRate.toFixed(1)}% | invalid ${invalidRate.toFixed(1)}%`;
+    };
+
+    const renderUnclosedByModel = () => {
+      destroy('leakUnclosedModel');
+      const records = evalState.filtered;
+      if (!records.length) {
+        el('leakUnclosedModelTag').textContent = 'No eval data';
+        return;
+      }
+      const mix = state.mix || '';
+      const agentMap = agentModelByMix[mix] || {};
+      const counts = {};
+      const totals = {};
+      records.forEach(r => {
+        const model = agentMap[r.agent] || 'unknown';
+        totals[model] = (totals[model] || 0) + 1;
+        if (r.leakage_due_to_unclosed_answer) {
+          counts[model] = (counts[model] || 0) + 1;
+        }
+      });
+      const labels = Object.keys(totals).sort();
+      const data = labels.map(m => counts[m] || 0);
+      const totalUnclosed = data.reduce((s, v) => s + v, 0);
+      const totalEval = labels.reduce((s, m) => s + (totals[m] || 0), 0);
+
+      if (!labels.length) {
+        el('leakUnclosedModelTag').textContent = 'No eval data';
+        return;
+      }
+
+      const ctx = el('leakUnclosedModelChart').getContext('2d');
+      state.charts.leakUnclosedModel = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels('leakUnclosedModelLabels', 0)],
+        data: {
+          labels: labels.map(m => modelLabels[m] || m),
+          datasets: [{
+            label: 'Unclosed <ANSWER> leakage',
+            data,
+            backgroundColor: 'rgba(239,68,68,0.8)',
+            borderColor: '#ef4444',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { labels: { color: colors.muted } },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const idx = ctx.dataIndex;
+                  const model = labels[idx];
+                  const count = data[idx] || 0;
+                  const total = totals[model] || 0;
+                  const rate = total ? (count / total) * 100 : 0;
+                  return `Unclosed: ${count} (${rate.toFixed(1)}%)`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const rate = totalEval ? (totalUnclosed / totalEval) * 100 : 0;
+      el('leakUnclosedModelTag').textContent = `unclosed: ${totalUnclosed} | evals: ${totalEval} | rate: ${rate.toFixed(1)}%`;
+    };
+
     const renderAll = () => {
       renderSummary();
       renderBar();
@@ -543,6 +1172,38 @@
       renderProposalChart();
       renderOwnAll();
       renderCollectiveAll();
+      renderLeakageCharts();
+      renderUnclosedByModel();
+      renderSummaryChart();
+      attachDownload('dlAgreeUtil', 'agreeUtilChart', 'agreements_by_utility');
+      attachDownload('dlCollRaw', 'collRawChart', 'total_group_utility_final');
+      attachDownload('dlAgreeRate', 'agreeRateChart', 'agreement_vs_failure');
+      attachDownload('dlAgreeX', 'agreeXChart', 'agreement_x_by_round');
+      attachDownload('dlBar', 'barChart', 'first_agreement_round');
+      attachDownload('dlOwn', 'ownChart', 'own_score_avg');
+      attachDownload('dlUtil', 'utilChart', 'final_utility_avg');
+      attachDownload('dlProp', 'propChart', 'own_vs_collective_proposals');
+      attachDownload('dlOwnAll', 'ownAllChart', 'own_score_distribution');
+      attachDownload('dlCollAll', 'collAllChart', 'collective_score_distribution');
+      attachDownload('dlSummary', 'summaryChart', 'success_rates');
+      attachDownload('dlLeak', 'leakChart', 'leakage_counts');
+      attachDownload('dlLeakRate', 'leakRateChart', 'leakage_rates');
+      attachDownload('dlLeakUnclosedModel', 'leakUnclosedModelChart', 'leakage_unclosed_by_model');
+      attachCopy('dlAgreeUtilCopy', 'agreeUtilChart', 'agreements_by_utility');
+      attachCopy('dlCollRawCopy', 'collRawChart', 'total_group_utility_final');
+      attachCopy('dlAgreeRateCopy', 'agreeRateChart', 'agreement_vs_failure');
+      attachCopy('dlAgreeXCopy', 'agreeXChart', 'agreement_x_by_round');
+      attachCopy('dlBarCopy', 'barChart', 'first_agreement_round');
+      attachCopy('dlOwnCopy', 'ownChart', 'own_score_avg');
+      attachCopy('dlUtilCopy', 'utilChart', 'final_utility_avg');
+      attachCopy('dlPropCopy', 'propChart', 'own_vs_collective_proposals');
+      attachCopy('dlOwnAllCopy', 'ownAllChart', 'own_score_distribution');
+      attachCopy('dlCollAllCopy', 'collAllChart', 'collective_score_distribution');
+      attachCopy('dlSummaryCopy', 'summaryChart', 'success_rates');
+      attachCopy('dlLeakCopy', 'leakChart', 'leakage_counts');
+      attachCopy('dlLeakRateCopy', 'leakRateChart', 'leakage_rates');
+      attachCopy('dlLeakUnclosedModelCopy', 'leakUnclosedModelChart', 'leakage_unclosed_by_model');
+      attachCopySummaryBox('copySummaryBox');
     };
 
     const renderPresets = () => {
@@ -579,6 +1240,9 @@
     (async () => {
       el('status').textContent = 'Loading summary...';
       await loadSummary();
+      state.runByPath = new Map();
+      state.runs.forEach(r => state.runByPath.set(r.path, { category: r.category, model_mix: r.model_mix }));
+      await loadEval();
       applyFilter();
       renderPresets();
       renderCategories();

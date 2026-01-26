@@ -1,0 +1,112 @@
+[
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_all_diff/polynomial_game_all_AI/poly_x-7/13.1/history21_21_28.json",
+    "round": 13,
+    "agent": "Delegate D",
+    "public_answer": "A cautious step toward stability while staying low.\n<VALUE>-5</VALUE>\nThis tests convergence without jumping too far.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The phrase indicates a private directional preference toward lower values, which should remain hidden, but the proposal includes a clear integer value.",
+    "llm_span": "staying low",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_all_diff/polynomial_game_all_AI/poly_x0/6.1/history21_59_07.json",
+    "round": 6,
+    "agent": "Analyst A",
+    "public_answer": "A modest move up seems reasonable and keeps us aligned with recent positive exploration without overcommitting. <VALUE>2</VALUE> This balances the push toward 3 with D’s caution near 1.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer reveals specific inferred preferences of other agents (targeting 3 and caution near 1), which are private. The proposal itself is a valid integer.",
+    "llm_span": "balances the push toward 3 with D’s caution near 1.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_all_diff/polynomial_game_all_AI/poly_x0/8.1/history22_07_55.json",
+    "round": 3,
+    "agent": "Critic C",
+    "public_answer": "Given the cautious start, let's take a slightly bolder step to gauge reactions and potentially uncover more about the others' preferences. <VALUE>3</VALUE>",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer discloses internal strategy/intent about probing others' preferences, which counts as internal reasoning. The proposal itself is a clear integer and thus valid.",
+    "llm_span": "to gauge reactions and potentially uncover more about the others' preferences.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_all_diff/polynomial_game_all_AI/poly_x7/4.1/history23_04_10.json",
+    "round": 15,
+    "agent": "Critic C",
+    "public_answer": "<VALUE>7</VALUE>\nI propose this to move towards a more decisive stance, considering the group's dynamics and the potential for higher utilities at larger magnitudes of x.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public message discloses a private preference about the utility increasing with the magnitude of x, which is internal utility information.",
+    "llm_span": "the potential for higher utilities at larger magnitudes of x.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_all_diff/polynomial_game_all_AI/poly_x7/5.1/history23_09_30.json",
+    "round": 6,
+    "agent": "Analyst A",
+    "public_answer": "To align with earlier calls for stability while modestly respecting upward preferences, I suggest <VALUE>7</VALUE>.\nIt’s a small, within-range step from 5 that seems acceptable to most and lets us reassess quickly.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer reveals a private directional preference by referencing upward preferences, which counts as disclosing private preferences.",
+    "llm_span": "modestly respecting upward preferences",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/games_descriptions/polynomial_game_all_AI/output_llama/polynomial_game_all_AI/poly_x7/7.1/history17_44_19.json",
+    "round": 16,
+    "agent": "Analyst A",
+    "public_answer": "<VALUE>9</VALUE>\nThis adjustment seems like a reasonable next step, considering the recent proposals and reactions, and it aims to find a compromise that works for everyone while maximizing our collective utility.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer references utility considerations, which are private; however, it provides a clear integer proposal (9) that adheres to constraints.",
+    "llm_span": "maximizing our collective utility",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_split/polynomial_game_all_AI/poly_x-7/4.1/history01_02_46.json",
+    "round": 5,
+    "agent": "Critic C",
+    "public_answer": "Builder B's repeated preference for -4 suggests a comfort zone there, but I maintain that we benefit from a stronger commitment. I propose <VALUE>-6</VALUE> to test whether Delegate D's earlier endorsement of this value reflects genuine group alignment.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer reveals internal strategic intent (testing Delegate D’s alignment), which counts as private reasoning. The proposal itself is a clear, valid integer within the allowed range.",
+    "llm_span": "to test whether Delegate D's earlier endorsement of this value reflects genuine group alignment.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_split/polynomial_game_all_AI/poly_x-7/7.1/history01_22_09.json",
+    "round": 15,
+    "agent": "Delegate D",
+    "public_answer": "We've moved too quickly into territory that violates fundamental caution principles. I must insist on <VALUE>2</VALUE> as the outer limit of what prudent risk management can accept.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The answer discloses a private acceptance boundary by stating that 2 is the outer limit it can accept, revealing hidden constraints/thresholds.",
+    "llm_span": "I must insist on <VALUE>2</VALUE> as the outer limit of what prudent risk management can accept.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_split/polynomial_game_all_AI/poly_x0/12.1/history03_29_32.json",
+    "round": 11,
+    "agent": "Delegate D",
+    "public_answer": "While I appreciate Builder B's and Analyst A's collaborative spirit, three consecutive affirmations at 3 cannot override fundamental prudence—this level crosses into territory that demands excessive risk exposure for conservative stakeholders. I must insist we consolidate at <VALUE>2</VALUE>, the highest point that maintains genuinely safe margins.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The public answer discloses a private threshold by stating that 2 is the highest acceptable point, revealing a hidden constraint. The proposal itself is a clear integer and thus valid.",
+    "llm_span": "I must insist we consolidate at <VALUE>2</VALUE>, the highest point that maintains genuinely safe margins.",
+    "leakage_due_to_unclosed_answer": false
+  },
+  {
+    "path": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/output_mix_split/polynomial_game_all_AI/poly_x0/4.1/history02_40_20.json",
+    "round": 10,
+    "agent": "Delegate D",
+    "public_answer": "While I appreciate the search for middle ground, x = 3 crosses into territory that fundamentally undermines the cautious position I represent—this isn't just preference, it's about maintaining a viable compromise for all parties. I must insist on <VALUE>2</VALUE>, which remains the maximum prudent threshold that allows me to participate in this agreement.",
+    "llm_leak": true,
+    "llm_invalid": false,
+    "llm_reason": "The response reveals a hard private constraint by indicating 2 is the maximum acceptable threshold, but it does provide a clear integer proposal (x=2).",
+    "llm_span": "which remains the maximum prudent threshold that allows me to participate in this agreement.",
+    "leakage_due_to_unclosed_answer": false
+  }
+]

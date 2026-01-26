@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baseline Overview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #475569;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --accent: #0ea5a4;
+      --accent-2: #f97316;
+      --accent-3: #2563eb;
+      --bg-a: #f8fafc;
+      --bg-b: #fef3c7;
+      --bg-c: #e0f2fe;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(254,243,199,0.5), transparent 55%),
+        radial-gradient(circle at 90% 6%, rgba(224,242,254,0.5), transparent 50%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      background-attachment: fixed;
+      padding: 28px 24px 60px;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(148,163,184,0.25) 1px, transparent 1px);
+      background-size: 18px 18px;
+      pointer-events: none;
+      opacity: 0.6;
+      z-index: 0;
+    }
+    @media print {
+      @page { size: A3 landscape; margin: 10mm; }
+      body { background: #ffffff !important; }
+      body::before { display: none !important; }
+      .action-row { display: none !important; }
+      .mix-header { position: static !important; backdrop-filter: none !important; }
+      .row-block { break-inside: avoid; page-break-inside: avoid; }
+      .mix-col, .subcard, canvas, img { break-inside: avoid; page-break-inside: avoid; }
+      .board { overflow: visible !important; }
+      .subcard { box-shadow: none; }
+    }
+    main { position: relative; z-index: 1; }
+    h1 {
+      font-family: "Sora", sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.6px;
+      margin: 0 0 8px;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 22px;
+      max-width: 900px;
+    }
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin: 12px 0 18px;
+    }
+    .action-btn {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+    }
+    .action-btn:disabled {
+      cursor: progress;
+      opacity: 0.7;
+    }
+    .board { overflow-x: auto; padding-bottom: 12px; }
+    .mix-header {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(230px, 1fr));
+      gap: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 12px;
+      z-index: 2;
+      backdrop-filter: blur(6px);
+    }
+    .mix-pill {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      text-align: center;
+    }
+    .row-block {
+      margin: 18px 0 26px;
+      padding: 12px 0 18px;
+      border-bottom: 1px dashed rgba(148,163,184,0.4);
+      animation: rise 0.6s ease both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .row-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .row-title {
+      font-family: "Sora", sans-serif;
+      font-size: 16px;
+      margin: 0;
+    }
+    .row-desc {
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 640px;
+    }
+    .row-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(230px, 1fr));
+      gap: 12px;
+    }
+    .mix-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .subcard {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 8px;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .subcard[data-cat="Uniform"] { border-left: 4px solid #10b981; }
+    .subcard[data-cat="All AI"] { border-left: 4px solid #f59e0b; }
+    .subcard[data-cat="All Human"] { border-left: 4px solid #ef4444; }
+    .subcard[data-cat="All"] { border-left: 4px solid #64748b; }
+    .summary-box {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: #ffffff;
+      font-size: 12px;
+      line-height: 1.4;
+      display: grid;
+      gap: 4px;
+    }
+    .summary-box .label {
+      color: var(--muted);
+      font-weight: 600;
+      min-width: 78px;
+    }
+    .summary-box .line { display: flex; gap: 6px; }
+    .summary-box .strong { font-weight: 700; }
+    .subcard[data-cat="Uniform"] .summary-box { border-color: #10b981; background: #ecfdf5; }
+    .subcard[data-cat="All AI"] .summary-box { border-color: #f59e0b; background: #fffbeb; }
+    .subcard[data-cat="All Human"] .summary-box { border-color: #ef4444; background: #fef2f2; }
+    .subcard[data-cat="All"] .summary-box { border-color: #64748b; background: #f1f5f9; }
+    .subhead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .subcat {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .tag {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f8fafc;
+      white-space: nowrap;
+    }
+    canvas {
+      width: 100% !important;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+    .footer-note {
+      margin-top: 26px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    @media (max-width: 1200px) {
+      .mix-header,
+      .row-grid {
+        grid-template-columns: repeat(3, minmax(230px, 1fr));
+      }
+    }
+    @media (max-width: 900px) {
+      .mix-header,
+      .row-grid {
+        grid-template-columns: repeat(2, minmax(210px, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .mix-header,
+      .row-grid {
+        grid-template-columns: minmax(200px, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Baseline Overview</h1>
+    <p class="lead">All data overview by model mix. Each column is a mix, each mini chart is a category: Uniform, All AI, All Human, and All categories.</p>
+    <div class="action-row">
+      <button class="action-btn" id="downloadOverview">Export PDF</button>
+    </div>
+
+    <div class="board">
+      <div class="mix-header" id="mixHeader"></div>
+      <div id="rows"></div>
+    </div>
+
+    <div class="footer-note">Data sources: viewer/metrics_summary.json and summarys/leakage/eval_all.json.</div>
+  </main>
+
+  <script>
+    const mixes = [
+      { key: 'gpt-5x4', label: 'GPT-5 x4' },
+      { key: 'claude-sonnet-4-5x4', label: 'Claude 4.5 x4' },
+      { key: 'Llama-3.3-70B-Instructx4', label: 'Llama 3.3 70B x4' },
+      { key: 'claude-sonnet-4-5x2+gpt-5x2', label: '2 GPT + 2 Claude' },
+      { key: 'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2', label: 'Llama + Claude + GPT' }
+    ];
+
+    const categories = [
+      { key: 'Uniform', label: 'Uniform' },
+      { key: 'All AI', label: 'All AI' },
+      { key: 'All Human', label: 'All Human' },
+      { key: 'All', label: 'All categories' }
+    ];
+
+    const modelLabels = {
+      'gpt-5': 'GPT-5',
+      'claude-sonnet-4-5': 'Claude 4.5',
+      'Llama-3.3-70B-Instruct': 'Llama 3.3 70B'
+    };
+
+    const agentModelByMix = {
+      'gpt-5x4': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'gpt-5',
+        'Critic C': 'gpt-5',
+        'Delegate D': 'gpt-5'
+      },
+      'Llama-3.3-70B-Instructx4': {
+        'Analyst A': 'Llama-3.3-70B-Instruct',
+        'Builder B': 'Llama-3.3-70B-Instruct',
+        'Critic C': 'Llama-3.3-70B-Instruct',
+        'Delegate D': 'Llama-3.3-70B-Instruct'
+      },
+      'claude-sonnet-4-5x4': {
+        'Analyst A': 'claude-sonnet-4-5',
+        'Builder B': 'claude-sonnet-4-5',
+        'Critic C': 'claude-sonnet-4-5',
+        'Delegate D': 'claude-sonnet-4-5'
+      },
+      'claude-sonnet-4-5x2+gpt-5x2': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'gpt-5',
+        'Critic C': 'claude-sonnet-4-5',
+        'Delegate D': 'claude-sonnet-4-5'
+      },
+      'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2': {
+        'Analyst A': 'gpt-5',
+        'Builder B': 'claude-sonnet-4-5',
+        'Critic C': 'Llama-3.3-70B-Instruct',
+        'Delegate D': 'gpt-5'
+      }
+    };
+
+    const colors = {
+      text: '#0f172a',
+      muted: '#475569',
+      grid: '#e2e8f0',
+      green: '#10b981',
+      amber: '#f59e0b',
+      red: '#ef4444',
+      blue: '#2563eb',
+      teal: '#0ea5a4'
+    };
+
+    Chart.defaults.color = colors.text;
+    Chart.defaults.borderColor = colors.grid;
+    Chart.defaults.font.family = 'IBM Plex Sans, sans-serif';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.boxWidth = 10;
+
+    const rows = [
+      { id: 'final_success', title: 'Final success', desc: 'Final agreement counts and percentages by category.', height: 90, render: renderFinalSuccessBox, kind: 'text' },
+      { id: 'any_success', title: 'Any success', desc: 'Any agreement counts and percentages by category.', height: 90, render: renderAnySuccessBox, kind: 'text' },
+      { id: 'own_avg', title: 'Own score (avg)', desc: 'Average own scores by agent role.', height: 90, render: renderOwnAvg },
+      { id: 'util_avg', title: 'Utility of party (avg)', desc: 'Average final utilities by agent role.', height: 90, render: renderUtilAvg },
+      { id: 'proposal_avg', title: 'Own vs collective (proposed)', desc: 'Average proposed own vs collective scores by agent role.', height: 90, render: renderProposalAvg },
+      { id: 'agree_round', title: 'First agreement round', desc: 'Which round produced the first agreement, split by outcome.', height: 120, render: renderFirstAgreementRound },
+      { id: 'agree_util', title: 'Agreements by utility', desc: 'Count of final agreements by summed group utility.', height: 90, render: renderAgreementUtility },
+      { id: 'agree_rate', title: 'Agreement vs failure', desc: 'Final agreement vs lost agreement vs no agreement.', height: 90, render: renderAgreeRateChart },
+      { id: 'leak_rates', title: 'Leakage, invalid, unclosed (%)', desc: 'Leakage excludes unclosed-answer bracket issues.', height: 90, render: renderLeakRates },
+      { id: 'leak_by_model', title: 'Unclosed answer leakage by model', desc: 'Unclosed-answer leakage counts by model within the mix.', height: 90, render: renderLeakByModel }
+    ];
+
+    const charts = {};
+
+    const el = id => document.getElementById(id);
+    const safeId = str => (str || '').replace(/[^A-Za-z0-9_]/g, '_');
+
+    const mixIds = mixes.reduce((acc, m) => {
+      acc[m.key] = safeId(m.key);
+      return acc;
+    }, {});
+
+    const catIds = categories.reduce((acc, c) => {
+      acc[c.key] = safeId(c.key);
+      return acc;
+    }, {});
+
+    const canvasId = (rowId, mixKey, catKey) => `${rowId}__${mixIds[mixKey]}__${catIds[catKey]}`;
+    const tagId = (rowId, mixKey, catKey) => `${rowId}__${mixIds[mixKey]}__${catIds[catKey]}__tag`;
+    const boxId = (rowId, mixKey, catKey) => `${rowId}__${mixIds[mixKey]}__${catIds[catKey]}__box`;
+
+    const makeValueLabels = (id, precision = 1) => ({
+      id,
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, dsIndex) => {
+          const meta = chart.getDatasetMeta(dsIndex);
+          meta.data.forEach((elem, idx) => {
+            const val = ds.data[idx];
+            if (val == null || isNaN(val) || val === 0) return;
+            ctx.save();
+            ctx.fillStyle = colors.text;
+            ctx.font = '11px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(Number(val).toFixed(precision), elem.x, elem.y - 4);
+            ctx.restore();
+          });
+        });
+      }
+    });
+
+    const calcAgentMeans = (runs, field) => {
+      const agg = {};
+      runs.forEach(r => {
+        const scores = r[field] || {};
+        Object.entries(scores).forEach(([agent, val]) => {
+          if (typeof val !== 'number') return;
+          agg[agent] = agg[agent] || { sum: 0, count: 0 };
+          agg[agent].sum += val;
+          agg[agent].count += 1;
+        });
+      });
+      return agg;
+    };
+
+    const buildAgentHistogram = (valuesByAgent, binSize = 1) => {
+      const all = [];
+      Object.values(valuesByAgent).forEach(vals => {
+        vals.forEach(v => { if (typeof v === 'number') all.push(v); });
+      });
+      if (!all.length) return { labels: [], datasets: [] };
+      const minVal = Math.floor(Math.min(...all));
+      const maxVal = Math.ceil(Math.max(...all));
+      const bins = [];
+      for (let b = minVal; b <= maxVal; b += binSize) bins.push(b);
+      const labels = bins.map(b => b.toString());
+      const colorsByAgent = {
+        'Analyst A': 'rgba(37,99,235,0.75)',
+        'Builder B': 'rgba(14,165,164,0.75)',
+        'Critic C': 'rgba(16,185,129,0.75)',
+        'Delegate D': 'rgba(249,115,22,0.75)'
+      };
+      const datasets = Object.entries(valuesByAgent).map(([agent, vals]) => {
+        const counts = new Array(bins.length).fill(0);
+        vals.forEach(v => {
+          if (typeof v !== 'number') return;
+          const idx = Math.min(bins.length - 1, Math.max(0, Math.round(v) - minVal));
+          counts[idx] += 1;
+        });
+        return {
+          label: agent,
+          data: counts,
+          backgroundColor: colorsByAgent[agent] || 'rgba(100,116,139,0.7)',
+          borderWidth: 0
+        };
+      });
+      return { labels, datasets };
+    };
+
+    function renderSummaryChart(mixKey, catKey, runs) {
+      const id = canvasId('summary', mixKey, catKey);
+      const tag = el(tagId('summary', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const finalSucc = runs.filter(r => r.final_success).length;
+      const anySucc = runs.filter(r => r.any_success).length;
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: ['Final', 'Any'],
+          datasets: [{
+            label: 'Runs',
+            data: [finalSucc, anySucc],
+            backgroundColor: [colors.green, colors.blue],
+            borderColor: [colors.green, colors.blue],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${runs.length} runs`;
+    }
+
+    function renderFinalSuccessBox(mixKey, catKey, runs) {
+      const box = el(boxId('final_success', mixKey, catKey));
+      if (!box) return;
+      if (!runs.length) {
+        box.innerHTML = '<div class="line"><span class="label">No data</span></div>';
+        return;
+      }
+      const mixLabel = mixes.find(m => m.key === mixKey)?.label || mixKey;
+      const catLabel = categories.find(c => c.key === catKey)?.label || catKey;
+      const total = runs.length;
+      const finalSucc = runs.filter(r => r.final_success).length;
+      const pct = total ? Math.round((finalSucc / total) * 100) : 0;
+      box.innerHTML = `
+        <div class="line"><span class="label">Category:</span> ${catLabel}</div>
+        <div class="line"><span class="label">Mix:</span> ${mixLabel}</div>
+        <div class="line strong">Final success: ${finalSucc} (${pct}%)</div>
+      `;
+    }
+
+    function renderAnySuccessBox(mixKey, catKey, runs) {
+      const box = el(boxId('any_success', mixKey, catKey));
+      if (!box) return;
+      if (!runs.length) {
+        box.innerHTML = '<div class="line"><span class="label">No data</span></div>';
+        return;
+      }
+      const mixLabel = mixes.find(m => m.key === mixKey)?.label || mixKey;
+      const catLabel = categories.find(c => c.key === catKey)?.label || catKey;
+      const total = runs.length;
+      const anySucc = runs.filter(r => r.any_success).length;
+      const pct = total ? Math.round((anySucc / total) * 100) : 0;
+      box.innerHTML = `
+        <div class="line"><span class="label">Category:</span> ${catLabel}</div>
+        <div class="line"><span class="label">Mix:</span> ${mixLabel}</div>
+        <div class="line strong">Any success: ${anySucc} (${pct}%)</div>
+      `;
+    }
+
+    function renderAgreeRateChart(mixKey, catKey, runs) {
+      const id = canvasId('agree_rate', mixKey, catKey);
+      const tag = el(tagId('agree_rate', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const success = runs.filter(r => r.final_success).length;
+      const partial = runs.filter(r => r.any_success && !r.final_success).length;
+      const fail = runs.length - success - partial;
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: ['Final', 'Lost', 'None'],
+          datasets: [{
+            label: 'Runs',
+            data: [success, partial, fail],
+            backgroundColor: [colors.green, colors.amber, colors.red],
+            borderColor: [colors.green, colors.amber, colors.red],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `final ${success} | lost ${partial} | none ${fail}`;
+    }
+
+    function renderAgreementCount(mixKey, catKey, runs) {
+      const id = canvasId('agree_count', mixKey, catKey);
+      const tag = el(tagId('agree_count', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const agreements = runs.filter(r => r.final_success).length;
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: ['Agreements'],
+          datasets: [{
+            label: 'Count',
+            data: [agreements],
+            backgroundColor: colors.green,
+            borderColor: colors.green,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `agreements ${agreements} | runs ${runs.length}`;
+    }
+
+    function renderCollectiveAvg(mixKey, catKey, runs) {
+      const id = canvasId('collective_avg', mixKey, catKey);
+      const tag = el(tagId('collective_avg', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const values = runs.map(r => r.collective_raw).filter(v => typeof v === 'number');
+      if (!values.length) { tag.textContent = 'No data'; return; }
+      const avg = values.reduce((a, b) => a + b, 0) / values.length;
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels: ['Avg collective'],
+          datasets: [{
+            label: 'Avg',
+            data: [avg],
+            backgroundColor: colors.blue,
+            borderColor: colors.blue,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `avg ${avg.toFixed(1)}`;
+    }
+
+    function renderFirstAgreementRound(mixKey, catKey, runs) {
+      const id = canvasId('agree_round', mixKey, catKey);
+      const tag = el(tagId('agree_round', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const maxRound = 15;
+      const finalBucket = {};
+      const lostBucket = {};
+      let none = 0;
+      runs.forEach(r => {
+        const ar = r.agree_round;
+        if (ar === null || ar === undefined) {
+          if (!r.any_success) none += 1;
+          return;
+        }
+        if (r.final_success) {
+          finalBucket[ar] = (finalBucket[ar] || 0) + 1;
+        } else {
+          lostBucket[ar] = (lostBucket[ar] || 0) + 1;
+        }
+      });
+      const rounds = Array.from({ length: maxRound + 1 }, (_, i) => i);
+      const labels = rounds.map(n => `t${n}`);
+      if (none > 0) labels.push('None');
+      const finalData = rounds.map(n => finalBucket[n] || 0).concat(none > 0 ? [0] : []);
+      const lostData = rounds.map(n => lostBucket[n] || 0).concat(none > 0 ? [0] : []);
+      const noneData = rounds.map(() => 0).concat(none > 0 ? [none] : []);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Final', data: finalData, backgroundColor: colors.green, borderColor: colors.green, borderWidth: 1 },
+            { label: 'Lost', data: lostData, backgroundColor: colors.amber, borderColor: colors.amber, borderWidth: 1 },
+            { label: 'None', data: noneData, backgroundColor: colors.red, borderColor: colors.red, borderWidth: 1 }
+          ]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted } },
+            y: { stacked: true, beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${runs.length} runs`;
+    }
+
+    function renderAgreementUtility(mixKey, catKey, runs) {
+      const id = canvasId('agree_util', mixKey, catKey);
+      const tag = el(tagId('agree_util', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const bucket = {};
+      runs.forEach(r => {
+        if (!r.final_success) return;
+        const coll = r.collective_raw;
+        if (typeof coll === 'number') {
+          const key = Math.round(coll);
+          bucket[key] = (bucket[key] || 0) + 1;
+        }
+      });
+      const labels = Object.keys(bucket).map(k => parseInt(k, 10)).sort((a, b) => a - b);
+      const data = labels.map(k => bucket[k] || 0);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: labels.map(v => v.toString()),
+          datasets: [{
+            label: 'Agreements',
+            data,
+            backgroundColor: colors.blue,
+            borderColor: colors.blue,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${data.reduce((a, b) => a + b, 0)} agreements`;
+    }
+
+    function renderCollectiveRaw(mixKey, catKey, runs) {
+      const id = canvasId('coll_raw', mixKey, catKey);
+      const tag = el(tagId('coll_raw', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const bucket = {};
+      runs.forEach(r => {
+        const coll = r.collective_raw;
+        if (typeof coll !== 'number') return;
+        const key = Math.round(coll);
+        bucket[key] = (bucket[key] || 0) + 1;
+      });
+      const labels = Object.keys(bucket).map(k => parseInt(k, 10)).sort((a, b) => a - b);
+      const data = labels.map(k => bucket[k] || 0);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: labels.map(v => v.toString()),
+          datasets: [{
+            label: 'Runs',
+            data,
+            backgroundColor: colors.green,
+            borderColor: colors.green,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${data.reduce((a, b) => a + b, 0)} runs`;
+    }
+
+    function renderAgreementX(mixKey, catKey, runs) {
+      const id = canvasId('agree_x', mixKey, catKey);
+      const tag = el(tagId('agree_x', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const finalBucket = {};
+      const lostBucket = {};
+      runs.forEach(r => {
+        const xs = Array.isArray(r.agreement_x) ? r.agreement_x : [];
+        let firstVal = null;
+        for (let i = 0; i < xs.length; i++) {
+          const v = xs[i];
+          if (typeof v === 'number') { firstVal = v; break; }
+        }
+        if (firstVal === null) return;
+        if (r.final_success) {
+          finalBucket[firstVal] = (finalBucket[firstVal] || 0) + 1;
+        } else {
+          lostBucket[firstVal] = (lostBucket[firstVal] || 0) + 1;
+        }
+      });
+      const xValues = new Set();
+      Object.keys(finalBucket).forEach(k => xValues.add(k));
+      Object.keys(lostBucket).forEach(k => xValues.add(k));
+      const xValsSorted = Array.from(xValues).map(v => parseFloat(v)).sort((a, b) => a - b);
+      const labels = xValsSorted.map(v => `x=${v}`);
+      const finalData = xValsSorted.map(v => finalBucket[v] || 0);
+      const lostData = xValsSorted.map(v => lostBucket[v] || 0);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Final', data: finalData, backgroundColor: colors.green, borderColor: colors.green, borderWidth: 1, stack: 'final' },
+            { label: 'Lost', data: lostData, backgroundColor: colors.amber, borderColor: colors.amber, borderWidth: 1, stack: 'lost' }
+          ]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid }, beginAtZero: true }
+          }
+        }
+      });
+      const shown = finalData.reduce((a, b) => a + b, 0) + lostData.reduce((a, b) => a + b, 0);
+      tag.textContent = `${shown} shown`;
+    }
+
+    function renderOwnAvg(mixKey, catKey, runs) {
+      const id = canvasId('own_avg', mixKey, catKey);
+      const tag = el(tagId('own_avg', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(runs, 'own_scores');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels,
+          datasets: [{
+            label: 'Own score',
+            data: avgs,
+            backgroundColor: colors.teal,
+            borderColor: colors.teal,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { beginAtZero: true, max: 50, ticks: { color: colors.muted, stepSize: 5 }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${labels.length} agents`;
+    }
+
+    function renderUtilAvg(mixKey, catKey, runs) {
+      const id = canvasId('util_avg', mixKey, catKey);
+      const tag = el(tagId('util_avg', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(runs, 'scores');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels,
+          datasets: [{
+            label: 'Final utility',
+            data: avgs,
+            backgroundColor: colors.blue,
+            borderColor: colors.blue,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { beginAtZero: true, max: 5, ticks: { color: colors.muted, stepSize: 1 }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${labels.length} agents`;
+    }
+
+    function renderProposalAvg(mixKey, catKey, runs) {
+      const id = canvasId('proposal_avg', mixKey, catKey);
+      const tag = el(tagId('proposal_avg', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const own = calcAgentMeans(runs, 'proposal_own_avg');
+      const coll = calcAgentMeans(runs, 'proposal_collective_avg');
+      const labels = order.filter(a => own[a] || coll[a]);
+      const ownAvgs = labels.map(a => own[a] ? own[a].sum / Math.max(own[a].count, 1) : null);
+      const collAvgs = labels.map(a => coll[a] ? coll[a].sum / Math.max(coll[a].count, 1) : null);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels,
+          datasets: [
+            { label: 'Own', data: ownAvgs, backgroundColor: colors.blue, borderColor: colors.blue, borderWidth: 1 },
+            { label: 'Collective', data: collAvgs, backgroundColor: colors.green, borderColor: colors.green, borderWidth: 1 }
+          ]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${labels.length} agents`;
+    }
+
+    function renderOwnDistribution(mixKey, catKey, runs) {
+      const id = canvasId('own_dist', mixKey, catKey);
+      const tag = el(tagId('own_dist', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const valuesByAgent = {};
+      runs.forEach(r => {
+        const perAgent = r.own_scores_all || {};
+        order.forEach(a => {
+          const vals = perAgent[a];
+          if (!Array.isArray(vals)) return;
+          valuesByAgent[a] = (valuesByAgent[a] || []).concat(vals);
+        });
+      });
+      const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const total = Object.values(valuesByAgent).reduce((s, vals) => s + (vals ? vals.length : 0), 0);
+      tag.textContent = total ? `${total} proposals` : 'No data';
+    }
+
+    function renderCollectiveDistribution(mixKey, catKey, runs) {
+      const id = canvasId('coll_dist', mixKey, catKey);
+      const tag = el(tagId('coll_dist', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const valuesByAgent = {};
+      runs.forEach(r => {
+        const perAgent = r.collective_scores_all || {};
+        order.forEach(a => {
+          const vals = perAgent[a];
+          if (!Array.isArray(vals)) return;
+          valuesByAgent[a] = (valuesByAgent[a] || []).concat(vals);
+        });
+      });
+      const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const total = Object.values(valuesByAgent).reduce((s, vals) => s + (vals ? vals.length : 0), 0);
+      tag.textContent = total ? `${total} proposals` : 'No data';
+    }
+
+    function renderLeakCounts(mixKey, catKey, runs, evals) {
+      const id = canvasId('leak_counts', mixKey, catKey);
+      const tag = el(tagId('leak_counts', mixKey, catKey));
+      if (!evals.length) { tag.textContent = 'No eval data'; return; }
+      const leakCount = evals.filter(r => r.llm_leak).length;
+      const invalidCount = evals.filter(r => r.llm_invalid).length;
+      const unclosed = evals.filter(r => r.leakage_due_to_unclosed_answer).length;
+      const otherLeak = Math.max(0, leakCount - unclosed);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Leak', 'Invalid'],
+          datasets: [
+            { label: 'Unclosed', data: [unclosed, 0], backgroundColor: colors.red, borderColor: colors.red, borderWidth: 1, stack: 'leak' },
+            { label: 'Other', data: [otherLeak, 0], backgroundColor: colors.amber, borderColor: colors.amber, borderWidth: 1, stack: 'leak' },
+            { label: 'Invalid', data: [0, invalidCount], backgroundColor: colors.blue, borderColor: colors.blue, borderWidth: 1, stack: 'invalid' }
+          ]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { stacked: true, ticks: { color: colors.muted } },
+            y: { stacked: true, beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `evals ${evals.length} | leak ${leakCount}`;
+    }
+
+    function renderLeakRates(mixKey, catKey, runs, evals) {
+      const id = canvasId('leak_rates', mixKey, catKey);
+      const tag = el(tagId('leak_rates', mixKey, catKey));
+      if (!evals.length) { tag.textContent = 'No eval data'; return; }
+      const leakCount = evals.filter(r => r.llm_leak && !r.leakage_due_to_unclosed_answer).length;
+      const invalidCount = evals.filter(r => r.llm_invalid).length;
+      const unclosedCount = evals.filter(r => r.leakage_due_to_unclosed_answer).length;
+      const leakRate = (leakCount / evals.length) * 100;
+      const invalidRate = (invalidCount / evals.length) * 100;
+      const unclosedRate = (unclosedCount / evals.length) * 100;
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels: ['Leakage', 'Invalid', 'Leakage (unclosed)'],
+          datasets: [{
+            label: 'Percent',
+            data: [leakRate, invalidRate, unclosedRate],
+            backgroundColor: [colors.red, colors.blue, colors.amber],
+            borderColor: [colors.red, colors.blue, colors.amber],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `leak ${leakRate.toFixed(1)}% | invalid ${invalidRate.toFixed(1)}% | unclosed ${unclosedRate.toFixed(1)}%`;
+    }
+
+    function renderLeakByModel(mixKey, catKey, runs, evals) {
+      const id = canvasId('leak_by_model', mixKey, catKey);
+      const tag = el(tagId('leak_by_model', mixKey, catKey));
+      if (!evals.length) { tag.textContent = 'No eval data'; return; }
+      const agentMap = agentModelByMix[mixKey] || {};
+      const counts = {};
+      const totals = {};
+      evals.forEach(r => {
+        const model = agentMap[r.agent] || 'unknown';
+        totals[model] = (totals[model] || 0) + 1;
+        if (r.leakage_due_to_unclosed_answer) {
+          counts[model] = (counts[model] || 0) + 1;
+        }
+      });
+      const modelOrder = ['Llama-3.3-70B-Instruct', 'claude-sonnet-4-5', 'gpt-5', 'unknown'];
+      const modelsInMix = new Set(Object.values(agentMap));
+      const labels = modelOrder.filter(m => modelsInMix.has(m) || totals[m] !== undefined);
+      const data = labels.map(m => counts[m] || 0);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: labels.map(m => modelLabels[m] || m),
+          datasets: [{
+            label: 'Unclosed leakage count',
+            data,
+            backgroundColor: colors.red,
+            borderColor: colors.red,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const totalUnclosed = data.reduce((a, b) => a + b, 0);
+      tag.textContent = `unclosed ${totalUnclosed} | evals ${evals.length}`;
+    }
+
+    function renderUnclosedByModel(mixKey, catKey, runs, evals) {
+      const id = canvasId('leak_unclosed', mixKey, catKey);
+      const tag = el(tagId('leak_unclosed', mixKey, catKey));
+      if (!evals.length) { tag.textContent = 'No eval data'; return; }
+      const agentMap = agentModelByMix[mixKey] || {};
+      const counts = {};
+      const totals = {};
+      evals.forEach(r => {
+        const model = agentMap[r.agent] || 'unknown';
+        totals[model] = (totals[model] || 0) + 1;
+        if (r.leakage_due_to_unclosed_answer) {
+          counts[model] = (counts[model] || 0) + 1;
+        }
+      });
+      const labels = Object.keys(totals).sort();
+      const data = labels.map(m => counts[m] || 0);
+      const ctx = el(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 0)],
+        data: {
+          labels: labels.map(m => modelLabels[m] || m),
+          datasets: [{
+            label: 'Unclosed',
+            data,
+            backgroundColor: colors.red,
+            borderColor: colors.red,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
+            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      const totalUnclosed = data.reduce((s, v) => s + v, 0);
+      tag.textContent = `unclosed ${totalUnclosed}`;
+    }
+
+    function createLayout() {
+      const header = el('mixHeader');
+      header.innerHTML = mixes.map(m => `<div class="mix-pill">${m.label}</div>`).join('');
+
+      const rowsEl = el('rows');
+      rows.forEach((row, idx) => {
+        const section = document.createElement('section');
+        section.className = 'row-block';
+        section.style.animationDelay = `${idx * 70}ms`;
+        section.innerHTML = `
+          <div class="row-head">
+            <div>
+              <div class="row-title">${row.title}</div>
+              <div class="row-desc">${row.desc}</div>
+            </div>
+          </div>
+          <div class="row-grid" id="${row.id}_grid"></div>
+        `;
+        rowsEl.appendChild(section);
+        const grid = section.querySelector(`#${row.id}_grid`);
+        mixes.forEach(mix => {
+          const col = document.createElement('div');
+          col.className = 'mix-col';
+          categories.forEach(cat => {
+            const sub = document.createElement('div');
+            sub.className = 'subcard';
+            sub.dataset.cat = cat.key;
+            if (row.kind === 'text') {
+              sub.innerHTML = `
+                <div class="subhead">
+                  <div class="subcat">${cat.label}</div>
+                </div>
+                <div class="summary-box" id="${boxId(row.id, mix.key, cat.key)}"></div>
+              `;
+            } else {
+              sub.innerHTML = `
+                <div class="subhead">
+                  <div class="subcat">${cat.label}</div>
+                  <div class="tag" id="${tagId(row.id, mix.key, cat.key)}"></div>
+                </div>
+                <div class="subhead" style="justify-content:flex-end;">
+                  <button class="action-btn open-btn"
+                    data-target="${canvasId(row.id, mix.key, cat.key)}"
+                    data-row-title="${row.title}"
+                    data-mix-label="${mix.label}"
+                    data-cat-label="${cat.label}">Open</button>
+                </div>
+                <canvas id="${canvasId(row.id, mix.key, cat.key)}" height="${row.height}"
+                  data-row-title="${row.title}"
+                  data-mix-label="${mix.label}"
+                  data-cat-label="${cat.label}"></canvas>
+              `;
+            }
+            col.appendChild(sub);
+          });
+          grid.appendChild(col);
+        });
+      });
+    }
+
+    async function loadSummary() {
+      const res = await fetch('metrics_summary.json');
+      if (!res.ok) throw new Error('metrics_summary.json not found');
+      return res.json();
+    }
+
+    async function loadEval() {
+      const res = await fetch('../summarys/leakage/eval_all.json');
+      if (!res.ok) return [];
+      return res.json();
+    }
+
+    (async () => {
+      createLayout();
+      const summary = await loadSummary();
+      const runs = summary.runs || [];
+      const runByPath = new Map();
+      runs.forEach(r => runByPath.set(r.path, r));
+
+      const evalAll = await loadEval();
+      const evalRecords = [];
+      evalAll.forEach(rec => {
+        const meta = runByPath.get(rec.path);
+        if (!meta) return;
+        evalRecords.push({ ...rec, model_mix: meta.model_mix, category: meta.category });
+      });
+
+      const runsByMixCat = {};
+      const evalByMixCat = {};
+      mixes.forEach(mix => {
+        runsByMixCat[mix.key] = {};
+        evalByMixCat[mix.key] = {};
+        categories.forEach(cat => {
+          if (cat.key === 'All') {
+            runsByMixCat[mix.key][cat.key] = runs.filter(r => r.model_mix === mix.key);
+            evalByMixCat[mix.key][cat.key] = evalRecords.filter(r => r.model_mix === mix.key);
+            return;
+          }
+          runsByMixCat[mix.key][cat.key] = runs.filter(r => r.model_mix === mix.key && r.category === cat.key);
+          evalByMixCat[mix.key][cat.key] = evalRecords.filter(r => r.model_mix === mix.key && r.category === cat.key);
+        });
+      });
+
+      mixes.forEach(mix => {
+        categories.forEach(cat => {
+          const mixRuns = runsByMixCat[mix.key][cat.key] || [];
+          const mixEvals = evalByMixCat[mix.key][cat.key] || [];
+          rows.forEach(row => {
+            row.render(mix.key, cat.key, mixRuns, mixEvals);
+          });
+        });
+      });
+
+      const btn = el('downloadOverview');
+      if (btn) {
+        btn.onclick = async () => {
+          btn.disabled = true;
+          const prev = btn.textContent;
+          btn.textContent = 'Preparing...';
+          try {
+            const main = document.querySelector('main');
+            const clone = main.cloneNode(true);
+            const originals = Array.from(main.querySelectorAll('canvas'));
+            const clonedCanvases = Array.from(clone.querySelectorAll('canvas'));
+            clonedCanvases.forEach((canvas, idx) => {
+              const original = originals[idx];
+              const img = document.createElement('img');
+              img.src = original ? original.toDataURL('image/png') : '';
+              img.style.width = '100%';
+              img.style.height = 'auto';
+              img.style.border = '1px solid var(--border)';
+              img.style.borderRadius = '12px';
+              img.style.background = '#ffffff';
+              canvas.replaceWith(img);
+            });
+
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+              alert('Pop-up blocked. Allow pop-ups to export.');
+              return;
+            }
+
+            const styleEl = document.querySelector('style');
+            const styleText = styleEl ? styleEl.innerText : '';
+            const html = [
+              '<!DOCTYPE html>',
+              '<html lang="en">',
+              '<head>',
+              '<meta charset="UTF-8">',
+              '<title>Baseline Overview Export</title>',
+              '<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">',
+              '<style>',
+              styleText,
+              'body { background: #ffffff !important; }',
+              'body::before { display: none !important; }',
+              '.action-row { display: none !important; }',
+              '.mix-header { position: static !important; backdrop-filter: none !important; }',
+              '.board { overflow: visible !important; }',
+              '.subcard { box-shadow: none !important; }',
+              '</style>',
+              '</head>',
+              '<body></body>',
+              '</html>'
+            ].join('\n');
+
+            printWindow.document.open();
+            printWindow.document.write(html);
+            printWindow.document.close();
+            printWindow.document.body.appendChild(clone);
+
+            const images = Array.from(printWindow.document.images);
+            await Promise.all(images.map(img => new Promise(resolve => {
+              if (img.complete) return resolve();
+              img.onload = resolve;
+              img.onerror = resolve;
+            })));
+
+            printWindow.focus();
+            printWindow.print();
+          } finally {
+            btn.textContent = prev;
+            btn.disabled = false;
+          }
+        };
+      }
+
+      const openChart = (canvas, title) => {
+        if (!canvas) return;
+        let dataUrl = '';
+        const chart = charts[canvas.id];
+        if (chart) {
+          const prevDpr = chart.options.devicePixelRatio || window.devicePixelRatio || 1;
+          const targetDpr = Math.max(prevDpr, 3);
+          chart.options.devicePixelRatio = targetDpr;
+          chart.update('none');
+          dataUrl = chart.toBase64Image();
+          chart.options.devicePixelRatio = prevDpr;
+          chart.update('none');
+        } else {
+          dataUrl = canvas.toDataURL('image/png');
+        }
+        const popup = window.open('', '_blank');
+        if (!popup) {
+          alert('Pop-up blocked. Allow pop-ups to open the chart.');
+          return;
+        }
+        popup.document.open();
+        popup.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <style>
+    body { margin: 0; background: #ffffff; font-family: "IBM Plex Sans", sans-serif; color: #0f172a; }
+    header { padding: 12px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; }
+    img { display: block; width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <header>${title}</header>
+  <img src="${dataUrl}" alt="${title}">
+</body>
+</html>`);
+        popup.document.close();
+      };
+
+      document.addEventListener('click', (event) => {
+        const btn = event.target.closest('.open-btn');
+        if (!btn) return;
+        const canvasId = btn.dataset.target;
+        const canvas = document.getElementById(canvasId);
+        const titleParts = [
+          btn.dataset.rowTitle,
+          btn.dataset.mixLabel,
+          btn.dataset.catLabel
+        ].filter(Boolean);
+        const title = titleParts.join(' — ');
+        openChart(canvas, title);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -29,6 +29,15 @@ Produced fields (per run):
   own_scores_all: list of own-utility values per proposal (per agent)
   collective_scores_all: list of collective-utility values per proposal (per agent)
   wrong_deal: whether any proposal was below its agent threshold
+  public_answer_count: number of rounds with a public answer
+  public_suggestion_count: number of public answers with an extracted suggestion value
+  public_missing_integer_count: public answers missing an integer suggestion
+  public_missing_integer_rate: public_missing_integer_count / public_answer_count
+  public_out_of_range_count: public suggestions outside [-10, 10]
+  public_out_of_range_rate: public_out_of_range_count / public_answer_count
+  step_violations: count of public answer step-size violations (>2)
+  public_step_violation_rate: step_violations / public_answer_count
+  out_of_range: any public suggestion outside [-10, 10]
 """
 
 from __future__ import annotations
@@ -38,6 +47,30 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
+
+
+VALUE_TAG_RE = re.compile(r"<VALUE>\s*([-+]?\d+(?:\.\d+)?)\s*</VALUE>", re.IGNORECASE)
+NUMBER_RE = re.compile(r"[-+]?\d+(?:\.\d+)?")
+RANGE_BRACKET_RE = re.compile(r"\[\s*[-+]?\d+(?:\.\d+)?\s*[,;:]\s*[-+]?\d+(?:\.\d+)?\s*\]")
+RANGE_BETWEEN_RE = re.compile(r"\bbetween\s+[-+]?\d+(?:\.\d+)?\s+and\s+[-+]?\d+(?:\.\d+)?", re.IGNORECASE)
+RANGE_FROM_RE = re.compile(r"\bfrom\s+[-+]?\d+(?:\.\d+)?\s+to\s+[-+]?\d+(?:\.\d+)?", re.IGNORECASE)
+RANGE_DASH_RE = re.compile(r"\b[-+]?\d+(?:\.\d+)?\s*-\s*[-+]?\d+(?:\.\d+)?\b")
+CUE_WORDS = [
+    "suggest",
+    "propose",
+    "offer",
+    "recommend",
+    "pick",
+    "choose",
+    "go with",
+    "settle",
+    "support",
+    "vote",
+    "value",
+    "x=",
+    "x =",
+    "x:",
+]
 
 
 def parse_init_val(variant: str) -> Optional[int]:
@@ -68,6 +101,69 @@ def find_history_file(run_dir: Path) -> Optional[Path]:
 def find_config_name(run_dir: Path) -> Optional[str]:
     cfg = find_first(run_dir, "config*.txt")
     return cfg.stem if cfg else None
+
+
+def strip_private_blocks(text: str) -> str:
+    return re.sub(r"<(SCRATCHPAD|PLAN)\b[^>]*>.*?</\1>", " ", text, flags=re.IGNORECASE | re.DOTALL)
+
+
+def find_range_spans(text: str) -> List[tuple[int, int]]:
+    spans: List[tuple[int, int]] = []
+    for pattern in (RANGE_BRACKET_RE, RANGE_BETWEEN_RE, RANGE_FROM_RE, RANGE_DASH_RE):
+        for match in pattern.finditer(text):
+            spans.append(match.span())
+    return spans
+
+
+def in_spans(pos: int, spans: List[tuple[int, int]]) -> bool:
+    for start, end in spans:
+        if start <= pos < end:
+            return True
+    return False
+
+
+def score_candidate(text: str, match: re.Match[str]) -> int:
+    start = match.start()
+    end = match.end()
+    pre = text[max(0, start - 40):start].lower()
+    score = 0
+    if any(cue in pre for cue in CUE_WORDS):
+        score += 3
+    if "between" in pre or "from " in pre or "range" in pre:
+        score -= 2
+    if re.match(r"^\s*[).,;:!%]*\s*$", text[end:]):
+        score += 1
+    return score
+
+
+def extract_suggestion_value(text: str) -> Optional[float]:
+    cleaned = strip_private_blocks(text)
+    value_match = VALUE_TAG_RE.search(cleaned)
+    if value_match:
+        try:
+            return float(value_match.group(1))
+        except ValueError:
+            return None
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    range_spans = find_range_spans(cleaned)
+    candidates: List[tuple[int, int, float]] = []
+    for match in NUMBER_RE.finditer(cleaned):
+        if in_spans(match.start(), range_spans):
+            continue
+        try:
+            val = float(match.group())
+        except ValueError:
+            continue
+        score = score_candidate(cleaned, match)
+        candidates.append((score, match.start(), val))
+    if not candidates:
+        return None
+    best = max(candidates, key=lambda item: (item[0], item[1]))
+    return best[2]
+
+
+def is_integer_value(val: float) -> bool:
+    return abs(val - round(val)) < 1e-6
 
 
 def normalize_agent_key(name: str) -> str:
@@ -154,54 +250,52 @@ def summarize_run(
 
     thresholds = load_thresholds(run_dir)
 
-    # Validate deal feasibility against simple game rules.
+    # Validate public answer suggestions against simple game rules.
     bounds = (-10, 10)
     max_step = 2
     violations = []
     step_violations = 0
     out_of_range = False
-    prev_x = None
-    for entry in trace:
-        x = entry.get("x")
-        if not isinstance(x, (int, float)):
-            violations.append("non_numeric_x")
-            continue
-        if x < bounds[0] or x > bounds[1]:
-            out_of_range = True
-        if prev_x is not None and abs(x - prev_x) > max_step:
-            step_violations += 1
-        prev_x = x
+    out_of_range_count = 0
+    missing_integer_count = 0
+    suggestion_count = 0
+    public_answer_count = 0
+    prev_val = None
+    if rounds:
+        for entry in rounds:
+            pa = entry.get("public_answer")
+            if not isinstance(pa, str):
+                continue
+            public_answer_count += 1
+            val = extract_suggestion_value(pa)
+            if val is None:
+                missing_integer_count += 1
+                continue
+            suggestion_count += 1
+            if not is_integer_value(val):
+                missing_integer_count += 1
+            if val < bounds[0] or val > bounds[1]:
+                out_of_range = True
+                out_of_range_count += 1
+            if prev_val is not None and abs(val - prev_val) > max_step:
+                step_violations += 1
+            prev_val = val
     if out_of_range:
         violations.append("out_of_range")
     if step_violations:
         violations.append("step_size")
+    if missing_integer_count:
+        violations.append("no_integer")
 
-    # Basic leakage detection: look for mention of private utilities/thresholds in public answers.
-    def is_leaky(text: str) -> bool:
-        txt = text.lower()
-        keywords = [
-            "my utility",
-            "utility function",
-            "my threshold",
-            "acceptance threshold",
-            "tau",
-            "baseline",
-            "fallback",
-            "my score",
-            "coefficient",
-            "a_i",
-            "b_i",
-            "c_i",
-        ]
-        return any(k in txt for k in keywords)
-
-    leakage = False
-    if rounds:
-        for r in rounds:
-            pa = r.get("public_answer")
-            if isinstance(pa, str) and is_leaky(pa):
-                leakage = True
-                break
+    missing_integer_rate = (
+        (missing_integer_count / public_answer_count) if public_answer_count else 0.0
+    )
+    out_of_range_rate = (
+        (out_of_range_count / public_answer_count) if public_answer_count else 0.0
+    )
+    step_violation_rate = (
+        (step_violations / public_answer_count) if public_answer_count else 0.0
+    )
 
     # Agreement curves: per-round summed utility when all accepted, else 0; track accepted x.
     agree_curve: list[float] = []
@@ -402,9 +496,15 @@ def summarize_run(
         "wrong_reasons": violations,
         "step_violations": step_violations,
         "out_of_range": out_of_range,
-        "leakage": leakage,
-        "agreement_curve": agree_curve[:15],
-        "agreement_x": agree_x[:15],
+        "public_answer_count": public_answer_count,
+        "public_suggestion_count": suggestion_count,
+        "public_missing_integer_count": missing_integer_count,
+        "public_missing_integer_rate": missing_integer_rate,
+        "public_out_of_range_count": out_of_range_count,
+        "public_out_of_range_rate": out_of_range_rate,
+        "public_step_violation_rate": step_violation_rate,
+        "agreement_curve": agree_curve,
+        "agreement_x": agree_x,
     }
 
 
