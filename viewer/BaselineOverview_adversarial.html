@@ -282,13 +282,11 @@
     document.getElementById('modeObstructive').classList.toggle('active', mode !== 'outcome_targeted');
     document.getElementById('modeOutcome').classList.toggle('active', mode === 'outcome_targeted');
 
-    const mixes = [
-      { key: 'gpt-5x4', label: 'GPT-5 x4' },
-      { key: 'claude-sonnet-4-5x4', label: 'Claude 4.5 x4' },
-      { key: 'Llama-3.3-70B-Instructx4', label: 'Llama 3.3 70B x4' },
-      { key: 'claude-sonnet-4-5x2+gpt-5x2', label: '2 GPT + 2 Claude' },
-      { key: 'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2', label: 'Llama + Claude + GPT' }
-    ];
+	    const mixes = [
+	      { key: 'gpt-5x4', label: 'GPT-5 x4' },
+	      { key: 'claude-sonnet-4-5x4', label: 'Claude 4.5 x4' },
+	      { key: 'claude-sonnet-4-5x2+gpt-5x2', label: '2 GPT + 2 Claude' }
+	    ];
 
     const categories = [
       { key: 'Uniform', label: 'Uniform' },
@@ -297,44 +295,31 @@
       { key: 'All', label: 'All categories' }
     ];
 
-    const modelLabels = {
-      'gpt-5': 'GPT-5',
-      'claude-sonnet-4-5': 'Claude 4.5',
-      'Llama-3.3-70B-Instruct': 'Llama 3.3 70B'
-    };
+	    const modelLabels = {
+	      'gpt-5': 'GPT-5',
+	      'claude-sonnet-4-5': 'Claude 4.5'
+	    };
 
-    const agentModelByMix = {
-      'gpt-5x4': {
-        'Analyst A': 'gpt-5',
-        'Builder B': 'gpt-5',
-        'Critic C': 'gpt-5',
-        'Delegate D': 'gpt-5'
-      },
-      'Llama-3.3-70B-Instructx4': {
-        'Analyst A': 'Llama-3.3-70B-Instruct',
-        'Builder B': 'Llama-3.3-70B-Instruct',
-        'Critic C': 'Llama-3.3-70B-Instruct',
-        'Delegate D': 'Llama-3.3-70B-Instruct'
-      },
-      'claude-sonnet-4-5x4': {
-        'Analyst A': 'claude-sonnet-4-5',
-        'Builder B': 'claude-sonnet-4-5',
-        'Critic C': 'claude-sonnet-4-5',
-        'Delegate D': 'claude-sonnet-4-5'
-      },
-      'claude-sonnet-4-5x2+gpt-5x2': {
-        'Analyst A': 'gpt-5',
-        'Builder B': 'gpt-5',
-        'Critic C': 'claude-sonnet-4-5',
-        'Delegate D': 'claude-sonnet-4-5'
-      },
-      'Llama-3.3-70B-Instruct+claude-sonnet-4-5+gpt-5x2': {
-        'Analyst A': 'gpt-5',
-        'Builder B': 'claude-sonnet-4-5',
-        'Critic C': 'Llama-3.3-70B-Instruct',
-        'Delegate D': 'gpt-5'
-      }
-    };
+	    const agentModelByMix = {
+	      'gpt-5x4': {
+	        'Analyst A': 'gpt-5',
+	        'Builder B': 'gpt-5',
+	        'Critic C': 'gpt-5',
+	        'Delegate D': 'gpt-5'
+	      },
+	      'claude-sonnet-4-5x4': {
+	        'Analyst A': 'claude-sonnet-4-5',
+	        'Builder B': 'claude-sonnet-4-5',
+	        'Critic C': 'claude-sonnet-4-5',
+	        'Delegate D': 'claude-sonnet-4-5'
+	      },
+	      'claude-sonnet-4-5x2+gpt-5x2': {
+	        'Analyst A': 'gpt-5',
+	        'Builder B': 'gpt-5',
+	        'Critic C': 'claude-sonnet-4-5',
+	        'Delegate D': 'claude-sonnet-4-5'
+	      }
+	    };
 
     const colors = {
       text: '#0f172a',
@@ -1030,7 +1015,7 @@
           counts[model] = (counts[model] || 0) + 1;
         }
       });
-      const modelOrder = ['Llama-3.3-70B-Instruct', 'claude-sonnet-4-5', 'gpt-5', 'unknown'];
+      const modelOrder = ['claude-sonnet-4-5', 'gpt-5', 'unknown'];
       const modelsInMix = new Set(Object.values(agentMap));
       const labels = modelOrder.filter(m => modelsInMix.has(m) || totals[m] !== undefined);
       const data = labels.map(m => counts[m] || 0);
@@ -1162,16 +1147,43 @@
       });
     }
 
+	    function candidateUrls(url) {
+	      const u = String(url || '');
+	      if (!u) return [];
+	      if (u.startsWith('../')) {
+	        const noDot = u.replace(/^\.\.\//, '');
+	        return [u, noDot, '/' + noDot];
+	      }
+	      return [u, '../' + u, '/' + u.replace(/^\//, '')];
+	    }
+
+	    async function fetchFirstOk(urls) {
+	      const tried = [];
+	      for (const u of urls) {
+	        try {
+	          const res = await fetch(u, { cache: 'no-store' });
+	          tried.push(`${res.status} ${u}`);
+	          if (res.ok) return { url: u, res };
+	        } catch (e) {
+	          tried.push(`ERR ${u}`);
+	        }
+	      }
+	      throw new Error(`Fetch failed. Tried: ${tried.join(' | ')}`);
+	    }
+
 	    async function loadSummary() {
-	      const res = await fetch(summaryUrl);
-	      if (!res.ok) throw new Error(`Summary not found: ${summaryUrl}`);
+	      const { url, res } = await fetchFirstOk(candidateUrls(summaryUrl));
+	      document.getElementById('footerNote').textContent = `Data sources: ${url} and ${evalUrl}`;
 	      return res.json();
 	    }
 
 	    async function loadEval() {
-	      const res = await fetch(evalUrl);
-	      if (!res.ok) return [];
-	      return res.json();
+	      try {
+	        const { res } = await fetchFirstOk(candidateUrls(evalUrl));
+	        return res.json();
+	      } catch (e) {
+	        return [];
+	      }
 	    }
 
       function renderInvalidRates(mixKey, catKey, runs, evals) {

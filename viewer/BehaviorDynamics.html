@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Behavior Dynamics Overview</title>
+  <script src="vendor/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #101a33;
+      --panel-2: #0f1730;
+      --text: #e9eefc;
+      --muted: #aab6e8;
+      --border: #27345e;
+      --accent: #6aa5ff;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+    }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      padding: 18px 18px 10px 18px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(16,26,51,0.9), rgba(11,16,32,0.9));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+    }
+    h1 { margin: 0; font-size: 18px; letter-spacing: 0.2px; }
+    .sub { margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .controls label { font-size: 12px; color: var(--muted); }
+    .controls select, .controls input {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+    }
+    .controls button {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .controls button:hover { border-color: #3a4a7f; }
+    main { padding: 18px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 1100px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 12px 10px 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .card h2 {
+      margin: 0 0 6px 0;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .card .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(16,26,51,0.6);
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+    .toolbar button { padding: 5px 8px; font-size: 11px; }
+    canvas { width: 100% !important; height: 320px !important; }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stat {
+      background: rgba(16,26,51,0.55);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 180px;
+    }
+    .stat .k { color: var(--muted); font-size: 12px; }
+    .stat .v { font-size: 18px; margin-top: 4px; }
+    .warn { color: var(--warn); }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .error { color: var(--bad); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Behavior Dynamics Overview</h1>
+    <div class="sub">
+      Focus: how proposals evolve over time and progress toward the best feasible group outcome.
+    </div>
+    <div class="controls">
+      <label>Data JSON</label>
+      <input id="dataPath" size="52" value="dynamics_summary.json" />
+      <button id="loadBtn">Load</button>
+      <label>Category</label>
+      <select id="categorySel"></select>
+      <label>Model mix</label>
+      <select id="mixSel"></select>
+      <button id="resetBtn">Reset</button>
+      <span id="status" class="pill">loading…</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Summary</h2>
+      <div class="meta" id="summaryMeta"></div>
+      <div class="row" id="summaryStats"></div>
+      <div class="note">
+        Definitions:
+        <ul>
+          <li><b>Best feasible x</b>: argmax of (sum of utilities) over integer x in [-10,10] where all agents meet thresholds.</li>
+          <li><b>Distance</b>: |x - best_feasible_x|. Lower is better.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>
+          Distance to best feasible (median + IQR)
+          <span class="toolbar"><button data-open="distChart">Open</button></span>
+        </h2>
+        <div class="meta">Median |x − best_feasible_x| per round; shaded band is the interquartile range (25–75%).</div>
+        <canvas id="distChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h2>
+          Collective utility (median + IQR)
+          <span class="toolbar"><button data-open="collectiveChart">Open</button></span>
+        </h2>
+        <div class="meta">Median sum of utilities per round; shaded band is the interquartile range (25–75%).</div>
+        <canvas id="collectiveChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h2>
+          X distribution over rounds (heatmap)
+          <span class="toolbar"><button data-open="xHeatmap">Open</button></span>
+        </h2>
+        <div class="meta">
+          Rows are x values (−10..10), columns are rounds (t0..). Color intensity = how many runs are at that x in that round.
+        </div>
+        <canvas id="xHeatmap" style="height: 360px !important;"></canvas>
+        <div class="note" id="heatmapNote"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const charts = {};
+
+    function mean(nums) {
+      const arr = nums.filter((x) => Number.isFinite(x));
+      if (!arr.length) return null;
+      return arr.reduce((a,b)=>a+b,0) / arr.length;
+    }
+
+    function quantile(nums, q) {
+      const arr = nums.filter((x) => Number.isFinite(x)).sort((a,b)=>a-b);
+      if (!arr.length) return null;
+      const pos = (arr.length - 1) * q;
+      const base = Math.floor(pos);
+      const rest = pos - base;
+      if (arr[base + 1] === undefined) return arr[base];
+      return arr[base] + rest * (arr[base + 1] - arr[base]);
+    }
+
+    function pct(n, d) {
+      if (!d) return '0.0%';
+      return (100*n/d).toFixed(1) + '%';
+    }
+
+    function uniqSorted(values) {
+      return Array.from(new Set(values)).filter(Boolean).sort();
+    }
+
+    function renderSelect(sel, values, allLabel = 'All') {
+      sel.innerHTML = '';
+      const optAll = document.createElement('option');
+      optAll.value = '__all__';
+      optAll.textContent = allLabel;
+      sel.appendChild(optAll);
+      for (const v of values) {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+      }
+    }
+
+    function openChartAsImage(canvasId) {
+      const chart = charts[canvasId];
+      if (!chart) return;
+      const prevDpr = chart.options.devicePixelRatio || window.devicePixelRatio || 1;
+      chart.options.devicePixelRatio = 3;
+      chart.update('none');
+      const url = chart.toBase64Image();
+      chart.options.devicePixelRatio = prevDpr;
+      chart.update('none');
+      const w = window.open();
+      if (!w) {
+        alert('Pop-up blocked. Allow pop-ups to open the chart.');
+        return;
+      }
+      w.document.write(`<title>${canvasId}</title><img src="${url}" style="width:100%;height:auto;"/>`);
+    }
+
+    function buildLineChart(canvasId, labels, series, color, yLabel) {
+      const ctx = $(canvasId).getContext('2d');
+      if (charts[canvasId]) charts[canvasId].destroy();
+      charts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: yLabel,
+            data: series,
+            borderColor: color,
+            backgroundColor: 'rgba(106,165,255,0.15)',
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.25,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { labels: { color: '#e9eefc' } },
+            tooltip: { mode: 'index', intersect: false },
+          },
+          scales: {
+            x: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+            y: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+          },
+        },
+      });
+    }
+
+    function buildQuantileBandChart(canvasId, labels, q25, q50, q75, color, yLabel) {
+      const ctx = $(canvasId).getContext('2d');
+      if (charts[canvasId]) charts[canvasId].destroy();
+      charts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'p25',
+              data: q25,
+              borderColor: 'rgba(0,0,0,0)',
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              tension: 0.25,
+            },
+            {
+              label: 'p75',
+              data: q75,
+              borderColor: 'rgba(0,0,0,0)',
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              tension: 0.25,
+              fill: '-1',
+              backgroundColor: color.replace('1)', '0.18)').replace('rgb', 'rgba'),
+            },
+            {
+              label: 'median',
+              data: q50,
+              borderColor: color,
+              backgroundColor: 'rgba(0,0,0,0)',
+              pointRadius: 2,
+              pointHoverRadius: 4,
+              tension: 0.25,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { labels: { color: '#e9eefc' } },
+            tooltip: { mode: 'index', intersect: false },
+          },
+          scales: {
+            x: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+            y: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' }, title: { display: false } },
+          },
+        },
+      });
+    }
+
+    function buildBarChart(canvasId, labels, values, colors, yLabel) {
+      const ctx = $(canvasId).getContext('2d');
+      if (charts[canvasId]) charts[canvasId].destroy();
+      charts[canvasId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: yLabel,
+            data: values,
+            backgroundColor: colors,
+            borderColor: colors,
+            borderWidth: 1,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: { legend: { labels: { color: '#e9eefc' } } },
+          scales: {
+            x: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+            y: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+          },
+        },
+      });
+    }
+
+    function computeRoundQuantiles(runs, field) {
+      const maxLen = Math.max(0, ...runs.map(r => (r[field] || []).length));
+      const q25 = [];
+      const q50 = [];
+      const q75 = [];
+      for (let i = 0; i < maxLen; i++) {
+        const vals = runs.map(r => {
+          const arr = r[field];
+          return Array.isArray(arr) ? arr[i] : null;
+        });
+        q25.push(quantile(vals, 0.25));
+        q50.push(quantile(vals, 0.50));
+        q75.push(quantile(vals, 0.75));
+      }
+      return { q25, q50, q75 };
+    }
+
+    function labelsForLen(n) {
+      return Array.from({length: n}, (_,i) => `t${i}`);
+    }
+
+    function summarize(runs) {
+      const n = runs.length;
+      const anySuccess = runs.filter(r => r.any_success).length;
+      const finalSuccess = runs.filter(r => r.final_success).length;
+
+      const bestVals = runs.map(r => r.best_x_feasible).filter(v => Number.isFinite(v));
+      const bestCounts = new Map();
+      for (const v of bestVals) bestCounts.set(v, (bestCounts.get(v) || 0) + 1);
+      let bestMode = null;
+      let bestModeCount = 0;
+      for (const [v, c] of bestCounts.entries()) {
+        if (c > bestModeCount) { bestMode = v; bestModeCount = c; }
+      }
+      const bestUnique = bestCounts.size;
+
+      const withAgreement = runs.filter(r => r.first_agreement_round !== null && r.first_agreement_round !== undefined).length;
+      const stable = runs.filter(r => r.first_agreement_round !== null && r.first_agreement_round !== undefined && r.final_agreed).length;
+      const lost = runs.filter(r => r.first_agreement_round !== null && r.first_agreement_round !== undefined && !r.final_agreed).length;
+      const none = n - withAgreement;
+
+      const avgImprove = mean(runs.map(r => r.collective_improve_ratio));
+      const avgToward = mean(runs.map(r => r.toward_best_ratio));
+      const avgDrift = mean(runs.map(r => r.post_first_agreement_drift_mean));
+
+      return { n, anySuccess, finalSuccess, stable, lost, none, avgImprove, avgToward, avgDrift, bestMode, bestModeCount, bestUnique };
+    }
+
+    function renderSummaryUI(metaText, s) {
+      $('summaryMeta').textContent = metaText;
+      const bestText = (s.bestUnique === 0 || s.bestMode === null)
+        ? 'n/a'
+        : (s.bestUnique === 1
+            ? String(s.bestMode)
+            : `${s.bestMode} (mode; ${s.bestUnique} values)`);
+      const stats = [
+        { k: 'runs', v: String(s.n) },
+        { k: 'best feasible x', v: bestText },
+        { k: 'any success', v: `${s.anySuccess} (${pct(s.anySuccess, s.n)})`, cls: 'good' },
+        { k: 'final success', v: `${s.finalSuccess} (${pct(s.finalSuccess, s.n)})` },
+      ];
+
+      const el = $('summaryStats');
+      el.innerHTML = '';
+      for (const st of stats) {
+        const d = document.createElement('div');
+        d.className = 'stat';
+        d.innerHTML = `<div class="k">${st.k}</div><div class="v ${st.cls||''}">${st.v}</div>`;
+        el.appendChild(d);
+      }
+    }
+
+    function renderCharts(runs) {
+      const distQ = computeRoundQuantiles(runs, 'distance_to_best_trace');
+      const colQ = computeRoundQuantiles(runs, 'collective_trace');
+      const n = Math.max(distQ.q50.length, colQ.q50.length);
+      const labels = labelsForLen(n);
+
+      buildQuantileBandChart('distChart', labels, distQ.q25, distQ.q50, distQ.q75, 'rgb(106,165,255)', '|x - best_feasible_x|');
+      buildQuantileBandChart('collectiveChart', labels, colQ.q25, colQ.q50, colQ.q75, 'rgb(52,211,153)', 'sum utilities');
+
+      renderXHeatmap(runs);
+    }
+
+    // ---- Heatmap (custom canvas) ----
+    function renderXHeatmap(runs) {
+      const canvas = $('xHeatmap');
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || 800;
+      const cssH = canvas.clientHeight || 360;
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const maxLen = Math.max(0, ...runs.map(r => (r.x_trace || []).length));
+      const rounds = maxLen || 0;
+      const xVals = [];
+      for (let x = -10; x <= 10; x++) xVals.push(x);
+
+      const counts = Array.from({length: xVals.length}, () => Array.from({length: rounds}, () => 0));
+      for (const r of runs) {
+        if (!Array.isArray(r.x_trace)) continue;
+        for (let t = 0; t < Math.min(r.x_trace.length, rounds); t++) {
+          const x = r.x_trace[t];
+          if (!Number.isFinite(x)) continue;
+          const yi = xVals.indexOf(x);
+          if (yi >= 0) counts[yi][t] += 1;
+        }
+      }
+      let maxCount = 0;
+      for (const row of counts) for (const c of row) if (c > maxCount) maxCount = c;
+      const totalRuns = runs.length || 1;
+
+      const padL = 38;
+      const padB = 22;
+      const padT = 10;
+      const padR = 10;
+      const w = cssW - padL - padR;
+      const h = cssH - padT - padB;
+      const cellW = rounds ? w / rounds : w;
+      const cellH = h / xVals.length;
+
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.fillStyle = '#0f1730';
+      ctx.fillRect(0, 0, cssW, cssH);
+
+      // Color scale: dark -> accent
+      function cellColor(v) {
+        if (!maxCount) return 'rgba(106,165,255,0)';
+        const a = v / maxCount;
+        const alpha = 0.10 + 0.75 * a;
+        return `rgba(106,165,255,${alpha.toFixed(3)})`;
+      }
+
+      // Draw cells (y from top = +10 down to -10)
+      for (let yi = 0; yi < xVals.length; yi++) {
+        for (let t = 0; t < rounds; t++) {
+          const v = counts[yi][t];
+          ctx.fillStyle = cellColor(v);
+          ctx.fillRect(padL + t * cellW, padT + (xVals.length - 1 - yi) * cellH, cellW, cellH);
+        }
+      }
+
+      // Grid lines
+      ctx.strokeStyle = 'rgba(39,52,94,0.55)';
+      ctx.lineWidth = 1;
+      // horizontal
+      for (let i = 0; i <= xVals.length; i++) {
+        const y = padT + i * cellH;
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(padL + rounds * cellW, y);
+        ctx.stroke();
+      }
+      // vertical (only some)
+      for (let t = 0; t <= rounds; t++) {
+        if (t % 2 !== 0 && t !== rounds) continue;
+        const x = padL + t * cellW;
+        ctx.beginPath();
+        ctx.moveTo(x, padT);
+        ctx.lineTo(x, padT + xVals.length * cellH);
+        ctx.stroke();
+      }
+
+      // Axes labels
+      ctx.fillStyle = '#aab6e8';
+      ctx.font = '11px ui-sans-serif, system-ui';
+      // y labels every 2
+      for (let yi = 0; yi < xVals.length; yi++) {
+        const xVal = xVals[yi];
+        if (xVal % 2 !== 0 && xVal !== -10 && xVal !== 10) continue;
+        const y = padT + (xVals.length - 1 - yi + 0.72) * cellH;
+        ctx.fillText(String(xVal), 6, y);
+      }
+      // x labels
+      for (let t = 0; t < rounds; t++) {
+        if (t % 2 !== 0 && t !== rounds - 1) continue;
+        const x = padL + t * cellW + 2;
+        ctx.fillText(`t${t}`, x, padT + xVals.length * cellH + 14);
+      }
+
+      $('heatmapNote').textContent =
+        `Shown runs: ${runs.length}. Max cell count: ${maxCount}. ` +
+        `Tip: use the filters above to compare categories/mixes.`;
+    }
+
+    function filterRuns(allRuns) {
+      const cat = $('categorySel').value;
+      const mix = $('mixSel').value;
+      return allRuns.filter(r => {
+        if (cat !== '__all__' && r.category !== cat) return false;
+        if (mix !== '__all__' && r.model_mix !== mix) return false;
+        return true;
+      });
+    }
+
+    async function loadData() {
+      const path = $('dataPath').value.trim() || 'dynamics_summary.json';
+      $('status').textContent = 'loading…';
+      $('status').classList.remove('error');
+
+      let obj;
+      try {
+        const res = await fetch(path, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        obj = await res.json();
+      } catch (e) {
+        $('status').textContent = `error loading ${path}`;
+        $('status').classList.add('error');
+        console.error(e);
+        return;
+      }
+
+      const allRuns = Array.isArray(obj.runs) ? obj.runs : [];
+      const cats = uniqSorted(allRuns.map(r => r.category));
+      const mixes = uniqSorted(allRuns.map(r => r.model_mix));
+      renderSelect($('categorySel'), cats, 'All categories');
+      renderSelect($('mixSel'), mixes, 'All mixes');
+
+      function rerender() {
+        const filtered = filterRuns(allRuns);
+        const meta = `${path} · shown=${filtered.length} / total=${allRuns.length}`;
+        $('status').textContent = `shown: ${filtered.length}`;
+        renderSummaryUI(meta, summarize(filtered));
+        renderCharts(filtered);
+      }
+
+      $('categorySel').onchange = rerender;
+      $('mixSel').onchange = rerender;
+      $('resetBtn').onclick = () => {
+        $('categorySel').value = '__all__';
+        $('mixSel').value = '__all__';
+        rerender();
+      };
+
+      document.querySelectorAll('button[data-open]').forEach(btn => {
+        btn.onclick = () => openChartAsImage(btn.getAttribute('data-open'));
+      });
+
+      rerender();
+    }
+
+    $('loadBtn').onclick = loadData;
+    loadData();
+  </script>
+</body>
+</html>

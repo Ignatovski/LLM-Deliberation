@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Baseline vs Adversarial Comparison</title>
+  <script src="vendor/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --ink:#0f172a;
+      --muted:#475569;
+      --card:#ffffff;
+      --border:#e2e8f0;
+      --shadow:0 14px 40px rgba(15,23,42,.10);
+      --bg:#f8fafc;
+
+      --gpt:#2563eb;
+      --claude:#10b981;
+
+      --uni:#10b981;
+      --ai:#f59e0b;
+      --human:#ef4444;
+      --all:#64748b;
+
+      --beige:#fef3c7;
+      --beigeBorder:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(254,243,199,0.55), transparent 55%),
+        radial-gradient(circle at 90% 6%, rgba(224,242,254,0.55), transparent 50%),
+        linear-gradient(180deg,#fff 0%, var(--bg) 100%);
+      background-attachment: fixed;
+      padding: 22px 18px 50px;
+    }
+    header{
+      max-width: 1400px;
+      margin: 0 auto 14px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:-0.4px;
+    }
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      max-width: 800px;
+    }
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    select, button{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size:12px;
+      color:var(--ink);
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+      outline:none;
+    }
+    button{cursor:pointer}
+    button:hover{border-color:#cbd5e1}
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      padding: 6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.75);
+    }
+    main{
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .model-row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .group{
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .groupHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .groupTitle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      font-size:14px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--gpt);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    .dot.claude{
+      background: var(--claude);
+      box-shadow: 0 0 0 4px rgba(16,185,129,.12);
+    }
+    .note{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .grid6Wrap{
+      overflow-x:auto;
+      overflow-y:hidden;
+      max-width: 100%;
+      padding-bottom: 8px;
+    }
+    .grid6{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(320px, 1fr));
+      gap: 12px;
+      min-width: 1020px; /* 3 * 320px + gaps; enables horizontal scroll instead of squeezing */
+    }
+    .adversarialLabelRow{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(320px, 1fr));
+      gap: 12px;
+      min-width: 1020px;
+      margin: 6px 0 10px;
+      align-items:center;
+    }
+    .adversarialLabel{
+      grid-column: 2 / span 2;
+      justify-self:center;
+      background: var(--beige);
+      border: 1px solid var(--beigeBorder);
+      color: #7c2d12;
+      font-weight:600;
+      font-size:12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: 0 8px 22px rgba(245,158,11,.16);
+    }
+
+    .panel{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-width: 0;
+    }
+    .panelHeader{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 10px 8px;
+      background: rgba(248,250,252,0.7);
+      border-bottom:1px solid var(--border);
+    }
+    .headerPill{
+      background: var(--beige);
+      border:1px solid var(--beigeBorder);
+      color:#7c2d12;
+      font-weight:700;
+      font-size:12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    .inner{
+      padding: 10px 12px 12px;
+    }
+    .mixPill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.85);
+      font-size:12px;
+      color: var(--muted);
+      margin: 0 auto 10px;
+      width: fit-content;
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+    }
+    .metricTitle{
+      font-weight:800;
+      font-size:14px;
+      margin: 2px 0 2px;
+    }
+    .metricSub{
+      font-size:12px;
+      color: var(--muted);
+      margin: 0 0 10px;
+      line-height:1.35;
+    }
+
+    .subcard{
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      padding: 10px 10px;
+      margin-bottom: 10px;
+      background: rgba(248,250,252,0.7);
+    }
+    .tag{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display:inline-block;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      background: rgba(255,255,255,0.75);
+    }
+    .tag.uni{ border-color: rgba(16,185,129,.55); color:#065f46; background: rgba(16,185,129,.12); }
+    .tag.ai{ border-color: rgba(245,158,11,.55); color:#7c2d12; background: rgba(245,158,11,.14); }
+    .tag.human{ border-color: rgba(239,68,68,.55); color:#7f1d1d; background: rgba(239,68,68,.12); }
+    .tag.all{ border-color: rgba(100,116,139,.55); color:#0f172a; background: rgba(100,116,139,.10); }
+
+    .subcard.uni{ border-color: rgba(16,185,129,.55); background: rgba(16,185,129,.08); }
+    .subcard.ai{ border-color: rgba(245,158,11,.55); background: rgba(245,158,11,.08); }
+    .subcard.human{ border-color: rgba(239,68,68,.55); background: rgba(239,68,68,.07); }
+    .subcard.all{ border-color: rgba(100,116,139,.55); background: rgba(100,116,139,.06); }
+
+    .line{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      font-size:12px;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .line .k{ color: var(--muted); }
+    .bar{
+      margin-top: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.25);
+      overflow:hidden;
+      border: 1px solid rgba(148,163,184,.35);
+    }
+    .bar > div{
+      height:100%;
+      border-radius:999px;
+      width:0%;
+      background: var(--gpt);
+    }
+    .bar.claude > div{ background: var(--claude); }
+    .bar.uni > div{ background: var(--uni); }
+    .bar.ai > div{ background: var(--ai); }
+    .bar.human > div{ background: var(--human); }
+    .bar.all > div{ background: var(--all); }
+
+    .muted{ color: var(--muted); }
+    .error{ color: #b91c1c; }
+    canvas{
+      width:100% !important;
+      height:160px !important;
+      margin-top: 8px;
+    }
+    /* Always stack GPT and Claude vertically to use full page width. */
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Baseline vs Adversarial Comparison</h1>
+      <div class="sub">
+        Compare baseline behavior vs adversarial behavior (Obstructive vs Outcome targeted) for GPT‑5 x4 and Claude 4.5 x4.
+        Uses the same categories as BaselineOverview: Uniform, All AI, All Human, and All categories.
+      </div>
+    </div>
+    <div class="controls">
+      <button id="reloadBtn">Reload data</button>
+      <span class="status" id="status">loading…</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="model-row">
+      <section class="group" id="groupGpt">
+        <div class="groupHead">
+          <div class="groupTitle"><span class="dot"></span> GPT‑5</div>
+          <div class="note">Mix key: <code>gpt-5x4</code></div>
+        </div>
+        <div class="grid6Wrap">
+          <div id="gridGpt"></div>
+        </div>
+      </section>
+
+      <section class="group" id="groupClaude">
+        <div class="groupHead">
+          <div class="groupTitle"><span class="dot claude"></span> Claude</div>
+          <div class="note">Mix key: <code>claude-sonnet-4-5x4</code></div>
+        </div>
+        <div class="grid6Wrap">
+          <div id="gridClaude"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const charts = {};
+
+    const SOURCES = {
+      baselineSummary: 'viewer/metrics_summary.json',
+      baselineEval: 'summarys/leakage/eval_all.json',
+      obstructiveSummary: 'summarys/metrics_summary.adversarial_obstructive.json',
+      obstructiveEval: 'summarys/leakage/eval_adversarial_obstructive.json',
+      outcomeSummary: 'summarys/metrics_summary.adversarial_outcome_targeted.json',
+      outcomeEval: 'summarys/leakage/eval_adversarial_outcome_targeted.json',
+    };
+
+    const MODELS = [
+      { key: 'gpt-5x4', label: 'GPT-5 x4', gridId: 'gridGpt' },
+      { key: 'claude-sonnet-4-5x4', label: 'CLAUDE 4.5 x4', gridId: 'gridClaude' },
+    ];
+
+    const PANELS = [
+      { key: 'baseline', title: 'Baseline Overview' },
+      { key: 'obstructive', title: 'Obstructive' },
+      { key: 'outcome', title: 'Outcome targeted' },
+    ];
+
+    const CATEGORIES = [
+      { key: 'Uniform', tag: 'UNIFORM', cls: 'uni' },
+      { key: 'All AI', tag: 'ALL AI', cls: 'ai' },
+      { key: 'All Human', tag: 'ALL HUMAN', cls: 'human' },
+      { key: 'All', tag: 'ALL CATEGORIES', cls: 'all' },
+    ];
+
+    const AGENT_ORDER = ['Analyst A','Builder B','Critic C','Delegate D'];
+
+    Chart.defaults.color = '#0f172a';
+    Chart.defaults.borderColor = '#e2e8f0';
+    Chart.defaults.font.family = 'IBM Plex Sans, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.boxWidth = 10;
+    Chart.defaults.animation = false;
+
+    function safeId(s) {
+      return String(s || '').replace(/[^A-Za-z0-9_]/g, '_');
+    }
+
+    function canvasId(metricKey, modelKey, panelKey, catKey) {
+      return `cv__${safeId(metricKey)}__${safeId(modelKey)}__${safeId(panelKey)}__${safeId(catKey)}`;
+    }
+
+    function destroyChart(id) {
+      const c = charts[id];
+      if (c) {
+        try { c.destroy(); } catch (e) {}
+        delete charts[id];
+      }
+    }
+
+    function makeValueLabels(pluginId, precision = 1) {
+      return {
+        id: pluginId,
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+          chart.data.datasets.forEach((ds, dsIndex) => {
+            const meta = chart.getDatasetMeta(dsIndex);
+            meta.data.forEach((elem, idx) => {
+              const val = ds.data[idx];
+              if (val == null || isNaN(val) || val === 0) return;
+              ctx.save();
+              ctx.fillStyle = '#0f172a';
+              ctx.font = '11px IBM Plex Sans';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              ctx.fillText(Number(val).toFixed(precision), elem.x, elem.y - 4);
+              ctx.restore();
+            });
+          });
+        }
+      };
+    }
+
+    const METRICS = [
+      {
+        key: 'final_success',
+        title: 'Final success',
+        subtitle: 'Final agreement counts and percentages by category.',
+        kind: 'text',
+        render: (box, runs) => {
+          if (!runs.length) { box.textContent = 'No data'; return; }
+          const total = runs.length;
+          const count = runs.filter(r => !!r.final_success).length;
+          const pct = total ? (100*count/total) : 0;
+          box.textContent = `${count} (${pct.toFixed(1)}%)`;
+        }
+      },
+      {
+        key: 'any_success',
+        title: 'Any success',
+        subtitle: 'Any agreement achieved at any point during the negotiation.',
+        kind: 'text',
+        render: (box, runs) => {
+          if (!runs.length) { box.textContent = 'No data'; return; }
+          const total = runs.length;
+          const count = runs.filter(r => !!r.any_success).length;
+          const pct = total ? (100*count/total) : 0;
+          box.textContent = `${count} (${pct.toFixed(1)}%)`;
+        }
+      },
+      {
+        key: 'agreements_vs_failure',
+        title: 'Agreements vs failure',
+        subtitle: 'Breakdown: final agreement vs agreement lost vs no agreement.',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const success = runs.filter(r => r.final_success).length;
+          const partial = runs.filter(r => r.any_success && !r.final_success).length;
+          const fail = runs.length - success - partial;
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 0)],
+            data: {
+              labels: ['Final', 'Lost', 'None'],
+              datasets: [{
+                label: 'Runs',
+                data: [success, partial, fail],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'leakage_invalid',
+        title: 'Leakage & invalid',
+        subtitle: 'Rates over evaluated public answers: llm_leak, llm_invalid, unclosed <ANSWER>.',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs, evals) => {
+          destroyChart(id);
+          if (!evals.length) return;
+          const n = evals.length;
+          const leak = evals.filter(e => !!e.llm_leak).length;
+          const invalid = evals.filter(e => !!e.llm_invalid).length;
+          const unclosed = evals.filter(e => !!e.leakage_due_to_unclosed_answer).length;
+          const leakRate = (100*leak/n);
+          const invalidRate = (100*invalid/n);
+          const unclosedRate = (100*unclosed/n);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 1)],
+            data: {
+              labels: ['Leak', 'Invalid', 'Unclosed'],
+              datasets: [{
+                label: 'Percent',
+                data: [leakRate, invalidRate, unclosedRate],
+                backgroundColor: ['#ef4444', '#2563eb', '#f59e0b'],
+                borderColor: ['#ef4444', '#2563eb', '#f59e0b'],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'ownscore',
+        title: 'Own score (proposed)',
+        subtitle: 'Average own scores by agent role (proposal_own_avg).',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const sums = {};
+          const counts = {};
+          for (const r of runs) {
+            const d = r.proposal_own_avg || {};
+            for (const [agent, val] of Object.entries(d)) {
+              if (typeof val !== 'number') continue;
+              sums[agent] = (sums[agent] || 0) + val;
+              counts[agent] = (counts[agent] || 0) + 1;
+            }
+          }
+          const labels = AGENT_ORDER.filter(a => counts[a]);
+          const data = labels.map(a => sums[a] / counts[a]);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 1)],
+            data: {
+              labels,
+              datasets: [{
+                label: 'Own score (proposed)',
+                data,
+                backgroundColor: '#2563eb',
+                borderColor: '#2563eb',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'collective',
+        title: 'Collective score (proposed)',
+        subtitle: 'Average collective scores by agent role (proposal_collective_avg).',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const sums = {};
+          const counts = {};
+          for (const r of runs) {
+            const d = r.proposal_collective_avg || {};
+            for (const [agent, val] of Object.entries(d)) {
+              if (typeof val !== 'number') continue;
+              sums[agent] = (sums[agent] || 0) + val;
+              counts[agent] = (counts[agent] || 0) + 1;
+            }
+          }
+          const labels = AGENT_ORDER.filter(a => counts[a]);
+          const data = labels.map(a => sums[a] / counts[a]);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 1)],
+            data: {
+              labels,
+              datasets: [{
+                label: 'Collective score (proposed)',
+                data,
+                backgroundColor: '#10b981',
+                borderColor: '#10b981',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'own_vs_collective',
+        title: 'Own vs collective (proposed)',
+        subtitle: 'Average proposed own (blue) vs collective (green) scores by agent role.',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const sumsOwn = {}, cntOwn = {};
+          const sumsCol = {}, cntCol = {};
+          for (const r of runs) {
+            const own = r.proposal_own_avg || {};
+            const col = r.proposal_collective_avg || {};
+            for (const [agent, val] of Object.entries(own)) {
+              if (typeof val !== 'number') continue;
+              sumsOwn[agent] = (sumsOwn[agent] || 0) + val;
+              cntOwn[agent] = (cntOwn[agent] || 0) + 1;
+            }
+            for (const [agent, val] of Object.entries(col)) {
+              if (typeof val !== 'number') continue;
+              sumsCol[agent] = (sumsCol[agent] || 0) + val;
+              cntCol[agent] = (cntCol[agent] || 0) + 1;
+            }
+          }
+          const labels = AGENT_ORDER.filter(a => (cntOwn[a] || cntCol[a]));
+          const ownData = labels.map(a => cntOwn[a] ? (sumsOwn[a] / cntOwn[a]) : null);
+          const colData = labels.map(a => cntCol[a] ? (sumsCol[a] / cntCol[a]) : null);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 1)],
+            data: {
+              labels,
+              datasets: [
+                { label: 'Own score (proposed)', data: ownData, backgroundColor: 'rgba(37,99,235,0.75)', borderColor: '#2563eb', borderWidth: 1 },
+                { label: 'Collective score (proposed)', data: colData, backgroundColor: 'rgba(16,185,129,0.75)', borderColor: '#10b981', borderWidth: 1 },
+              ]
+            },
+            options: {
+              plugins: { legend: { position: 'top', labels: { color: '#475569' } } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'utility_party',
+        title: 'Utility of party (outcome)',
+        subtitle: 'Average realized final utilities by agent role (scores).',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const sums = {};
+          const counts = {};
+          for (const r of runs) {
+            const d = r.scores || {};
+            for (const [agent, val] of Object.entries(d)) {
+              if (typeof val !== 'number') continue;
+              sums[agent] = (sums[agent] || 0) + val;
+              counts[agent] = (counts[agent] || 0) + 1;
+            }
+          }
+          const labels = AGENT_ORDER.filter(a => counts[a]);
+          const data = labels.map(a => sums[a] / counts[a]);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 1)],
+            data: {
+              labels,
+              datasets: [{
+                label: 'Final utility',
+                data,
+                backgroundColor: '#2563eb',
+                borderColor: '#2563eb',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+      {
+        key: 'agreements_by_utility',
+        title: 'Agreements by utility',
+        subtitle: 'Count of final agreements by summed group utility (collective_raw, rounded).',
+        kind: 'chart',
+        height: 140,
+        renderChart: (canvas, id, runs) => {
+          destroyChart(id);
+          if (!runs.length) return;
+          const bucket = {};
+          for (const r of runs) {
+            if (!r.final_success) continue;
+            const coll = r.collective_raw;
+            if (typeof coll !== 'number') continue;
+            const k = Math.round(coll);
+            bucket[k] = (bucket[k] || 0) + 1;
+          }
+          const labels = Object.keys(bucket).map(k => parseInt(k,10)).sort((a,b)=>a-b);
+          const data = labels.map(k => bucket[k] || 0);
+          const ctx = canvas.getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'bar',
+            plugins: [makeValueLabels(id + '_labels', 0)],
+            data: {
+              labels: labels.map(v => v.toString()),
+              datasets: [{
+                label: 'Agreements',
+                data,
+                backgroundColor: '#2563eb',
+                borderColor: '#2563eb',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: '#475569' } },
+                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+              }
+            }
+          });
+        }
+      },
+    ];
+
+    function candidateUrls(url) {
+      const u = String(url || '');
+      if (!u) return [];
+      const cleaned = u.replace(/^\//,'');
+      // Support serving from repo root OR from /viewer/ subdir.
+      return [
+        u,
+        '/' + cleaned,
+        cleaned,
+        '../' + cleaned,
+      ];
+    }
+
+    async function fetchFirstOk(urls) {
+      const tried = [];
+      for (const u of urls) {
+        try {
+          const res = await fetch(u, { cache: 'no-store' });
+          tried.push(`${res.status} ${u}`);
+          if (res.ok) return { url: u, res };
+        } catch (e) {
+          tried.push(`ERR ${u}`);
+        }
+      }
+      throw new Error(`Fetch failed. Tried: ${tried.join(' | ')}`);
+    }
+
+    async function loadJson(url) {
+      const { res } = await fetchFirstOk(candidateUrls(url));
+      return res.json();
+    }
+
+    function fmtNum(x) {
+      if (x === null || x === undefined || !Number.isFinite(x)) return 'n/a';
+      const ax = Math.abs(x);
+      if (ax >= 100) return x.toFixed(0);
+      if (ax >= 10) return x.toFixed(1);
+      return x.toFixed(2);
+    }
+
+    function fmtPct(x) {
+      if (!Number.isFinite(x)) return 'n/a';
+      return x.toFixed(1) + '%';
+    }
+
+    function el(tag, cls) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      return e;
+    }
+
+    function buildPanelHeader(title) {
+      const h = el('div','panelHeader');
+      const p = el('div','headerPill');
+      p.textContent = title;
+      h.appendChild(p);
+      return h;
+    }
+
+    function renderSubcard(container, theme, tag, lines, barPct, mixKey) {
+      const card = el('div', `subcard ${theme}`);
+      const t = el('div', `tag ${theme}`);
+      t.textContent = tag;
+      card.appendChild(t);
+
+      for (const [k,v] of lines) {
+        const row = el('div','line');
+        row.innerHTML = `<span class="k">${k}:</span> <span>${v}</span>`;
+        card.appendChild(row);
+      }
+
+      if (Number.isFinite(barPct)) {
+        const b = el('div', `bar ${theme} ${mixKey === 'claude-sonnet-4-5x4' ? 'claude' : ''}`);
+        const fill = el('div');
+        fill.style.width = Math.max(0, Math.min(100, barPct)) + '%';
+        b.appendChild(fill);
+        card.appendChild(b);
+      }
+
+      container.appendChild(card);
+    }
+
+    function pickRuns(runs, mixKey, catKey) {
+      if (catKey === 'All') return runs.filter(r => r.model_mix === mixKey);
+      return runs.filter(r => r.model_mix === mixKey && r.category === catKey);
+    }
+
+    function attachEvalMeta(evals, runsByPath) {
+      const norm = (p) => {
+        if (!p) return '';
+        const s = String(p);
+        const marker = '/LLM-Deliberation/';
+        const idx = s.indexOf(marker);
+        if (idx !== -1) return s.slice(idx + marker.length);
+        return s.replace(/^\.?\//,'');
+      };
+      const out = [];
+      for (const rec of evals) {
+        const meta = runsByPath.get(norm(rec.path));
+        if (!meta) continue;
+        out.push({ ...rec, model_mix: meta.model_mix, category: meta.category });
+      }
+      return out;
+    }
+
+    function pickEvals(evals, mixKey, catKey) {
+      if (catKey === 'All') return evals.filter(e => e.model_mix === mixKey);
+      return evals.filter(e => e.model_mix === mixKey && e.category === catKey);
+    }
+
+    function renderMetricSection(targetEl, model, metric, data) {
+      const section = el('section');
+      section.style.marginBottom = '18px';
+
+      const labelRow = el('div', 'adversarialLabelRow');
+      labelRow.innerHTML = `<div></div><div class="adversarialLabel">Adversarial Overview</div>`;
+      section.appendChild(labelRow);
+
+      const grid = el('div', 'grid6');
+
+      for (const panel of PANELS) {
+        const panelEl = el('div','panel');
+        panelEl.appendChild(buildPanelHeader(panel.title));
+        const inner = el('div','inner');
+
+        const mixPill = el('div','mixPill');
+        mixPill.textContent = model.label;
+        inner.appendChild(mixPill);
+
+        const title = el('div','metricTitle');
+        title.textContent = metric.title;
+        inner.appendChild(title);
+
+        const sub = el('div','metricSub');
+        sub.textContent = metric.subtitle;
+        inner.appendChild(sub);
+
+        const runSet = panel.key === 'baseline'
+          ? data.baselineRuns
+          : (panel.key === 'obstructive' ? data.obstructiveRuns : data.outcomeRuns);
+
+        const evalSet = panel.key === 'baseline'
+          ? data.baselineEvals
+          : (panel.key === 'obstructive' ? data.obstructiveEvals : data.outcomeEvals);
+
+        for (const cat of CATEGORIES) {
+          const runs = pickRuns(runSet, model.key, cat.key);
+          const evals = pickEvals(evalSet, model.key, cat.key);
+
+          const lines = [
+            ['Category', cat.key === 'All' ? 'All categories' : cat.key],
+            ['Mix', model.label],
+          ];
+
+          if (metric.kind === 'text') {
+            const valueLine = document.createElement('div');
+            valueLine.className = 'line';
+            const box = document.createElement('span');
+            box.className = 'strong';
+            metric.render(box, runs, evals);
+            valueLine.innerHTML = `<span class="k">${metric.title}:</span> `;
+            valueLine.appendChild(box);
+            const card = el('div', `subcard ${cat.cls}`);
+            const t = el('div', `tag ${cat.cls}`); t.textContent = cat.tag;
+            card.appendChild(t);
+            for (const [k,v] of lines) {
+              const row = el('div','line');
+              row.innerHTML = `<span class="k">${k}:</span> <span>${v}</span>`;
+              card.appendChild(row);
+            }
+            card.appendChild(valueLine);
+            inner.appendChild(card);
+            continue;
+          }
+
+          const id = canvasId(metric.key, model.key, panel.key, cat.key);
+          const card = el('div', `subcard ${cat.cls}`);
+          const t = el('div', `tag ${cat.cls}`); t.textContent = cat.tag;
+          card.appendChild(t);
+          for (const [k,v] of lines) {
+            const row = el('div','line');
+            row.innerHTML = `<span class="k">${k}:</span> <span>${v}</span>`;
+            card.appendChild(row);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.id = id;
+          canvas.height = metric.height || 140;
+          card.appendChild(canvas);
+          inner.appendChild(card);
+
+          // chart render after DOM insertion
+          setTimeout(() => {
+            metric.renderChart(canvas, id, runs, evals);
+          }, 0);
+        }
+
+        panelEl.appendChild(inner);
+        grid.appendChild(panelEl);
+      }
+
+      section.appendChild(grid);
+      targetEl.appendChild(section);
+    }
+
+    function renderAllMetrics(data) {
+      for (const model of MODELS) {
+        const root = $(model.gridId);
+        root.innerHTML = '';
+        for (const metric of METRICS) {
+          renderMetricSection(root, model, metric, data);
+        }
+      }
+    }
+
+    async function loadAll() {
+      $('status').textContent = 'loading…';
+      $('status').classList.remove('error');
+      try {
+        const [
+          baselineSummary,
+          baselineEval,
+          obstructiveSummary,
+          obstructiveEval,
+          outcomeSummary,
+          outcomeEval,
+        ] = await Promise.all([
+          loadJson(SOURCES.baselineSummary),
+          loadJson(SOURCES.baselineEval),
+          loadJson(SOURCES.obstructiveSummary),
+          loadJson(SOURCES.obstructiveEval),
+          loadJson(SOURCES.outcomeSummary),
+          loadJson(SOURCES.outcomeEval),
+        ]);
+
+        const baselineRuns = baselineSummary.runs || [];
+        const obstructiveRuns = obstructiveSummary.runs || [];
+        const outcomeRuns = outcomeSummary.runs || [];
+
+        // Map history path -> run meta for each dataset, then attach category + model_mix to eval records
+        const buildRunMap = (runs) => {
+          const norm = (p) => {
+            if (!p) return '';
+            const s = String(p);
+            const marker = '/LLM-Deliberation/';
+            const idx = s.indexOf(marker);
+            if (idx !== -1) return s.slice(idx + marker.length);
+            return s.replace(/^\.?\//,'');
+          };
+          const m = new Map();
+          for (const r of runs) m.set(norm(r.path), r);
+          return m;
+        };
+
+        const baselineRunByPath = buildRunMap(baselineRuns);
+        const obstructiveRunByPath = buildRunMap(obstructiveRuns);
+        const outcomeRunByPath = buildRunMap(outcomeRuns);
+
+        const baselineEvals = attachEvalMeta(baselineEval || [], baselineRunByPath);
+        const obstructiveEvals = attachEvalMeta(obstructiveEval || [], obstructiveRunByPath);
+        const outcomeEvals = attachEvalMeta(outcomeEval || [], outcomeRunByPath);
+
+        const data = { baselineRuns, baselineEvals, obstructiveRuns, obstructiveEvals, outcomeRuns, outcomeEvals };
+        $('status').textContent = `loaded`;
+
+        renderAllMetrics(data);
+
+        window.__cmpData = data;
+      } catch (e) {
+        $('status').textContent = 'load error';
+        $('status').classList.add('error');
+        console.error(e);
+        alert(String(e));
+      }
+    }
+
+    function init() {
+      $('reloadBtn').onclick = loadAll;
+      loadAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
