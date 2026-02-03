@@ -328,11 +328,9 @@
     const rows = [
       { id: 'final_success', title: 'Final success', desc: 'Final agreement counts and percentages by category.', height: 90, render: renderFinalSuccessBox, kind: 'text' },
       { id: 'any_success', title: 'Any success', desc: 'Any agreement counts and percentages by category.', height: 90, render: renderAnySuccessBox, kind: 'text' },
-      { id: 'own_avg', title: 'Own score (avg)', desc: 'Average own scores by agent role.', height: 90, render: renderOwnAvg },
-      { id: 'util_avg', title: 'Utility of party (avg)', desc: 'Average final utilities by agent role.', height: 90, render: renderUtilAvg },
-      { id: 'proposal_avg', title: 'Own vs collective (proposed)', desc: 'Average proposed own vs collective scores by agent role.', height: 90, render: renderProposalAvg },
-      { id: 'agree_round', title: 'First agreement round', desc: 'Which round produced the first agreement, split by outcome.', height: 120, render: renderFirstAgreementRound },
-      { id: 'agree_util', title: 'Agreements by utility', desc: 'Count of final agreements by summed group utility.', height: 90, render: renderAgreementUtility },
+      { id: 'ownscore_prop', title: 'Own score (proposed) — avg', desc: 'Uses proposal_own_avg: proposer’s own score on their proposals (not outcome; not zeroed).', height: 90, render: renderOwnScoreProposedAvg },
+      { id: 'collscore_prop', title: 'Collective score (proposed) — avg', desc: 'Uses proposal_collective_avg: mean score across all agents for each proposal (not outcome; not zeroed).', height: 90, render: renderCollectiveScoreProposedAvg },
+      { id: 'util_avg', title: 'Utility (final outcome) — avg', desc: 'Uses scores: achieved outcome utility (0 if final_success=false).', height: 90, render: renderUtilAvg },
       { id: 'agree_rate', title: 'Agreement vs failure', desc: 'Final agreement vs lost agreement vs no agreement.', height: 90, render: renderAgreeRateChart },
       { id: 'leak_rates', title: 'Leakage, invalid, unclosed (%)', desc: 'Leakage excludes unclosed-answer bracket issues.', height: 90, render: renderLeakRates },
       { id: 'leak_by_model', title: 'Unclosed answer leakage by model', desc: 'Unclosed-answer leakage counts by model within the mix.', height: 90, render: renderLeakByModel }
@@ -426,6 +424,47 @@
       return { labels, datasets };
     };
 
+    // ---------- Fixed chart scales (comparability across panels) ----------
+    // Filled after data load.
+    let FIXED = null;
+
+    const quantile = (sorted, q) => {
+      if (!sorted.length) return 0;
+      if (q <= 0) return sorted[0];
+      if (q >= 1) return sorted[sorted.length - 1];
+      const pos = (sorted.length - 1) * q;
+      const base = Math.floor(pos);
+      const rest = pos - base;
+      const left = sorted[base];
+      const right = sorted[Math.min(sorted.length - 1, base + 1)];
+      return left + rest * (right - left);
+    };
+
+    const niceStep = (maxVal) => {
+      if (!isFinite(maxVal) || maxVal <= 0) return 1;
+      const exp = Math.floor(Math.log10(maxVal));
+      const f = maxVal / Math.pow(10, exp);
+      const nf = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10;
+      return nf * Math.pow(10, exp);
+    };
+
+    const niceMax = (maxVal) => {
+      if (!isFinite(maxVal) || maxVal <= 0) return 1;
+      const step = niceStep(maxVal);
+      return Math.ceil(maxVal / step) * step;
+    };
+
+    const symRange = (values, q = 0.95) => {
+      const abs = values.map(v => Math.abs(v)).filter(v => typeof v === 'number' && isFinite(v));
+      if (!abs.length) return { min: -1, max: 1, step: 1 };
+      abs.sort((a, b) => a - b);
+      const robust = quantile(abs, q);
+      const headroom = robust * 1.1;
+      const max = niceMax(headroom || 1);
+      const step = niceStep(max / 4);
+      return { min: -max, max, step };
+    };
+
     function renderSummaryChart(mixKey, catKey, runs) {
       const id = canvasId('summary', mixKey, catKey);
       const tag = el(tagId('summary', mixKey, catKey));
@@ -433,6 +472,7 @@
       const finalSucc = runs.filter(r => r.final_success).length;
       const anySucc = runs.filter(r => r.any_success).length;
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -450,7 +490,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -503,6 +543,7 @@
       const partial = runs.filter(r => r.any_success && !r.final_success).length;
       const fail = runs.length - success - partial;
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -520,7 +561,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -533,6 +574,7 @@
       if (!runs.length) { tag.textContent = 'No data'; return; }
       const agreements = runs.filter(r => r.final_success).length;
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -550,7 +592,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -565,6 +607,7 @@
       if (!values.length) { tag.textContent = 'No data'; return; }
       const avg = values.reduce((a, b) => a + b, 0) / values.length;
       const ctx = el(id).getContext('2d');
+      const scale = FIXED?.collectiveAvg;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 1)],
@@ -582,7 +625,12 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: {
+              min: scale?.min,
+              max: scale?.max,
+              ticks: { color: colors.muted, stepSize: scale?.step },
+              grid: { color: colors.grid }
+            }
           }
         }
       });
@@ -616,6 +664,7 @@
       const lostData = rounds.map(n => lostBucket[n] || 0).concat(none > 0 ? [0] : []);
       const noneData = rounds.map(() => 0).concat(none > 0 ? [none] : []);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -630,7 +679,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { stacked: true, ticks: { color: colors.muted } },
-            y: { stacked: true, beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { stacked: true, beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -653,6 +702,7 @@
       const labels = Object.keys(bucket).map(k => parseInt(k, 10)).sort((a, b) => a - b);
       const data = labels.map(k => bucket[k] || 0);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -670,7 +720,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -691,6 +741,7 @@
       const labels = Object.keys(bucket).map(k => parseInt(k, 10)).sort((a, b) => a - b);
       const data = labels.map(k => bucket[k] || 0);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -708,7 +759,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -743,6 +794,7 @@
       const finalData = xValsSorted.map(v => finalBucket[v] || 0);
       const lostData = xValsSorted.map(v => lostBucket[v] || 0);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.countMaxByCat?.[catKey] ?? FIXED?.countMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -756,7 +808,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
-            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid }, beginAtZero: true }
+            y: { stacked: true, beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -769,17 +821,18 @@
       const tag = el(tagId('own_avg', mixKey, catKey));
       if (!runs.length) { tag.textContent = 'No data'; return; }
       const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
-      const filt = calcAgentMeans(runs, 'own_scores');
+      const filt = calcAgentMeans(runs, 'scores_raw');
       const labels = order.filter(a => a in filt);
       const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
       const ctx = el(id).getContext('2d');
+      const scale = FIXED?.ownAvg;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 1)],
         data: {
           labels,
           datasets: [{
-            label: 'Own score',
+            label: 'Score (scores_raw)',
             data: avgs,
             backgroundColor: colors.teal,
             borderColor: colors.teal,
@@ -790,7 +843,75 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { beginAtZero: true, max: 50, ticks: { color: colors.muted, stepSize: 5 }, grid: { color: colors.grid } }
+            y: { min: scale?.min, max: scale?.max, ticks: { color: colors.muted, stepSize: scale?.step }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${labels.length} agents`;
+    }
+
+    function renderOwnScoreProposedAvg(mixKey, catKey, runs) {
+      const id = canvasId('ownscore_prop', mixKey, catKey);
+      const tag = el(tagId('ownscore_prop', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(runs, 'proposal_own_avg');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      const ctx = el(id).getContext('2d');
+      const scale = FIXED?.proposalOwnAvg;
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels,
+          datasets: [{
+            label: 'Own score (proposal_own_avg)',
+            data: avgs,
+            backgroundColor: colors.blue,
+            borderColor: colors.blue,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { min: scale?.min, max: scale?.max, ticks: { color: colors.muted, stepSize: scale?.step }, grid: { color: colors.grid } }
+          }
+        }
+      });
+      tag.textContent = `${labels.length} agents`;
+    }
+
+    function renderCollectiveScoreProposedAvg(mixKey, catKey, runs) {
+      const id = canvasId('collscore_prop', mixKey, catKey);
+      const tag = el(tagId('collscore_prop', mixKey, catKey));
+      if (!runs.length) { tag.textContent = 'No data'; return; }
+      const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+      const filt = calcAgentMeans(runs, 'proposal_collective_avg');
+      const labels = order.filter(a => a in filt);
+      const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
+      const ctx = el(id).getContext('2d');
+      const scale = FIXED?.proposalCollectiveAvg;
+      charts[id] = new Chart(ctx, {
+        type: 'bar',
+        plugins: [makeValueLabels(`${id}_labels`, 1)],
+        data: {
+          labels,
+          datasets: [{
+            label: 'Collective score (proposal_collective_avg)',
+            data: avgs,
+            backgroundColor: colors.green,
+            borderColor: colors.green,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: colors.muted }, grid: { display: false } },
+            y: { min: scale?.min, max: scale?.max, ticks: { color: colors.muted, stepSize: scale?.step }, grid: { color: colors.grid } }
           }
         }
       });
@@ -806,13 +927,14 @@
       const labels = order.filter(a => a in filt);
       const avgs = labels.map(a => filt[a].sum / Math.max(filt[a].count, 1));
       const ctx = el(id).getContext('2d');
+      const scale = FIXED?.utilAvg;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 1)],
         data: {
           labels,
           datasets: [{
-            label: 'Final utility',
+            label: 'Utility (scores)',
             data: avgs,
             backgroundColor: colors.blue,
             borderColor: colors.blue,
@@ -823,7 +945,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { beginAtZero: true, max: 5, ticks: { color: colors.muted, stepSize: 1 }, grid: { color: colors.grid } }
+            y: { min: scale?.min, max: scale?.max, ticks: { color: colors.muted, stepSize: scale?.step }, grid: { color: colors.grid } }
           }
         }
       });
@@ -841,21 +963,22 @@
       const ownAvgs = labels.map(a => own[a] ? own[a].sum / Math.max(own[a].count, 1) : null);
       const collAvgs = labels.map(a => coll[a] ? coll[a].sum / Math.max(coll[a].count, 1) : null);
       const ctx = el(id).getContext('2d');
+      const scale = FIXED?.proposalAvg;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 1)],
         data: {
           labels,
           datasets: [
-            { label: 'Own', data: ownAvgs, backgroundColor: colors.blue, borderColor: colors.blue, borderWidth: 1 },
-            { label: 'Collective', data: collAvgs, backgroundColor: colors.green, borderColor: colors.green, borderWidth: 1 }
+            { label: 'Own score (proposal_own_avg)', data: ownAvgs, backgroundColor: colors.blue, borderColor: colors.blue, borderWidth: 1 },
+            { label: 'Collective score (proposal_collective_avg)', data: collAvgs, backgroundColor: colors.green, borderColor: colors.green, borderWidth: 1 }
           ]
         },
         options: {
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { min: scale?.min, max: scale?.max, ticks: { color: colors.muted, stepSize: scale?.step }, grid: { color: colors.grid } }
           }
         }
       });
@@ -878,6 +1001,7 @@
       });
       const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.histMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         data: { labels, datasets },
@@ -885,7 +1009,7 @@
           plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
           scales: {
             x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
-            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { stacked: true, beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -909,6 +1033,7 @@
       });
       const { labels, datasets } = buildAgentHistogram(valuesByAgent, 1);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.histMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         data: { labels, datasets },
@@ -916,7 +1041,7 @@
           plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
           scales: {
             x: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } },
-            y: { stacked: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { stacked: true, beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -933,6 +1058,7 @@
       const unclosed = evals.filter(r => r.leakage_due_to_unclosed_answer).length;
       const otherLeak = Math.max(0, leakCount - unclosed);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.leakCountMaxByCat?.[catKey] ?? FIXED?.leakCountMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -947,7 +1073,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { stacked: true, ticks: { color: colors.muted } },
-            y: { stacked: true, beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { stacked: true, beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -982,7 +1108,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { min: 0, max: 100, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -1008,6 +1134,7 @@
       const labels = modelOrder.filter(m => modelsInMix.has(m) || totals[m] !== undefined);
       const data = labels.map(m => counts[m] || 0);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.leakByModelMaxByCat?.[catKey] ?? FIXED?.leakByModelMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -1025,7 +1152,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { display: false } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -1050,6 +1177,7 @@
       const labels = Object.keys(totals).sort();
       const data = labels.map(m => counts[m] || 0);
       const ctx = el(id).getContext('2d');
+      const yMax = FIXED?.leakByModelMaxByCat?.[catKey] ?? FIXED?.leakByModelMax;
       charts[id] = new Chart(ctx, {
         type: 'bar',
         plugins: [makeValueLabels(`${id}_labels`, 0)],
@@ -1067,7 +1195,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: colors.muted }, grid: { color: colors.grid } },
-            y: { beginAtZero: true, ticks: { color: colors.muted }, grid: { color: colors.grid } }
+            y: { beginAtZero: true, max: yMax, suggestedMax: yMax, ticks: { color: colors.muted }, grid: { color: colors.grid } }
           }
         }
       });
@@ -1177,6 +1305,109 @@
           evalByMixCat[mix.key][cat.key] = evalRecords.filter(r => r.model_mix === mix.key && r.category === cat.key);
         });
       });
+
+      // Fixed scales derived from the data we actually plot (keeps panels comparable without huge ranges).
+      try {
+        const runCounts = [];
+        Object.values(runsByMixCat).forEach(byCat => {
+          Object.values(byCat).forEach(xs => runCounts.push(xs.length));
+        });
+        const maxRuns = Math.max(1, ...(runCounts.length ? runCounts : [1]));
+
+        const allCollective = runs.map(r => r.collective_raw).filter(v => typeof v === 'number' && isFinite(v));
+
+        const proposalOwnVals = [];
+        const proposalCollectiveVals = [];
+        const utilVals = [];
+        runs.forEach(r => {
+          const scores = r.scores || {};
+          Object.values(scores).forEach(v => { if (typeof v === 'number' && isFinite(v)) utilVals.push(v); });
+          const po = r.proposal_own_avg || {};
+          const pc = r.proposal_collective_avg || {};
+          Object.values(po).forEach(v => { if (typeof v === 'number' && isFinite(v)) proposalOwnVals.push(v); });
+          Object.values(pc).forEach(v => { if (typeof v === 'number' && isFinite(v)) proposalCollectiveVals.push(v); });
+        });
+
+        // Histogram max: actual stacked max bin count across all runs (own + collective distributions).
+        const order = ['Analyst A', 'Builder B', 'Critic C', 'Delegate D'];
+        const globalOwnByAgent = {};
+        const globalCollByAgent = {};
+        runs.forEach(r => {
+          const ownAll = r.own_scores_all || {};
+          const collAll = r.collective_scores_all || {};
+          order.forEach(a => {
+            const o = ownAll[a];
+            if (Array.isArray(o)) globalOwnByAgent[a] = (globalOwnByAgent[a] || []).concat(o);
+            const c = collAll[a];
+            if (Array.isArray(c)) globalCollByAgent[a] = (globalCollByAgent[a] || []).concat(c);
+          });
+        });
+        const ownHist = buildAgentHistogram(globalOwnByAgent, 1);
+        const collHist = buildAgentHistogram(globalCollByAgent, 1);
+        const maxStacked = (hist) => {
+          if (!hist.labels.length || !hist.datasets.length) return 1;
+          let m = 1;
+          for (let i = 0; i < hist.labels.length; i++) {
+            let s = 0;
+            hist.datasets.forEach(ds => { s += (ds.data[i] || 0); });
+            if (s > m) m = s;
+          }
+          return m;
+        };
+        const histMax = niceMax(Math.max(maxStacked(ownHist), maxStacked(collHist)));
+
+        // Leak/invalid count chart max: max of any stacked bar component across all groups.
+        const leakCountVals = [];
+        Object.values(evalByMixCat).forEach(byCat => {
+          Object.values(byCat).forEach(evals => {
+            if (!evals.length) return;
+            const leak = evals.filter(r => r.llm_leak).length;
+            const invalid = evals.filter(r => r.llm_invalid).length;
+            const unclosed = evals.filter(r => r.leakage_due_to_unclosed_answer).length;
+            leakCountVals.push(leak, invalid, unclosed);
+          });
+        });
+        const leakCountMax = niceMax(Math.max(1, ...(leakCountVals.length ? leakCountVals : [1])));
+
+        const countMaxByCat = {};
+        categories.forEach(cat => {
+          const vals = mixes.map(m => (runsByMixCat[m.key]?.[cat.key] || []).length);
+          countMaxByCat[cat.key] = niceMax(Math.max(1, ...(vals.length ? vals : [1])));
+        });
+
+        const leakCountMaxByCat = {};
+        const leakByModelMaxByCat = {};
+        categories.forEach(cat => {
+          const vals = [];
+          mixes.forEach(m => {
+            const evals = evalByMixCat[m.key]?.[cat.key] || [];
+            if (!evals.length) return;
+            const leak = evals.filter(r => r.llm_leak).length;
+            const invalid = evals.filter(r => r.llm_invalid).length;
+            const unclosed = evals.filter(r => r.leakage_due_to_unclosed_answer).length;
+            vals.push(leak, invalid, unclosed);
+          });
+          const mx = niceMax(Math.max(1, ...(vals.length ? vals : [1])));
+          leakCountMaxByCat[cat.key] = mx;
+          leakByModelMaxByCat[cat.key] = mx;
+        });
+
+        FIXED = {
+          countMax: niceMax(maxRuns),
+          countMaxByCat,
+          collectiveAvg: symRange(allCollective, 0.95),
+          utilAvg: symRange(utilVals, 0.95),
+          proposalOwnAvg: symRange(proposalOwnVals, 0.95),
+          proposalCollectiveAvg: symRange(proposalCollectiveVals, 0.95),
+          histMax,
+          leakCountMax,
+          leakCountMaxByCat,
+          leakByModelMax: leakCountMax,
+          leakByModelMaxByCat
+        };
+      } catch (e) {
+        console.warn('Failed to compute fixed scales:', e);
+      }
 
       mixes.forEach(mix => {
         categories.forEach(cat => {

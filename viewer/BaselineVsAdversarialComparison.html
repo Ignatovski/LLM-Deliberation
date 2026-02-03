@@ -65,6 +65,32 @@
       align-items:center;
       justify-content:flex-end;
     }
+    .seg{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid var(--border);
+      border-radius:999px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+    }
+    .seg button{
+      border:none;
+      border-right:1px solid var(--border);
+      border-radius:0;
+      box-shadow:none;
+      padding: 8px 12px;
+      background: transparent;
+      font-weight:600;
+    }
+    .seg button:last-child{ border-right:none; }
+    .seg button.active{
+      background: rgba(15,23,42,0.08);
+    }
+    .seg button:focus-visible{
+      outline: 2px solid rgba(37,99,235,0.45);
+      outline-offset: -2px;
+    }
     select, button{
       background: var(--card);
       border:1px solid var(--border);
@@ -299,9 +325,18 @@
       <div class="sub">
         Compare baseline behavior vs adversarial behavior (Obstructive vs Outcome targeted) for GPT‑5 x4 and Claude 4.5 x4.
         Uses the same categories as BaselineOverview: Uniform, All AI, All Human, and All categories.
+        <br />
+        <b>Definitions:</b>
+        <b>Utility (scores)</b> = achieved outcome utility (forced to 0 when <code>final_success=false</code>).
+        <b>Score (proposed)</b> = proposal-level score that does not apply the 0 rule (e.g., <code>proposal_own_avg</code>, <code>proposal_collective_avg</code>).
       </div>
     </div>
     <div class="controls">
+      <div class="seg" role="tablist" aria-label="Model view">
+        <button id="viewBothBtn" class="active" type="button">Both</button>
+        <button id="viewGptBtn" type="button">GPT‑5</button>
+        <button id="viewClaudeBtn" type="button">Claude</button>
+      </div>
       <button id="reloadBtn">Reload data</button>
       <span class="status" id="status">loading…</span>
     </div>
@@ -410,6 +445,104 @@
       };
     }
 
+    function computeGlobalScales(data) {
+      // Fixed y-scales per metric for easier visual comparison across panels/categories.
+      const panels = [
+        { key: 'baseline', runs: data.baselineRuns || [] },
+        { key: 'obstructive', runs: data.obstructiveRuns || [] },
+        { key: 'outcome', runs: data.outcomeRuns || [] },
+      ];
+
+      // Count charts: max number of runs across any displayed slice.
+      let maxRuns = 0;
+      for (const p of panels) {
+        for (const model of MODELS) {
+          for (const cat of CATEGORIES) {
+            const rs = pickRuns(p.runs, model.key, cat.key);
+            if (rs.length > maxRuns) maxRuns = rs.length;
+          }
+        }
+      }
+      const niceCountMax = (() => {
+        const m = Math.max(1, maxRuns);
+        if (m <= 10) return 10;
+        if (m <= 25) return 25;
+        if (m <= 50) return 50;
+        if (m <= 75) return 75;
+        if (m <= 100) return 100;
+        if (m <= 150) return 150;
+        if (m <= 200) return 200;
+        return Math.ceil(m / 50) * 50;
+      })();
+
+      // For value charts, use the range of what we actually plot (slice-level averages),
+      // not raw per-run extremes. This keeps the fixed scales "logical" and comparable.
+      function quantileAbs(values, q) {
+        const arr = values
+          .filter(v => typeof v === 'number' && Number.isFinite(v))
+          .map(v => Math.abs(v))
+          .sort((a,b) => a-b);
+        if (!arr.length) return 1;
+        const pos = (arr.length - 1) * q;
+        const base = Math.floor(pos);
+        const rest = pos - base;
+        const a = arr[base];
+        const b = arr[base + 1];
+        if (b === undefined) return a;
+        return a + rest * (b - a);
+      }
+
+      function symFromValues(values) {
+        // Robust: p95 of abs values + headroom.
+        const maxAbs95 = quantileAbs(values, 0.95);
+        const padded = Math.max(1, maxAbs95) * 1.10;
+        const step = padded <= 10 ? 1 : padded <= 25 ? 5 : padded <= 60 ? 10 : 25;
+        const nice = Math.ceil(padded / step) * step;
+        return { yMin: -nice, yMax: nice };
+      }
+
+      function collectSliceAverages(fieldName) {
+        // Collect all per-slice (panel+mix+category) mean values that are actually charted.
+        const out = [];
+        for (const p of panels) {
+          for (const model of MODELS) {
+            for (const cat of CATEGORIES) {
+              const rs = pickRuns(p.runs, model.key, cat.key);
+              if (!rs.length) continue;
+              const sums = {};
+              const counts = {};
+              for (const r of rs) {
+                const d = r[fieldName] || {};
+                if (!d || typeof d !== 'object') continue;
+                for (const [agent, v] of Object.entries(d)) {
+                  if (typeof v !== 'number' || !Number.isFinite(v)) continue;
+                  sums[agent] = (sums[agent] || 0) + v;
+                  counts[agent] = (counts[agent] || 0) + 1;
+                }
+              }
+              for (const agent of AGENT_ORDER) {
+                if (!counts[agent]) continue;
+                out.push(sums[agent] / counts[agent]);
+              }
+            }
+          }
+        }
+        return out;
+      }
+
+      const ownAvgVals = collectSliceAverages('proposal_own_avg');
+      const colAvgVals = collectSliceAverages('proposal_collective_avg');
+      const finalUtilVals = collectSliceAverages('scores');
+
+      return {
+        agreements_vs_failure: { yMin: 0, yMax: niceCountMax },
+        leakage_invalid: { yMin: 0, yMax: 100 },
+        ownscore: symFromValues(ownAvgVals),
+        collective: symFromValues(colAvgVals),
+        utility_party: symFromValues(finalUtilVals),
+      };
+    }
+
     const METRICS = [
       {
         key: 'final_success',
@@ -443,7 +576,7 @@
         subtitle: 'Breakdown: final agreement vs agreement lost vs no agreement.',
         kind: 'chart',
         height: 140,
-        renderChart: (canvas, id, runs) => {
+        renderChart: (canvas, id, runs, _evals, scale) => {
           destroyChart(id);
           if (!runs.length) return;
           const success = runs.filter(r => r.final_success).length;
@@ -467,7 +600,13 @@
               plugins: { legend: { display: false } },
               scales: {
                 x: { ticks: { color: '#475569' } },
-                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+                y: {
+                  beginAtZero: true,
+                  min: scale?.yMin ?? 0,
+                  max: scale?.yMax,
+                  ticks: { color: '#475569' },
+                  grid: { color: '#e2e8f0' }
+                }
               }
             }
           });
@@ -479,7 +618,7 @@
         subtitle: 'Rates over evaluated public answers: llm_leak, llm_invalid, unclosed <ANSWER>.',
         kind: 'chart',
         height: 140,
-        renderChart: (canvas, id, runs, evals) => {
+        renderChart: (canvas, id, runs, evals, scale) => {
           destroyChart(id);
           if (!evals.length) return;
           const n = evals.length;
@@ -507,7 +646,13 @@
               plugins: { legend: { display: false } },
               scales: {
                 x: { ticks: { color: '#475569' } },
-                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+                y: {
+                  beginAtZero: true,
+                  min: scale?.yMin ?? 0,
+                  max: scale?.yMax ?? 100,
+                  ticks: { color: '#475569' },
+                  grid: { color: '#e2e8f0' }
+                }
               }
             }
           });
@@ -515,11 +660,11 @@
       },
       {
         key: 'ownscore',
-        title: 'Own score (proposed)',
-        subtitle: 'Average own scores by agent role (proposal_own_avg).',
+        title: 'Own score (proposed) — avg',
+        subtitle: 'Uses proposal_own_avg: proposer’s own score on their proposals (not outcome; not zeroed).',
         kind: 'chart',
         height: 140,
-        renderChart: (canvas, id, runs) => {
+        renderChart: (canvas, id, runs, _evals, scale) => {
           destroyChart(id);
           if (!runs.length) return;
           const sums = {};
@@ -541,7 +686,7 @@
             data: {
               labels,
               datasets: [{
-                label: 'Own score (proposed)',
+                label: 'Own score (proposal_own_avg)',
                 data,
                 backgroundColor: '#2563eb',
                 borderColor: '#2563eb',
@@ -552,7 +697,12 @@
               plugins: { legend: { display: false } },
               scales: {
                 x: { ticks: { color: '#475569' } },
-                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+                y: {
+                  min: scale?.yMin,
+                  max: scale?.yMax,
+                  ticks: { color: '#475569' },
+                  grid: { color: '#e2e8f0' }
+                }
               }
             }
           });
@@ -560,11 +710,11 @@
       },
       {
         key: 'collective',
-        title: 'Collective score (proposed)',
-        subtitle: 'Average collective scores by agent role (proposal_collective_avg).',
+        title: 'Collective score (proposed) — avg',
+        subtitle: 'Uses proposal_collective_avg: collective score on proposals (mean across agents; not outcome).',
         kind: 'chart',
         height: 140,
-        renderChart: (canvas, id, runs) => {
+        renderChart: (canvas, id, runs, _evals, scale) => {
           destroyChart(id);
           if (!runs.length) return;
           const sums = {};
@@ -586,7 +736,7 @@
             data: {
               labels,
               datasets: [{
-                label: 'Collective score (proposed)',
+                label: 'Collective score (proposal_collective_avg)',
                 data,
                 backgroundColor: '#10b981',
                 borderColor: '#10b981',
@@ -597,56 +747,12 @@
               plugins: { legend: { display: false } },
               scales: {
                 x: { ticks: { color: '#475569' } },
-                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
-              }
-            }
-          });
-        }
-      },
-      {
-        key: 'own_vs_collective',
-        title: 'Own vs collective (proposed)',
-        subtitle: 'Average proposed own (blue) vs collective (green) scores by agent role.',
-        kind: 'chart',
-        height: 140,
-        renderChart: (canvas, id, runs) => {
-          destroyChart(id);
-          if (!runs.length) return;
-          const sumsOwn = {}, cntOwn = {};
-          const sumsCol = {}, cntCol = {};
-          for (const r of runs) {
-            const own = r.proposal_own_avg || {};
-            const col = r.proposal_collective_avg || {};
-            for (const [agent, val] of Object.entries(own)) {
-              if (typeof val !== 'number') continue;
-              sumsOwn[agent] = (sumsOwn[agent] || 0) + val;
-              cntOwn[agent] = (cntOwn[agent] || 0) + 1;
-            }
-            for (const [agent, val] of Object.entries(col)) {
-              if (typeof val !== 'number') continue;
-              sumsCol[agent] = (sumsCol[agent] || 0) + val;
-              cntCol[agent] = (cntCol[agent] || 0) + 1;
-            }
-          }
-          const labels = AGENT_ORDER.filter(a => (cntOwn[a] || cntCol[a]));
-          const ownData = labels.map(a => cntOwn[a] ? (sumsOwn[a] / cntOwn[a]) : null);
-          const colData = labels.map(a => cntCol[a] ? (sumsCol[a] / cntCol[a]) : null);
-          const ctx = canvas.getContext('2d');
-          charts[id] = new Chart(ctx, {
-            type: 'bar',
-            plugins: [makeValueLabels(id + '_labels', 1)],
-            data: {
-              labels,
-              datasets: [
-                { label: 'Own score (proposed)', data: ownData, backgroundColor: 'rgba(37,99,235,0.75)', borderColor: '#2563eb', borderWidth: 1 },
-                { label: 'Collective score (proposed)', data: colData, backgroundColor: 'rgba(16,185,129,0.75)', borderColor: '#10b981', borderWidth: 1 },
-              ]
-            },
-            options: {
-              plugins: { legend: { position: 'top', labels: { color: '#475569' } } },
-              scales: {
-                x: { ticks: { color: '#475569' } },
-                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+                y: {
+                  min: scale?.yMin,
+                  max: scale?.yMax,
+                  ticks: { color: '#475569' },
+                  grid: { color: '#e2e8f0' }
+                }
               }
             }
           });
@@ -654,11 +760,11 @@
       },
       {
         key: 'utility_party',
-        title: 'Utility of party (outcome)',
-        subtitle: 'Average realized final utilities by agent role (scores).',
+        title: 'Utility (scores; final outcome)',
+        subtitle: 'Uses scores: realized outcome utility (0 if final_success=false).',
         kind: 'chart',
         height: 140,
-        renderChart: (canvas, id, runs) => {
+        renderChart: (canvas, id, runs, _evals, scale) => {
           destroyChart(id);
           if (!runs.length) return;
           const sums = {};
@@ -680,7 +786,7 @@
             data: {
               labels,
               datasets: [{
-                label: 'Final utility',
+                label: 'Utility (scores)',
                 data,
                 backgroundColor: '#2563eb',
                 borderColor: '#2563eb',
@@ -691,55 +797,18 @@
               plugins: { legend: { display: false } },
               scales: {
                 x: { ticks: { color: '#475569' } },
-                y: { ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
+                y: {
+                  min: scale?.yMin,
+                  max: scale?.yMax,
+                  ticks: { color: '#475569' },
+                  grid: { color: '#e2e8f0' }
+                }
               }
             }
           });
         }
       },
-      {
-        key: 'agreements_by_utility',
-        title: 'Agreements by utility',
-        subtitle: 'Count of final agreements by summed group utility (collective_raw, rounded).',
-        kind: 'chart',
-        height: 140,
-        renderChart: (canvas, id, runs) => {
-          destroyChart(id);
-          if (!runs.length) return;
-          const bucket = {};
-          for (const r of runs) {
-            if (!r.final_success) continue;
-            const coll = r.collective_raw;
-            if (typeof coll !== 'number') continue;
-            const k = Math.round(coll);
-            bucket[k] = (bucket[k] || 0) + 1;
-          }
-          const labels = Object.keys(bucket).map(k => parseInt(k,10)).sort((a,b)=>a-b);
-          const data = labels.map(k => bucket[k] || 0);
-          const ctx = canvas.getContext('2d');
-          charts[id] = new Chart(ctx, {
-            type: 'bar',
-            plugins: [makeValueLabels(id + '_labels', 0)],
-            data: {
-              labels: labels.map(v => v.toString()),
-              datasets: [{
-                label: 'Agreements',
-                data,
-                backgroundColor: '#2563eb',
-                borderColor: '#2563eb',
-                borderWidth: 1
-              }]
-            },
-            options: {
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { ticks: { color: '#475569' } },
-                y: { beginAtZero: true, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } }
-              }
-            }
-          });
-        }
-      },
+      
     ];
 
     function candidateUrls(url) {
@@ -852,7 +921,7 @@
       return evals.filter(e => e.model_mix === mixKey && e.category === catKey);
     }
 
-    function renderMetricSection(targetEl, model, metric, data) {
+    function renderMetricSection(targetEl, model, metric, data, scales) {
       const section = el('section');
       section.style.marginBottom = '18px';
 
@@ -934,7 +1003,7 @@
 
           // chart render after DOM insertion
           setTimeout(() => {
-            metric.renderChart(canvas, id, runs, evals);
+            metric.renderChart(canvas, id, runs, evals, scales?.[metric.key]);
           }, 0);
         }
 
@@ -947,11 +1016,12 @@
     }
 
     function renderAllMetrics(data) {
+      const scales = computeGlobalScales(data);
       for (const model of MODELS) {
         const root = $(model.gridId);
         root.innerHTML = '';
         for (const metric of METRICS) {
-          renderMetricSection(root, model, metric, data);
+          renderMetricSection(root, model, metric, data, scales);
         }
       }
     }
@@ -1018,6 +1088,43 @@
     }
 
     function init() {
+      // View toggle (avoid scrolling: show GPT-only / Claude-only / both)
+      const VIEW_KEY = 'baseline_vs_adversarial_view';
+      const setActive = (id, on) => {
+        const el = $(id);
+        if (!el) return;
+        el.classList.toggle('active', !!on);
+      };
+      const applyView = (view) => {
+        const v = (view || 'both').toLowerCase();
+        const showGpt = v !== 'claude';
+        const showClaude = v !== 'gpt';
+        $('groupGpt').style.display = showGpt ? '' : 'none';
+        $('groupClaude').style.display = showClaude ? '' : 'none';
+        setActive('viewBothBtn', v === 'both');
+        setActive('viewGptBtn', v === 'gpt');
+        setActive('viewClaudeBtn', v === 'claude');
+        try { localStorage.setItem(VIEW_KEY, v); } catch (_) {}
+        window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      };
+      const readInitialView = () => {
+        try {
+          const url = new URL(window.location.href);
+          const q = (url.searchParams.get('view') || '').toLowerCase();
+          if (q === 'gpt' || q === 'claude' || q === 'both') return q;
+        } catch (_) {}
+        try {
+          const saved = (localStorage.getItem(VIEW_KEY) || '').toLowerCase();
+          if (saved === 'gpt' || saved === 'claude' || saved === 'both') return saved;
+        } catch (_) {}
+        return 'both';
+      };
+
+      $('viewBothBtn').onclick = () => applyView('both');
+      $('viewGptBtn').onclick = () => applyView('gpt');
+      $('viewClaudeBtn').onclick = () => applyView('claude');
+      applyView(readInitialView());
+
       $('reloadBtn').onclick = loadAll;
       loadAll();
     }

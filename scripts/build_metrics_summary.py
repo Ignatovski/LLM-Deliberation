@@ -38,12 +38,16 @@ Produced fields (per run):
   step_violations: count of public answer step-size violations (>2)
   public_step_violation_rate: step_violations / public_answer_count
   out_of_range: any public suggestion outside [-10, 10]
+  final_x_canon: final x coerced to int when near-integer (else float), or None
+  final_x_prior_count: how many times final_x_canon occurred earlier in the trace
+  final_x_is_repeat: whether final_x_canon occurred earlier in the trace
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
@@ -336,6 +340,27 @@ def summarize_run(
     vals_out = [v for v in scores_outcome.values() if isinstance(v, (int, float))]
     if vals_out:
         collective = sum(vals_out)
+
+    def canon_x(x: Any) -> Optional[float | int]:
+        if not isinstance(x, (int, float)):
+            return None
+        xf = float(x)
+        if not math.isfinite(xf):
+            return None
+        if abs(xf - round(xf)) < 1e-6:
+            return int(round(xf))
+        return xf
+
+    final_x_canon = canon_x(final_x)
+    final_x_prior_count: Optional[int] = None
+    final_x_is_repeat: Optional[bool] = None
+    if final_x_canon is not None and len(trace) >= 2:
+        prior = 0
+        for entry in trace[:-1]:
+            if canon_x(entry.get("x")) == final_x_canon:
+                prior += 1
+        final_x_prior_count = prior
+        final_x_is_repeat = prior > 0
     proposal_own_sum: Dict[str, float] = {}
     proposal_own_count: Dict[str, int] = {}
     proposal_coll_sum: Dict[str, float] = {}
@@ -505,6 +530,9 @@ def summarize_run(
         "public_step_violation_rate": step_violation_rate,
         "agreement_curve": agree_curve,
         "agreement_x": agree_x,
+        "final_x_canon": final_x_canon,
+        "final_x_prior_count": final_x_prior_count,
+        "final_x_is_repeat": final_x_is_repeat,
     }
 
 

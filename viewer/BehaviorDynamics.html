@@ -200,6 +200,18 @@
         <canvas id="xHeatmap" style="height: 360px !important;"></canvas>
         <div class="note" id="heatmapNote"></div>
       </div>
+
+      <div class="card">
+        <h2>
+          Final x known vs new in final-failure runs
+          <span class="toolbar"><button data-open="repeatHist">Open</button></span>
+        </h2>
+        <div class="meta">
+          For runs with <code>final_success=false</code>, check whether the final x had appeared earlier in the run (known) or not (new).
+        </div>
+        <canvas id="repeatHist"></canvas>
+        <div class="note" id="repeatNote"></div>
+      </div>
     </div>
   </main>
 
@@ -349,7 +361,7 @@
       });
     }
 
-    function buildBarChart(canvasId, labels, values, colors, yLabel) {
+    function buildBarChart(canvasId, labels, values, colors, yLabel, xTitle = '', yTitle = '') {
       const ctx = $(canvasId).getContext('2d');
       if (charts[canvasId]) charts[canvasId].destroy();
       charts[canvasId] = new Chart(ctx, {
@@ -370,8 +382,17 @@
           animation: false,
           plugins: { legend: { labels: { color: '#e9eefc' } } },
           scales: {
-            x: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
-            y: { ticks: { color: '#aab6e8' }, grid: { color: 'rgba(39,52,94,0.45)' } },
+            x: {
+              ticks: { color: '#aab6e8' },
+              grid: { color: 'rgba(39,52,94,0.45)' },
+              title: { display: Boolean(xTitle), text: xTitle, color: '#aab6e8', font: { size: 12, weight: '600' } },
+            },
+            y: {
+              ticks: { color: '#aab6e8' },
+              grid: { color: 'rgba(39,52,94,0.45)' },
+              title: { display: Boolean(yTitle), text: yTitle, color: '#aab6e8', font: { size: 12, weight: '600' } },
+              beginAtZero: true,
+            },
           },
         },
       });
@@ -398,10 +419,91 @@
       return Array.from({length: n}, (_,i) => `t${i}`);
     }
 
+    function canonX(x) {
+      if (!Number.isFinite(x)) return null;
+      const r = Math.round(x);
+      if (Math.abs(x - r) < 1e-6) return r;
+      return x;
+    }
+
+    function finalXPriorCountFinalFailure(run) {
+      if (!run || run.final_success !== false) return null;
+      const xs = Array.isArray(run.x_trace) ? run.x_trace : [];
+      let lastIdx = -1;
+      let lastVal = null;
+      for (let i = xs.length - 1; i >= 0; i--) {
+        if (Number.isFinite(xs[i])) { lastIdx = i; lastVal = xs[i]; break; }
+      }
+      if (lastIdx < 0 && Number.isFinite(run.final_x)) {
+        lastIdx = xs.length; // treat final_x as after the trace
+        lastVal = run.final_x;
+      }
+      const finalCanon = canonX(lastVal);
+      if (finalCanon === null) return null;
+      let prior = 0;
+      for (let i = 0; i < Math.max(0, lastIdx); i++) {
+        const v = canonX(xs[i]);
+        if (v === null) continue;
+        if (v === finalCanon) prior += 1;
+      }
+      return prior;
+    }
+
+    function finalXRepeatStatsFinalFailure(runs) {
+      const failRuns = runs.filter(r => r && r.final_success === false);
+      let usable = 0;
+      let repeats = 0;
+      let priorSum = 0;
+      for (const r of failRuns) {
+        const prior = finalXPriorCountFinalFailure(r);
+        if (prior === null) continue;
+        usable += 1;
+        priorSum += prior;
+        if (prior > 0) repeats += 1;
+      }
+      return {
+        nFinalFailure: failRuns.length,
+        nUsable: usable,
+        nRepeats: repeats,
+        repeatPct: usable ? (100 * repeats / usable) : 0,
+        avgPriorCount: usable ? (priorSum / usable) : 0,
+      };
+    }
+
+    function renderFinalXKnownVsNew(runs) {
+      let usable = 0;
+      let known = 0;
+      let newCount = 0;
+      for (const r of runs) {
+        const prior = finalXPriorCountFinalFailure(r);
+        if (prior === null) continue;
+        usable += 1;
+        if (prior > 0) known += 1;
+        else newCount += 1;
+      }
+
+      const labels = ['new (not seen before)', 'known (seen before)'];
+      const values = [newCount, known];
+      const colors = [
+        'rgba(148,163,184,0.45)', // slate
+        'rgba(251,191,36,0.85)',  // amber
+      ];
+      buildBarChart('repeatHist', labels, values, colors, 'runs', 'final x novelty', 'number of runs');
+
+      const finalFail = runs.filter(r => r && r.final_success === false).length;
+      const knownPct = usable ? (100 * known / usable) : 0;
+      const newPct = usable ? (100 * newCount / usable) : 0;
+      $('repeatNote').textContent =
+        `Final-failure runs: ${finalFail}. Usable: ${usable}. ` +
+        `Known: ${known}/${usable} (${knownPct.toFixed(1)}%). ` +
+        `New: ${newCount}/${usable} (${newPct.toFixed(1)}%).`;
+    }
+
     function summarize(runs) {
       const n = runs.length;
       const anySuccess = runs.filter(r => r.any_success).length;
       const finalSuccess = runs.filter(r => r.final_success).length;
+      const finalFailure = runs.filter(r => r.final_success === false).length;
 
       const bestVals = runs.map(r => r.best_x_feasible).filter(v => Number.isFinite(v));
       const bestCounts = new Map();
@@ -422,7 +524,15 @@
       const avgToward = mean(runs.map(r => r.toward_best_ratio));
       const avgDrift = mean(runs.map(r => r.post_first_agreement_drift_mean));
 
-      return { n, anySuccess, finalSuccess, stable, lost, none, avgImprove, avgToward, avgDrift, bestMode, bestModeCount, bestUnique };
+      const fx = finalXRepeatStatsFinalFailure(runs);
+
+      return {
+        n, anySuccess, finalSuccess, stable, lost, none,
+        avgImprove, avgToward, avgDrift,
+        bestMode, bestModeCount, bestUnique,
+        finalFailure,
+        ...fx,
+      };
     }
 
     function renderSummaryUI(metaText, s) {
@@ -437,6 +547,9 @@
         { k: 'best feasible x', v: bestText },
         { k: 'any success', v: `${s.anySuccess} (${pct(s.anySuccess, s.n)})`, cls: 'good' },
         { k: 'final success', v: `${s.finalSuccess} (${pct(s.finalSuccess, s.n)})` },
+        { k: 'final failure', v: `${s.finalFailure} (${pct(s.finalFailure, s.n)})`, cls: 'warn' },
+        { k: 'final x repeated (final failure)', v: `${s.nRepeats} / ${s.nUsable} (${s.repeatPct.toFixed(1)}%)` },
+        { k: 'avg prior repeats (final failure)', v: s.nUsable ? s.avgPriorCount.toFixed(2) : 'n/a' },
       ];
 
       const el = $('summaryStats');
@@ -459,6 +572,7 @@
       buildQuantileBandChart('collectiveChart', labels, colQ.q25, colQ.q50, colQ.q75, 'rgb(52,211,153)', 'sum utilities');
 
       renderXHeatmap(runs);
+      renderFinalXKnownVsNew(runs);
     }
 
     // ---- Heatmap (custom canvas) ----
@@ -504,12 +618,13 @@
       ctx.fillStyle = '#0f1730';
       ctx.fillRect(0, 0, cssW, cssH);
 
-      // Color scale: dark -> accent
+      // Color scale: dark -> red (higher contrast vs blue background)
       function cellColor(v) {
         if (!maxCount) return 'rgba(106,165,255,0)';
         const a = v / maxCount;
-        const alpha = 0.10 + 0.75 * a;
-        return `rgba(106,165,255,${alpha.toFixed(3)})`;
+        const alpha = 0.18 + 0.82 * Math.pow(a, 0.85);
+        // Matches theme "bad" (#fb7185) but with variable opacity.
+        return `rgba(251,113,133,${alpha.toFixed(3)})`;
       }
 
       // Draw cells (y from top = +10 down to -10)
