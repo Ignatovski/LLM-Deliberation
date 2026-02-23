@@ -255,6 +255,7 @@
       padding: 10px 10px;
       margin-bottom: 10px;
       background: rgba(248,250,252,0.7);
+      position: relative;
     }
     .tag{
       font-size:11px;
@@ -269,6 +270,24 @@
       color: var(--ink);
       background: rgba(255,255,255,0.75);
     }
+    .cornerStat{
+      position:absolute;
+      top:10px;
+      right:10px;
+      font-size:11px;
+      font-weight:800;
+      padding: 5px 8px;
+      border-radius:999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.85);
+      color: var(--muted);
+      max-width: 240px;
+      text-align: right;
+      white-space: normal;
+      line-height: 1.2;
+      pointer-events:none;
+    }
+    .cornerStat strong{ color: var(--ink); }
     .tag.uni{ border-color: rgba(16,185,129,.55); color:#065f46; background: rgba(16,185,129,.12); }
     .tag.ai{ border-color: rgba(245,158,11,.55); color:#7c2d12; background: rgba(245,158,11,.14); }
     .tag.human{ border-color: rgba(239,68,68,.55); color:#7f1d1d; background: rgba(239,68,68,.12); }
@@ -371,12 +390,13 @@
     const charts = {};
 
     const SOURCES = {
-      baselineSummary: 'viewer/metrics_summary.json',
-      baselineEval: 'summarys/leakage/eval_all.json',
-      obstructiveSummary: 'summarys/metrics_summary.adversarial_obstructive.json',
-      obstructiveEval: 'summarys/leakage/eval_adversarial_obstructive.json',
-      outcomeSummary: 'summarys/metrics_summary.adversarial_outcome_targeted.json',
-      outcomeEval: 'summarys/leakage/eval_adversarial_outcome_targeted.json',
+      // This page is served from /viewer/, so keep paths relative to /viewer/ for reliability.
+      baselineSummary: 'metrics_summary.json',
+      baselineEval: '../summarys/leakage/eval_all.json',
+      obstructiveSummary: '../summarys/metrics_summary.adversarial_obstructive.json',
+      obstructiveEval: '../summarys/leakage/eval_adversarial_obstructive.json',
+      outcomeSummary: '../summarys/metrics_summary.adversarial_outcome_targeted.json',
+      outcomeEval: '../summarys/leakage/eval_adversarial_outcome_targeted.json',
     };
 
     const MODELS = [
@@ -843,6 +863,15 @@
       return res.json();
     }
 
+    async function loadJsonOptional(url, fallback) {
+      try {
+        return await loadJson(url);
+      } catch (e) {
+        console.warn('Optional JSON failed to load:', url, e);
+        return fallback;
+      }
+    }
+
     function fmtNum(x) {
       if (x === null || x === undefined || !Number.isFinite(x)) return 'n/a';
       const ax = Math.abs(x);
@@ -995,6 +1024,34 @@
             row.innerHTML = `<span class="k">${k}:</span> <span>${v}</span>`;
             card.appendChild(row);
           }
+          if (metric.key === 'utility_party') {
+            const totalRuns = runs.length;
+            const successRuns = runs.filter(r => !!r.final_success);
+            const totalSuccess = successRuns.length;
+            const succPct = totalRuns ? Math.round((totalSuccess / totalRuns) * 100) : null;
+
+            let extra = '';
+            if (panel.key === 'outcome' || panel.key === 'obstructive') {
+              if (!totalSuccess) {
+                extra = ' · x=-2 <strong>n/a</strong>';
+              } else {
+                const atMinus2 = successRuns.filter(r => Number(r.final_x) === -2).length;
+                const pct = Math.round((atMinus2 / totalSuccess) * 100);
+                extra = ` · x=-2 <strong>${atMinus2}/${totalSuccess}</strong> <strong>(${pct}%)</strong>`;
+              }
+            }
+
+            const badge = el('div', 'cornerStat');
+            if (!totalRuns) {
+              badge.innerHTML = `succ <strong>n/a</strong>${panel.key === 'outcome' ? ' · x=-2 <strong>n/a</strong>' : ''}`;
+            } else {
+              badge.innerHTML =
+                `succ <strong>${totalSuccess}/${totalRuns}</strong>` +
+                (succPct === null ? '' : ` <strong>(${succPct}%)</strong>`) +
+                extra;
+            }
+            card.appendChild(badge);
+          }
           const canvas = document.createElement('canvas');
           canvas.id = id;
           canvas.height = metric.height || 140;
@@ -1039,11 +1096,11 @@
           outcomeEval,
         ] = await Promise.all([
           loadJson(SOURCES.baselineSummary),
-          loadJson(SOURCES.baselineEval),
+          loadJsonOptional(SOURCES.baselineEval, []),
           loadJson(SOURCES.obstructiveSummary),
-          loadJson(SOURCES.obstructiveEval),
+          loadJsonOptional(SOURCES.obstructiveEval, []),
           loadJson(SOURCES.outcomeSummary),
-          loadJson(SOURCES.outcomeEval),
+          loadJsonOptional(SOURCES.outcomeEval, []),
         ]);
 
         const baselineRuns = baselineSummary.runs || [];

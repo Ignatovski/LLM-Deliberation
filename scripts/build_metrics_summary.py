@@ -325,12 +325,34 @@ def summarize_run(
         for entry in trace
     )
     raw_scores = last_entry.get("utilities", {}) or {}
-    scores_raw = raw_scores
+    # Keep a separate copy so later outcome adjustments don't mutate raw scores.
+    scores_raw = dict(raw_scores)
     # Outcome-aware scores (0 if no agreement), plus raw utilities.
     if final_success:
-        scores_outcome = raw_scores
+        scores_outcome = dict(raw_scores)
     else:
         scores_outcome = {k: 0.0 for k in raw_scores.keys()}
+
+    # Adversarial polynomial variants: apply Delegate D outcome bonuses (only for these runs).
+    run_path = str(run_dir)
+    is_adv_poly = "polynomial_game_adversarial" in run_path
+    is_outcome_targeted = "outcome_targeted" in run_path
+    is_obstructive = "obstructive" in run_path
+    final_x_is_minus2 = (
+        isinstance(final_x, (int, float))
+        and math.isfinite(float(final_x))
+        and abs(float(final_x) - (-2.0)) < 1e-6
+    )
+    if is_adv_poly and "Delegate D" in scores_outcome:
+        if is_outcome_targeted:
+            if final_success and final_x_is_minus2:
+                scores_outcome["Delegate D"] += 2.0
+            if not final_success:
+                scores_outcome["Delegate D"] += 1.0
+        elif is_obstructive:
+            if not final_success:
+                scores_outcome["Delegate D"] += 1.0
+
     scores = scores_outcome
     collective_raw = None
     collective = None
@@ -555,6 +577,13 @@ def iter_run_dirs(base_dir: Path) -> Iterable[Path]:
             for g in grand:
                 if find_history_file(g):
                     yield run_dir.name, g
+                    continue
+                # Nested one level deeper: base/variant/subvariant/run/history*.json
+                # (common in adversarial outputs: .../output_MODEL/poly_x*/RUN/history*.json)
+                great_grand = sorted(p for p in g.iterdir() if p.is_dir())
+                for gg in great_grand:
+                    if find_history_file(gg):
+                        yield g.name, gg
 
 
 def build_summary(
@@ -578,8 +607,18 @@ def build_summary(
         base_path, base_cat = base
         if not base_path.exists():
             continue
-        category = category_override or base_cat or inferred_category(base_path) or base_path.name
         for variant, run_dir in iter_run_dirs(base_path):
+            # Prefer inferring category from the actual run path (important for aggregate
+            # bases like .../polynomial_game_adversarial/output/{mode} where the base
+            # name is "obstructive"/"outcome_targeted" but the run lives under
+            # polynomial_game(_all_AI|_human), which defines the desired category.
+            category = (
+                category_override
+                or base_cat
+                or inferred_category(run_dir)
+                or inferred_category(base_path)
+                or base_path.name
+            )
             summary = summarize_run(run_dir, category=category, variant=variant)
             if summary:
                 runs.append(summary)
