@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cyberneg-v1"
+version = "0.1.0"
+description = "Scaffold-first cyber-only multi-agent negotiation framework (mock-first)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic>=2.6,<3",
+  "PyYAML>=6.0",
+  "pandas>=2.0",
+  "matplotlib>=3.7",
+  "streamlit>=1.32",
+]
+
+[project.optional-dependencies]
+providers = [
+  "openai>=1.40",
+  "anthropic>=0.34",
+]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+cyberneg = "cyberneg.cli.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+

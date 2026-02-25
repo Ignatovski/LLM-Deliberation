@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "Severity": {
+      "enum": [
+        "Compliance",
+        "Info",
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "condition_id": {
+      "title": "Condition Id",
+      "type": "string"
+    },
+    "scenario_id": {
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "final_committee_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Final Committee Label"
+    },
+    "final_committee_severity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Severity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "final_agreement_exact": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Final Agreement Exact"
+    },
+    "transcript_reference": {
+      "title": "Transcript Reference",
+      "type": "string"
+    },
+    "agent_final_outputs_reference": {
+      "title": "Agent Final Outputs Reference",
+      "type": "string"
+    },
+    "expert_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Label"
+    },
+    "expert_severity": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Severity"
+    },
+    "expert_score_argument_quality": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Score Argument Quality"
+    },
+    "expert_score_evidence_relevance": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Score Evidence Relevance"
+    },
+    "expert_score_defensibility_for_report": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Score Defensibility For Report"
+    },
+    "expert_would_accept_in_QA": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Would Accept In Qa"
+    },
+    "expert_comments": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert Comments"
+    }
+  },
+  "required": [
+    "run_id",
+    "condition_id",
+    "scenario_id",
+    "transcript_reference",
+    "agent_final_outputs_reference"
+  ],
+  "title": "ExpertReviewRow",
+  "type": "object"
+}

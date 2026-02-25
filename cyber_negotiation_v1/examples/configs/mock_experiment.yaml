@@ -1,0 +1,29 @@
+experiment_id: mock_experiment_v1
+condition_set_path: configs/conditions/mock_demo.yaml
+provider_catalog_path: configs/providers/providers.yaml
+model_catalog_path: configs/models/default_models.yaml
+label_set_paths:
+  - configs/label_sets/default_findings_v1.yaml
+scenario_paths:
+  - configs/scenarios/placeholder_webapp_001.yaml
+ground_truth_paths:
+  - configs/scenarios/placeholder_webapp_001_ground_truth.yaml
+role_paths:
+  R: configs/roles/R.yaml
+  C: configs/roles/C.yaml
+  K: configs/roles/K.yaml
+prompt_paths:
+  round0_global: configs/prompts/global_round0.yaml
+  roundn: configs/prompts/roundn.yaml
+  baseline: configs/prompts/baseline.yaml
+output_root: outputs
+seed: 12345
+mock:
+  enabled: true
+  behavior:
+    invalid_json_attempts_per_turn: 1
+    deterministic_seed_offset: 17
+runtime_overrides:
+  export_json_schemas: true
+  generate_plots: true
+

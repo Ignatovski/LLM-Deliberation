@@ -1,0 +1,14 @@
+models:
+  mock-default:
+    provider: mock
+    model_name: mock-deterministic-v1
+    timeout_seconds: 10
+  azure-gpt:
+    provider: azure_responses
+    model_name: gpt-4.1
+    timeout_seconds: 90
+  anthropic-sonnet:
+    provider: anthropic
+    model_name: claude-sonnet-4-5
+    timeout_seconds: 90
+

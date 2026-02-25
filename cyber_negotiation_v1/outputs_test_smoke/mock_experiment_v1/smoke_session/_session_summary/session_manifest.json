@@ -1,0 +1,38 @@
+{
+  "experiment_id": "mock_experiment_v1",
+  "session_dir": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session",
+  "output_root": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke",
+  "conditions": [
+    {
+      "condition_id": "C1",
+      "condition_summary_dir": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C1/_condition_summary",
+      "run_count": 1,
+      "aggregate_paths": {
+        "aggregate_metrics_json": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C1/_condition_summary/metrics/aggregate_metrics.json",
+        "aggregate_metrics_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C1/_condition_summary/metrics/aggregate_metrics.csv"
+      },
+      "combined_expert_review_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C1/_condition_summary/expert_review_combined.csv"
+    },
+    {
+      "condition_id": "C2",
+      "condition_summary_dir": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C2/_condition_summary",
+      "run_count": 1,
+      "aggregate_paths": {
+        "aggregate_metrics_json": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C2/_condition_summary/metrics/aggregate_metrics.json",
+        "aggregate_metrics_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C2/_condition_summary/metrics/aggregate_metrics.csv"
+      },
+      "combined_expert_review_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/C2/_condition_summary/expert_review_combined.csv"
+    }
+  ],
+  "aggregate_paths": {
+    "aggregate_metrics_json": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/_session_summary/metrics/aggregate_metrics.json",
+    "aggregate_metrics_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/_session_summary/metrics/aggregate_metrics.csv"
+  },
+  "combined_expert_review_csv": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/outputs_test_smoke/mock_experiment_v1/smoke_session/_session_summary/expert_review_combined.csv",
+  "config_refs": {
+    "experiment_config": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/examples/configs/mock_experiment.yaml",
+    "condition_set": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/configs/conditions/mock_demo.yaml",
+    "provider_catalog": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/configs/providers/providers.yaml",
+    "model_catalog": "/pfs/data6/home/ma/ma_ma/ma_dignatov/LLM-Deliberation/cyber_negotiation_v1/configs/models/default_models.yaml"
+  }
+}

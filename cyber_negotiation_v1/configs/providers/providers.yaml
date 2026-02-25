@@ -1,0 +1,30 @@
+providers:
+  mock:
+    kind: mock
+    enabled: true
+  azure_responses:
+    kind: azure_responses
+    enabled: false
+    env_mapping:
+      endpoint:
+        - AZURE_OPENAI_ENDPOINT
+        - AZURE_OPENAI_API_BASE
+        - OPENAI_API_BASE
+        - OPENAI_BASE_URL
+      api_key:
+        - AZURE_OPENAI_API_KEY
+        - AZURE_OPENAI_API
+        - OPENAI_API_KEY
+      api_version:
+        - AZURE_OPENAI_API_VERSION
+        - OPENAI_API_VERSION
+  anthropic:
+    kind: anthropic
+    enabled: false
+    env_mapping:
+      api_key:
+        - ANTHROPIC_API_KEY
+        - ANTHROPIC_API
+      base_url:
+        - ANTHROPIC_BASE_URL
+

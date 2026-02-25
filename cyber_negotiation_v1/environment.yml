@@ -1,0 +1,16 @@
+name: cyberneg-v1
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pydantic>=2.6,<3
+  - pyyaml>=6.0
+  - pandas>=2.0
+  - matplotlib>=3.7
+  - streamlit>=1.32
+  - pytest>=8.0
+  - pip:
+      - openai>=1.40
+      - anthropic>=0.34
+
