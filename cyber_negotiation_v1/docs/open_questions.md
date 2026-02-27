@@ -1,5 +1,9 @@
 # Open Questions (Ambiguities + Deviations from Polynomial JSON Runner)
 
+Canonical implementation note:
+- The primary entrypoint is now `main_cyber_json.py` with `games_descriptions/cyber_game/`.
+- The earlier `src/cyberneg/` scaffold remains available, but it is no longer the main user-facing structure.
+
 This document records unresolved items and any intentional implementation differences from the prior `main_polynomial_json.py` approach.
 
 ## Required User Clarifications (Not Blocking V1 Scaffold)
@@ -40,9 +44,10 @@ This document records unresolved items and any intentional implementation differ
 
 ## Intentional Differences vs `main_polynomial_json.py` (Documented Per Request)
 
-1. Strict JSON parser policy (no fallback parsing)
-- Polynomial JSON runner has robustness logic tailored to mixed outputs and `<VALUE>` extraction.
-- V1 uses strict JSON only (`json.loads`), schema validation, bounded retries, and logs every failed attempt/error.
+1. Same outer JSON schema, different inner payload semantics
+- Polynomial JSON runner uses outer keys `scratchpad`, `answer`, `plan`.
+- Cyber V1 now uses the same outer keys.
+- The cyber-specific structured assessment is embedded inside `answer` as `<ASSESSMENT>{...}</ASSESSMENT>` so the file layout and top-level schema stay aligned with the old project.
 
 2. Config-driven experiment conditions (no embedded condition logic)
 - Polynomial code embeds game mechanics and some fixed assumptions in runner code.
@@ -77,4 +82,3 @@ This document records unresolved items and any intentional implementation differ
 - Azure/Anthropic token-usage capture coverage parity across all paths
 - cost accounting (placeholder in V1)
 - dashboard polish and Siemens overview templates beyond machine-readable exports + basic charts
-

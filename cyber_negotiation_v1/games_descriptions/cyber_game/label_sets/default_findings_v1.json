@@ -1,0 +1,32 @@
+{
+  "label_set_id": "default_findings_v1",
+  "labels": [
+    "BruteForce",
+    "CommandInjection",
+    "CSRF",
+    "FileInclusion",
+    "FileUpload",
+    "InsecureCaptcha",
+    "SQLInjection",
+    "BlindSQLInjection",
+    "WeakSessionIDs",
+    "XSS_DOM",
+    "XSS_Reflected",
+    "XSS_Stored",
+    "CSPBypass",
+    "BrokenAccessControl",
+    "AuthBypass",
+    "ExposedSecret",
+    "NoFinding",
+    "Other"
+  ],
+  "aliases": {
+    "sql injection": "SQLInjection",
+    "sqli": "SQLInjection",
+    "blind sqli": "BlindSQLInjection",
+    "reflected xss": "XSS_Reflected",
+    "stored xss": "XSS_Stored",
+    "dom xss": "XSS_DOM",
+    "no finding": "NoFinding"
+  }
+}

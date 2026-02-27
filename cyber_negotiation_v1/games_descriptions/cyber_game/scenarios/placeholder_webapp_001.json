@@ -1,0 +1,15 @@
+{
+  "scenario_id": "placeholder_webapp_001",
+  "title": "Placeholder Web App Finding Packet (Polynomial-Style Layout)",
+  "source_family": "generic_webapp",
+  "difficulty": "medium",
+  "label_set_id": "default_findings_v1",
+  "lines": [
+    {"id": "L001", "text": "Login endpoint returns 200 for both valid and invalid usernames, but response time differs by about 180ms."},
+    {"id": "L002", "text": "Account lockout is disabled in the test configuration used for the packet."},
+    {"id": "L003", "text": "Observed request parameter `username` reflected in HTML without output encoding in the error banner."},
+    {"id": "L004", "text": "PoC screenshot transcript shows a reflected script payload rendered in a browser alert context."},
+    {"id": "L005", "text": "No CSP header is present in the HTTP response captured in the packet."}
+  ],
+  "author_notes": "Hidden placeholder note for scenario authoring only."
+}

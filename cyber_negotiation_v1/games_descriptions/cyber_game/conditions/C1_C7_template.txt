@@ -1,0 +1,17 @@
+# Fill one file per condition (C1..C7) using this polynomial-style key=value format.
+condition_id=C1
+mode=negotiation
+public_messages=6
+json_max_retries=3
+prior_round0=You are negotiating with other LLM reviewers.
+apply_priors_round0_only=true
+reminder_text=Stay evidence-grounded and cite exact line IDs.
+reinject_role_instruction_roundn=false
+final_turn_announcement_window=1
+per_call_timeout_seconds=20
+per_run_wallclock_limit_seconds=180
+token_budget_limit=
+public_message_min_words=80
+public_message_max_words=150
+public_message_hard_cap_words=220
+invalid_json_attempts_per_turn=0

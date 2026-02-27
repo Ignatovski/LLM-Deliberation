@@ -1,65 +1,88 @@
-# Cyber Negotiation Framework V1 (Scaffold-First)
+# Cyber Negotiation Framework V1
 
-This is a new cyber-only subproject scaffolded inside the existing repository.
+This subproject now follows the old polynomial project more closely.
 
-Adaptation note:
-- The existing repository is focused on polynomial negotiation experiments.
-- To avoid breaking that codebase, this V1 framework is implemented as a self-contained subproject under `cyber_negotiation_v1/`.
-- The Python package is namespaced as `cyberneg` (instead of top-level `core`, `io`, etc.) to avoid import collisions (notably Python stdlib `io`).
+Primary workflow:
+- runner-first entrypoint: `cyber_negotiation_v1/main_cyber_json.py`
+- polynomial-style game layout: `cyber_negotiation_v1/games_descriptions/cyber_game/`
+- simple text config files: `config.txt`, `config_claude.txt`, `config_azure.txt`, `config_mix_all_diff.txt`
+- shared instruction file: `global_instructions.txt`
+- role-specific instruction files: `individual_instructions/cooperative/*.txt`
+- simple condition files: `conditions/*.txt`
+- scenario packets and ground truth: `scenarios/*.json`, `ground_truth/*.json`
 
-## V1 Scope
+The earlier `src/cyberneg/` package scaffold is still present, but it is now support infrastructure rather than the main interface.
 
-Implemented scaffold-first components:
-- strict JSON schemas and validation (pydantic v2)
-- mock/offline provider + mock runnable baseline and 3-agent negotiation
-- scheduler with fairness/no-repeat constraints
-- private/public logging separation
-- committee aggregation + metrics + CSV exports
-- basic visualizations (machine-readable metrics + PNGs)
-- Streamlit local dashboard (lightweight)
-- config-driven conditions/roles/prompts/scenarios/label sets
-- provider adapter scaffolds for Azure OpenAI (Responses API) and Anthropic
+## Canonical Layout
+
+```text
+cyber_negotiation_v1/
+  main_cyber_json.py
+  cyber_agent.py
+  cyber_utils.py
+  cyber_save_utils.py
+  games_descriptions/
+    cyber_game/
+      config.txt
+      config_claude.txt
+      config_azure.txt
+      config_mix_all_diff.txt
+      global_instructions.txt
+      initial_deal.txt
+      individual_instructions/cooperative/
+      conditions/
+      label_sets/
+      scenarios/
+      ground_truth/
+      output/
+```
+
+## JSON Contract
+
+The outer JSON contract now mirrors `main_polynomial_json.py`:
+
+```json
+{
+  "scratchpad": "<SCRATCHPAD>...</SCRATCHPAD>",
+  "answer": "<ANSWER>public message</ANSWER>\n<ASSESSMENT>{...}</ASSESSMENT>",
+  "plan": "<PLAN>...</PLAN>"
+}
+```
+
+Notes:
+- `scratchpad` remains private.
+- `plan` remains private.
+- `answer` contains the public message plus a hidden structured assessment block.
+- public history is built from `<ANSWER>...</ANSWER>` only.
+- structured assessment is parsed strictly from `<ASSESSMENT>{...}</ASSESSMENT>`.
 
 ## Quickstart (Mock Mode)
 
 From `cyber_negotiation_v1/`:
 
 ```bash
-python -m cyberneg.cli.main validate-config --config examples/configs/mock_experiment.yaml
-python -m cyberneg.cli.main dry-run --config examples/configs/mock_experiment.yaml
-python -m cyberneg.cli.main run-scenario --config examples/configs/mock_experiment.yaml
-python -m cyberneg.cli.main run-baseline --config examples/configs/mock_experiment.yaml
-python -m cyberneg.cli.main compute-metrics --run-dir outputs/latest_mock_run
-python -m cyberneg.cli.main export-expert-csv --run-dir outputs/latest_mock_run
+python main_cyber_json.py \
+  --game_dir ./games_descriptions/cyber_game \
+  --config_file config.txt \
+  --condition_file conditions/C1.txt \
+  --scenario_file placeholder_webapp_001.json \
+  --exp_name mock_run
 ```
 
-Or install editable:
+This writes a polynomial-style history file plus companion metrics/export files into:
+- `cyber_negotiation_v1/games_descriptions/cyber_game/output/mock_run/`
 
-```bash
-pip install -e .
-cyberneg validate-config --config examples/configs/mock_experiment.yaml
-```
+## Provider Modes
 
-## CLI Commands (V1)
-
-- `validate-config`
-- `dry-run`
-- `run-scenario`
-- `run-baseline`
-- `run-condition`
-- `run-experiment`
-- `compute-metrics`
-- `export-expert-csv`
-- `launch-dashboard`
-- `scaffold-scenario`
-- `scaffold-condition`
+- `mock-cyber` in `config*.txt`: offline runnable, no keys required
+- `claude-*` in `config*.txt`: Anthropic adapter
+- `gpt-*` with `--azure`: Azure Responses adapter
 
 ## Important Docs
 
-- `docs/open_questions.md` (all unresolved ambiguities + deviations vs polynomial JSON runner)
-- `docs/assumptions.md` (conservative defaults used in V1)
+- `docs/open_questions.md`
+- `docs/assumptions.md`
 - `docs/protocol.md`
 - `docs/schemas.md`
 - `docs/metrics.md`
 - `docs/expert_review.md`
-

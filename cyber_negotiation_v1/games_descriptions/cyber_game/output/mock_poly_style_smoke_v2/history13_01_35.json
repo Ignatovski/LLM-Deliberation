@@ -1,0 +1,679 @@
+{
+  "round0": [
+    {
+      "agent": "Risk Reviewer R",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Risk Reviewer R: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "round0",
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "QA Reviewer C",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for QA Reviewer C: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Low\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Low",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "round0",
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "Technical Analyst K",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Technical Analyst K: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "My independent starting view is that the strongest explanation is a reflected XSS finding because the packet shows unsafely reflected user input and a browser-rendered proof of execution. I want the committee to keep alternatives in mind, but at this stage I would keep the leading hypothesis tightly grounded in the cited lines and avoid stretching the impact beyond what the packet directly supports. The absence of stronger impact details means I would rather converge on a defensible medium-confidence assessment now and let the later public discussion test whether any competing label explains the same packet evidence more cleanly.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "round0",
+      "attempts": 2,
+      "warnings": []
+    }
+  ],
+  "rounds": [
+    {
+      "agent": "QA Reviewer C",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY></HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nCurrent public turn index: 0\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for QA Reviewer C: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Low\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Low",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 0,
+      "is_final_public_turn": false,
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "Technical Analyst K",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nCurrent public turn index: 1\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Technical Analyst K: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 1,
+      "is_final_public_turn": false,
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "QA Reviewer C",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. You (QA Reviewer C): I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . Technical Analyst K: I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nCurrent public turn index: 2\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for QA Reviewer C: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 2,
+      "is_final_public_turn": false,
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "Risk Reviewer R",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . Technical Analyst K: I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nCurrent public turn index: 3\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Risk Reviewer R: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 3,
+      "is_final_public_turn": false,
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "Technical Analyst K",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . You (Technical Analyst K): I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . Risk Reviewer R: I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nCurrent public turn index: 4\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Technical Analyst K: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to tighten around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to tighten around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 4,
+      "is_final_public_turn": false,
+      "attempts": 2,
+      "warnings": []
+    },
+    {
+      "agent": "Risk Reviewer R",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . Technical Analyst K: I want to clarify around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . QA Reviewer C: I want to defend around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . You (Risk Reviewer R): I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading. \n . Technical Analyst K: I want to tighten around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PREV_PLAN>.\nThis is the final public turn. Commit to your most defensible assessment.\nCurrent public turn index: 5\nReturn the required JSON object only.\n\nYou must respond with ONE JSON object, nothing else:\n{\n  \"scratchpad\": \"<SCRATCHPAD>…</SCRATCHPAD>\",\n  \"answer\": \"<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>\",\n  \"plan\": \"<PLAN>…</PLAN>\"\n}\n\nRules:\n- scratchpad: private reasoning only; keep it concise.\n- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.\n- plan: private next-step notes; omit or use \"<PLAN></PLAN>\" if none.\n- assessment.ranked_findings must contain ranks 1, 2, and 3.\n- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.\n- Rank 1 must cite 1-2 valid evidence line IDs.\n- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.\n- Output must be valid JSON; no extra text, comments, or Markdown.\nIf you cannot comply, reformat to valid JSON with the fields above; never return other text.\n",
+      "full_answer": "<SCRATCHPAD>Private notes for Risk Reviewer R: compare top hypotheses, track citation quality, and preserve separation between internal reasoning and public argument.</SCRATCHPAD>\n<ANSWER>I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"confidence\": 0.78, \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows reflected input handling and browser-rendered execution evidence.\"}, {\"rank\": 2, \"label\": \"XSS_Stored\", \"severity\": \"Low\", \"confidence\": 0.3, \"citations\": [\"L003\"], \"rationale\": \"A different XSS variant remains possible but is less directly supported.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"confidence\": 0.15, \"citations\": [], \"rationale\": \"A conservative no-finding interpretation remains weaker than the reflected-XSS reading.\"}], \"decision_summary\": \"Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears.\"}</ASSESSMENT>\n<PLAN>Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.</PLAN>",
+      "public_answer": "I want to stabilize around the reflected XSS hypothesis rather than widen scope without stronger evidence. The clearest support is still the reflected parameter behavior plus the browser execution proof, so my view is that the committee should converge on a defensible finding with explicit line citations and only move severity upward if someone can tie stronger impact directly to the packet. If another label is going to displace this one, I need to see a tighter mechanism argument and at least one cited line that explains the rendered script execution better than the reflected-XSS reading.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "confidence": 0.78,
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows reflected input handling and browser-rendered execution evidence."
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Stored",
+            "severity": "Low",
+            "confidence": 0.3,
+            "citations": [
+              "L003"
+            ],
+            "rationale": "A different XSS variant remains possible but is less directly supported."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "confidence": 0.15,
+            "citations": [],
+            "rationale": "A conservative no-finding interpretation remains weaker than the reflected-XSS reading."
+          }
+        ],
+        "decision_summary": "Reflected XSS remains the most defensible current label; severity stays conservative unless stronger impact evidence appears."
+      },
+      "phase": "public",
+      "public_turn_index": 5,
+      "is_final_public_turn": true,
+      "attempts": 2,
+      "warnings": []
+    }
+  ],
+  "plan": {
+    "Risk Reviewer R": [
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn."
+    ],
+    "QA Reviewer C": [
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn."
+    ],
+    "Technical Analyst K": [
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn.",
+      "Keep the top-1 stable if evidence remains strongest, ask for precise citation-backed objections, and commit clearly on the final public turn."
+    ]
+  },
+  "finished_rounds": 9,
+  "finished_public_rounds": 6,
+  "validation_failures": [],
+  "committee_snapshots": [
+    {
+      "public_turn_index": 0,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Low",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": false,
+      "committee_majority_severity": "Medium"
+    },
+    {
+      "public_turn_index": 1,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Low",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": false,
+      "committee_majority_severity": "Medium"
+    },
+    {
+      "public_turn_index": 2,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": true,
+      "committee_majority_severity": "Medium"
+    },
+    {
+      "public_turn_index": 3,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": true,
+      "committee_majority_severity": "Medium"
+    },
+    {
+      "public_turn_index": 4,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": true,
+      "committee_majority_severity": "Medium"
+    },
+    {
+      "public_turn_index": 5,
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "XSS_Reflected",
+        "QA Reviewer C": "XSS_Reflected",
+        "Technical Analyst K": "XSS_Reflected"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "committee_type_label": "XSS_Reflected",
+      "committee_exact_label": "XSS_Reflected",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "majority",
+      "committee_exact_status": "majority",
+      "full_agreement_type": true,
+      "full_agreement_exact": true,
+      "committee_majority_severity": "Medium"
+    }
+  ],
+  "slot_assignment": [
+    "QA Reviewer C",
+    "Technical Analyst K",
+    "QA Reviewer C",
+    "Risk Reviewer R",
+    "Technical Analyst K",
+    "Risk Reviewer R"
+  ],
+  "condition": {
+    "condition_id": "C1",
+    "mode": "negotiation",
+    "public_messages": 6,
+    "json_max_retries": 3,
+    "prior_round0": "You are negotiating with other LLM reviewers.",
+    "apply_priors_round0_only": true,
+    "reminder_text": "Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.",
+    "reinject_role_instruction_roundn": false,
+    "final_turn_announcement_window": 1,
+    "per_call_timeout_seconds": 20,
+    "per_run_wallclock_limit_seconds": 180,
+    "token_budget_limit": null,
+    "public_message_min_words": 80,
+    "public_message_max_words": 150,
+    "public_message_hard_cap_words": 220,
+    "invalid_json_attempts_per_turn": 1
+  },
+  "scenario": {
+    "scenario_id": "placeholder_webapp_001",
+    "title": "Placeholder Web App Finding Packet (Polynomial-Style Layout)",
+    "source_family": "generic_webapp",
+    "difficulty": "medium",
+    "label_set_id": "default_findings_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "Login endpoint returns 200 for both valid and invalid usernames, but response time differs by about 180ms."
+      },
+      {
+        "id": "L002",
+        "text": "Account lockout is disabled in the test configuration used for the packet."
+      },
+      {
+        "id": "L003",
+        "text": "Observed request parameter `username` reflected in HTML without output encoding in the error banner."
+      },
+      {
+        "id": "L004",
+        "text": "PoC screenshot transcript shows a reflected script payload rendered in a browser alert context."
+      },
+      {
+        "id": "L005",
+        "text": "No CSP header is present in the HTTP response captured in the packet."
+      }
+    ]
+  },
+  "scenario_id": "placeholder_webapp_001",
+  "scenario_title": "Placeholder Web App Finding Packet (Polynomial-Style Layout)",
+  "ground_truth": {
+    "scenario_id": "placeholder_webapp_001",
+    "final_label": "XSS_Reflected",
+    "final_severity": "Medium",
+    "ambiguity_notes": "CSP absence supports exploitability context but is not the finding label itself.",
+    "expert_notes": "Placeholder adjudication only.",
+    "adjudication_metadata": {
+      "status": "placeholder"
+    }
+  },
+  "validation_stats": {
+    "total_turns": 9,
+    "total_attempts": 18,
+    "successful_turns": 9,
+    "failed_turns": 0,
+    "json_retry_count": 9,
+    "json_failures": 0,
+    "schema_validation_failures": 0,
+    "citation_count_violations": 0,
+    "message_length_violations": 0,
+    "citation_total_rank1": 18,
+    "citation_valid_rank1": 18
+  },
+  "metrics": {
+    "FinalCorrectType": true,
+    "FinalCorrectSeverity": true,
+    "FinalCorrectExact": true,
+    "OverSeverityRate": 0.0,
+    "UnderSeverityRate": 0.0,
+    "FinalAgreementType": true,
+    "FinalAgreementExact": true,
+    "WrongConsensusType": false,
+    "WrongConsensusExact": false,
+    "NoConsensus": false,
+    "LateDriftType": false,
+    "LateDriftExact": false,
+    "FlipCountType": 0,
+    "ConsensusLatencyType": 0,
+    "ConsensusLatencyExact": 2,
+    "SeverityVarianceAcrossRounds": 0.0,
+    "ExactSeverityDisagreementRateAtFinal": 0.0,
+    "JsonRetryCount": 9,
+    "JsonFailureRate": 0.0,
+    "SchemaValidationFailureRate": 0.0,
+    "CitationValidityRate": 1.0,
+    "CitationCountViolations": 0,
+    "MessageLengthViolations": 0
+  },
+  "committee_final": {
+    "public_turn_index": 5,
+    "by_agent_top1_label": {
+      "Risk Reviewer R": "XSS_Reflected",
+      "QA Reviewer C": "XSS_Reflected",
+      "Technical Analyst K": "XSS_Reflected"
+    },
+    "by_agent_top1_severity": {
+      "Risk Reviewer R": "Medium",
+      "QA Reviewer C": "Medium",
+      "Technical Analyst K": "Medium"
+    },
+    "committee_type_label": "XSS_Reflected",
+    "committee_exact_label": "XSS_Reflected",
+    "committee_exact_severity": "Medium",
+    "committee_type_status": "majority",
+    "committee_exact_status": "majority",
+    "full_agreement_type": true,
+    "full_agreement_exact": true,
+    "committee_majority_severity": "Medium"
+  }
+}
