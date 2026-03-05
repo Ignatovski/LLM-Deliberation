@@ -1,2 +1,0 @@
-"""Local dashboard UI."""
-

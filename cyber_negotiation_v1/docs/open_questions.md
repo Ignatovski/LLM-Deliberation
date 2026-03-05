@@ -1,84 +1,58 @@
-# Open Questions (Ambiguities + Deviations from Polynomial JSON Runner)
+# Open Questions
 
-Canonical implementation note:
-- The primary entrypoint is now `main_cyber_json.py` with `games_descriptions/cyber_game/`.
-- The earlier `src/cyberneg/` scaffold remains available, but it is no longer the main user-facing structure.
+These items remain intentionally documented instead of guessed.
 
-This document records unresolved items and any intentional implementation differences from the prior `main_polynomial_json.py` approach.
+## Evaluation Defaults Needing User Confirmation
 
-## Required User Clarifications (Not Blocking V1 Scaffold)
+1. Public message character bounds
+- Current conservative default: `350..1200` characters.
+- This replaces the earlier word-based targeting because the updated spec explicitly asks for char-based validation.
 
-1. Exact C1-C7 condition table definitions
-- Requirement says support the exact user-defined condition matrix via config only.
-- The exact C1-C7 content was not provided.
-- V1 includes `configs/conditions/c1_c7_template.yaml` placeholders and a runnable `mock_demo.yaml`.
+2. Leakage policy strength
+- Current implementation only flags obvious forbidden-token leakage in the public message.
+- If you want stronger leakage detection later, it should be specified explicitly rather than inferred.
 
-2. Final committee tie behavior policy
-- For 3 agents, majority usually exists, but 3-way splits are possible.
-- V1 default: committee output becomes `null` with `no_majority`.
-- Confirm if you want a forced tie-break rule.
+3. Sign-off gate scope
+- Current implementation applies the new `accept/block_reason` gate to exact-agreement metrics only.
+- Type-only agreement metrics still use plain label unanimity.
+- If you want sign-off to also gate type-only agreement metrics later, that should be specified explicitly rather than inferred.
+4. Condition-level aggregation workflow
+- The patched runner emits per-run outputs plus a single-run condition aggregate.
+- If you want a built-in folder-level reducer over many `history*.json` files, that should be added explicitly rather than inferred.
 
-3. Exact `FlipCountType` definition
-- V1 default: count label transitions in committee majority Top-1 label trajectory across public turns (including transitions to/from no-majority).
-- Confirm if flips should ignore no-majority states.
+5. Single-agent baseline instruction policy
+- The table requires C1/C2 single-model baselines, but the original cyber role instructions were defined for the 3-agent R/C/K negotiation setup.
+- Current implementation uses a new combined-lens baseline instruction file.
 
-4. Exact `SeverityVarianceAcrossRounds` definition
-- V1 default: variance of committee majority Top-1 severity ordinal across public turns where majority exists.
-- Alternative interpretations exist (agent-level variance, exact-majority-only, etc.).
+6. C5 total outputs ambiguity
+- Your table shows about `13` outputs for C5, but the scheduler enforces equal public-turn counts across 3 agents, so total public messages must be divisible by 3.
+- Current runnable default for C5 is `15`.
 
-5. Final-turn announcement wording
-- V1 uses a conservative generic announcement string in prompt rendering.
-- Confirm desired wording/policy (only final turn vs final N turns).
+## Documented Differences From The Earlier Cyber V1 Patch
 
-6. Azure OpenAI Responses API payload details in your environment
-- SDK/API combinations differ across versions and Azure deployments.
-- V1 adapter is scaffolded and integrated, but exact `responses.create(...)` payload may need a config-compatible tweak after first live test.
+1. Headline metrics reduced to the new 6-metric table
+- Older broad metrics such as `FlipCountType`, `LateDriftType`, `JsonFailureRate`, and `MessageLengthViolations` are no longer headline outputs.
+- Where still useful, they have been removed or demoted to derived/debug reporting.
 
-7. Anthropic structured-output mode preference
-- V1 uses prompt-contract + strict local JSON validation/retry.
-- Confirm whether you want tool-use or a provider-specific structured mode when available.
+2. Citation and public-message checks are now non-fatal validators
+- Earlier code rejected some citation/message issues during parsing.
+- Updated behavior matches the new spec: only JSON/schema-invalid outputs trigger retries.
 
-8. Siemens expert review column set finalization
-- V1 exports all required fields plus optional placeholders.
-- Confirm if additional columns (reviewer ID/date/etc.) are needed.
+3. Committee ties now use the explicit string `"NoConsensus"`
+- Earlier code used `null` plus status fields.
+- Updated behavior follows the new evaluation spec exactly.
 
-## Intentional Differences vs `main_polynomial_json.py` (Documented Per Request)
+4. Structured validation remains stricter than the original polynomial runner
+- The cyber project still enforces a structured assessment block for evaluation, but validation is now manual inside `cyber_utils.py` instead of using `pydantic`.
+- The outer JSON contract and polynomial-style file layout remain unchanged.
 
-1. Same outer JSON schema, different inner payload semantics
-- Polynomial JSON runner uses outer keys `scratchpad`, `answer`, `plan`.
-- Cyber V1 now uses the same outer keys.
-- The cyber-specific structured assessment is embedded inside `answer` as `<ASSESSMENT>{...}</ASSESSMENT>` so the file layout and top-level schema stay aligned with the old project.
+5. Mock-mode scaffolding and local runtime guardrails were removed
+- The cyber project no longer carries the earlier mock-response path or the local timeout/wallclock placeholder controls.
 
-2. Config-driven experiment conditions (no embedded condition logic)
-- Polynomial code embeds game mechanics and some fixed assumptions in runner code.
-- V1 moves conditions, priors, label sets, roles, prompts, and scenarios into config files.
+6. Invalid-output policy after retry exhaustion
+- Current implementation now aborts the run and records the failure instead of emitting a fallback assessment.
+- If you later want a different policy, it should be specified explicitly because fabricated substitute outputs are intentionally excluded.
 
-3. Provider abstraction layer
-- Polynomial project uses a shared `Agent` wrapper with mixed provider handling.
-- V1 separates providers (`base`, `azure_responses`, `anthropic`, `mock_provider`) from orchestration and validation for auditability and mock testing.
-
-4. Cyber-specific schemas and committee metrics
-- Polynomial outputs center on numeric `x`, utilities, thresholds, and acceptance.
-- V1 outputs center on finding labels, severities, citations, committee snapshots, and trust/drift/calibration metrics.
-
-5. Private/public separation as first-class log model
-- Polynomial histories store prompt/full/public answer and plans.
-- V1 explicitly models/logs `private_notes`, `private_plan`, `public_message`, and structured assessment with visibility separation.
-
-6. Round semantics
-- Polynomial runs use turn loops and a final review step.
-- V1 treats Round 0 as a separate independent phase and counts “rounds” as public negotiation answers only.
-
-7. No temperature setting in V1
-- Polynomial code supports temperature.
-- V1 omits temperature from provider calls/config defaults (provider defaults only).
-
-8. Mock-first runnable mode
-- Polynomial framework is API-centric.
-- V1 must run offline with no keys; mock provider is a primary tested path.
-
-## Deferred to Phase 2 (Non-Blocking for V1 Scaffold)
-
-- Azure/Anthropic token-usage capture coverage parity across all paths
-- cost accounting (placeholder in V1)
-- dashboard polish and Siemens overview templates beyond machine-readable exports + basic charts
+7. Azure API path choice
+- Current implementation now uses the same Azure chat-completions integration style as the polynomial runner instead of a separate Responses-API adapter layer.
+- This matches the user's existing working Azure setup more closely, but it is a deliberate deviation from the earlier cyber scaffold that used a standalone provider wrapper.

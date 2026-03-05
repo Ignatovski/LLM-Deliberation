@@ -1,58 +1,64 @@
-# Assumptions (Conservative Defaults Used in V1)
+# Assumptions
 
-This file documents assumptions made where the user request was intentionally open-ended or ambiguous.
+## Scope
 
-## Repository Adaptation
+- The existing polynomial-style cyber runner remains the canonical entrypoint: `main_cyber_json.py`.
+- The 3-agent protocol is unchanged: Round 0 independent assessments first, then public negotiation turns.
+- This patch changes evaluation, validators, logging, and reporting. It does not introduce a leader step or change turn scheduling rules.
+- Condition files are authoritative. Missing required condition keys or unknown condition keys now raise errors instead of being silently backfilled in Python.
 
-- The existing repository already contains a separate polynomial negotiation project.
-- Conservative adaptation: implement this framework as a self-contained subproject under `cyber_negotiation_v1/`.
-- Package namespace is `cyberneg` to avoid stdlib/package collisions (notably `io`).
+## Turn Indexing
 
-## Runtime Defaults
+- `turn_index=0` represents the Round 0 committee state after all 3 independent assessments are available.
+- Public negotiation turns are stored as `turn_index=1..N`.
+- `public_turn_index` remains zero-based in raw public-turn logs for backward compatibility with the runner internals.
 
-- Default mock provider is used unless a provider/model is selected in config.
-- Default public negotiation message count in example configs: `6` (must be divisible by 3).
-- Default JSON retry max retries: `3`.
-- Default per-call timeout: `90s` (overridable via config/env).
-- Default final-turn announcement window: only the final public turn is explicitly marked.
-- Default execution mode: sequential.
-- Optional parallel execution exists at experiment level and is disabled by default.
+## Agent Visibility
 
-## JSON Validation Defaults
+- Agents are shown only the evidence `lines` from a scenario packet, not scenario metadata fields such as `scenario_id`, `title`, `source_family`, `difficulty`, or `label_set_id`.
 
-- Strict JSON means `json.loads` only (no regex/text fallback parsing).
-- Invalid JSON/schema outputs are retried with a validation-error correction prompt.
-- All failed attempts and validation errors are logged in machine-readable JSON.
-- Public message length target (soft validation): `80-150` words.
-- Public message hard cap (schema/business validation): `220` words in example configs.
+## Negotiation-Turn Defaults
 
-## Label Set / Taxonomy Defaults
+- The same scanned-turn set is used for `AnyAgreementExact`, `AnyAgreementType`, `AnyCorrectConsensusType`, and `ConsensusLatencyExact`.
+- That scanned-turn set always excludes Round 0 and starts at public turns only.
+- Baseline mode is a one-shot single-agent run with `public_messages=0`.
+- In baseline mode, the single agent is treated as a committee of size 1; `FinalAgreementExact=1` only if that agent also sets `accept=true`.
 
-- Default label set is `default_findings_v1` in `configs/label_sets/default_findings_v1.yaml`.
-- Included labels (default): `BruteForce`, `CommandInjection`, `CSRF`, `FileInclusion`, `FileUpload`, `InsecureCaptcha`, `SQLInjection`, `BlindSQLInjection`, `WeakSessionIDs`, `XSS_DOM`, `XSS_Reflected`, `XSS_Stored`, `CSPBypass`, `BrokenAccessControl`, `AuthBypass`, `ExposedSecret`, `NoFinding`, `Other`
-- Alias normalization is supported through config and logged when applied.
+## Sign-Off Gate
 
-## Committee / Tie Behavior Defaults (V1)
+- Every structured assessment now includes `accept` and `block_reason`.
+- `accept=true` means the agent signs off on its current top-1 label and severity as report-defensible under its role lens.
+- `accept=false` means the agent refuses sign-off and must provide a short `block_reason`.
+- `FinalAgreementExact` and `AnyAgreementExact` now require both exact unanimity and `accept=true` from every participating agent.
+- Type-only agreement metrics remain plain label unanimity for now; the sign-off gate is applied only to the exact-agreement metrics.
 
-- Final agreement metrics (`FinalAgreementType`, `FinalAgreementExact`) require all 3 agents to agree.
-- Committee type-only output is computed by majority vote on Top-1 label.
-- Committee exact output is computed by majority vote on `(Top-1 label, severity)` pair.
-- If no majority exists (possible 3-way split), committee output is `null` and status `no_majority`.
+## Public Message Validation
 
-## Metric Definition Defaults (Open to Revision)
+- Current condition files set `public_message_min_chars=350` and `public_message_max_chars=1200`.
+- These bounds are treated as validation flags, not schema failures.
+- Forbidden token detection is case-insensitive substring matching.
 
-- `FlipCountType`: count of changes in committee majority Top-1 label across public turns (including transitions to/from no-majority).
-- `SeverityVarianceAcrossRounds`: population variance of committee majority Top-1 severity ordinal across public turns where a majority severity exists.
-- `ConsensusLatencyType/Exact`: first public turn index where full agreement is reached and remains unchanged through final public turn.
+## Trust Hygiene Defaults
 
-## Priors
+- Citation count and citation line-ID validity are non-fatal validator checks that feed trust-hygiene logging.
+- Leakage is currently only the explicit forbidden-token marker check in the public message.
+- A schema-invalid response after all retries aborts the run instead of fabricating a substitute assessment.
+- Aborted runs remain machine-readable in logs, but outcome/agreement metrics are left `null` rather than inferred from fake content.
 
-- Priors are instruction-only and applied in Round 0 only by default.
-- Rounds 1+ do not re-inject role-specific instructions unless condition config explicitly enables it.
+## Baseline Defaults
 
-## Provider Adapter Status
+- The single-model baseline uses `individual_instructions/cooperative/baseline_general.txt`.
+- This is a conservative combined-lens baseline because the original cyber role set was defined for 3-agent negotiation, not for a single-agent baseline.
 
-- Mock provider is fully runnable in V1 Phase 1.
-- Azure Responses API and Anthropic adapters are scaffolded with config/env support and strict-JSON pipeline integration.
-- Exact request payload details may require environment-specific adjustment after first live run.
+## Aggregation Defaults
 
+- `SeverityBias` condition aggregates exclude runs whose final exact committee is `"NoConsensus"`.
+- `OverSeverityRate` and `UnderSeverityRate` are derived over runs with non-null `SeverityBias`.
+- The current runner invocation produces a single-run condition aggregate alongside the per-run report. Multi-run experiment aggregation can compose the same JSON structures later.
+
+## Machine-Readable Output Defaults
+
+- `metrics_*.json` contains the per-run report plus the current condition aggregate.
+- `condition_headline_*.csv` is the stable headline export for expert-facing tables.
+- `full_agreement_exact` now mirrors the sign-off-gated exact agreement state rather than plain exact unanimity.
+- In the expert-review CSV, `packet_id` is exported from the scenario's `scenario_id`.

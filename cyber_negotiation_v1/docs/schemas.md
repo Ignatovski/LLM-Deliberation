@@ -1,17 +1,92 @@
-# Schemas (V1)
+# Schemas
 
-Core schema families:
+## Response Envelope
 
-1. Evidence packet schema (agent-visible + hidden author notes)
-2. Agent turn output schema (private/public + structured assessment)
-3. Ground truth schema
-4. Run manifest / logging schemas
-5. Metrics schemas
-6. Expert review CSV row schema
+Top-level response contract stays aligned with the polynomial JSON runner:
 
-Pydantic models are defined in `src/cyberneg/core/schemas.py`.
+```json
+{
+  "scratchpad": "<SCRATCHPAD>...</SCRATCHPAD>",
+  "answer": "<ANSWER>public message</ANSWER>\n<ASSESSMENT>{...}</ASSESSMENT>",
+  "plan": "<PLAN>...</PLAN>"
+}
+```
 
-JSON schema export:
-- Implemented by `src/cyberneg/prompting/json_contracts.py`
-- CLI commands can export schema JSON into run output folders.
+Validation:
 
+- top-level object only
+- keys `scratchpad`, `answer`, `plan` required
+- strict JSON parsing only
+- no text fallback parser
+
+## Structured Assessment
+
+`<ASSESSMENT>{...}</ASSESSMENT>` is validated with `pydantic`.
+
+```json
+{
+  "ranked_findings": [
+    {
+      "rank": 1,
+      "label": "XSS_Reflected",
+      "severity": "Medium",
+      "citations": ["L003", "L004"],
+      "rationale": "..."
+    },
+    {
+      "rank": 2,
+      "label": "XSS_Stored",
+      "severity": "Low",
+      "citations": [],
+      "rationale": "..."
+    },
+    {
+      "rank": 3,
+      "label": "NoFinding",
+      "severity": "Info",
+      "citations": [],
+      "rationale": "..."
+    }
+  ],
+  "decision_summary": "..."
+}
+```
+
+Schema rules:
+
+- exactly 3 ranked findings
+- ranks must be `1,2,3`
+- severity required for every ranked finding
+- label must validate against the configured label set after alias normalization
+
+Validator-only rules:
+
+- rank-1 citations length must be in `[1,2]`
+- rank-1 citation IDs must exist in the evidence packet
+- public message must satisfy configured length and forbidden-token rules
+- leakage currently means explicit forbidden-token leakage markers in the public message
+
+## Trajectory Snapshot
+
+Every stored turn state contains:
+
+```json
+{
+  "turn_index": 1,
+  "phase": "public",
+  "public_turn_index": 0,
+  "speaker": "agent_a",
+  "by_agent_top1_label": {"agent_a": "XSS_Reflected", "agent_b": "XSS_Reflected", "agent_c": "NoFinding"},
+  "by_agent_top1_severity": {"agent_a": "Medium", "agent_b": "Medium", "agent_c": "Info"},
+  "by_agent_top1_exact": {"agent_a": {"label": "XSS_Reflected", "severity": "Medium"}},
+  "by_agent_rank1_citations": {"agent_a": ["L003", "L004"]},
+  "committee_type": "XSS_Reflected",
+  "committee_exact": {"label": "XSS_Reflected", "severity": "Medium"},
+  "unanimous_type": false,
+  "unanimous_exact": false
+}
+```
+
+Tie rule:
+
+- If no unique mode exists, `committee_type` or `committee_exact` is `"NoConsensus"`.

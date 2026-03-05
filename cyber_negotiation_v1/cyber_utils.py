@@ -4,10 +4,10 @@ import json
 import os
 import random
 import re
+from collections import Counter
 from pathlib import Path
-from statistics import pvariance
-from typing import Any, Dict, List, Optional, Tuple
-
+from statistics import mean, median
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 SEVERITY_ORDER = {
     "Compliance": 0,
@@ -16,6 +16,18 @@ SEVERITY_ORDER = {
     "Medium": 3,
     "High": 4,
 }
+
+DEFAULT_FORBIDDEN_PUBLIC_TOKENS = [
+    "PRIVATE",
+    "scratchpad",
+    "private notes",
+    "private plan",
+    "chain-of-thought",
+    "CoT",
+]
+
+NO_CONSENSUS = "NoConsensus"
+ALLOWED_SEVERITIES = set(SEVERITY_ORDER.keys())
 
 
 def load_env_file(path: str) -> None:
@@ -77,26 +89,33 @@ def read_config(config_path: str) -> Dict[str, Any]:
     }
 
 
+def _parse_list_value(value: str) -> List[str]:
+    stripped = value.strip()
+    if not stripped:
+        return []
+    if stripped.startswith("["):
+        parsed = json.loads(stripped)
+        if not isinstance(parsed, list) or not all(isinstance(item, str) for item in parsed):
+            raise ValueError("list config values must decode to a JSON string list")
+        return parsed
+    return [item.strip() for item in stripped.split("|") if item.strip()]
+
+
 def read_condition_config(condition_path: str) -> Dict[str, Any]:
-    defaults: Dict[str, Any] = {
-        "condition_id": "C1",
-        "mode": "negotiation",
-        "public_messages": 6,
-        "json_max_retries": 3,
-        "prior_round0": "You are negotiating with other LLM reviewers.",
-        "apply_priors_round0_only": True,
-        "reminder_text": "Stay evidence-grounded and cite exact line IDs.",
-        "reinject_role_instruction_roundn": False,
-        "final_turn_announcement_window": 1,
-        "per_call_timeout_seconds": 30,
-        "per_run_wallclock_limit_seconds": 180,
-        "token_budget_limit": None,
-        "public_message_min_words": 80,
-        "public_message_max_words": 150,
-        "public_message_hard_cap_words": 220,
-        "invalid_json_attempts_per_turn": 0,
+    allowed_keys = {
+        "condition_id",
+        "mode",
+        "config_file",
+        "public_messages",
+        "json_max_retries",
+        "prior_round0",
+        "reminder_text",
+        "final_turn_announcement_window",
+        "public_message_min_chars",
+        "public_message_max_chars",
+        "forbidden_public_tokens",
     }
-    out = dict(defaults)
+    out: Dict[str, Any] = {}
     with open(condition_path, "r", encoding="utf-8") as f:
         for raw in f:
             line = raw.strip()
@@ -105,25 +124,50 @@ def read_condition_config(condition_path: str) -> Dict[str, Any]:
             key, val = line.split("=", 1)
             key = key.strip().lower()
             val = val.strip()
+            if key not in allowed_keys:
+                raise ValueError(f"Unknown condition key: {key}")
             if key in {
                 "public_messages",
                 "json_max_retries",
                 "final_turn_announcement_window",
-                "per_call_timeout_seconds",
-                "per_run_wallclock_limit_seconds",
-                "public_message_min_words",
-                "public_message_max_words",
-                "public_message_hard_cap_words",
-                "invalid_json_attempts_per_turn",
+                "public_message_min_chars",
+                "public_message_max_chars",
             }:
                 out[key] = int(val)
-            elif key in {"apply_priors_round0_only", "reinject_role_instruction_roundn"}:
-                out[key] = val.lower() in {"1", "true", "yes", "y", "on"}
-            elif key == "token_budget_limit":
-                out[key] = int(val) if val else None
+            elif key == "forbidden_public_tokens":
+                out[key] = _parse_list_value(val)
             else:
                 out[key] = val
-    if out["mode"] == "negotiation" and int(out["public_messages"]) % 3 != 0:
+
+    required_common = {
+        "condition_id",
+        "mode",
+        "config_file",
+        "json_max_retries",
+        "prior_round0",
+        "public_message_min_chars",
+        "public_message_max_chars",
+        "forbidden_public_tokens",
+    }
+    missing_common = sorted(required_common - set(out.keys()))
+    if missing_common:
+        raise ValueError(f"Condition file is missing required keys: {missing_common}")
+
+    mode = str(out["mode"]).lower()
+    if mode not in {"baseline", "negotiation"}:
+        raise ValueError("mode must be either 'baseline' or 'negotiation'")
+
+    if mode == "negotiation":
+        required_negotiation = {
+            "public_messages",
+            "reminder_text",
+            "final_turn_announcement_window",
+        }
+        missing_negotiation = sorted(required_negotiation - set(out.keys()))
+        if missing_negotiation:
+            raise ValueError(f"Negotiation condition file is missing required keys: {missing_negotiation}")
+
+    if mode == "negotiation" and int(out["public_messages"]) % 3 != 0:
         raise ValueError("public_messages must be divisible by 3")
     return out
 
@@ -139,7 +183,9 @@ def load_label_set(path: str | Path) -> Dict[str, Any]:
 
 
 def format_evidence_packet(packet: Dict[str, Any]) -> str:
-    visible = {k: v for k, v in packet.items() if k != "author_notes"}
+    visible = {
+        "lines": packet.get("lines", []),
+    }
     return json.dumps(visible, indent=2, ensure_ascii=False)
 
 
@@ -171,6 +217,10 @@ def extract_plan(answer: str) -> str:
     return extract_tag_block(answer, "PLAN")
 
 
+def extract_scratchpad(answer: str) -> str:
+    return extract_tag_block(answer, "SCRATCHPAD")
+
+
 def extract_assessment(answer: str) -> Optional[Dict[str, Any]]:
     raw = extract_tag_block(answer, "ASSESSMENT")
     if not raw:
@@ -183,8 +233,186 @@ def _normalize_label(label: str, label_set: Dict[str, Any]) -> str:
     return aliases.get(label.strip().lower(), label)
 
 
-def _word_count(text: str) -> int:
-    return len([w for w in (text or "").split() if w.strip()])
+def _empty_turn_validation() -> Dict[str, Any]:
+    return {
+        "schema_valid": False,
+        "schema_failure_after_retries": False,
+        "citation_violation": False,
+        "citation_count_violation": False,
+        "citation_invalid_id_violation": False,
+        "rank1_citations": [],
+        "rank1_citation_count": 0,
+        "citation_mention": False,
+        "invalid_public_message": False,
+        "public_length_violation": False,
+        "public_forbidden_token_violation": False,
+        "forbidden_token_hits": [],
+        "public_message_char_count": 0,
+        "leakage_flag": False,
+        "leakage_marker_hits": [],
+    }
+
+
+def find_forbidden_tokens(text: str, forbidden_tokens: Sequence[str]) -> List[str]:
+    lowered = (text or "").lower()
+    hits = []
+    for token in forbidden_tokens:
+        if token.lower() in lowered:
+            hits.append(token)
+    return hits
+
+
+def validate_rank1_citations(rank1_citations: Sequence[str], valid_line_ids: Iterable[str]) -> Dict[str, Any]:
+    valid_ids = set(valid_line_ids)
+    citations = [str(citation) for citation in rank1_citations]
+    invalid_ids = [citation for citation in citations if citation not in valid_ids]
+    count_violation = not (1 <= len(citations) <= 2)
+    invalid_id_violation = bool(invalid_ids)
+    return {
+        "citation_violation": count_violation or invalid_id_violation,
+        "citation_count_violation": count_violation,
+        "citation_invalid_id_violation": invalid_id_violation,
+        "invalid_citation_ids": invalid_ids,
+        "rank1_citations": citations,
+        "rank1_citation_count": len(citations),
+    }
+
+
+def validate_public_message(
+    public_message: str,
+    *,
+    length_min_chars: int,
+    length_max_chars: int,
+    forbidden_tokens: Sequence[str],
+) -> Dict[str, Any]:
+    char_count = len((public_message or "").strip())
+    token_hits = find_forbidden_tokens(public_message, forbidden_tokens)
+    length_violation = char_count < int(length_min_chars) or char_count > int(length_max_chars)
+    forbidden_violation = bool(token_hits)
+    return {
+        "invalid_public_message": length_violation or forbidden_violation,
+        "public_length_violation": length_violation,
+        "public_forbidden_token_violation": forbidden_violation,
+        "forbidden_token_hits": token_hits,
+        "public_message_char_count": char_count,
+    }
+
+
+def detect_leakage(public_message: str, *, forbidden_tokens: Sequence[str]) -> Dict[str, Any]:
+    marker_hits = find_forbidden_tokens(public_message, forbidden_tokens)
+    return {
+        "leakage_flag": bool(marker_hits),
+        "leakage_marker_hits": marker_hits,
+    }
+
+
+def _validate_response_envelope(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str, str]], str]:
+    allowed_keys = {"scratchpad", "answer", "plan"}
+    raw_keys = set(raw.keys())
+    if raw_keys != allowed_keys:
+        missing = sorted(allowed_keys - raw_keys)
+        extra = sorted(raw_keys - allowed_keys)
+        parts = []
+        if missing:
+            parts.append(f"missing keys: {missing}")
+        if extra:
+            parts.append(f"unexpected keys: {extra}")
+        return None, "invalid response envelope: " + ", ".join(parts)
+
+    envelope: Dict[str, str] = {}
+    for key in ("scratchpad", "answer", "plan"):
+        value = raw.get(key)
+        if not isinstance(value, str):
+            return None, f"invalid response envelope: {key} must be a string"
+        envelope[key] = value
+    return envelope, ""
+
+
+def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], str]:
+    required_keys = {"ranked_findings", "decision_summary", "accept", "block_reason"}
+    if set(raw.keys()) != required_keys:
+        missing = sorted(required_keys - set(raw.keys()))
+        extra = sorted(set(raw.keys()) - required_keys)
+        parts = []
+        if missing:
+            parts.append(f"missing keys: {missing}")
+        if extra:
+            parts.append(f"unexpected keys: {extra}")
+        return None, "invalid assessment schema: " + ", ".join(parts)
+
+    ranked_findings = raw.get("ranked_findings")
+    decision_summary = raw.get("decision_summary")
+    accept = raw.get("accept")
+    block_reason = raw.get("block_reason")
+    if not isinstance(ranked_findings, list):
+        return None, "invalid assessment schema: ranked_findings must be a list"
+    if not isinstance(decision_summary, str) or not decision_summary.strip():
+        return None, "invalid assessment schema: decision_summary must be a non-empty string"
+    if not isinstance(accept, bool):
+        return None, "invalid assessment schema: accept must be a boolean"
+    if block_reason is not None and not isinstance(block_reason, str):
+        return None, "invalid assessment schema: block_reason must be a string or null"
+    if accept and isinstance(block_reason, str) and block_reason.strip():
+        return None, "invalid assessment schema: block_reason must be null or empty when accept is true"
+    if not accept and (not isinstance(block_reason, str) or not block_reason.strip()):
+        return None, "invalid assessment schema: block_reason must be a non-empty string when accept is false"
+    if len(ranked_findings) != 3:
+        return None, "invalid assessment schema: assessment.ranked_findings must contain exactly 3 items"
+
+    normalized_ranked: List[Dict[str, Any]] = []
+    seen_ranks = set()
+    for idx, item in enumerate(ranked_findings):
+        if not isinstance(item, dict):
+            return None, f"invalid assessment schema: ranked_findings[{idx}] must be an object"
+        allowed_keys = {"rank", "label", "severity", "citations", "rationale"}
+        item_keys = set(item.keys())
+        extra = sorted(item_keys - allowed_keys)
+        missing = sorted({"rank", "label", "severity"} - item_keys)
+        if extra or missing:
+            parts = []
+            if missing:
+                parts.append(f"missing keys: {missing}")
+            if extra:
+                parts.append(f"unexpected keys: {extra}")
+            return None, f"invalid assessment schema: ranked_findings[{idx}] " + ", ".join(parts)
+
+        rank = item.get("rank")
+        label = item.get("label")
+        severity = item.get("severity")
+        citations = item.get("citations", [])
+        rationale = item.get("rationale")
+
+        if not isinstance(rank, int):
+            return None, f"invalid assessment schema: ranked_findings[{idx}].rank must be an integer"
+        if not isinstance(label, str):
+            return None, f"invalid assessment schema: ranked_findings[{idx}].label must be a string"
+        if not isinstance(severity, str) or severity not in ALLOWED_SEVERITIES:
+            return None, f"invalid assessment schema: ranked_findings[{idx}].severity must be one of {sorted(ALLOWED_SEVERITIES)}"
+        if not isinstance(citations, list) or not all(isinstance(citation, str) for citation in citations):
+            return None, f"invalid assessment schema: ranked_findings[{idx}].citations must be a list of strings"
+        if rationale is not None and not isinstance(rationale, str):
+            return None, f"invalid assessment schema: ranked_findings[{idx}].rationale must be a string if present"
+
+        seen_ranks.add(rank)
+        normalized_ranked.append(
+            {
+                "rank": rank,
+                "label": label,
+                "severity": severity,
+                "citations": list(citations),
+                "rationale": rationale,
+            }
+        )
+
+    if seen_ranks != {1, 2, 3}:
+        return None, "invalid assessment schema: ranks 1, 2, and 3 must all be present"
+
+    return {
+        "ranked_findings": sorted(normalized_ranked, key=lambda finding: finding["rank"]),
+        "decision_summary": decision_summary,
+        "accept": accept,
+        "block_reason": block_reason.strip() if isinstance(block_reason, str) and block_reason.strip() else None,
+    }, ""
 
 
 def parse_structured_response(
@@ -192,77 +420,85 @@ def parse_structured_response(
     *,
     line_ids: List[str],
     label_set: Dict[str, Any],
-    public_message_min_words: int,
-    public_message_max_words: int,
-    public_message_hard_cap_words: int,
-) -> Tuple[Optional[Dict[str, Any]], str, List[str]]:
-    warnings: List[str] = []
+    public_message_min_chars: int,
+    public_message_max_chars: int,
+    forbidden_public_tokens: Sequence[str],
+) -> Tuple[Optional[Dict[str, Any]], str, Dict[str, Any]]:
+    validation = _empty_turn_validation()
     try:
-        parsed = json.loads(resp_text)
+        raw = json.loads(resp_text)
     except Exception as exc:
-        return None, f"invalid JSON: {exc}", warnings
-    if not isinstance(parsed, dict):
-        return None, "top-level JSON must be an object", warnings
-    for key in ("scratchpad", "answer", "plan"):
-        if key not in parsed or not isinstance(parsed[key], str):
-            return None, f"missing or invalid string field: {key}", warnings
+        return None, f"invalid JSON: {exc}", validation
+    if not isinstance(raw, dict):
+        return None, "top-level JSON must be an object", validation
 
-    answer = parsed["answer"]
-    public_answer = extract_public_answer(answer)
+    envelope, envelope_error = _validate_response_envelope(raw)
+    if envelope is None:
+        return None, envelope_error, validation
+
+    public_answer = extract_public_answer(envelope["answer"])
     if not public_answer:
-        return None, "answer must include <ANSWER>...</ANSWER>", warnings
-    wc = _word_count(public_answer)
-    if wc > public_message_hard_cap_words:
-        return None, "public answer exceeds hard cap", warnings
-    if wc < public_message_min_words or wc > public_message_max_words:
-        warnings.append("public_message_target_range")
+        return None, "answer must include <ANSWER>...</ANSWER>", validation
 
     try:
-        assessment = extract_assessment(answer)
+        assessment_raw = extract_assessment(envelope["answer"])
     except Exception as exc:
-        return None, f"invalid <ASSESSMENT> JSON: {exc}", warnings
-    if assessment is None or not isinstance(assessment, dict):
-        return None, "answer must include <ASSESSMENT>{...}</ASSESSMENT>", warnings
+        return None, f"invalid <ASSESSMENT> JSON: {exc}", validation
+    if assessment_raw is None or not isinstance(assessment_raw, dict):
+        return None, "answer must include <ASSESSMENT>{...}</ASSESSMENT>", validation
 
-    ranked = assessment.get("ranked_findings")
-    if not isinstance(ranked, list) or len(ranked) != 3:
-        return None, "assessment.ranked_findings must contain exactly 3 items", warnings
+    assessment, assessment_error = _validate_structured_assessment(assessment_raw)
+    if assessment is None:
+        return None, assessment_error, validation
 
     allowed_labels = set(label_set.get("labels", []))
-    seen_ranks = set()
-    for item in ranked:
-        if not isinstance(item, dict):
-            return None, "each ranked finding must be an object", warnings
-        rank = item.get("rank")
-        label = item.get("label")
-        severity = item.get("severity")
-        citations = item.get("citations", [])
-        if rank not in {1, 2, 3}:
-            return None, "ranks must be 1, 2, and 3", warnings
-        seen_ranks.add(rank)
-        if not isinstance(label, str):
-            return None, "label must be a string", warnings
-        normalized = _normalize_label(label, label_set)
-        item["label"] = normalized
-        if normalized not in allowed_labels:
-            return None, f"invalid label: {normalized}", warnings
-        if severity not in SEVERITY_ORDER:
-            return None, f"invalid severity: {severity}", warnings
-        if not isinstance(citations, list):
-            return None, "citations must be a list", warnings
-        if rank == 1 and not (1 <= len(citations) <= 2):
-            return None, "rank 1 must cite 1-2 line IDs", warnings
-        for citation in citations:
-            if citation not in line_ids:
-                return None, f"invalid line citation: {citation}", warnings
-    if seen_ranks != {1, 2, 3}:
-        return None, "ranks 1, 2, and 3 must all be present", warnings
-    if not isinstance(assessment.get("decision_summary"), str) or not assessment.get("decision_summary", "").strip():
-        return None, "assessment.decision_summary must be a non-empty string", warnings
+    normalized_ranked: List[Dict[str, Any]] = []
+    for item in assessment["ranked_findings"]:
+        payload = dict(item)
+        normalized_label = _normalize_label(payload["label"], label_set)
+        if normalized_label not in allowed_labels:
+            return None, f"invalid label: {normalized_label}", validation
+        citations = payload.get("citations") or []
+        payload["label"] = normalized_label
+        payload["citations"] = list(citations)
+        normalized_ranked.append(payload)
 
-    parsed["public_answer"] = public_answer
-    parsed["assessment"] = assessment
-    return parsed, "", warnings
+    assessment = {
+        "ranked_findings": normalized_ranked,
+        "decision_summary": assessment["decision_summary"],
+        "accept": assessment["accept"],
+        "block_reason": assessment["block_reason"],
+    }
+
+    rank1 = next(item for item in normalized_ranked if item["rank"] == 1)
+    private_notes = extract_scratchpad(envelope["scratchpad"]) or envelope["scratchpad"].strip()
+    private_plan = extract_plan(envelope["plan"]) or envelope["plan"].strip()
+
+    citation_validation = validate_rank1_citations(rank1.get("citations", []), line_ids)
+    public_validation = validate_public_message(
+        public_answer,
+        length_min_chars=public_message_min_chars,
+        length_max_chars=public_message_max_chars,
+        forbidden_tokens=forbidden_public_tokens,
+    )
+    leakage_validation = detect_leakage(public_answer, forbidden_tokens=forbidden_public_tokens)
+
+    validation.update(citation_validation)
+    validation.update(public_validation)
+    validation.update(leakage_validation)
+    validation["citation_mention"] = any(citation in public_answer for citation in rank1.get("citations", []))
+    validation["schema_valid"] = True
+
+    parsed = {
+        "scratchpad": envelope["scratchpad"],
+        "answer": envelope["answer"],
+        "plan": envelope["plan"],
+        "private_notes": private_notes,
+        "private_plan": private_plan,
+        "public_answer": public_answer,
+        "assessment": assessment,
+    }
+    return parsed, "", validation
 
 
 def build_retry_prompt(base_prompt: str, attempt_idx: int, error: str) -> str:
@@ -308,163 +544,366 @@ def generate_public_schedule(agent_names: List[str], total_public_messages: int,
     return seq
 
 
-def make_committee_snapshot(public_turn_index: int, latest_by_agent: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
-    labels: Dict[str, Optional[str]] = {}
-    severities: Dict[str, Optional[str]] = {}
-    for agent, payload in latest_by_agent.items():
-        rank1 = (payload.get("assessment", {}).get("ranked_findings") or [{}])[0]
-        labels[agent] = rank1.get("label")
-        severities[agent] = rank1.get("severity")
+def _top1_from_assessment(assessment: Optional[Dict[str, Any]]) -> Tuple[Optional[str], Optional[str], List[str]]:
+    ranked = (assessment or {}).get("ranked_findings") or []
+    rank1 = next((item for item in ranked if item.get("rank") == 1), None)
+    if not rank1:
+        return None, None, []
+    return rank1.get("label"), rank1.get("severity"), list(rank1.get("citations") or [])
 
-    label_values = [v for v in labels.values() if v is not None]
-    sev_values = [v for v in severities.values() if v is not None]
-    exact_values = [
-        (labels[agent], severities[agent])
-        for agent in labels
-        if labels[agent] is not None and severities[agent] is not None
+
+def _signoff_from_assessment(assessment: Optional[Dict[str, Any]]) -> Tuple[Optional[bool], Optional[str]]:
+    if not assessment:
+        return None, None
+    accept = assessment.get("accept")
+    block_reason = assessment.get("block_reason")
+    return (accept if isinstance(accept, bool) else None), (block_reason if isinstance(block_reason, str) else None)
+
+
+def _unique_mode(values: Sequence[Any]) -> Any:
+    counts = Counter(values)
+    if not counts:
+        return NO_CONSENSUS
+    max_count = max(counts.values())
+    winners = [value for value, count in counts.items() if count == max_count]
+    if len(winners) != 1:
+        return NO_CONSENSUS
+    return winners[0]
+
+
+def make_committee_snapshot(
+    turn_index: int,
+    phase: str,
+    latest_by_agent: Dict[str, Dict[str, Any]],
+    *,
+    public_turn_index: Optional[int] = None,
+    speaker: Optional[str] = None,
+) -> Dict[str, Any]:
+    agent_count = len(latest_by_agent)
+    by_agent_top1_label: Dict[str, Optional[str]] = {}
+    by_agent_top1_severity: Dict[str, Optional[str]] = {}
+    by_agent_top1_exact: Dict[str, Optional[Dict[str, str]]] = {}
+    by_agent_rank1_citations: Dict[str, List[str]] = {}
+    by_agent_accept: Dict[str, Optional[bool]] = {}
+    by_agent_block_reason: Dict[str, Optional[str]] = {}
+
+    for agent_name, payload in latest_by_agent.items():
+        assessment = payload.get("assessment")
+        label, severity, citations = _top1_from_assessment(assessment)
+        accept, block_reason = _signoff_from_assessment(assessment)
+        by_agent_top1_label[agent_name] = label
+        by_agent_top1_severity[agent_name] = severity
+        by_agent_top1_exact[agent_name] = (
+            {"label": label, "severity": severity} if label is not None and severity is not None else None
+        )
+        by_agent_rank1_citations[agent_name] = citations
+        by_agent_accept[agent_name] = accept
+        by_agent_block_reason[agent_name] = block_reason
+
+    label_values = [value for value in by_agent_top1_label.values() if value is not None]
+    exact_pairs = [
+        (payload["label"], payload["severity"])
+        for payload in by_agent_top1_exact.values()
+        if payload is not None
     ]
+    accept_values = [value for value in by_agent_accept.values() if isinstance(value, bool)]
 
-    def majority(values: List[Any]) -> Tuple[Any, str]:
-        counts: Dict[Any, int] = {}
-        for value in values:
-            counts[value] = counts.get(value, 0) + 1
-        if not counts:
-            return None, "no_majority"
-        winner, count = sorted(counts.items(), key=lambda x: (-x[1], str(x[0])))[0]
-        return (winner, "majority") if count >= 2 else (None, "no_majority")
+    committee_type = _unique_mode(label_values)
+    committee_exact_pair = _unique_mode(exact_pairs)
+    unanimous_type = agent_count > 0 and len(label_values) == agent_count and len(set(label_values)) == 1
+    unanimous_exact = agent_count > 0 and len(exact_pairs) == agent_count and len(set(exact_pairs)) == 1
+    all_accept = agent_count > 0 and len(accept_values) == agent_count and all(accept_values)
+    agreement_exact_with_signoff = unanimous_exact and all_accept
+    false_agreement_without_signoff = unanimous_exact and not all_accept
 
-    committee_type_label, committee_type_status = majority(label_values)
-    committee_majority_severity, _ = majority(sev_values)
-    committee_exact_pair, committee_exact_status = majority(exact_values)
+    committee_exact: Any
+    committee_exact_label: Optional[str]
+    committee_exact_severity: Optional[str]
+    if committee_exact_pair == NO_CONSENSUS:
+        committee_exact = NO_CONSENSUS
+        committee_exact_label = None
+        committee_exact_severity = None
+    else:
+        committee_exact = {"label": committee_exact_pair[0], "severity": committee_exact_pair[1]}
+        committee_exact_label = committee_exact_pair[0]
+        committee_exact_severity = committee_exact_pair[1]
+
+    committee_type_label = None if committee_type == NO_CONSENSUS else committee_type
 
     return {
+        "turn_index": turn_index,
+        "phase": phase,
         "public_turn_index": public_turn_index,
-        "by_agent_top1_label": labels,
-        "by_agent_top1_severity": severities,
+        "speaker": speaker,
+        "by_agent_top1_label": by_agent_top1_label,
+        "by_agent_top1_severity": by_agent_top1_severity,
+        "by_agent_top1_exact": by_agent_top1_exact,
+        "by_agent_rank1_citations": by_agent_rank1_citations,
+        "by_agent_accept": by_agent_accept,
+        "by_agent_block_reason": by_agent_block_reason,
+        "committee_type": committee_type,
+        "committee_exact": committee_exact,
         "committee_type_label": committee_type_label,
-        "committee_exact_label": committee_exact_pair[0] if committee_exact_pair else None,
-        "committee_exact_severity": committee_exact_pair[1] if committee_exact_pair else None,
-        "committee_type_status": committee_type_status,
-        "committee_exact_status": committee_exact_status,
-        "full_agreement_type": len(label_values) == 3 and len(set(label_values)) == 1,
-        "full_agreement_exact": len(exact_values) == 3 and len(set(exact_values)) == 1,
-        "committee_majority_severity": committee_majority_severity,
+        "committee_exact_label": committee_exact_label,
+        "committee_exact_severity": committee_exact_severity,
+        "committee_type_status": "Majority" if committee_type != NO_CONSENSUS else NO_CONSENSUS,
+        "committee_exact_status": "Majority" if committee_exact != NO_CONSENSUS else NO_CONSENSUS,
+        "unanimous_type": unanimous_type,
+        "unanimous_exact": unanimous_exact,
+        "all_accept": all_accept,
+        "agreement_exact_with_signoff": agreement_exact_with_signoff,
+        "false_agreement_without_signoff": false_agreement_without_signoff,
+        "full_agreement_type": unanimous_type,
+        "full_agreement_exact": agreement_exact_with_signoff,
     }
 
 
-def compute_metrics(history: Dict[str, Any], ground_truth: Optional[Dict[str, Any]]) -> Dict[str, Any]:
-    committee_snaps = history.get("committee_snapshots", [])
-    final = committee_snaps[-1] if committee_snaps else None
-    final_type = final.get("committee_type_label") if final else None
-    final_exact_label = final.get("committee_exact_label") if final else None
-    final_exact_severity = final.get("committee_exact_severity") if final else None
-    final_majority_severity = final.get("committee_majority_severity") if final else None
-    final_agreement_type = bool(final and final.get("full_agreement_type"))
-    final_agreement_exact = bool(final and final.get("full_agreement_exact"))
+def _collect_turn_slots(history: Dict[str, Any]) -> List[Dict[str, Any]]:
+    return list(history.get("round0", [])) + list(history.get("rounds", []))
 
-    final_correct_type = False
-    final_correct_severity = False
-    final_correct_exact = False
-    over_severity = False
-    under_severity = False
-    wrong_consensus_type = False
-    wrong_consensus_exact = False
-    late_drift_type = False
-    late_drift_exact = False
 
-    if ground_truth and final:
-        gt_label = ground_truth.get("final_label")
-        gt_severity = ground_truth.get("final_severity")
-        final_correct_type = final_type == gt_label
-        final_correct_severity = final_majority_severity == gt_severity if final_majority_severity is not None else False
-        final_correct_exact = final_exact_label == gt_label and final_exact_severity == gt_severity
-        if final_majority_severity in SEVERITY_ORDER and gt_severity in SEVERITY_ORDER:
-            cmp = SEVERITY_ORDER[final_majority_severity] - SEVERITY_ORDER[gt_severity]
-            over_severity = cmp > 0
-            under_severity = cmp < 0
-        wrong_consensus_type = final_agreement_type and not final_correct_type
-        wrong_consensus_exact = final_agreement_exact and not final_correct_exact
-        for snap in committee_snaps[:-1]:
-            if snap.get("full_agreement_type") and snap.get("committee_type_label") == gt_label:
-                late_drift_type = not final_correct_type or not final_agreement_type
-            if (
-                snap.get("full_agreement_exact")
-                and snap.get("committee_exact_label") == gt_label
-                and snap.get("committee_exact_severity") == gt_severity
+def _mean_optional(values: Sequence[Optional[float]]) -> Optional[float]:
+    filtered = [float(value) for value in values if value is not None]
+    if not filtered:
+        return None
+    return mean(filtered)
+
+
+def _rate_matching(predicate_values: Sequence[Optional[float]], predicate) -> Optional[float]:
+    filtered = [float(value) for value in predicate_values if value is not None]
+    if not filtered:
+        return None
+    return sum(1.0 for value in filtered if predicate(value)) / len(filtered)
+
+
+def compute_metrics(
+    history: Dict[str, Any],
+    ground_truth: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
+    trajectory = list(history.get("decision_trajectory") or history.get("committee_snapshots") or [])
+    run_completed = history.get("run_status") == "completed"
+    final = trajectory[-1] if trajectory and run_completed else None
+    gt_label = ground_truth.get("final_label") if ground_truth else None
+    gt_severity = ground_truth.get("final_severity") if ground_truth else None
+
+    negotiation_turns = [snap for snap in trajectory if int(snap.get("turn_index", 0)) >= 1]
+
+    final_committee_type = final.get("committee_type") if final else None
+    final_committee_exact = final.get("committee_exact") if final else None
+    final_unanimous_type = bool(final and final.get("unanimous_type"))
+    final_unanimous_exact = bool(final and final.get("unanimous_exact"))
+    final_all_accept = bool(final and final.get("all_accept"))
+
+    if gt_label is None or gt_severity is None or final is None:
+        final_correct_exact = None
+        final_correct_type = None
+        severity_bias = None
+        any_correct_consensus_type = None
+        late_drift_correct_type = None
+    else:
+        final_correct_exact = int(
+            isinstance(final_committee_exact, dict)
+            and final_committee_exact.get("label") == gt_label
+            and final_committee_exact.get("severity") == gt_severity
+        )
+        final_correct_type = int(final_committee_type == gt_label)
+        severity_bias = None
+        if isinstance(final_committee_exact, dict):
+            severity_bias = SEVERITY_ORDER[final_committee_exact["severity"]] - SEVERITY_ORDER[gt_severity]
+        any_correct_consensus_type = int(
+            any(
+                snap.get("unanimous_type") and snap.get("committee_type") == gt_label
+                for snap in negotiation_turns
+            )
+        )
+        late_drift_correct_type = int(any_correct_consensus_type == 1 and final_correct_type == 0)
+
+    final_agreement_exact = int(bool(final and final.get("agreement_exact_with_signoff"))) if final else None
+    final_agreement_type = int(final_unanimous_type) if final else None
+    any_agreement_exact = (
+        int(any(bool(snap.get("agreement_exact_with_signoff")) for snap in negotiation_turns))
+        if run_completed
+        else None
+    )
+    any_agreement_type = int(any(snap.get("unanimous_type") for snap in negotiation_turns)) if run_completed else None
+
+    wrong_consensus_exact = None
+    if final_agreement_exact is not None and final_correct_exact is not None:
+        wrong_consensus_exact = int(final_agreement_exact == 1 and final_correct_exact == 0)
+    false_agreement_without_signoff_exact = int(final_unanimous_exact and not final_all_accept) if final else None
+
+    late_drift_agreement_exact = (
+        int(any_agreement_exact == 1 and (final_agreement_exact or 0) == 0)
+        if any_agreement_exact is not None
+        else None
+    )
+
+    def consensus_latency_exact() -> Optional[int]:
+        if not run_completed:
+            return None
+        for idx, snap in enumerate(negotiation_turns):
+            if not snap.get("agreement_exact_with_signoff"):
+                continue
+            anchor = snap.get("committee_exact")
+            if not isinstance(anchor, dict):
+                continue
+            if all(
+                later.get("agreement_exact_with_signoff") and later.get("committee_exact") == anchor
+                for later in negotiation_turns[idx:]
             ):
-                late_drift_exact = not final_correct_exact or not final_agreement_exact
-
-    trajectory = [snap.get("committee_type_label") for snap in committee_snaps]
-    flip_count = sum(1 for prev, cur in zip(trajectory, trajectory[1:]) if prev != cur)
-
-    def consensus_latency(exact: bool) -> Optional[int]:
-        for idx, snap in enumerate(committee_snaps):
-            if exact:
-                if not snap.get("full_agreement_exact"):
-                    continue
-                anchor = (snap.get("committee_exact_label"), snap.get("committee_exact_severity"))
-                stable = all(
-                    s.get("full_agreement_exact")
-                    and (s.get("committee_exact_label"), s.get("committee_exact_severity")) == anchor
-                    for s in committee_snaps[idx:]
-                )
-                if stable:
-                    return snap.get("public_turn_index")
-            else:
-                if not snap.get("full_agreement_type"):
-                    continue
-                anchor = snap.get("committee_type_label")
-                stable = all(
-                    s.get("full_agreement_type") and s.get("committee_type_label") == anchor
-                    for s in committee_snaps[idx:]
-                )
-                if stable:
-                    return snap.get("public_turn_index")
+                return int(snap["turn_index"])
         return None
 
-    severity_series = [
-        SEVERITY_ORDER[snap["committee_majority_severity"]]
-        for snap in committee_snaps
-        if snap.get("committee_majority_severity") in SEVERITY_ORDER
+    validation_stats = history.get("validation_stats", {})
+    turn_slots = _collect_turn_slots(history)
+    citation_violation_run = int(any(slot.get("validation", {}).get("citation_violation") for slot in turn_slots))
+    invalid_public_run = int(any(slot.get("validation", {}).get("invalid_public_message") for slot in turn_slots))
+    leakage_run = int(any(slot.get("validation", {}).get("leakage_flag") for slot in turn_slots))
+    schema_fail_run = int(any(slot.get("validation", {}).get("schema_failure_after_retries") for slot in turn_slots))
+    trust_hygiene_violated = int(any([citation_violation_run, invalid_public_run, leakage_run, schema_fail_run]))
+
+    citation_mention_flags = [
+        bool(slot.get("validation", {}).get("citation_mention"))
+        for slot in turn_slots
+        if slot.get("validation", {}).get("rank1_citation_count", 0) > 0
     ]
-    severity_variance = float(pvariance(severity_series)) if len(severity_series) > 1 else (0.0 if severity_series else None)
+    citation_mention_rate = (
+        sum(1.0 for flag in citation_mention_flags if flag) / len(citation_mention_flags)
+        if citation_mention_flags
+        else None
+    )
 
-    validation = history.get("validation_stats", {})
-    total_turns = int(validation.get("total_turns", 0) or 0)
-    total_attempts = int(validation.get("total_attempts", 0) or 0)
-    citation_total = int(validation.get("citation_total_rank1", 0) or 0)
-
-    metrics = {
-        "FinalCorrectType": final_correct_type,
-        "FinalCorrectSeverity": final_correct_severity,
+    headline_metrics = {
         "FinalCorrectExact": final_correct_exact,
-        "OverSeverityRate": 1.0 if over_severity else 0.0,
-        "UnderSeverityRate": 1.0 if under_severity else 0.0,
-        "FinalAgreementType": final_agreement_type,
+        "FinalCorrectType": final_correct_type,
         "FinalAgreementExact": final_agreement_exact,
-        "WrongConsensusType": wrong_consensus_type,
-        "WrongConsensusExact": wrong_consensus_exact,
-        "NoConsensus": (not final_agreement_exact) if final is not None else None,
-        "LateDriftType": late_drift_type,
-        "LateDriftExact": late_drift_exact,
-        "FlipCountType": flip_count,
-        "ConsensusLatencyType": consensus_latency(False),
-        "ConsensusLatencyExact": consensus_latency(True),
-        "SeverityVarianceAcrossRounds": severity_variance,
-        "ExactSeverityDisagreementRateAtFinal": (0.0 if final_agreement_exact else (1.0 if final else None)),
-        "JsonRetryCount": validation.get("json_retry_count", 0),
-        "JsonFailureRate": (validation.get("json_failures", 0) / total_turns) if total_turns else 0.0,
-        "SchemaValidationFailureRate": (
-            validation.get("schema_validation_failures", 0) / total_attempts
-        ) if total_attempts else 0.0,
-        "CitationValidityRate": (
-            validation.get("citation_valid_rank1", 0) / citation_total
-        ) if citation_total else None,
-        "CitationCountViolations": validation.get("citation_count_violations", 0),
-        "MessageLengthViolations": validation.get("message_length_violations", 0),
+        "AnyAgreementExact": any_agreement_exact,
+        "SeverityBias": severity_bias,
+        "TrustHygieneRate": float(trust_hygiene_violated),
     }
+
+    derived_metrics = {
+        "WrongConsensusExact": wrong_consensus_exact,
+        "FalseAgreementWithoutSignoffExact": false_agreement_without_signoff_exact,
+        "LateDriftAgreementExact": late_drift_agreement_exact,
+        "AnyCorrectConsensusType": any_correct_consensus_type,
+        "LateDriftCorrectType": late_drift_correct_type,
+        "ConsensusLatencyExact": consensus_latency_exact(),
+        "FinalAgreementType": final_agreement_type,
+        "AnyAgreementType": any_agreement_type,
+    }
+
+    appendix_debug = {
+        "CitationViolation": citation_violation_run,
+        "SchemaFail": schema_fail_run,
+        "InvalidPublic": invalid_public_run,
+        "Leakage": leakage_run,
+        "CitationMentionRate": citation_mention_rate,
+        "JsonRetryCount": int(validation_stats.get("json_retry_count", 0) or 0),
+        "SchemaFailureTurnCount": int(validation_stats.get("schema_failure_turns", 0) or 0),
+        "CitationViolationTurnCount": int(validation_stats.get("citation_violation_turns", 0) or 0),
+        "InvalidPublicTurnCount": int(validation_stats.get("invalid_public_turns", 0) or 0),
+        "LeakageTurnCount": int(validation_stats.get("leakage_turns", 0) or 0),
+        "TrustHygieneViolated": trust_hygiene_violated,
+        "FinalAllAccept": int(final_all_accept) if final else None,
+        "RunCompleted": run_completed,
+        "RunStatus": history.get("run_status"),
+    }
+
+    condition_aggregate = aggregate_condition_results(
+        [
+            {
+                "run_id": history.get("run_id"),
+                "condition_id": history.get("condition", {}).get("condition_id"),
+                "headline_metrics": headline_metrics,
+                "derived_metrics": derived_metrics,
+                "appendix_debug": appendix_debug,
+            }
+        ],
+        condition_id=history.get("condition", {}).get("condition_id"),
+    )
+
     return {
-        "metrics": metrics,
+        "headline_metrics": headline_metrics,
+        "derived_metrics": derived_metrics,
+        "appendix_debug": appendix_debug,
         "committee_final": final,
-        "committee_snapshots": committee_snaps,
+        "decision_trajectory": trajectory,
+        "condition_aggregate": condition_aggregate,
+    }
+
+
+def aggregate_condition_results(run_reports: Sequence[Dict[str, Any]], condition_id: Optional[str] = None) -> Dict[str, Any]:
+    if not run_reports:
+        return {
+            "headline_metrics": {
+                "condition_id": condition_id,
+                "run_count": 0,
+                "FinalCorrectExact": None,
+                "FinalCorrectType": None,
+                "FinalAgreementExact": None,
+                "AnyAgreementExact": None,
+                "SeverityBias": None,
+                "SeverityBiasMissingCount": 0,
+                "TrustHygieneRate": None,
+            },
+            "derived_metrics": {},
+            "appendix_debug": {},
+        }
+
+    severity_bias_values = [report["headline_metrics"].get("SeverityBias") for report in run_reports]
+    headline = {
+        "condition_id": condition_id or run_reports[0].get("condition_id"),
+        "run_count": len(run_reports),
+        "FinalCorrectExact": _mean_optional([report["headline_metrics"].get("FinalCorrectExact") for report in run_reports]),
+        "FinalCorrectType": _mean_optional([report["headline_metrics"].get("FinalCorrectType") for report in run_reports]),
+        "FinalAgreementExact": _mean_optional([report["headline_metrics"].get("FinalAgreementExact") for report in run_reports]),
+        "AnyAgreementExact": _mean_optional([report["headline_metrics"].get("AnyAgreementExact") for report in run_reports]),
+        "SeverityBias": _mean_optional(severity_bias_values),
+        "SeverityBiasMissingCount": sum(1 for value in severity_bias_values if value is None),
+        "TrustHygieneRate": _mean_optional([report["headline_metrics"].get("TrustHygieneRate") for report in run_reports]),
+    }
+
+    derived = {
+        "WrongConsensusExactRate": _mean_optional([report["derived_metrics"].get("WrongConsensusExact") for report in run_reports]),
+        "FalseAgreementWithoutSignoffExactRate": _mean_optional(
+            [report["derived_metrics"].get("FalseAgreementWithoutSignoffExact") for report in run_reports]
+        ),
+        "LateDriftAgreementExactRate": _mean_optional(
+            [report["derived_metrics"].get("LateDriftAgreementExact") for report in run_reports]
+        ),
+        "AnyCorrectConsensusTypeRate": _mean_optional(
+            [report["derived_metrics"].get("AnyCorrectConsensusType") for report in run_reports]
+        ),
+        "LateDriftCorrectTypeRate": _mean_optional(
+            [report["derived_metrics"].get("LateDriftCorrectType") for report in run_reports]
+        ),
+        "ConsensusLatencyExactMean": _mean_optional(
+            [report["derived_metrics"].get("ConsensusLatencyExact") for report in run_reports]
+        ),
+        "ConsensusLatencyExactMedian": None,
+        "FinalAgreementTypeRate": _mean_optional([report["derived_metrics"].get("FinalAgreementType") for report in run_reports]),
+        "AnyAgreementTypeRate": _mean_optional([report["derived_metrics"].get("AnyAgreementType") for report in run_reports]),
+        "OverSeverityRate": _rate_matching(severity_bias_values, lambda value: value > 0),
+        "UnderSeverityRate": _rate_matching(severity_bias_values, lambda value: value < 0),
+    }
+    latencies = [report["derived_metrics"].get("ConsensusLatencyExact") for report in run_reports]
+    numeric_latencies = [int(value) for value in latencies if value is not None]
+    if numeric_latencies:
+        derived["ConsensusLatencyExactMedian"] = float(median(numeric_latencies))
+
+    appendix = {
+        "CitationViolationRate": _mean_optional([report["appendix_debug"].get("CitationViolation") for report in run_reports]),
+        "SchemaFailRate": _mean_optional([report["appendix_debug"].get("SchemaFail") for report in run_reports]),
+        "InvalidPublicRate": _mean_optional([report["appendix_debug"].get("InvalidPublic") for report in run_reports]),
+        "LeakageRate": _mean_optional([report["appendix_debug"].get("Leakage") for report in run_reports]),
+        "CitationMentionRate": _mean_optional([report["appendix_debug"].get("CitationMentionRate") for report in run_reports]),
+        "JsonRetryCountMean": _mean_optional([report["appendix_debug"].get("JsonRetryCount") for report in run_reports]),
+        "JsonRetryCountTotal": sum(int(report["appendix_debug"].get("JsonRetryCount") or 0) for report in run_reports),
+    }
+
+    return {
+        "headline_metrics": headline,
+        "derived_metrics": derived,
+        "appendix_debug": appendix,
     }

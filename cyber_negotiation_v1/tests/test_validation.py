@@ -1,130 +1,141 @@
-from __future__ import annotations
-
 import json
+import tempfile
+import sys
+import unittest
+from pathlib import Path
 
-from cyberneg.core.enums import RoleId, TurnPhase
-from cyberneg.core.schemas import LabelSetConfig, ProviderAttemptLog
-from cyberneg.core.validators import build_turn_validation_context, strict_json_retry_loop
-from cyberneg.providers.base import BaseProvider, ProviderCallContext, ProviderResponse
-from cyberneg.providers.mock_provider import MockProvider
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-
-class SequenceProvider(BaseProvider):
-    def __init__(self, responses: list[str]) -> None:
-        super().__init__(provider_name="seq", provider_kind="mock", model_name="seq")
-        self._responses = list(responses)
-        self._idx = 0
-
-    def generate(self, prompt: str, ctx: ProviderCallContext) -> ProviderResponse:
-        text = self._responses[self._idx]
-        self._idx += 1
-        return ProviderResponse(text=text)
+from cyber_utils import detect_leakage, parse_structured_response, read_condition_config, validate_rank1_citations
 
 
-def _ctx() -> ProviderCallContext:
-    return ProviderCallContext(
-        provider_name="mock",
-        provider_kind="mock",
-        model_name="mock",
-        phase=TurnPhase.PUBLIC,
-        role_id=RoleId.R,
-        public_turn_index=0,
-        turn_id="t0",
-        metadata={
-            "line_ids": ["L001", "L002", "L003"],
-            "label_set_labels": ["XSS_Reflected", "NoFinding", "Other"],
-        },
-    )
+LABEL_SET = {
+    "labels": ["XSS_Reflected", "XSS_Stored", "NoFinding", "Other"],
+    "aliases": {"xss reflected": "XSS_Reflected"},
+}
+LINE_IDS = ["L001", "L002", "L003"]
 
 
-def _validation_ctx():
-    label_set = LabelSetConfig(
-        label_set_id="ls1",
-        labels=["XSS_Reflected", "NoFinding", "Other"],
-        aliases={"sqli": "Other"},
-    )
-    return build_turn_validation_context(
-        label_set,
-        ["L001", "L002", "L003"],
-        public_message_min_words=1,
-        public_message_max_words=200,
-        public_message_hard_cap_words=300,
-    )
+class ValidationTests(unittest.TestCase):
+    def _response(self, *, citations=None, public_message=None, accept=True, block_reason=None):
+        payload = {
+            "scratchpad": "<SCRATCHPAD>keep private reasoning separate from the public note</SCRATCHPAD>",
+            "answer": (
+                "<ANSWER>"
+                + (
+                    public_message
+                    or "I am grounding this claim in L001 and I am keeping the committee focused on the cited evidence rather than expanding scope without support. The current packet still fits the reflected XSS hypothesis best, and I want any objection to explain the same lines more cleanly before we change the top label."
+                )
+                + "</ANSWER>\n<ASSESSMENT>"
+                + json.dumps(
+                    {
+                        "ranked_findings": [
+                            {
+                                "rank": 1,
+                                "label": "XSS_Reflected",
+                                "severity": "Medium",
+                                "citations": citations if citations is not None else ["L001"],
+                                "rationale": "stub",
+                            },
+                            {
+                                "rank": 2,
+                                "label": "XSS_Stored",
+                                "severity": "Low",
+                                "citations": [],
+                                "rationale": "stub",
+                            },
+                            {
+                                "rank": 3,
+                                "label": "NoFinding",
+                                "severity": "Info",
+                                "citations": [],
+                                "rationale": "stub",
+                            },
+                        ],
+                        "decision_summary": "stub",
+                        "accept": accept,
+                        "block_reason": block_reason,
+                    }
+                )
+                + "</ASSESSMENT>"
+            ),
+            "plan": "<PLAN>ask for direct line-based objections only</PLAN>",
+        }
+        return json.dumps(payload)
+
+    def test_citation_validator_flags_bad_count_and_id(self):
+        result = validate_rank1_citations(["L001", "BAD", "L002"], LINE_IDS)
+        self.assertTrue(result["citation_violation"])
+        self.assertTrue(result["citation_count_violation"])
+        self.assertTrue(result["citation_invalid_id_violation"])
+
+    def test_parse_keeps_citation_violations_non_fatal(self):
+        parsed, error, validation = parse_structured_response(
+            self._response(citations=["BAD"]),
+            line_ids=LINE_IDS,
+            label_set=LABEL_SET,
+            public_message_min_chars=50,
+            public_message_max_chars=500,
+            forbidden_public_tokens=["PRIVATE"],
+        )
+        self.assertIsNotNone(parsed)
+        self.assertEqual(error, "")
+        self.assertTrue(validation["citation_violation"])
+        self.assertTrue(validation["citation_invalid_id_violation"])
+
+    def test_parse_requires_block_reason_when_accept_is_false(self):
+        parsed, error, _ = parse_structured_response(
+            self._response(accept=False, block_reason=None),
+            line_ids=LINE_IDS,
+            label_set=LABEL_SET,
+            public_message_min_chars=50,
+            public_message_max_chars=500,
+            forbidden_public_tokens=["PRIVATE"],
+        )
+        self.assertIsNone(parsed)
+        self.assertIn("block_reason", error)
+
+    def test_leakage_heuristic_triggers_on_marker_tokens(self):
+        result = detect_leakage(
+            "This PUBLIC message accidentally says PRIVATE notes.",
+            forbidden_tokens=["PRIVATE"],
+        )
+        self.assertTrue(result["leakage_flag"])
+        self.assertIn("PRIVATE", result["leakage_marker_hits"])
+
+    def test_condition_parser_rejects_missing_required_keys(self):
+        with tempfile.NamedTemporaryFile("w+", suffix=".txt", encoding="utf-8") as fh:
+            fh.write("condition_id=C3\nmode=negotiation\nconfig_file=config.txt\n")
+            fh.flush()
+            with self.assertRaises(ValueError):
+                read_condition_config(fh.name)
+
+    def test_condition_parser_rejects_unknown_keys(self):
+        with tempfile.NamedTemporaryFile("w+", suffix=".txt", encoding="utf-8") as fh:
+            fh.write(
+                "\n".join(
+                    [
+                        "condition_id=C3",
+                        "mode=negotiation",
+                        "config_file=config.txt",
+                        "public_messages=15",
+                        "json_max_retries=5",
+                        "prior_round0=",
+                        "reminder_text=test",
+                        "final_turn_announcement_window=1",
+                        "public_message_min_chars=350",
+                        "public_message_max_chars=1200",
+                        "forbidden_public_tokens=PRIVATE",
+                        "typo_field=oops",
+                    ]
+                )
+            )
+            fh.flush()
+            with self.assertRaises(ValueError):
+                read_condition_config(fh.name)
 
 
-def _attempt_factory(attempt_idx: int, prompt_text: str) -> ProviderAttemptLog:
-    return ProviderAttemptLog(
-        attempt_index=attempt_idx,
-        provider_name="mock",
-        provider_kind="mock",
-        model_name="mock",
-        phase=TurnPhase.PUBLIC,
-        role_id=RoleId.R,
-        public_turn_index=0,
-        prompt_text=prompt_text,
-    )
-
-
-def test_strict_json_retry_loop_retries_invalid_json_then_succeeds() -> None:
-    provider = MockProvider(invalid_json_attempts_per_turn=1)
-    result = strict_json_retry_loop(
-        provider=provider,
-        provider_context=_ctx(),
-        base_prompt="Return JSON",
-        validation_context=_validation_ctx(),
-        max_retries=3,
-        attempt_log_factory=_attempt_factory,
-    )
-
-    assert result.success is True
-    assert len(result.attempts) == 2
-    assert result.attempts[0].json_valid is False
-    assert result.attempts[0].validation_errors[0].code == "invalid_json"
-    assert result.attempts[1].schema_valid is True
-
-
-def test_strict_json_retry_loop_logs_schema_business_validation_errors() -> None:
-    invalid_payload = {
-        "private_notes": "n",
-        "private_plan": "p",
-        "public_message": "short but valid length for this test",
-        "assessment": {
-            "ranked_findings": [
-                {"rank": 1, "label": "MadeUpLabel", "severity": "Low", "citations": []},
-                {"rank": 2, "label": "Other", "severity": "Info", "citations": []},
-                {"rank": 3, "label": "NoFinding", "severity": "Info", "citations": []},
-            ],
-            "decision_summary": "summary",
-        },
-    }
-    valid_payload = {
-        "private_notes": "n",
-        "private_plan": "p",
-        "public_message": "this public message has enough words for the test and remains within the configured bounds",
-        "assessment": {
-            "ranked_findings": [
-                {"rank": 1, "label": "XSS_Reflected", "severity": "Low", "citations": ["L001"]},
-                {"rank": 2, "label": "Other", "severity": "Info", "citations": []},
-                {"rank": 3, "label": "NoFinding", "severity": "Info", "citations": []},
-            ],
-            "decision_summary": "summary",
-        },
-    }
-    provider = SequenceProvider([json.dumps(invalid_payload), json.dumps(valid_payload)])
-    result = strict_json_retry_loop(
-        provider=provider,
-        provider_context=_ctx(),
-        base_prompt="Return JSON",
-        validation_context=_validation_ctx(),
-        max_retries=2,
-        attempt_log_factory=_attempt_factory,
-    )
-
-    assert result.success is True
-    assert len(result.attempts) == 2
-    first_errors = {e.code for e in result.attempts[0].validation_errors}
-    assert "invalid_label" in first_errors
-    assert "rank1_citation_count" in first_errors
-    assert result.attempts[0].json_valid is True
-    assert result.attempts[0].schema_valid is False
-
+if __name__ == "__main__":
+    unittest.main()

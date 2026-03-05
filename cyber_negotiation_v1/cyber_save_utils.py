@@ -3,10 +3,9 @@ from __future__ import annotations
 import json
 import os
 import time
-from pathlib import Path
 from typing import Dict, Optional
 
-from cyber_utils import extract_assessment, extract_plan, extract_public_answer
+from cyber_utils import extract_assessment, extract_plan, extract_public_answer, extract_scratchpad
 
 
 def write_file(log_dict, output_file):
@@ -47,13 +46,16 @@ def save_conversation(history, agent_name, full_answer, prompt, phase="public", 
         history["content"]["finished_rounds"] += 1
 
     public_answer = extract_public_answer(full_answer)
-    plan = extract_plan(full_answer)
+    private_plan = extract_plan(full_answer)
+    private_notes = extract_scratchpad(full_answer)
     assessment = extract_assessment(full_answer) if "<ASSESSMENT>" in full_answer else None
     slot = {
         "agent": agent_name,
         "prompt": prompt,
         "full_answer": full_answer,
         "public_answer": public_answer,
+        "private_notes": private_notes,
+        "private_plan": private_plan,
         "assessment": assessment,
     }
     if extra_fields:
@@ -63,8 +65,8 @@ def save_conversation(history, agent_name, full_answer, prompt, phase="public", 
     else:
         history["content"]["rounds"].append(slot)
 
-    if plan:
-        history["content"]["plan"].setdefault(agent_name, []).append(plan)
+    if private_plan:
+        history["content"]["plan"].setdefault(agent_name, []).append(private_plan)
 
     write_file(history["content"], history["file"])
     return history

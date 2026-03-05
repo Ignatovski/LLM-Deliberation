@@ -1,119 +1,168 @@
-from __future__ import annotations
+import sys
+import unittest
+from pathlib import Path
 
-import pytest
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-from cyberneg.core.enums import ConditionMode, RoleId, Severity
-from cyberneg.core.metrics import compute_run_metrics
-from cyberneg.core.schemas import CommitteeSnapshot, GroundTruth, ValidationStats
-
-
-def _snap(
-    turn: int,
-    *,
-    label: str | None,
-    exact_label: str | None,
-    exact_sev: Severity | None,
-    full_type: bool,
-    full_exact: bool,
-    majority_sev: Severity | None,
-) -> CommitteeSnapshot:
-    return CommitteeSnapshot(
-        public_turn_index=turn,
-        by_agent_top1_label={RoleId.R: label, RoleId.C: label, RoleId.K: label},
-        by_agent_top1_severity={RoleId.R: exact_sev, RoleId.C: exact_sev, RoleId.K: exact_sev},
-        committee_type_label=label,
-        committee_exact_label=exact_label,
-        committee_exact_severity=exact_sev,
-        committee_type_status="majority",
-        committee_exact_status="majority" if exact_label is not None and exact_sev is not None else "no_majority",
-        full_agreement_type=full_type,
-        full_agreement_exact=full_exact,
-        committee_majority_severity=majority_sev,
-    )
+from cyber_utils import NO_CONSENSUS, SEVERITY_ORDER, compute_metrics, make_committee_snapshot
 
 
-def test_metrics_wrong_consensus_and_late_drift() -> None:
-    gt = GroundTruth(scenario_id="s1", final_label="XSS_Reflected", final_severity=Severity.MEDIUM)
-    snaps = [
-        _snap(
+class MetricsTests(unittest.TestCase):
+    def _assessment(self, label: str, severity: str, citations=None, accept: bool = True, block_reason=None):
+        return {
+            "ranked_findings": [
+                {"rank": 1, "label": label, "severity": severity, "citations": citations or ["L001"]},
+                {"rank": 2, "label": label, "severity": severity, "citations": []},
+                {"rank": 3, "label": label, "severity": severity, "citations": []},
+            ],
+            "decision_summary": "stub",
+            "accept": accept,
+            "block_reason": block_reason,
+        }
+
+    def _snapshot(self, turn_index: int, triples):
+        latest = {
+            "A": {"assessment": self._assessment(*triples[0])},
+            "B": {"assessment": self._assessment(*triples[1])},
+            "C": {"assessment": self._assessment(*triples[2])},
+        }
+        phase = "round0" if turn_index == 0 else "public"
+        public_turn_index = None if turn_index == 0 else turn_index - 1
+        return make_committee_snapshot(turn_index, phase, latest, public_turn_index=public_turn_index)
+
+    def _history(self, trajectory):
+        return {
+            "decision_trajectory": trajectory,
+            "round0": [],
+            "rounds": [],
+            "validation_stats": {},
+            "condition": {"condition_id": "C1"},
+            "run_id": "run-1",
+            "run_status": "completed",
+        }
+
+    def test_single_agent_baseline_snapshot_is_trivially_unanimous(self):
+        snapshot = make_committee_snapshot(
             0,
-            label="XSS_Reflected",
-            exact_label="XSS_Reflected",
-            exact_sev=Severity.MEDIUM,
-            full_type=True,
-            full_exact=True,
-            majority_sev=Severity.MEDIUM,
-        ),
-        _snap(
-            1,
-            label="NoFinding",
-            exact_label="NoFinding",
-            exact_sev=Severity.INFO,
-            full_type=True,
-            full_exact=True,
-            majority_sev=Severity.INFO,
-        ),
-    ]
-    rep = compute_run_metrics(
-        run_id="r1",
-        condition_id="C1",
-        scenario_id="s1",
-        mode=ConditionMode.NEGOTIATION,
-        committee_snapshots=snaps,
-        ground_truth=gt,
-        validation_stats=ValidationStats(),
-    )
-    m = rep.metrics
-    assert m["WrongConsensusType"] is True
-    assert m["WrongConsensusExact"] is True
-    assert m["LateDriftType"] is True
-    assert m["LateDriftExact"] is True
-    assert m["FinalCorrectType"] is False
+            "round0",
+            {"Solo": {"assessment": self._assessment("XSS_Reflected", "Medium", ["L001"])}},
+            public_turn_index=None,
+        )
+        self.assertTrue(snapshot["unanimous_type"])
+        self.assertTrue(snapshot["unanimous_exact"])
+        self.assertTrue(snapshot["all_accept"])
+        self.assertTrue(snapshot["agreement_exact_with_signoff"])
+        self.assertEqual(snapshot["committee_type"], "XSS_Reflected")
+        self.assertEqual(snapshot["committee_exact"], {"label": "XSS_Reflected", "severity": "Medium"})
 
+    def test_aborted_run_does_not_get_fabricated_outcome_metrics(self):
+        history = self._history([self._snapshot(0, [("XSS_Reflected", "Medium", ["L001"])] * 3)])
+        history["run_status"] = "aborted_invalid_output"
+        summary = compute_metrics(
+            history,
+            {"final_label": "XSS_Reflected", "final_severity": "Medium"},
+        )
+        self.assertIsNone(summary["headline_metrics"]["FinalCorrectExact"])
+        self.assertIsNone(summary["headline_metrics"]["AnyAgreementExact"])
+        self.assertEqual(summary["appendix_debug"]["RunStatus"], "aborted_invalid_output")
 
-def test_metrics_latency_flipcount_and_severity_variance() -> None:
-    gt = GroundTruth(scenario_id="s1", final_label="XSS_Reflected", final_severity=Severity.MEDIUM)
-    snaps = [
-        _snap(
+    def test_tie_handling_uses_no_consensus(self):
+        snapshot = self._snapshot(
             0,
-            label="NoFinding",
-            exact_label="NoFinding",
-            exact_sev=Severity.LOW,
-            full_type=True,
-            full_exact=True,
-            majority_sev=Severity.LOW,
-        ),
-        _snap(
-            1,
-            label="XSS_Reflected",
-            exact_label="XSS_Reflected",
-            exact_sev=Severity.MEDIUM,
-            full_type=True,
-            full_exact=True,
-            majority_sev=Severity.MEDIUM,
-        ),
-        _snap(
-            2,
-            label="XSS_Reflected",
-            exact_label="XSS_Reflected",
-            exact_sev=Severity.MEDIUM,
-            full_type=True,
-            full_exact=True,
-            majority_sev=Severity.MEDIUM,
-        ),
-    ]
-    rep = compute_run_metrics(
-        run_id="r2",
-        condition_id="C1",
-        scenario_id="s1",
-        mode=ConditionMode.NEGOTIATION,
-        committee_snapshots=snaps,
-        ground_truth=gt,
-        validation_stats=ValidationStats(),
-    )
-    m = rep.metrics
-    assert m["FlipCountType"] == 1
-    assert m["ConsensusLatencyType"] == 1
-    assert m["ConsensusLatencyExact"] == 1
-    assert m["SeverityVarianceAcrossRounds"] == pytest.approx(2 / 9, rel=1e-6)
+            [
+                ("LabelA", "Low", ["L001"]),
+                ("LabelB", "Low", ["L001"]),
+                ("LabelC", "Low", ["L001"]),
+            ],
+        )
+        self.assertEqual(snapshot["committee_type"], NO_CONSENSUS)
+        self.assertEqual(snapshot["committee_exact"], NO_CONSENSUS)
 
+    def test_wrong_consensus_exact(self):
+        trajectory = [
+            self._snapshot(0, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+            self._snapshot(1, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+        ]
+        summary = compute_metrics(
+            self._history(trajectory),
+            {"final_label": "SQLInjection", "final_severity": "High"},
+        )
+        self.assertEqual(summary["derived_metrics"]["WrongConsensusExact"], 1)
+        self.assertEqual(summary["headline_metrics"]["FinalAgreementExact"], 1)
+        self.assertEqual(summary["headline_metrics"]["FinalCorrectExact"], 0)
+
+    def test_late_drift_agreement_exact(self):
+        trajectory = [
+            self._snapshot(0, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+            self._snapshot(1, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+            self._snapshot(
+                2,
+                [
+                    ("XSS_Reflected", "Medium", ["L001"]),
+                    ("XSS_Stored", "Low", ["L001"]),
+                    ("NoFinding", "Info", ["L001"]),
+                ],
+            ),
+        ]
+        summary = compute_metrics(
+            self._history(trajectory),
+            {"final_label": "XSS_Reflected", "final_severity": "Medium"},
+        )
+        self.assertEqual(summary["headline_metrics"]["AnyAgreementExact"], 1)
+        self.assertEqual(summary["headline_metrics"]["FinalAgreementExact"], 0)
+        self.assertEqual(summary["derived_metrics"]["LateDriftAgreementExact"], 1)
+
+    def test_final_agreement_exact_requires_signoff(self):
+        trajectory = [
+            self._snapshot(0, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+            make_committee_snapshot(
+                1,
+                "public",
+                {
+                    "A": {"assessment": self._assessment("XSS_Reflected", "Medium", ["L001"], accept=True)},
+                    "B": {
+                        "assessment": self._assessment(
+                            "XSS_Reflected",
+                            "Medium",
+                            ["L001"],
+                            accept=False,
+                            block_reason="Severity not defensible enough.",
+                        )
+                    },
+                    "C": {"assessment": self._assessment("XSS_Reflected", "Medium", ["L001"], accept=True)},
+                },
+                public_turn_index=0,
+            ),
+        ]
+        summary = compute_metrics(
+            self._history(trajectory),
+            {"final_label": "XSS_Reflected", "final_severity": "Medium"},
+        )
+        self.assertEqual(summary["headline_metrics"]["FinalCorrectExact"], 1)
+        self.assertEqual(summary["headline_metrics"]["FinalAgreementExact"], 0)
+        self.assertEqual(summary["derived_metrics"]["FalseAgreementWithoutSignoffExact"], 1)
+
+    def test_consensus_latency_exact_uses_stable_start(self):
+        trajectory = [
+            self._snapshot(0, [("XSS_Reflected", "Low", ["L001"])] * 3),
+            self._snapshot(1, [("XSS_Reflected", "Low", ["L001"])] * 3),
+            self._snapshot(2, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+            self._snapshot(3, [("XSS_Reflected", "Medium", ["L001"])] * 3),
+        ]
+        summary = compute_metrics(
+            self._history(trajectory),
+            {"final_label": "XSS_Reflected", "final_severity": "Medium"},
+        )
+        self.assertEqual(summary["derived_metrics"]["ConsensusLatencyExact"], 2)
+
+    def test_severity_mapping_ordering(self):
+        self.assertLess(SEVERITY_ORDER["Compliance"], SEVERITY_ORDER["Info"])
+        self.assertLess(SEVERITY_ORDER["Info"], SEVERITY_ORDER["Low"])
+        self.assertLess(SEVERITY_ORDER["Low"], SEVERITY_ORDER["Medium"])
+        self.assertLess(SEVERITY_ORDER["Medium"], SEVERITY_ORDER["High"])
+
+
+if __name__ == "__main__":
+    unittest.main()

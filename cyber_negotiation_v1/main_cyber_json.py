@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Optional
 from cyber_agent import CyberAgent
 from cyber_save_utils import create_outfiles, save_conversation, write_file
 from cyber_utils import (
+    NO_CONSENSUS,
+    aggregate_condition_results,
     build_retry_prompt,
     compute_metrics,
     format_evidence_packet,
@@ -29,9 +31,9 @@ from cyber_utils import (
 
 JSON_PROMPT = """You must respond with ONE JSON object, nothing else:
 {
-  "scratchpad": "<SCRATCHPAD>…</SCRATCHPAD>",
-  "answer": "<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\"}</ASSESSMENT>",
-  "plan": "<PLAN>…</PLAN>"
+  "scratchpad": "<SCRATCHPAD>...</SCRATCHPAD>",
+  "answer": "<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\",\"accept\":true,\"block_reason\":null}</ASSESSMENT>",
+  "plan": "<PLAN>...</PLAN>"
 }
 
 Rules:
@@ -40,8 +42,11 @@ Rules:
 - plan: private next-step notes; omit or use "<PLAN></PLAN>" if none.
 - assessment.ranked_findings must contain ranks 1, 2, and 3.
 - Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.
-- Rank 1 must cite 1-2 valid evidence line IDs.
-- Public message should be natural discussion text, 80-150 words, and must not expose private scratchpad or hidden planning.
+- Labels must come from the configured label set.
+- assessment.accept must be true or false.
+- If assessment.accept is false, assessment.block_reason must be a short non-empty string explaining why you cannot sign off.
+- If assessment.accept is true, assessment.block_reason must be null or an empty string.
+- Public message must stay report-defensible, obey the configured length limits, and must not expose private scratchpad or hidden planning.
 - Output must be valid JSON; no extra text, comments, or Markdown.
 If you cannot comply, reformat to valid JSON with the fields above; never return other text.
 """
@@ -58,6 +63,7 @@ class CyberInitialPromptJSON:
         condition: Dict[str, Any],
         label_set: Dict[str, Any],
     ):
+        del agent_name
         global_text_path = os.path.join(game_dir, "global_instructions.txt")
         with open(global_text_path, "r", encoding="utf-8") as f:
             self.global_text = f.read().strip()
@@ -71,10 +77,6 @@ class CyberInitialPromptJSON:
         parts = [
             self.global_text,
             self.personal_text,
-            (
-                f"Visible scenario metadata: scenario_id={scenario['scenario_id']}, title={scenario['title']}, "
-                f"source_family={scenario['source_family']}, difficulty={scenario['difficulty']}"
-            ),
             "Allowed finding labels: " + ", ".join(label_set.get("labels", [])),
         ]
         if condition.get("prior_round0"):
@@ -111,15 +113,13 @@ class CyberSlotPromptJSON:
         history_text, last_plan = format_history(self.agent_name, history, window=6)
         prompt = "Review the latest public negotiation history:\n"
         prompt += f"<HISTORY>{history_text}</HISTORY>\n" if history_text else "<HISTORY></HISTORY>\n"
-        if self.condition.get("reinject_role_instruction_roundn"):
-            prompt += "Role reminder:\n" + self.personal_text + "\n"
         if self.condition.get("reminder_text"):
             prompt += f"Reminder: {str(self.condition['reminder_text']).strip()}\n"
         if last_plan:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
         if history.get("_current_final_turn"):
             prompt += "This is the final public turn. Commit to your most defensible assessment.\n"
-        prompt += f"Current public turn index: {round_idx}\n"
+        prompt += f"Current public turn index: {round_idx + 1}\n"
         prompt += "Return the required JSON object only.\n\n" + JSON_PROMPT
         return prompt
 
@@ -159,52 +159,11 @@ def derive_role_id(file_name: str) -> str:
     return file_name[-1:].upper()
 
 
-def make_fallback_parsed(label_set: Dict[str, Any], line_ids: List[str], message: str, reason: str) -> Dict[str, Any]:
-    top_label = "NoFinding" if "NoFinding" in label_set.get("labels", []) else label_set.get("labels", ["Other"])[0]
-    second_label = "Other" if "Other" in label_set.get("labels", []) else top_label
-    assessment = {
-        "ranked_findings": [
-            {
-                "rank": 1,
-                "label": top_label,
-                "severity": "Info",
-                "citations": line_ids[:1],
-                "confidence": 0.0,
-                "rationale": reason,
-            },
-            {
-                "rank": 2,
-                "label": second_label,
-                "severity": "Info",
-                "citations": [],
-                "confidence": 0.0,
-                "rationale": "Fallback secondary candidate.",
-            },
-            {
-                "rank": 3,
-                "label": top_label,
-                "severity": "Info",
-                "citations": [],
-                "confidence": 0.0,
-                "rationale": "Fallback tertiary candidate.",
-            },
-        ],
-        "decision_summary": "Fallback assessment emitted after repeated invalid JSON output.",
-    }
-    return {
-        "scratchpad": f"<SCRATCHPAD>{reason}</SCRATCHPAD>",
-        "answer": "<ANSWER>" + message + "</ANSWER>\n<ASSESSMENT>" + json.dumps(assessment, ensure_ascii=False) + "</ASSESSMENT>",
-        "plan": "<PLAN></PLAN>",
-        "public_answer": message,
-        "assessment": assessment,
-    }
-
-
 def main():
     parser = argparse.ArgumentParser(description="Cyber negotiation game (polynomial-style JSON runner)")
     parser.add_argument("--temp", type=float, default=0.0)
-    parser.add_argument("--agents_num", type=int, default=3)
-    parser.add_argument("--rounds_num", type=int, default=6, help="Fallback public message count if condition file omits it")
+    parser.add_argument("--agents_num", type=int, default=0)
+    parser.add_argument("--rounds_num", type=int, default=6, help="Legacy CLI field; condition files are authoritative")
     parser.add_argument("--output_dir", type=str, default="./games_descriptions/cyber_game/output/")
     parser.add_argument("--game_dir", type=str, default="./games_descriptions/cyber_game")
     parser.add_argument("--config_file", type=str, default="config.txt", help="Polynomial-style agent config file")
@@ -212,22 +171,26 @@ def main():
     parser.add_argument("--scenario_file", type=str, default="", help="Scenario JSON file name under scenarios/")
     parser.add_argument("--ground_truth_file", type=str, default="", help="Ground-truth JSON file name under ground_truth/")
     parser.add_argument("--label_set_file", type=str, default="label_sets/default_findings_v1.json")
-    parser.add_argument("--exp_name", type=str, default="cyber_demo_json")
+    parser.add_argument("--exp_name", type=str, default="cyber_run")
     parser.add_argument("--restart", action="store_true")
     parser.add_argument("--output_file", type=str, default="history.json")
-    parser.add_argument("--azure", action="store_true", help="Use Azure Responses provider for non-mock non-Claude models")
+    parser.add_argument("--azure", action="store_true", help="Use Azure OpenAI for OpenAI model names")
     parser.add_argument("--model", type=str, default="", help="Optional model override for all agents")
     parser.add_argument("--env_file", type=str, default=".env")
-    parser.add_argument("--max_attempts_per_turn", type=int, default=5)
+    parser.add_argument("--max_attempts_per_turn", type=int, default=0, help="0 means use json_max_retries from the condition file")
     parser.add_argument("--retry_sleep", type=float, default=0.0)
     args = parser.parse_args()
 
     load_env_file(args.env_file)
 
-    config_path = os.path.join(args.game_dir, args.config_file)
     condition_path = os.path.join(args.game_dir, args.condition_file)
-    config = read_config(config_path)
     condition = read_condition_config(condition_path)
+    config_name = args.config_file
+    if config_name == "config.txt":
+        config_name = str(condition["config_file"])
+    config_path = os.path.join(args.game_dir, config_name)
+    config = read_config(config_path)
+    max_attempts_per_turn = int(args.max_attempts_per_turn or condition["json_max_retries"])
 
     scenario_name = args.scenario_file or config.get("default_scenario", "placeholder_webapp_001.json")
     scenario_path = scenario_name if os.path.isabs(scenario_name) else os.path.join(args.game_dir, "scenarios", scenario_name)
@@ -247,11 +210,14 @@ def main():
     label_set = load_label_set(label_set_path)
 
     agents_cfg = config["agents"]
-    if args.agents_num != len(agents_cfg):
+    requested_agents = len(agents_cfg) if args.agents_num <= 0 else args.agents_num
+    if requested_agents != len(agents_cfg):
         raise SystemExit("agents_num must match number of agents in config")
 
-    public_messages = int(condition.get("public_messages") or args.rounds_num)
-    if public_messages % args.agents_num != 0:
+    public_messages = 0 if str(condition["mode"]).lower() == "baseline" else int(condition["public_messages"])
+    if str(condition["mode"]).lower() == "baseline":
+        public_messages = 0
+    if len(agents_cfg) and public_messages % len(agents_cfg) != 0:
         raise SystemExit("public_messages / rounds_num must be divisible by agents_num")
 
     random.seed(config.get("seed", 42))
@@ -287,10 +253,6 @@ def main():
                 model=model_name,
                 azure=args.azure,
                 role_id=derive_role_id(agent["file_name"]),
-                line_ids=line_ids,
-                label_set=label_set,
-                timeout_seconds=int(condition.get("per_call_timeout_seconds", 30)),
-                invalid_json_attempts_per_turn=int(condition.get("invalid_json_attempts_per_turn", 0)),
             )
         }
 
@@ -303,97 +265,129 @@ def main():
     history["content"].setdefault("plan", {})
     history["content"].setdefault("finished_rounds", 0)
     history["content"].setdefault("finished_public_rounds", 0)
-    history["content"].setdefault("validation_failures", [])
-    history["content"].setdefault("committee_snapshots", [])
+    history["content"].setdefault("failed_attempts", [])
+    history["content"].setdefault("decision_trajectory", [])
+    history["content"]["committee_snapshots"] = history["content"]["decision_trajectory"]
     history["content"]["slot_assignment"] = public_schedule
     history["content"]["condition"] = condition
     history["content"]["scenario"] = {k: v for k, v in scenario.items() if k != "author_notes"}
     history["content"]["scenario_id"] = scenario.get("scenario_id")
     history["content"]["scenario_title"] = scenario.get("title")
+    history["content"]["schedule_seed"] = schedule_seed
     if ground_truth:
         history["content"]["ground_truth"] = ground_truth
     history["content"]["validation_stats"] = {
         "total_turns": 0,
         "total_attempts": 0,
         "successful_turns": 0,
-        "failed_turns": 0,
+        "schema_failure_turns": 0,
         "json_retry_count": 0,
-        "json_failures": 0,
-        "schema_validation_failures": 0,
-        "citation_count_violations": 0,
-        "message_length_violations": 0,
-        "citation_total_rank1": 0,
-        "citation_valid_rank1": 0,
+        "citation_violation_turns": 0,
+        "invalid_public_turns": 0,
+        "leakage_turns": 0,
+        "citation_mention_turns": 0,
     }
+    history["content"]["run_status"] = "running"
 
-    def update_validation(success: bool, attempts: int, warnings: List[str], parsed: Optional[Dict[str, Any]], error: str) -> None:
+    stem = Path(history["file"]).stem
+    history["content"]["run_id"] = stem
+
+    def record_failed_attempt(agent_name: str, phase: str, attempt: int, prompt: str, response_text: str, error: str) -> None:
+        history["content"]["failed_attempts"].append(
+            {
+                "agent": agent_name,
+                "phase": phase,
+                "attempt": attempt,
+                "prompt": prompt,
+                "response_text": response_text,
+                "error": error,
+            }
+        )
+
+    def finalize_validation(validation: Dict[str, Any], *, attempts: int, schema_failed: bool) -> Dict[str, Any]:
         stats = history["content"]["validation_stats"]
         stats["total_turns"] += 1
         stats["total_attempts"] += attempts
         stats["json_retry_count"] += max(0, attempts - 1)
-        if success:
-            stats["successful_turns"] += 1
+        if schema_failed:
+            stats["schema_failure_turns"] += 1
         else:
-            stats["failed_turns"] += 1
-            stats["json_failures"] += 1
-        if "public_message_target_range" in warnings:
-            stats["message_length_violations"] += 1
-        if parsed is not None:
-            rank1 = next(
-                (item for item in parsed["assessment"]["ranked_findings"] if item.get("rank") == 1),
-                None,
-            )
-            if rank1 is not None:
-                citations = rank1.get("citations", [])
-                stats["citation_total_rank1"] += len(citations)
-                stats["citation_valid_rank1"] += len(citations)
-        if error:
-            history["content"]["validation_failures"].append(error)
+            stats["successful_turns"] += 1
+        if validation.get("citation_violation"):
+            stats["citation_violation_turns"] += 1
+        if validation.get("invalid_public_message"):
+            stats["invalid_public_turns"] += 1
+        if validation.get("leakage_flag"):
+            stats["leakage_turns"] += 1
+        if validation.get("citation_mention"):
+            stats["citation_mention_turns"] += 1
+        validation["schema_failure_after_retries"] = bool(schema_failed)
+        return validation
 
-    run_started = time.monotonic()
-    token_budget_limit = condition.get("token_budget_limit")
-    total_attempt_counter = 0
+    run_completed = True
 
     for agent in agents_cfg:
         attempts = 0
         parsed = None
         prompt = ""
-        warnings: List[str] = []
         error = ""
+        response_text = ""
+        validation: Dict[str, Any] = {}
         while True:
             attempts += 1
             prompt, response = agents[agent["name"]]["instance"].execute_round0(history["content"])
-            parsed, error, warnings = parse_structured_response(
-                ensure_text(response),
+            response_text = ensure_text(response)
+            parsed, error, validation = parse_structured_response(
+                response_text,
                 line_ids=line_ids,
                 label_set=label_set,
-                public_message_min_words=int(condition["public_message_min_words"]),
-                public_message_max_words=int(condition["public_message_max_words"]),
-                public_message_hard_cap_words=int(condition["public_message_hard_cap_words"]),
+                public_message_min_chars=int(condition["public_message_min_chars"]),
+                public_message_max_chars=int(condition["public_message_max_chars"]),
+                forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
             )
             if parsed is not None:
                 break
-            if args.max_attempts_per_turn and attempts >= args.max_attempts_per_turn:
+            record_failed_attempt(agent["name"], "round0", attempts, prompt, response_text, error)
+            if max_attempts_per_turn and attempts >= max_attempts_per_turn:
                 break
             prompt = build_retry_prompt(prompt, attempts, error)
             if args.retry_sleep:
                 time.sleep(args.retry_sleep)
-        total_attempt_counter += attempts
-        update_validation(parsed is not None, attempts, warnings, parsed, error if parsed is None else "")
+        validation = finalize_validation(validation, attempts=attempts, schema_failed=parsed is None)
         if parsed is None:
-            parsed = make_fallback_parsed(
-                label_set,
-                line_ids,
-                "I cannot support a final committee claim from this turn because my previous output was invalid. Keep the discussion anchored in the packet and rely on the remaining committee record.",
-                "Structured output failure during Round 0.",
-            )
+            history["content"]["run_status"] = "aborted_invalid_output"
+            history["content"]["stopped_reason"] = "invalid_round0_output_after_retries"
+            history["content"]["failed_turn"] = {
+                "phase": "round0",
+                "agent": agent["name"],
+                "attempts": attempts,
+                "error": error,
+                "response_text": response_text,
+            }
+            write_file(history["content"], history["file"])
+            run_completed = False
+            break
         history = save_state(
             history,
             agent["name"],
             prompt,
             parsed,
             phase="round0",
-            extra_fields={"phase": "round0", "attempts": attempts, "warnings": warnings},
+            extra_fields={
+                "phase": "round0",
+                "turn_index": 0,
+                "attempts": attempts,
+                "validation": validation,
+                "top1_label": parsed["assessment"]["ranked_findings"][0]["label"],
+                "top1_severity": parsed["assessment"]["ranked_findings"][0]["severity"],
+                "top1_exact": {
+                    "label": parsed["assessment"]["ranked_findings"][0]["label"],
+                    "severity": parsed["assessment"]["ranked_findings"][0]["severity"],
+                },
+                "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
+                "accept": parsed["assessment"]["accept"],
+                "block_reason": parsed["assessment"]["block_reason"],
+            },
         )
 
     latest_by_agent = {
@@ -401,52 +395,59 @@ def main():
         for slot in history["content"].get("round0", [])
         if slot.get("assessment")
     }
+    if run_completed and latest_by_agent and not history["content"]["decision_trajectory"]:
+        history["content"]["decision_trajectory"].append(
+            make_committee_snapshot(0, "round0", latest_by_agent, public_turn_index=None, speaker=None)
+        )
+        write_file(history["content"], history["file"])
 
     for public_idx, current_agent in enumerate(public_schedule[public_start:], start=public_start):
-        if condition.get("per_run_wallclock_limit_seconds") and (
-            time.monotonic() - run_started
-        ) > int(condition["per_run_wallclock_limit_seconds"]):
-            history["content"]["stopped_reason"] = "wallclock_limit_exceeded"
+        if not run_completed:
             break
-        if token_budget_limit is not None and total_attempt_counter > int(token_budget_limit):
-            history["content"]["stopped_reason"] = "token_budget_placeholder_exceeded"
-            break
-
         history["content"]["_current_final_turn"] = public_idx >= (
             len(public_schedule) - int(condition["final_turn_announcement_window"])
         )
         attempts = 0
         parsed = None
         prompt = ""
-        warnings = []
         error = ""
+        response_text = ""
+        validation = {}
         while True:
             attempts += 1
             prompt, response = agents[current_agent]["instance"].execute_round(history["content"], public_idx)
-            parsed, error, warnings = parse_structured_response(
-                ensure_text(response),
+            response_text = ensure_text(response)
+            parsed, error, validation = parse_structured_response(
+                response_text,
                 line_ids=line_ids,
                 label_set=label_set,
-                public_message_min_words=int(condition["public_message_min_words"]),
-                public_message_max_words=int(condition["public_message_max_words"]),
-                public_message_hard_cap_words=int(condition["public_message_hard_cap_words"]),
+                public_message_min_chars=int(condition["public_message_min_chars"]),
+                public_message_max_chars=int(condition["public_message_max_chars"]),
+                forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
             )
             if parsed is not None:
                 break
-            if args.max_attempts_per_turn and attempts >= args.max_attempts_per_turn:
+            record_failed_attempt(current_agent, "public", attempts, prompt, response_text, error)
+            if max_attempts_per_turn and attempts >= max_attempts_per_turn:
                 break
             prompt = build_retry_prompt(prompt, attempts, error)
             if args.retry_sleep:
                 time.sleep(args.retry_sleep)
-        total_attempt_counter += attempts
-        update_validation(parsed is not None, attempts, warnings, parsed, error if parsed is None else "")
+        validation = finalize_validation(validation, attempts=attempts, schema_failed=parsed is None)
         if parsed is None:
-            parsed = make_fallback_parsed(
-                label_set,
-                line_ids,
-                "I am holding my prior position because my previous output was invalid. The safest course is to keep the committee anchored in cited packet lines and avoid inventing new claims.",
-                "Structured output failure during public negotiation.",
-            )
+            history["content"]["run_status"] = "aborted_invalid_output"
+            history["content"]["stopped_reason"] = "invalid_public_output_after_retries"
+            history["content"]["failed_turn"] = {
+                "phase": "public",
+                "agent": current_agent,
+                "public_turn_index": public_idx,
+                "attempts": attempts,
+                "error": error,
+                "response_text": response_text,
+            }
+            write_file(history["content"], history["file"])
+            run_completed = False
+            break
 
         history = save_state(
             history,
@@ -456,31 +457,93 @@ def main():
             phase="public",
             extra_fields={
                 "phase": "public",
+                "turn_index": public_idx + 1,
                 "public_turn_index": public_idx,
                 "is_final_public_turn": bool(history["content"].get("_current_final_turn")),
                 "attempts": attempts,
-                "warnings": warnings,
+                "validation": validation,
+                "top1_label": parsed["assessment"]["ranked_findings"][0]["label"],
+                "top1_severity": parsed["assessment"]["ranked_findings"][0]["severity"],
+                "top1_exact": {
+                    "label": parsed["assessment"]["ranked_findings"][0]["label"],
+                    "severity": parsed["assessment"]["ranked_findings"][0]["severity"],
+                },
+                "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
+                "accept": parsed["assessment"]["accept"],
+                "block_reason": parsed["assessment"]["block_reason"],
             },
         )
         latest_by_agent[current_agent] = {"assessment": parsed["assessment"]}
-        history["content"]["committee_snapshots"].append(make_committee_snapshot(public_idx, latest_by_agent))
+        history["content"]["decision_trajectory"].append(
+            make_committee_snapshot(
+                public_idx + 1,
+                "public",
+                latest_by_agent,
+                public_turn_index=public_idx,
+                speaker=current_agent,
+            )
+        )
         write_file(history["content"], history["file"])
 
     history["content"].pop("_current_final_turn", None)
+    if run_completed and history["content"]["run_status"] == "running":
+        history["content"]["run_status"] = "completed"
     summary = compute_metrics(history["content"], ground_truth)
-    history["content"]["metrics"] = summary["metrics"]
+
+    run_report = {
+        "run_id": stem,
+        "condition_id": condition["condition_id"],
+        "scenario_id": scenario.get("scenario_id"),
+        "headline_metrics": summary["headline_metrics"],
+        "derived_metrics": summary["derived_metrics"],
+        "appendix_debug": summary["appendix_debug"],
+        "committee_final": summary["committee_final"],
+        "decision_trajectory": summary["decision_trajectory"],
+        "validation_stats": history["content"]["validation_stats"],
+        "failed_attempts": history["content"].get("failed_attempts", []),
+    }
+    condition_aggregate = aggregate_condition_results([run_report], condition_id=condition["condition_id"])
+
+    history["content"]["metrics"] = summary["headline_metrics"]
+    history["content"]["derived_metrics"] = summary["derived_metrics"]
+    history["content"]["appendix_debug"] = summary["appendix_debug"]
     history["content"]["committee_final"] = summary["committee_final"]
+    history["content"]["condition_aggregate"] = condition_aggregate
     write_file(history["content"], history["file"])
 
-    stem = Path(history["file"]).stem
     out_dir = Path(history["file"]).parent
     metrics_path = out_dir / f"metrics_{stem}.json"
+    condition_json_path = out_dir / f"condition_summary_{stem}.json"
+    condition_csv_path = out_dir / f"condition_headline_{stem}.csv"
     public_history_path = out_dir / f"public_history_{stem}.json"
     expert_csv_path = out_dir / f"expert_review_{stem}.csv"
 
-    metrics_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    metrics_payload = {
+        "run_report": run_report,
+        "condition_aggregate": condition_aggregate,
+    }
+    metrics_path.write_text(json.dumps(metrics_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    condition_json_path.write_text(json.dumps(condition_aggregate, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    condition_csv_row = {
+        "condition_id": condition_aggregate["headline_metrics"]["condition_id"],
+        "run_count": condition_aggregate["headline_metrics"]["run_count"],
+        "FinalCorrectExact": condition_aggregate["headline_metrics"]["FinalCorrectExact"],
+        "FinalCorrectType": condition_aggregate["headline_metrics"]["FinalCorrectType"],
+        "FinalAgreementExact": condition_aggregate["headline_metrics"]["FinalAgreementExact"],
+        "AnyAgreementExact": condition_aggregate["headline_metrics"]["AnyAgreementExact"],
+        "SeverityBias": condition_aggregate["headline_metrics"]["SeverityBias"],
+        "SeverityBiasMissingCount": condition_aggregate["headline_metrics"]["SeverityBiasMissingCount"],
+        "TrustHygieneRate": condition_aggregate["headline_metrics"]["TrustHygieneRate"],
+    }
+    with condition_csv_path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(condition_csv_row.keys()))
+        writer.writeheader()
+        writer.writerow(condition_csv_row)
+
     public_history = [
         {
+            "turn_index": slot.get("turn_index"),
             "public_turn_index": slot.get("public_turn_index"),
             "agent": slot["agent"],
             "public_answer": slot["public_answer"],
@@ -489,24 +552,36 @@ def main():
     ]
     public_history_path.write_text(json.dumps(public_history, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    final_committee = summary["committee_final"] or {}
+    final_committee_exact = final_committee.get("committee_exact")
+    final_committee_type = final_committee.get("committee_type")
+    final_label = NO_CONSENSUS
+    final_severity = ""
+    if isinstance(final_committee_exact, dict):
+        final_label = final_committee_exact["label"]
+        final_severity = final_committee_exact["severity"]
+    elif final_committee_type and final_committee_type != NO_CONSENSUS:
+        final_label = final_committee_type
+
     expert_row = {
+        "packet_id": scenario.get("scenario_id"),
+        "condition_id": condition["condition_id"],
         "run_id": stem,
-        "condition_id": condition.get("condition_id"),
-        "scenario_id": scenario.get("scenario_id"),
-        "final_committee_label": (summary["committee_final"] or {}).get("committee_exact_label")
-        or (summary["committee_final"] or {}).get("committee_type_label"),
-        "final_committee_severity": (summary["committee_final"] or {}).get("committee_exact_severity")
-        or (summary["committee_final"] or {}).get("committee_majority_severity"),
-        "final_agreement_exact": (summary["committee_final"] or {}).get("full_agreement_exact"),
-        "transcript_reference": str(Path(history["file"]).resolve()),
-        "agent_final_outputs_reference": str(Path(history["file"]).resolve()),
-        "expert_label": "",
-        "expert_severity": "",
-        "expert_score_argument_quality": "",
-        "expert_score_evidence_relevance": "",
-        "expert_score_defensibility_for_report": "",
-        "expert_would_accept_in_QA": "",
-        "expert_comments": "",
+        "final_committee_label": final_label,
+        "final_committee_severity": final_severity,
+        "final_agreement_exact": summary["headline_metrics"].get("FinalAgreementExact"),
+        "history_reference": str(Path(history["file"]).resolve()),
+        "public_history_reference": str(public_history_path.resolve()),
+        "q1_finding_type_correctness": "",
+        "q1_reviewer_type": "",
+        "q2_severity_appropriateness": "",
+        "q2_reviewer_severity": "",
+        "q3_evidence_support": "",
+        "q4_report_defensibility": "",
+        "q5_main_issue": "",
+        "q6_minimal_fix_needed": "",
+        "comment": "",
+        "reviewer": "",
     }
     with expert_csv_path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=list(expert_row.keys()))
@@ -516,11 +591,10 @@ def main():
     print("=====")
     print(f"History file: {history['file']}")
     print(f"Metrics file: {metrics_path}")
+    print(f"Condition summary JSON: {condition_json_path}")
+    print(f"Condition headline CSV: {condition_csv_path}")
     print(f"Public history file: {public_history_path}")
     print(f"Expert review CSV: {expert_csv_path}")
-    print("Final metrics:", json.dumps(summary["metrics"], ensure_ascii=False))
-    if summary["committee_final"]:
-        print("Final committee:", json.dumps(summary["committee_final"], ensure_ascii=False))
 
 
 if __name__ == "__main__":
