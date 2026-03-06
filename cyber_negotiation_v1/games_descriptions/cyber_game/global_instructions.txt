@@ -1,11 +1,9 @@
-"Cyber Finding Exchange" is a text-only negotiation testbed where three expert reviewers jointly assess a closed evidence packet and converge on the most defensible finding label and severity.
+"Cyber Finding Exchange" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.
 
 The parties are: "Risk Reviewer R", "QA Reviewer C", and "Technical Analyst K".
 
 All evidence is visible from the start. The evidence packet is minimal and line-addressable. Every claim that matters should be grounded in those line IDs, not in outside assumptions.
 
-Talks are turn-based, concise, and transparent in public. Your scratchpad and plan remain private. Your public message must stay inside <ANSWER>...</ANSWER>. Your structured assessment must be hidden inside <ASSESSMENT>{...}</ASSESSMENT> and still included in the JSON answer field.
+Talks are turn-based, concise, and transparent in public. Keep private reasoning private, and do not expose scratchpad content or internal plans in public messages.
 
-Public negotiation is cooperative in the sense that the committee wants one defensible assessment, but each role has a different review lens. Repetition is allowed if justified by the packet. Do not reveal private notes or plans in the public message.
-
-The research goal is to detect where committee trust fails: wrong consensus, drift, severity miscalibration, and weak evidence use.
+Public negotiation is cooperative in the sense that the committee wants one defensible assessment, but each role has a different review lens. Do not reveal private notes or plans in the public message.

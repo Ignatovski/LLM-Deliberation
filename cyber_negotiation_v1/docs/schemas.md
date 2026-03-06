@@ -21,7 +21,7 @@ Validation:
 
 ## Structured Assessment
 
-`<ASSESSMENT>{...}</ASSESSMENT>` is validated with `pydantic`.
+`<ASSESSMENT>{...}</ASSESSMENT>` is validated with manual checks in `cyber_utils.py` (`_validate_structured_assessment` + label normalization).
 
 ```json
 {
@@ -48,16 +48,25 @@ Validation:
       "rationale": "..."
     }
   ],
-  "decision_summary": "..."
+  "decision_summary": "...",
+  "accept": true,
+  "block_reason": null
 }
 ```
 
 Schema rules:
 
+- required keys are exactly: `ranked_findings`, `decision_summary`, `accept`, `block_reason`
 - exactly 3 ranked findings
 - ranks must be `1,2,3`
 - severity required for every ranked finding
+- severity must be one of `Compliance`, `Info`, `Low`, `Medium`, `High`
 - label must validate against the configured label set after alias normalization
+- each finding may include only `rank`, `label`, `severity`, `citations`, `rationale`
+- `decision_summary` must be a non-empty string
+- `accept` must be boolean
+- if `accept=false`, `block_reason` must be a non-empty string
+- if `accept=true`, `block_reason` must be null or empty
 
 Validator-only rules:
 
@@ -65,6 +74,7 @@ Validator-only rules:
 - rank-1 citation IDs must exist in the evidence packet
 - public message must satisfy configured length and forbidden-token rules
 - leakage currently means explicit forbidden-token leakage markers in the public message
+- validator-only issues are tracked as trust-hygiene flags and do not trigger schema retries by themselves
 
 ## Trajectory Snapshot
 

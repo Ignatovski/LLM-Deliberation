@@ -62,3 +62,8 @@
 - `condition_headline_*.csv` is the stable headline export for expert-facing tables.
 - `full_agreement_exact` now mirrors the sign-off-gated exact agreement state rather than plain exact unanimity.
 - In the expert-review CSV, `packet_id` is exported from the scenario's `scenario_id`.
+
+## Scenario Defaults
+
+- The first runnable command-injection scenario is `scenarios/command_injection_ping_001.json`.
+- Its conservative ground truth default is `CommandInjection` with severity `High`.

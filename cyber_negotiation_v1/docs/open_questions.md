@@ -28,6 +28,10 @@ These items remain intentionally documented instead of guessed.
 - Your table shows about `13` outputs for C5, but the scheduler enforces equal public-turn counts across 3 agents, so total public messages must be divisible by 3.
 - Current runnable default for C5 is `15`.
 
+7. First command-injection scenario severity target
+- The first runnable scenario currently uses ground truth `CommandInjection + High`.
+- If you want this scenario to be benchmarked as `Medium` instead, update `ground_truth/command_injection_ping_001.json`.
+
 ## Documented Differences From The Earlier Cyber V1 Patch
 
 1. Headline metrics reduced to the new 6-metric table
