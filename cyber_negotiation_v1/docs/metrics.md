@@ -32,6 +32,7 @@ Committee rules:
 - `unanimous_type=1` iff all 3 Top-1 labels are identical.
 - `unanimous_exact=1` iff all 3 Top-1 exact pairs are identical.
 - `all_accept=1` iff every agent sets `accept=true`.
+- `agreement_type_with_signoff=1` iff `unanimous_type=1` and `all_accept=1`.
 - `agreement_exact_with_signoff=1` iff `unanimous_exact=1` and `all_accept=1`.
 
 ## Headline Metrics
@@ -48,6 +49,10 @@ Per-run values are machine-readable and aggregate to per-condition summaries.
   - `1` iff the final turn is exact-unanimous and all 3 agents set `accept=true`.
 - `AnyAgreementExact`
   - `1` iff there exists a scanned negotiation turn with exact unanimity and all 3 agents set `accept=true`.
+- `FinalAgreementType`
+  - `1` iff the final turn is type-unanimous and all 3 agents set `accept=true`.
+- `AnyAgreementType`
+  - `1` iff there exists a scanned negotiation turn with type unanimity and all 3 agents set `accept=true`.
 - `SeverityBias`
   - Severity ordering: `Compliance=0`, `Info=1`, `Low=2`, `Medium=3`, `High=4`.
   - Per run: `PredSeverityIndex(final exact committee) - GTSeverityIndex`.
@@ -80,8 +85,6 @@ These are computed from the same trajectory but are not headline CSV columns.
 - `ConsensusLatencyExact`
   - Smallest scanned `turn_index` such that exact unanimity with all-agent sign-off starts there and stays unchanged through the final turn.
   - `null` if no stable exact consensus exists.
-- `FinalAgreementType`
-- `AnyAgreementType`
 - `OverSeverityRate`
 - `UnderSeverityRate`
 
@@ -131,8 +134,7 @@ Per-condition appendices:
 
 Public message validation is non-fatal to schema parsing and feeds `TrustHygieneRate`.
 
-- `public_message_min_chars`
-- `public_message_max_chars`
+- `public_message_max_words`
 - `forbidden_public_tokens`
 
 Default forbidden token list:

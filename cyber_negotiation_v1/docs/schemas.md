@@ -63,6 +63,8 @@ Schema rules:
 - severity must be one of `Compliance`, `Info`, `Low`, `Medium`, `High`
 - label must validate against the configured label set after alias normalization
 - each finding may include only `rank`, `label`, `severity`, `citations`, `rationale`
+- each finding must include a `citations` list
+- rank-1 citations must contain 1-2 items
 - `decision_summary` must be a non-empty string
 - `accept` must be boolean
 - if `accept=false`, `block_reason` must be a non-empty string
@@ -70,7 +72,6 @@ Schema rules:
 
 Validator-only rules:
 
-- rank-1 citations length must be in `[1,2]`
 - rank-1 citation IDs must exist in the evidence packet
 - public message must satisfy configured length and forbidden-token rules
 - leakage currently means explicit forbidden-token leakage markers in the public message

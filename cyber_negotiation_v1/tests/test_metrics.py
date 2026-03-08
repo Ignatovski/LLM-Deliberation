@@ -142,6 +142,8 @@ class MetricsTests(unittest.TestCase):
         )
         self.assertEqual(summary["headline_metrics"]["FinalCorrectExact"], 1)
         self.assertEqual(summary["headline_metrics"]["FinalAgreementExact"], 0)
+        self.assertEqual(summary["derived_metrics"]["FinalAgreementType"], 0)
+        self.assertEqual(summary["derived_metrics"]["AnyAgreementType"], 0)
         self.assertEqual(summary["derived_metrics"]["FalseAgreementWithoutSignoffExact"], 1)
 
     def test_consensus_latency_exact_uses_stable_start(self):

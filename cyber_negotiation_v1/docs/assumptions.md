@@ -29,18 +29,19 @@
 - Every structured assessment now includes `accept` and `block_reason`.
 - `accept=true` means the agent signs off on its current top-1 label and severity as report-defensible under its role lens.
 - `accept=false` means the agent refuses sign-off and must provide a short `block_reason`.
-- `FinalAgreementExact` and `AnyAgreementExact` now require both exact unanimity and `accept=true` from every participating agent.
-- Type-only agreement metrics remain plain label unanimity for now; the sign-off gate is applied only to the exact-agreement metrics.
+- `FinalAgreementExact` and `AnyAgreementExact` require both exact unanimity and `accept=true` from every participating agent.
+- `FinalAgreementType` and `AnyAgreementType` also require label unanimity plus `accept=true` from every participating agent.
 
 ## Public Message Validation
 
-- Current condition files set `public_message_min_chars=350` and `public_message_max_chars=1200`.
+- Current condition files set `public_message_max_words=1200` and enforce no minimum length.
 - These bounds are treated as validation flags, not schema failures.
 - Forbidden token detection is case-insensitive substring matching.
 
 ## Trust Hygiene Defaults
 
-- Citation count and citation line-ID validity are non-fatal validator checks that feed trust-hygiene logging.
+- Rank-1 citation count (`1..2`) is schema-enforced and triggers retries if violated.
+- Citation line-ID validity remains a non-fatal validator check that feeds trust-hygiene logging.
 - Leakage is currently only the explicit forbidden-token marker check in the public message.
 - A schema-invalid response after all retries aborts the run instead of fabricating a substitute assessment.
 - Aborted runs remain machine-readable in logs, but outcome/agreement metrics are left `null` rather than inferred from fake content.

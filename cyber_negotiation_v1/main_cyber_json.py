@@ -41,6 +41,8 @@ Rules:
 - answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.
 - plan: private next-step notes; omit or use "<PLAN></PLAN>" if none.
 - assessment.ranked_findings must contain ranks 1, 2, and 3.
+- Every ranked finding must include a `citations` list (use `[]` if none for non-rank-1 findings).
+- The rank-1 finding must include 1-2 line-ID citations (for example: ["L003","L010"]).
 - Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.
 - Labels must come from the configured label set.
 - assessment.accept must be true or false.
@@ -341,8 +343,7 @@ def main():
                 response_text,
                 line_ids=line_ids,
                 label_set=label_set,
-                public_message_min_chars=int(condition["public_message_min_chars"]),
-                public_message_max_chars=int(condition["public_message_max_chars"]),
+                public_message_max_words=int(condition["public_message_max_words"]),
                 forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
             )
             if parsed is not None:
@@ -421,8 +422,7 @@ def main():
                 response_text,
                 line_ids=line_ids,
                 label_set=label_set,
-                public_message_min_chars=int(condition["public_message_min_chars"]),
-                public_message_max_chars=int(condition["public_message_max_chars"]),
+                public_message_max_words=int(condition["public_message_max_words"]),
                 forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
             )
             if parsed is not None:

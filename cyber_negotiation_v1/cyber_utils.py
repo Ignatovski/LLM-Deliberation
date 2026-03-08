@@ -111,8 +111,7 @@ def read_condition_config(condition_path: str) -> Dict[str, Any]:
         "prior_round0",
         "reminder_text",
         "final_turn_announcement_window",
-        "public_message_min_chars",
-        "public_message_max_chars",
+        "public_message_max_words",
         "forbidden_public_tokens",
     }
     out: Dict[str, Any] = {}
@@ -130,8 +129,7 @@ def read_condition_config(condition_path: str) -> Dict[str, Any]:
                 "public_messages",
                 "json_max_retries",
                 "final_turn_announcement_window",
-                "public_message_min_chars",
-                "public_message_max_chars",
+                "public_message_max_words",
             }:
                 out[key] = int(val)
             elif key == "forbidden_public_tokens":
@@ -145,8 +143,7 @@ def read_condition_config(condition_path: str) -> Dict[str, Any]:
         "config_file",
         "json_max_retries",
         "prior_round0",
-        "public_message_min_chars",
-        "public_message_max_chars",
+        "public_message_max_words",
         "forbidden_public_tokens",
     }
     missing_common = sorted(required_common - set(out.keys()))
@@ -247,6 +244,7 @@ def _empty_turn_validation() -> Dict[str, Any]:
         "public_length_violation": False,
         "public_forbidden_token_violation": False,
         "forbidden_token_hits": [],
+        "public_message_word_count": 0,
         "public_message_char_count": 0,
         "leakage_flag": False,
         "leakage_marker_hits": [],
@@ -281,19 +279,21 @@ def validate_rank1_citations(rank1_citations: Sequence[str], valid_line_ids: Ite
 def validate_public_message(
     public_message: str,
     *,
-    length_min_chars: int,
-    length_max_chars: int,
+    length_max_words: int,
     forbidden_tokens: Sequence[str],
 ) -> Dict[str, Any]:
-    char_count = len((public_message or "").strip())
+    cleaned = (public_message or "").strip()
+    char_count = len(cleaned)
+    word_count = len(re.findall(r"\S+", cleaned))
     token_hits = find_forbidden_tokens(public_message, forbidden_tokens)
-    length_violation = char_count < int(length_min_chars) or char_count > int(length_max_chars)
+    length_violation = word_count > int(length_max_words)
     forbidden_violation = bool(token_hits)
     return {
         "invalid_public_message": length_violation or forbidden_violation,
         "public_length_violation": length_violation,
         "public_forbidden_token_violation": forbidden_violation,
         "forbidden_token_hits": token_hits,
+        "public_message_word_count": word_count,
         "public_message_char_count": char_count,
     }
 
@@ -361,13 +361,14 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
 
     normalized_ranked: List[Dict[str, Any]] = []
     seen_ranks = set()
+    rank_to_citations: Dict[int, List[str]] = {}
     for idx, item in enumerate(ranked_findings):
         if not isinstance(item, dict):
             return None, f"invalid assessment schema: ranked_findings[{idx}] must be an object"
         allowed_keys = {"rank", "label", "severity", "citations", "rationale"}
         item_keys = set(item.keys())
         extra = sorted(item_keys - allowed_keys)
-        missing = sorted({"rank", "label", "severity"} - item_keys)
+        missing = sorted({"rank", "label", "severity", "citations"} - item_keys)
         if extra or missing:
             parts = []
             if missing:
@@ -394,6 +395,7 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
             return None, f"invalid assessment schema: ranked_findings[{idx}].rationale must be a string if present"
 
         seen_ranks.add(rank)
+        rank_to_citations[rank] = list(citations)
         normalized_ranked.append(
             {
                 "rank": rank,
@@ -406,6 +408,9 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
 
     if seen_ranks != {1, 2, 3}:
         return None, "invalid assessment schema: ranks 1, 2, and 3 must all be present"
+    rank1_citations = rank_to_citations.get(1, [])
+    if not (1 <= len(rank1_citations) <= 2):
+        return None, "invalid assessment schema: ranked_findings rank=1 must include 1-2 citations"
 
     return {
         "ranked_findings": sorted(normalized_ranked, key=lambda finding: finding["rank"]),
@@ -420,8 +425,7 @@ def parse_structured_response(
     *,
     line_ids: List[str],
     label_set: Dict[str, Any],
-    public_message_min_chars: int,
-    public_message_max_chars: int,
+    public_message_max_words: int,
     forbidden_public_tokens: Sequence[str],
 ) -> Tuple[Optional[Dict[str, Any]], str, Dict[str, Any]]:
     validation = _empty_turn_validation()
@@ -477,8 +481,7 @@ def parse_structured_response(
     citation_validation = validate_rank1_citations(rank1.get("citations", []), line_ids)
     public_validation = validate_public_message(
         public_answer,
-        length_min_chars=public_message_min_chars,
-        length_max_chars=public_message_max_chars,
+        length_max_words=public_message_max_words,
         forbidden_tokens=forbidden_public_tokens,
     )
     leakage_validation = detect_leakage(public_answer, forbidden_tokens=forbidden_public_tokens)
@@ -613,6 +616,7 @@ def make_committee_snapshot(
     unanimous_type = agent_count > 0 and len(label_values) == agent_count and len(set(label_values)) == 1
     unanimous_exact = agent_count > 0 and len(exact_pairs) == agent_count and len(set(exact_pairs)) == 1
     all_accept = agent_count > 0 and len(accept_values) == agent_count and all(accept_values)
+    agreement_type_with_signoff = unanimous_type and all_accept
     agreement_exact_with_signoff = unanimous_exact and all_accept
     false_agreement_without_signoff = unanimous_exact and not all_accept
 
@@ -651,9 +655,10 @@ def make_committee_snapshot(
         "unanimous_type": unanimous_type,
         "unanimous_exact": unanimous_exact,
         "all_accept": all_accept,
+        "agreement_type_with_signoff": agreement_type_with_signoff,
         "agreement_exact_with_signoff": agreement_exact_with_signoff,
         "false_agreement_without_signoff": false_agreement_without_signoff,
-        "full_agreement_type": unanimous_type,
+        "full_agreement_type": agreement_type_with_signoff,
         "full_agreement_exact": agreement_exact_with_signoff,
     }
 
@@ -690,9 +695,9 @@ def compute_metrics(
 
     final_committee_type = final.get("committee_type") if final else None
     final_committee_exact = final.get("committee_exact") if final else None
-    final_unanimous_type = bool(final and final.get("unanimous_type"))
     final_unanimous_exact = bool(final and final.get("unanimous_exact"))
     final_all_accept = bool(final and final.get("all_accept"))
+    final_agreement_type_with_signoff = bool(final and final.get("agreement_type_with_signoff"))
 
     if gt_label is None or gt_severity is None or final is None:
         final_correct_exact = None
@@ -719,13 +724,17 @@ def compute_metrics(
         late_drift_correct_type = int(any_correct_consensus_type == 1 and final_correct_type == 0)
 
     final_agreement_exact = int(bool(final and final.get("agreement_exact_with_signoff"))) if final else None
-    final_agreement_type = int(final_unanimous_type) if final else None
+    final_agreement_type = int(final_agreement_type_with_signoff) if final else None
     any_agreement_exact = (
         int(any(bool(snap.get("agreement_exact_with_signoff")) for snap in negotiation_turns))
         if run_completed
         else None
     )
-    any_agreement_type = int(any(snap.get("unanimous_type") for snap in negotiation_turns)) if run_completed else None
+    any_agreement_type = (
+        int(any(bool(snap.get("agreement_type_with_signoff")) for snap in negotiation_turns))
+        if run_completed
+        else None
+    )
 
     wrong_consensus_exact = None
     if final_agreement_exact is not None and final_correct_exact is not None:

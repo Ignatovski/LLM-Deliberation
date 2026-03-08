@@ -3,6 +3,5 @@ mode=baseline
 config_file=config_c1_baseline_gpt5.txt
 json_max_retries=5
 prior_round0=
-public_message_min_chars=350
-public_message_max_chars=1200
+public_message_max_words=1200
 forbidden_public_tokens=PRIVATE|scratchpad|private notes|private plan|chain-of-thought|CoT

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from typing import Any, Dict, Optional
 
@@ -99,6 +100,39 @@ class CyberAgent:
             api_version=self._resolve_azure_api_version(),
         )
 
+    def _structured_output_schema(self) -> Dict[str, Any]:
+        return {
+            "name": "structured_output",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "scratchpad": {"type": "string"},
+                    "answer": {"type": "string"},
+                    "plan": {"type": "string"},
+                },
+                "required": ["scratchpad", "answer", "plan"],
+                "additionalProperties": False,
+            },
+            "strict": True,
+        }
+
+    def _extract_claude_tool_json(self, response: Any, *, tool_name: str) -> Optional[str]:
+        for block in getattr(response, "content", []) or []:
+            block_type = getattr(block, "type", None)
+            block_name = getattr(block, "name", None)
+            if block_type != "tool_use" or block_name != tool_name:
+                continue
+            payload = getattr(block, "input", None)
+            if not isinstance(payload, dict):
+                continue
+            expected_keys = {"scratchpad", "answer", "plan"}
+            if set(payload.keys()) != expected_keys:
+                continue
+            if not all(isinstance(payload[key], str) for key in expected_keys):
+                continue
+            return json.dumps(payload, ensure_ascii=False)
+        return None
+
     def execute_round(self, answer_history: Dict[str, Any], round_idx: int):
         slot_prompt = self.round_prompt_cls.build_slot_prompt(answer_history, round_idx)
         agent_response = self.prompt(
@@ -118,6 +152,7 @@ class CyberAgent:
     def prompt(self, msg: str, *, turn_id: str) -> str:
         del turn_id
         full_prompt = self.initial_prompt + "\n\n" + msg
+        json_schema = self._structured_output_schema()
 
         if self.claude:
             assert self.claude_client is not None
@@ -125,7 +160,19 @@ class CyberAgent:
                 model=self.model,
                 max_tokens=2048,
                 messages=[{"role": "user", "content": full_prompt}],
+                tools=[
+                    {
+                        "name": json_schema["name"],
+                        "description": "Return only the required structured output fields.",
+                        "input_schema": json_schema["schema"],
+                    }
+                ],
+                tool_choice={"type": "tool", "name": json_schema["name"]},
             )
+            tool_json = self._extract_claude_tool_json(response, tool_name=json_schema["name"])
+            if tool_json is not None:
+                return tool_json
+
             parts: list[str] = []
             for block in getattr(response, "content", []) or []:
                 text = getattr(block, "text", None)
@@ -134,20 +181,6 @@ class CyberAgent:
             return "".join(parts)
 
         assert self.client is not None
-        json_schema = {
-            "name": "structured_output",
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "scratchpad": {"type": "string"},
-                    "answer": {"type": "string"},
-                    "plan": {"type": "string"},
-                },
-                "required": ["scratchpad", "answer", "plan"],
-                "additionalProperties": False,
-            },
-            "strict": True,
-        }
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[{"role": "user", "content": full_prompt}],

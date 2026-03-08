@@ -76,8 +76,7 @@ class ValidationTests(unittest.TestCase):
             self._response(citations=["BAD"]),
             line_ids=LINE_IDS,
             label_set=LABEL_SET,
-            public_message_min_chars=50,
-            public_message_max_chars=500,
+            public_message_max_words=500,
             forbidden_public_tokens=["PRIVATE"],
         )
         self.assertIsNotNone(parsed)
@@ -90,12 +89,31 @@ class ValidationTests(unittest.TestCase):
             self._response(accept=False, block_reason=None),
             line_ids=LINE_IDS,
             label_set=LABEL_SET,
-            public_message_min_chars=50,
-            public_message_max_chars=500,
+            public_message_max_words=500,
             forbidden_public_tokens=["PRIVATE"],
         )
         self.assertIsNone(parsed)
         self.assertIn("block_reason", error)
+
+    def test_parse_requires_citations_key_in_ranked_findings(self):
+        payload = json.loads(self._response())
+        answer = payload["answer"]
+        before, tail = answer.split("<ASSESSMENT>", 1)
+        assessment_raw, after = tail.split("</ASSESSMENT>", 1)
+        assessment = json.loads(assessment_raw)
+        assessment["ranked_findings"][0].pop("citations", None)
+        payload["answer"] = before + "<ASSESSMENT>" + json.dumps(assessment) + "</ASSESSMENT>" + after
+
+        parsed, error, _ = parse_structured_response(
+            json.dumps(payload),
+            line_ids=LINE_IDS,
+            label_set=LABEL_SET,
+            public_message_max_words=500,
+            forbidden_public_tokens=["PRIVATE"],
+        )
+        self.assertIsNone(parsed)
+        self.assertIn("missing keys", error)
+        self.assertIn("citations", error)
 
     def test_leakage_heuristic_triggers_on_marker_tokens(self):
         result = detect_leakage(
@@ -125,8 +143,7 @@ class ValidationTests(unittest.TestCase):
                         "prior_round0=",
                         "reminder_text=test",
                         "final_turn_announcement_window=1",
-                        "public_message_min_chars=350",
-                        "public_message_max_chars=1200",
+                        "public_message_max_words=1200",
                         "forbidden_public_tokens=PRIVATE",
                         "typo_field=oops",
                     ]
