@@ -131,7 +131,7 @@ class CyberAgent:
                                         "citations": {"type": "array", "items": {"type": "string"}},
                                         "rationale": {"type": ["string", "null"]},
                                     },
-                                    "required": ["rank", "label", "severity", "citations"],
+                                    "required": ["rank", "label", "severity", "citations", "rationale"],
                                     "additionalProperties": False,
                                 },
                             },
