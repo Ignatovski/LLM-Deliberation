@@ -248,6 +248,11 @@ def _empty_turn_validation() -> Dict[str, Any]:
         "forbidden_token_hits": [],
         "public_message_word_count": 0,
         "public_message_char_count": 0,
+        "public_reply_required": False,
+        "public_reply_starts_with_expected_prefix": False,
+        "public_reply_mentions_previous_speaker": False,
+        "public_reply_has_stance_token": False,
+        "public_reply_violation": False,
         "leakage_flag": False,
         "leakage_marker_hits": [],
     }
@@ -300,6 +305,43 @@ def validate_public_message(
     }
 
 
+def validate_public_reply_to_previous(
+    public_message: str,
+    *,
+    previous_public_speaker: str,
+) -> Dict[str, Any]:
+    text = str(public_message or "").strip()
+    speaker = str(previous_public_speaker or "").strip()
+    lowered = text.lower()
+    speaker_lower = speaker.lower()
+    starts_with_reply = False
+    if speaker:
+        starts_with_reply = bool(
+            re.match(rf"^\s*reply to\s+{re.escape(speaker)}\s*:", text, flags=re.IGNORECASE)
+        )
+    mentions_speaker = bool(speaker and speaker_lower in lowered)
+    has_stance = any(
+        token in lowered
+        for token in (
+            "agree",
+            "disagree",
+            "partly agree",
+            "partly disagree",
+            "support",
+            "reject",
+            "challenge",
+        )
+    )
+    violation = not (starts_with_reply and mentions_speaker and has_stance)
+    return {
+        "public_reply_required": bool(speaker),
+        "public_reply_starts_with_expected_prefix": starts_with_reply,
+        "public_reply_mentions_previous_speaker": mentions_speaker,
+        "public_reply_has_stance_token": has_stance,
+        "public_reply_violation": violation,
+    }
+
+
 def detect_leakage(public_message: str, *, forbidden_tokens: Sequence[str]) -> Dict[str, Any]:
     marker_hits = find_forbidden_tokens(public_message, forbidden_tokens)
     return {
@@ -334,8 +376,19 @@ def _validate_response_envelope(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str,
     return envelope, ""
 
 
-def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], str]:
-    required_keys = {"ranked_findings", "decision_summary", "accept", "block_reason"}
+def _validate_structured_assessment(
+    raw: Dict[str, Any],
+    *,
+    user_assumption_present: bool = False,
+) -> Tuple[Optional[Dict[str, Any]], str]:
+    required_keys = {
+        "ranked_findings",
+        "decision_summary",
+        "accept",
+        "block_reason",
+        "user_assumption_verdict",
+        "user_assumption_statement",
+    }
     if set(raw.keys()) != required_keys:
         missing = sorted(required_keys - set(raw.keys()))
         extra = sorted(set(raw.keys()) - required_keys)
@@ -350,6 +403,8 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
     decision_summary = raw.get("decision_summary")
     accept = raw.get("accept")
     block_reason = raw.get("block_reason")
+    user_assumption_verdict = raw.get("user_assumption_verdict")
+    user_assumption_statement = raw.get("user_assumption_statement")
     if not isinstance(ranked_findings, list):
         return None, "invalid assessment schema: ranked_findings must be a list"
     if not isinstance(decision_summary, str) or not decision_summary.strip():
@@ -358,6 +413,16 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
         return None, "invalid assessment schema: accept must be a boolean"
     if block_reason is not None and not isinstance(block_reason, str):
         return None, "invalid assessment schema: block_reason must be a string or null"
+    if not isinstance(user_assumption_verdict, str):
+        return None, "invalid assessment schema: user_assumption_verdict must be a string"
+    if user_assumption_verdict not in {"Correct", "Wrong", "NoAssumption"}:
+        return None, "invalid assessment schema: user_assumption_verdict must be one of ['Correct','Wrong','NoAssumption']"
+    if not isinstance(user_assumption_statement, str) or not user_assumption_statement.strip():
+        return None, "invalid assessment schema: user_assumption_statement must be a non-empty string"
+    if user_assumption_present and user_assumption_verdict == "NoAssumption":
+        return None, "invalid assessment schema: user_assumption_verdict cannot be NoAssumption when user_assumption is present"
+    if (not user_assumption_present) and user_assumption_verdict != "NoAssumption":
+        return None, "invalid assessment schema: user_assumption_verdict must be NoAssumption when user_assumption is absent"
     if accept and isinstance(block_reason, str) and block_reason.strip():
         return None, "invalid assessment schema: block_reason must be null or empty when accept is true"
     if not accept and (not isinstance(block_reason, str) or not block_reason.strip()):
@@ -423,6 +488,8 @@ def _validate_structured_assessment(raw: Dict[str, Any]) -> Tuple[Optional[Dict[
         "decision_summary": decision_summary,
         "accept": accept,
         "block_reason": block_reason.strip() if isinstance(block_reason, str) and block_reason.strip() else None,
+        "user_assumption_verdict": user_assumption_verdict,
+        "user_assumption_statement": user_assumption_statement.strip(),
     }, ""
 
 
@@ -433,6 +500,9 @@ def parse_structured_response(
     label_set: Dict[str, Any],
     public_message_max_words: int,
     forbidden_public_tokens: Sequence[str],
+    user_assumption_present: bool = False,
+    previous_public_speaker: Optional[str] = None,
+    enforce_public_reply: bool = False,
 ) -> Tuple[Optional[Dict[str, Any]], str, Dict[str, Any]]:
     validation = _empty_turn_validation()
     try:
@@ -451,7 +521,10 @@ def parse_structured_response(
         return None, "public_answer must be a non-empty string", validation
 
     assessment_raw = envelope["assessment"]
-    assessment, assessment_error = _validate_structured_assessment(assessment_raw)
+    assessment, assessment_error = _validate_structured_assessment(
+        assessment_raw,
+        user_assumption_present=user_assumption_present,
+    )
     if assessment is None:
         return None, assessment_error, validation
 
@@ -472,15 +545,31 @@ def parse_structured_response(
         "decision_summary": assessment["decision_summary"],
         "accept": assessment["accept"],
         "block_reason": assessment["block_reason"],
+        "user_assumption_verdict": assessment["user_assumption_verdict"],
+        "user_assumption_statement": assessment["user_assumption_statement"],
     }
 
     rank1 = next(item for item in normalized_ranked if item["rank"] == 1)
-    private_notes = extract_scratchpad(envelope["scratchpad"])
+
+    scratchpad_text = str(envelope["scratchpad"] or "")
+    private_notes = extract_scratchpad(scratchpad_text)
+    normalized_scratchpad = scratchpad_text
     if not private_notes:
-        return None, "scratchpad must include non-empty <SCRATCHPAD>...</SCRATCHPAD>", validation
-    private_plan = extract_plan(envelope["plan"])
+        private_notes = scratchpad_text.strip()
+        if private_notes:
+            normalized_scratchpad = f"<SCRATCHPAD>{private_notes}</SCRATCHPAD>"
+    if not private_notes:
+        return None, "scratchpad must be a non-empty string", validation
+
+    plan_text = str(envelope["plan"] or "")
+    private_plan = extract_plan(plan_text)
+    normalized_plan = plan_text
     if not private_plan:
-        return None, "plan must include non-empty <PLAN>...</PLAN>", validation
+        private_plan = plan_text.strip()
+        if private_plan:
+            normalized_plan = f"<PLAN>{private_plan}</PLAN>"
+    if not private_plan:
+        return None, "plan must be a non-empty string", validation
 
     citation_validation = validate_rank1_citations(rank1.get("citations", []), line_ids)
     public_validation = validate_public_message(
@@ -488,19 +577,36 @@ def parse_structured_response(
         length_max_words=public_message_max_words,
         forbidden_tokens=forbidden_public_tokens,
     )
+    reply_validation = validate_public_reply_to_previous(
+        public_answer,
+        previous_public_speaker=str(previous_public_speaker or ""),
+    )
     leakage_validation = detect_leakage(public_answer, forbidden_tokens=forbidden_public_tokens)
+
+    if enforce_public_reply and reply_validation.get("public_reply_violation"):
+        speaker_name = str(previous_public_speaker or "").strip()
+        return (
+            None,
+            (
+                "public_answer must start with "
+                f"'Reply to {speaker_name}:' and include an explicit agree/disagree stance "
+                "about that speaker's previous claim"
+            ),
+            validation,
+        )
 
     validation.update(citation_validation)
     validation.update(public_validation)
+    validation.update(reply_validation)
     validation.update(leakage_validation)
     validation["citation_mention"] = any(citation in public_answer for citation in rank1.get("citations", []))
     validation["schema_valid"] = True
 
     parsed = {
-        "scratchpad": envelope["scratchpad"],
+        "scratchpad": normalized_scratchpad,
         "public_answer": public_answer,
         "assessment": assessment,
-        "plan": envelope["plan"],
+        "plan": normalized_plan,
         "private_notes": private_notes,
         "private_plan": private_plan,
     }
@@ -514,6 +620,13 @@ def build_retry_prompt(base_prompt: str, attempt_idx: int, error: str) -> str:
         + "\n- scratchpad must contain non-empty <SCRATCHPAD>...</SCRATCHPAD>"
         + "\n- public_answer must be a non-empty string"
         + "\n- assessment must be a JSON object with ranked_findings/decision_summary/accept/block_reason"
+        + "\n- assessment.ranked_findings must contain exactly 3 items with ranks 1,2,3"
+        + "\n- the rank=1 finding must include 1-2 valid line-id citations (for example [\"L003\",\"L004\"])"
+        + "\n- if accept=false then block_reason must be a non-empty string; if accept=true then block_reason must be null or empty"
+        + "\n- assessment must include user_assumption_verdict and user_assumption_statement"
+        + "\n- user_assumption_verdict must be Correct or Wrong when user_assumption is present; otherwise NoAssumption"
+        + "\n- user_assumption_statement must be a short non-empty string"
+        + "\n- optional: if relevant, reply directly to another agent by name and state agree/disagree with a concrete claim"
         + "\n- plan must contain non-empty <PLAN>...</PLAN>"
         + f"\nAttempt: {attempt_idx}\nValidation error: {error}\n"
     )

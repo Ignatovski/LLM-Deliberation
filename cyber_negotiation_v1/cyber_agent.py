@@ -94,10 +94,27 @@ class CyberAgent:
         except Exception as exc:  # noqa: BLE001
             raise RuntimeError("openai package is required for Azure OpenAI models") from exc
 
+        timeout_raw = (
+            self._resolve_env("AZURE_OPENAI_TIMEOUT_SECONDS", "OPENAI_TIMEOUT_SECONDS") or "90"
+        ).strip()
+        retries_raw = (
+            self._resolve_env("AZURE_OPENAI_MAX_RETRIES", "OPENAI_MAX_RETRIES") or "0"
+        ).strip()
+        try:
+            timeout_seconds = float(timeout_raw)
+        except Exception:
+            timeout_seconds = 90.0
+        try:
+            max_retries = int(retries_raw)
+        except Exception:
+            max_retries = 0
+
         return AzureOpenAI(
             azure_endpoint=endpoint,
             api_key=api_key,
             api_version=self._resolve_azure_api_version(),
+            timeout=timeout_seconds,
+            max_retries=max_retries,
         )
 
     def _structured_output_schema(self) -> Dict[str, Any]:
@@ -106,12 +123,8 @@ class CyberAgent:
             "schema": {
                 "type": "object",
                 "properties": {
-                    "scratchpad": {
-                        "type": "string",
-                        "minLength": 1,
-                        "pattern": r"^\s*<SCRATCHPAD>[\s\S]+</SCRATCHPAD>\s*$",
-                    },
-                    "public_answer": {"type": "string", "minLength": 1},
+                    "scratchpad": {"type": "string", "minLength": 1},
+                    "public_answer": {"type": "string"},
                     "assessment": {
                         "type": "object",
                         "properties": {
@@ -135,18 +148,26 @@ class CyberAgent:
                                     "additionalProperties": False,
                                 },
                             },
-                            "decision_summary": {"type": "string", "minLength": 1},
+                            "decision_summary": {"type": "string"},
                             "accept": {"type": "boolean"},
                             "block_reason": {"type": ["string", "null"]},
+                            "user_assumption_verdict": {
+                                "type": "string",
+                                "enum": ["Correct", "Wrong", "NoAssumption"],
+                            },
+                            "user_assumption_statement": {"type": "string"},
                         },
-                        "required": ["ranked_findings", "decision_summary", "accept", "block_reason"],
+                        "required": [
+                            "ranked_findings",
+                            "decision_summary",
+                            "accept",
+                            "block_reason",
+                            "user_assumption_verdict",
+                            "user_assumption_statement",
+                        ],
                         "additionalProperties": False,
                     },
-                    "plan": {
-                        "type": "string",
-                        "minLength": 1,
-                        "pattern": r"^\s*<PLAN>[\s\S]+</PLAN>\s*$",
-                    },
+                    "plan": {"type": "string", "minLength": 1},
                 },
                 "required": ["scratchpad", "public_answer", "assessment", "plan"],
                 "additionalProperties": False,
@@ -233,10 +254,30 @@ class CyberAgent:
             return "".join(parts)
 
         assert self.client is not None
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": full_prompt}],
-            response_format={"type": "json_schema", "json_schema": json_schema},
-        )
+        request_kwargs: Dict[str, Any] = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": full_prompt}],
+            "response_format": {"type": "json_schema", "json_schema": json_schema},
+        }
+
+        if "gpt-5" in self.model.lower():
+            reasoning_effort = (
+                self._resolve_env("AZURE_OPENAI_REASONING_EFFORT", "OPENAI_REASONING_EFFORT") or "minimal"
+            ).strip()
+            if reasoning_effort:
+                request_kwargs["reasoning_effort"] = reasoning_effort
+
+        max_completion_tokens_raw = (
+            self._resolve_env("AZURE_OPENAI_MAX_COMPLETION_TOKENS", "OPENAI_MAX_COMPLETION_TOKENS") or ""
+        ).strip()
+        if max_completion_tokens_raw:
+            try:
+                max_completion_tokens = int(max_completion_tokens_raw)
+                if max_completion_tokens > 0:
+                    request_kwargs["max_completion_tokens"] = max_completion_tokens
+            except Exception:
+                pass
+
+        response = self.client.chat.completions.create(**request_kwargs)
         content = response.choices[0].message.content
         return content or ""

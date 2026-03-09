@@ -5,6 +5,8 @@ import csv
 import json
 import os
 import random
+import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -65,11 +67,20 @@ class CyberInitialPromptJSON:
 
 
 class CyberSlotPromptJSON:
-    def __init__(self, agent_name: str, game_dir: str, agent_file_name: str, condition: Dict[str, Any]):
+    def __init__(
+        self,
+        agent_name: str,
+        game_dir: str,
+        agent_file_name: str,
+        condition: Dict[str, Any],
+        *,
+        has_user_assumption: bool = False,
+    ):
         self.agent_name = agent_name
         self.game_dir = game_dir
         self.agent_file_name = agent_file_name
         self.condition = condition
+        self.has_user_assumption = has_user_assumption
         instruction_path = os.path.join(
             game_dir, "individual_instructions", "cooperative", f"{agent_file_name}.txt"
         )
@@ -77,16 +88,34 @@ class CyberSlotPromptJSON:
 
     def build_round0_prompt(self, history: Dict[str, Any]):
         del history
-        return (
+        prompt = (
             "Round 0 independent assessment. All evidence is already visible. "
             "Produce your own initial cyber finding assessment before public negotiation begins.\n"
-            "Return only one JSON object matching the required output schema."
+            "Output constraints: ranked_findings must have exactly three items with ranks 1,2,3; "
+            "the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); "
+            "if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\n"
+            "Return only one JSON object matching the required output schema.\n"
         )
+        if self.has_user_assumption:
+            prompt += (
+                "The evidence packet includes a user_assumption. You must evaluate it and set assessment.user_assumption_verdict "
+                "to Correct or Wrong with a short assessment.user_assumption_statement. "
+                "Also include one final sentence in public_answer stating whether the user_assumption is correct or wrong.\n"
+            )
+        else:
+            prompt += (
+                "No user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and "
+                "assessment.user_assumption_statement to a short confirmation.\n"
+            )
+        return prompt
 
     def build_slot_prompt(self, history: Dict[str, Any], round_idx: int, *_):
         history.setdefault("rounds", [])
         history.setdefault("plan", {})
         history_text, last_plan = format_history(self.agent_name, history, window=6)
+        previous_public_speaker = ""
+        if history.get("rounds"):
+            previous_public_speaker = str(history["rounds"][-1].get("agent", "")).strip()
         prompt = "Review the latest public negotiation history:\n"
         prompt += f"<HISTORY>{history_text}</HISTORY>\n" if history_text else "<HISTORY></HISTORY>\n"
         if self.condition.get("reminder_text"):
@@ -95,7 +124,34 @@ class CyberSlotPromptJSON:
             prompt += f"Your previous notes were <PREV_PLAN>{last_plan}</PREV_PLAN>.\n"
         if history.get("_current_final_turn"):
             prompt += "This is the final public turn. Commit to your most defensible assessment.\n"
+        if previous_public_speaker:
+            prompt += (
+                f"Optional negotiation behavior: you may directly reply to {previous_public_speaker} "
+                f"(for example: 'Reply to {previous_public_speaker}: ...') and state agree/disagree "
+                "with one concrete claim before your own update.\n"
+            )
+        else:
+            prompt += (
+                "No previous public speaker exists yet. You may open with your position and optionally "
+                "ask one specific challenge question to another agent by name.\n"
+            )
         prompt += f"Current public turn index: {round_idx + 1}\n"
+        prompt += (
+            "Output constraints: ranked_findings must have exactly three items with ranks 1,2,3; "
+            "the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); "
+            "if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\n"
+        )
+        if self.has_user_assumption:
+            prompt += (
+                "The evidence packet includes a user_assumption. Discuss it in your reasoning and set "
+                "assessment.user_assumption_verdict to Correct or Wrong with a short assessment.user_assumption_statement. "
+                "End public_answer with one sentence stating whether the user_assumption is correct or wrong.\n"
+            )
+        else:
+            prompt += (
+                "No user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and "
+                "assessment.user_assumption_statement to a short confirmation.\n"
+            )
         prompt += "Return only one JSON object matching the required output schema."
         return prompt
 
@@ -158,7 +214,12 @@ def main():
     parser.add_argument("--temp", type=float, default=0.0)
     parser.add_argument("--agents_num", type=int, default=0)
     parser.add_argument("--rounds_num", type=int, default=6, help="Legacy CLI field; condition files are authoritative")
-    parser.add_argument("--output_dir", type=str, default="./games_descriptions/cyber_game/output/")
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="",
+        help="Root output directory. If omitted, defaults to <game_dir>/output",
+    )
     parser.add_argument("--game_dir", type=str, default="./games_descriptions/cyber_game")
     parser.add_argument("--config_file", type=str, default="config.txt", help="Polynomial-style agent config file")
     parser.add_argument("--condition_file", type=str, default="conditions/C1.txt", help="Polynomial-style key=value condition file")
@@ -189,6 +250,9 @@ def main():
     scenario_name = args.scenario_file or config.get("default_scenario", "placeholder_webapp_001.json")
     scenario_path = scenario_name if os.path.isabs(scenario_name) else os.path.join(args.game_dir, "scenarios", scenario_name)
     scenario = load_json(scenario_path)
+    user_assumption_present = isinstance(scenario.get("user_assumption"), str) and bool(
+        scenario.get("user_assumption", "").strip()
+    )
 
     ground_truth_name = args.ground_truth_file or f"{Path(scenario_name).stem}.json"
     ground_truth_path = (
@@ -237,7 +301,13 @@ def main():
             condition,
             label_set,
         )
-        round_prompt = CyberSlotPromptJSON(agent["name"], args.game_dir, agent["file_name"], condition)
+        round_prompt = CyberSlotPromptJSON(
+            agent["name"],
+            args.game_dir,
+            agent["file_name"],
+            condition,
+            has_user_assumption=user_assumption_present,
+        )
         agents[agent["name"]] = {
             "instance": CyberAgent(
                 init_prompt,
@@ -250,7 +320,10 @@ def main():
             )
         }
 
-    output_dir = os.path.join(args.output_dir, args.exp_name)
+    output_root = args.output_dir.strip() if isinstance(args.output_dir, str) else ""
+    if not output_root:
+        output_root = os.path.join(args.game_dir, "output")
+    output_dir = os.path.join(output_root, args.exp_name)
     round_assign, _, public_start, history = create_outfiles(args, output_dir)
     del round_assign
     history.setdefault("content", {})
@@ -278,6 +351,7 @@ def main():
         "json_retry_count": 0,
         "citation_violation_turns": 0,
         "invalid_public_turns": 0,
+        "non_reply_turns": 0,
         "leakage_turns": 0,
         "citation_mention_turns": 0,
     }
@@ -320,6 +394,8 @@ def main():
             stats["citation_violation_turns"] += 1
         if validation.get("invalid_public_message"):
             stats["invalid_public_turns"] += 1
+        if validation.get("public_reply_violation"):
+            stats["non_reply_turns"] += 1
         if validation.get("leakage_flag"):
             stats["leakage_turns"] += 1
         if validation.get("citation_mention"):
@@ -329,7 +405,31 @@ def main():
 
     run_completed = True
 
+    def _fmt_committee_exact(value: Any) -> str:
+        if isinstance(value, dict):
+            label = str(value.get("label", "")).strip()
+            severity = str(value.get("severity", "")).strip()
+            if label and severity:
+                return f"{label}/{severity}"
+            if label:
+                return label
+            if severity:
+                return severity
+        return str(value)
+
+    print("=====", flush=True)
+    print("Cyber negotiation run started", flush=True)
+    print(f"Condition: {condition.get('condition_id')}", flush=True)
+    print(f"Scenario: {scenario.get('scenario_id')} ({scenario.get('title', 'n/a')})", flush=True)
+    print(f"Round0 agents: {', '.join(agent_names)}", flush=True)
+    if public_schedule:
+        print(f"Public schedule ({len(public_schedule)} turns): {' -> '.join(public_schedule)}", flush=True)
+    else:
+        print("Public schedule: baseline mode (no public turns)", flush=True)
+
     for agent in agents_cfg:
+        print("=====", flush=True)
+        print(f"Round0 | Agent: {agent['name']}", flush=True)
         attempts = 0
         parsed = None
         prompt = ""
@@ -339,17 +439,46 @@ def main():
         validation: Dict[str, Any] = {}
         while True:
             attempts += 1
-            prompt, full_prompt_sent, response = agents[agent["name"]]["instance"].execute_round0(history["content"])
-            response_text = ensure_text(response)
+            try:
+                prompt, full_prompt_sent, response = agents[agent["name"]]["instance"].execute_round0(history["content"])
+                response_text = ensure_text(response)
+            except Exception as exc:  # noqa: BLE001
+                error = f"api_error: {type(exc).__name__}: {exc}"
+                response_text = ""
+                print(
+                    f"[round0][{agent['name']}] API error "
+                    f"(attempt {attempts}/{max_attempts_per_turn or 'inf'}): {error}",
+                    flush=True,
+                )
+                record_failed_attempt(
+                    agent["name"],
+                    "round0",
+                    attempts,
+                    prompt,
+                    full_prompt_sent,
+                    response_text,
+                    error,
+                )
+                if max_attempts_per_turn and attempts >= max_attempts_per_turn:
+                    break
+                if args.retry_sleep:
+                    time.sleep(args.retry_sleep)
+                continue
             parsed, error, validation = parse_structured_response(
                 response_text,
                 line_ids=line_ids,
                 label_set=label_set,
                 public_message_max_words=int(condition["public_message_max_words"]),
                 forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
+                user_assumption_present=user_assumption_present,
             )
             if parsed is not None:
                 break
+            print(
+                f"[round0][{agent['name']}] invalid structured output "
+                f"(attempt {attempts}/{max_attempts_per_turn or 'inf'}): {error}",
+                flush=True,
+            )
             record_failed_attempt(
                 agent["name"],
                 "round0",
@@ -375,6 +504,10 @@ def main():
                 "error": error,
                 "response_text": response_text,
             }
+            print(
+                f"[round0][{agent['name']}] aborted after {attempts} attempts. Last error: {error}",
+                flush=True,
+            )
             write_file(history["content"], history["file"])
             run_completed = False
             break
@@ -398,9 +531,22 @@ def main():
                 "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
                 "accept": parsed["assessment"]["accept"],
                 "block_reason": parsed["assessment"]["block_reason"],
+                "user_assumption_verdict": parsed["assessment"].get("user_assumption_verdict"),
+                "user_assumption_statement": parsed["assessment"].get("user_assumption_statement"),
                 "full_prompt_sent": full_prompt_sent,
             },
         )
+        rank1 = parsed["assessment"]["ranked_findings"][0]
+        print(
+            f"[round0][{agent['name']}] top1={rank1['label']}/{rank1['severity']} "
+            f"accept={parsed['assessment']['accept']} "
+            f"block_reason={parsed['assessment']['block_reason']!r} "
+            f"user_assumption_verdict={parsed['assessment'].get('user_assumption_verdict')!r}",
+            flush=True,
+        )
+        public_preview = str(parsed.get("public_answer") or "").strip()
+        if public_preview:
+            print(f"[round0][{agent['name']}] public_answer: {public_preview}", flush=True)
 
     latest_by_agent_round0 = {
         slot["agent"]: {"assessment": slot["assessment"]}
@@ -426,6 +572,11 @@ def main():
     for public_idx, current_agent in enumerate(public_schedule[public_start:], start=public_start):
         if not run_completed:
             break
+        print("=====", flush=True)
+        print(
+            f"Public turn {public_idx + 1}/{len(public_schedule)} | Speaker: {current_agent}",
+            flush=True,
+        )
         history["content"]["_current_final_turn"] = public_idx >= (
             len(public_schedule) - int(condition["final_turn_announcement_window"])
         )
@@ -438,19 +589,55 @@ def main():
         validation = {}
         while True:
             attempts += 1
-            prompt, full_prompt_sent, response = agents[current_agent]["instance"].execute_round(
-                history["content"], public_idx
+            try:
+                prompt, full_prompt_sent, response = agents[current_agent]["instance"].execute_round(
+                    history["content"], public_idx
+                )
+                response_text = ensure_text(response)
+            except Exception as exc:  # noqa: BLE001
+                error = f"api_error: {type(exc).__name__}: {exc}"
+                response_text = ""
+                print(
+                    f"[public {public_idx + 1}][{current_agent}] API error "
+                    f"(attempt {attempts}/{max_attempts_per_turn or 'inf'}): {error}",
+                    flush=True,
+                )
+                record_failed_attempt(
+                    current_agent,
+                    "public",
+                    attempts,
+                    prompt,
+                    full_prompt_sent,
+                    response_text,
+                    error,
+                )
+                if max_attempts_per_turn and attempts >= max_attempts_per_turn:
+                    break
+                if args.retry_sleep:
+                    time.sleep(args.retry_sleep)
+                continue
+            previous_public_speaker = (
+                str(history["content"]["rounds"][-1].get("agent", "")).strip()
+                if history["content"].get("rounds")
+                else ""
             )
-            response_text = ensure_text(response)
             parsed, error, validation = parse_structured_response(
                 response_text,
                 line_ids=line_ids,
                 label_set=label_set,
                 public_message_max_words=int(condition["public_message_max_words"]),
                 forbidden_public_tokens=list(condition["forbidden_public_tokens"]),
+                user_assumption_present=user_assumption_present,
+                previous_public_speaker=previous_public_speaker or None,
+                enforce_public_reply=False,
             )
             if parsed is not None:
                 break
+            print(
+                f"[public {public_idx + 1}][{current_agent}] invalid structured output "
+                f"(attempt {attempts}/{max_attempts_per_turn or 'inf'}): {error}",
+                flush=True,
+            )
             record_failed_attempt(
                 current_agent,
                 "public",
@@ -477,6 +664,10 @@ def main():
                 "error": error,
                 "response_text": response_text,
             }
+            print(
+                f"[public {public_idx + 1}][{current_agent}] aborted after {attempts} attempts. Last error: {error}",
+                flush=True,
+            )
             write_file(history["content"], history["file"])
             run_completed = False
             break
@@ -503,21 +694,42 @@ def main():
                 "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
                 "accept": parsed["assessment"]["accept"],
                 "block_reason": parsed["assessment"]["block_reason"],
+                "user_assumption_verdict": parsed["assessment"].get("user_assumption_verdict"),
+                "user_assumption_statement": parsed["assessment"].get("user_assumption_statement"),
                 "full_prompt_sent": full_prompt_sent,
             },
         )
         latest_by_agent_public[current_agent] = {"assessment": parsed["assessment"]}
-        history["content"]["decision_trajectory"].append(
-            make_committee_snapshot(
-                public_idx + 1,
-                "public",
-                latest_by_agent_public,
-                public_turn_index=public_idx,
-                speaker=current_agent,
-                expected_agents=agent_names,
-            )
+        snapshot = make_committee_snapshot(
+            public_idx + 1,
+            "public",
+            latest_by_agent_public,
+            public_turn_index=public_idx,
+            speaker=current_agent,
+            expected_agents=agent_names,
         )
+        history["content"]["decision_trajectory"].append(snapshot)
         write_file(history["content"], history["file"])
+
+        rank1 = parsed["assessment"]["ranked_findings"][0]
+        public_answer = str(parsed.get("public_answer") or "").strip()
+        print(f"{current_agent} public answer:", flush=True)
+        print(public_answer or "(empty)", flush=True)
+        print(
+            f"[assessment] top1={rank1['label']}/{rank1['severity']} "
+            f"accept={parsed['assessment']['accept']} "
+            f"block_reason={parsed['assessment']['block_reason']!r} "
+            f"user_assumption_verdict={parsed['assessment'].get('user_assumption_verdict')!r}",
+            flush=True,
+        )
+        print(
+            "[committee] "
+            f"committee_exact={_fmt_committee_exact(snapshot.get('committee_exact'))} | "
+            f"all_accept={snapshot.get('all_accept')} | "
+            f"agreement_exact_with_signoff={snapshot.get('agreement_exact_with_signoff')} | "
+            f"false_agreement_without_signoff={snapshot.get('false_agreement_without_signoff')}",
+            flush=True,
+        )
 
     history["content"].pop("_current_final_turn", None)
     if run_completed and history["content"]["run_status"] == "running":
@@ -621,6 +833,27 @@ def main():
         writer = csv.DictWriter(fh, fieldnames=list(expert_row.keys()))
         writer.writeheader()
         writer.writerow(expert_row)
+
+    report_path = out_dir / f"report_{stem}.html"
+    report_script = Path(__file__).resolve().parent / "build_cyber_report.py"
+    try:
+        subprocess.run(
+            [
+                sys.executable,
+                str(report_script),
+                "--run_dir",
+                str(out_dir),
+                "--run_stem",
+                stem,
+                "--output",
+                str(report_path),
+            ],
+            check=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"Warning: auto report generation failed: {exc}", flush=True)
+    else:
+        print(f"HTML report file: {report_path}", flush=True)
 
     print("=====")
     print(f"History file: {history['file']}")
