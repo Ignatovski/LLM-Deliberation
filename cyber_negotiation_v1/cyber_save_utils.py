@@ -3,9 +3,7 @@ from __future__ import annotations
 import json
 import os
 import time
-from typing import Dict, Optional
-
-from cyber_utils import extract_assessment, extract_plan, extract_public_answer, extract_scratchpad
+from typing import Any, Dict, Optional
 
 
 def write_file(log_dict, output_file):
@@ -33,7 +31,19 @@ def create_outfiles(args, output_dir):
     return round_assign, round_start, public_start, history
 
 
-def save_conversation(history, agent_name, full_answer, prompt, phase="public", extra_fields: Optional[Dict] = None):
+def save_conversation(
+    history,
+    agent_name,
+    full_answer,
+    prompt,
+    phase="public",
+    extra_fields: Optional[Dict] = None,
+    *,
+    public_answer: str,
+    private_notes: str,
+    private_plan: str,
+    assessment: Optional[Dict[str, Any]],
+):
     history["content"].setdefault("rounds", [])
     history["content"].setdefault("round0", [])
     history["content"].setdefault("plan", {})
@@ -45,10 +55,6 @@ def save_conversation(history, agent_name, full_answer, prompt, phase="public", 
     elif phase == "round0":
         history["content"]["finished_rounds"] += 1
 
-    public_answer = extract_public_answer(full_answer)
-    private_plan = extract_plan(full_answer)
-    private_notes = extract_scratchpad(full_answer)
-    assessment = extract_assessment(full_answer) if "<ASSESSMENT>" in full_answer else None
     slot = {
         "agent": agent_name,
         "prompt": prompt,

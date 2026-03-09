@@ -306,8 +306,8 @@ def detect_leakage(public_message: str, *, forbidden_tokens: Sequence[str]) -> D
     }
 
 
-def _validate_response_envelope(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str, str]], str]:
-    allowed_keys = {"scratchpad", "answer", "plan"}
+def _validate_response_envelope(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], str]:
+    allowed_keys = {"scratchpad", "public_answer", "assessment", "plan"}
     raw_keys = set(raw.keys())
     if raw_keys != allowed_keys:
         missing = sorted(allowed_keys - raw_keys)
@@ -319,12 +319,16 @@ def _validate_response_envelope(raw: Dict[str, Any]) -> Tuple[Optional[Dict[str,
             parts.append(f"unexpected keys: {extra}")
         return None, "invalid response envelope: " + ", ".join(parts)
 
-    envelope: Dict[str, str] = {}
-    for key in ("scratchpad", "answer", "plan"):
+    envelope: Dict[str, Any] = {}
+    for key in ("scratchpad", "public_answer", "plan"):
         value = raw.get(key)
         if not isinstance(value, str):
             return None, f"invalid response envelope: {key} must be a string"
         envelope[key] = value
+    assessment = raw.get("assessment")
+    if not isinstance(assessment, dict):
+        return None, "invalid response envelope: assessment must be an object"
+    envelope["assessment"] = assessment
     return envelope, ""
 
 
@@ -440,17 +444,11 @@ def parse_structured_response(
     if envelope is None:
         return None, envelope_error, validation
 
-    public_answer = extract_public_answer(envelope["answer"])
+    public_answer = str(envelope["public_answer"]).strip()
     if not public_answer:
-        return None, "answer must include <ANSWER>...</ANSWER>", validation
+        return None, "public_answer must be a non-empty string", validation
 
-    try:
-        assessment_raw = extract_assessment(envelope["answer"])
-    except Exception as exc:
-        return None, f"invalid <ASSESSMENT> JSON: {exc}", validation
-    if assessment_raw is None or not isinstance(assessment_raw, dict):
-        return None, "answer must include <ASSESSMENT>{...}</ASSESSMENT>", validation
-
+    assessment_raw = envelope["assessment"]
     assessment, assessment_error = _validate_structured_assessment(assessment_raw)
     if assessment is None:
         return None, assessment_error, validation
@@ -475,8 +473,12 @@ def parse_structured_response(
     }
 
     rank1 = next(item for item in normalized_ranked if item["rank"] == 1)
-    private_notes = extract_scratchpad(envelope["scratchpad"]) or envelope["scratchpad"].strip()
-    private_plan = extract_plan(envelope["plan"]) or envelope["plan"].strip()
+    private_notes = extract_scratchpad(envelope["scratchpad"])
+    if not private_notes:
+        return None, "scratchpad must include non-empty <SCRATCHPAD>...</SCRATCHPAD>", validation
+    private_plan = extract_plan(envelope["plan"])
+    if not private_plan:
+        return None, "plan must include non-empty <PLAN>...</PLAN>", validation
 
     citation_validation = validate_rank1_citations(rank1.get("citations", []), line_ids)
     public_validation = validate_public_message(
@@ -494,12 +496,11 @@ def parse_structured_response(
 
     parsed = {
         "scratchpad": envelope["scratchpad"],
-        "answer": envelope["answer"],
+        "public_answer": public_answer,
+        "assessment": assessment,
         "plan": envelope["plan"],
         "private_notes": private_notes,
         "private_plan": private_plan,
-        "public_answer": public_answer,
-        "assessment": assessment,
     }
     return parsed, "", validation
 
@@ -507,7 +508,11 @@ def parse_structured_response(
 def build_retry_prompt(base_prompt: str, attempt_idx: int, error: str) -> str:
     return (
         base_prompt
-        + "\n\nYour previous response was invalid. Return ONLY one valid JSON object with keys scratchpad/answer/plan."
+        + "\n\nYour previous response was invalid. Return ONLY one valid JSON object with keys scratchpad/public_answer/assessment/plan."
+        + "\n- scratchpad must contain non-empty <SCRATCHPAD>...</SCRATCHPAD>"
+        + "\n- public_answer must be a non-empty string"
+        + "\n- assessment must be a JSON object with ranked_findings/decision_summary/accept/block_reason"
+        + "\n- plan must contain non-empty <PLAN>...</PLAN>"
         + f"\nAttempt: {attempt_idx}\nValidation error: {error}\n"
     )
 

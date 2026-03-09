@@ -12,6 +12,8 @@ Use only the provided packet evidence.
 Do not invent facts, tool outputs, CVEs, or observations that are not present in the packet.
 Keep private reasoning private.
 Do not expose scratchpad content, hidden plans, or internal notes in public messages.
+Always provide meaningful private reasoning notes and a concrete private next-step plan each turn.
+When you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.
 
 Context
 The parties are: "Risk Reviewer R", "QA Reviewer C", and "Technical Analyst K".

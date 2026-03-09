@@ -106,11 +106,49 @@ class CyberAgent:
             "schema": {
                 "type": "object",
                 "properties": {
-                    "scratchpad": {"type": "string"},
-                    "answer": {"type": "string"},
-                    "plan": {"type": "string"},
+                    "scratchpad": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": r"^\s*<SCRATCHPAD>[\s\S]+</SCRATCHPAD>\s*$",
+                    },
+                    "public_answer": {"type": "string", "minLength": 1},
+                    "assessment": {
+                        "type": "object",
+                        "properties": {
+                            "ranked_findings": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "rank": {"type": "integer", "enum": [1, 2, 3]},
+                                        "label": {"type": "string"},
+                                        "severity": {
+                                            "type": "string",
+                                            "enum": ["Compliance", "Info", "Low", "Medium", "High"],
+                                        },
+                                        "citations": {"type": "array", "items": {"type": "string"}},
+                                        "rationale": {"type": ["string", "null"]},
+                                    },
+                                    "required": ["rank", "label", "severity", "citations"],
+                                    "additionalProperties": False,
+                                },
+                            },
+                            "decision_summary": {"type": "string", "minLength": 1},
+                            "accept": {"type": "boolean"},
+                            "block_reason": {"type": ["string", "null"]},
+                        },
+                        "required": ["ranked_findings", "decision_summary", "accept", "block_reason"],
+                        "additionalProperties": False,
+                    },
+                    "plan": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": r"^\s*<PLAN>[\s\S]+</PLAN>\s*$",
+                    },
                 },
-                "required": ["scratchpad", "answer", "plan"],
+                "required": ["scratchpad", "public_answer", "assessment", "plan"],
                 "additionalProperties": False,
             },
             "strict": True,
@@ -125,33 +163,47 @@ class CyberAgent:
             payload = getattr(block, "input", None)
             if not isinstance(payload, dict):
                 continue
-            expected_keys = {"scratchpad", "answer", "plan"}
+            expected_keys = {"scratchpad", "public_answer", "assessment", "plan"}
             if set(payload.keys()) != expected_keys:
                 continue
-            if not all(isinstance(payload[key], str) for key in expected_keys):
+            if not isinstance(payload.get("scratchpad"), str):
+                continue
+            if not isinstance(payload.get("public_answer"), str):
+                continue
+            if not isinstance(payload.get("plan"), str):
+                continue
+            if not isinstance(payload.get("assessment"), dict):
                 continue
             return json.dumps(payload, ensure_ascii=False)
         return None
 
     def execute_round(self, answer_history: Dict[str, Any], round_idx: int):
         slot_prompt = self.round_prompt_cls.build_slot_prompt(answer_history, round_idx)
+        full_prompt = self.build_full_prompt(slot_prompt)
         agent_response = self.prompt(
             slot_prompt,
             turn_id=f"public_{round_idx}_{self.role_id}",
+            full_prompt=full_prompt,
         )
-        return slot_prompt, agent_response
+        return slot_prompt, full_prompt, agent_response
 
     def execute_round0(self, answer_history: Dict[str, Any]):
         slot_prompt = self.round_prompt_cls.build_round0_prompt(answer_history)
+        full_prompt = self.build_full_prompt(slot_prompt)
         agent_response = self.prompt(
             slot_prompt,
             turn_id=f"round0_{self.role_id}",
+            full_prompt=full_prompt,
         )
-        return slot_prompt, agent_response
+        return slot_prompt, full_prompt, agent_response
 
-    def prompt(self, msg: str, *, turn_id: str) -> str:
+    def build_full_prompt(self, msg: str) -> str:
+        return self.initial_prompt + "\n\n" + msg
+
+    def prompt(self, msg: str, *, turn_id: str, full_prompt: Optional[str] = None) -> str:
         del turn_id
-        full_prompt = self.initial_prompt + "\n\n" + msg
+        if full_prompt is None:
+            full_prompt = self.build_full_prompt(msg)
         json_schema = self._structured_output_schema()
 
         if self.claude:

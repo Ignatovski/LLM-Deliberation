@@ -1,0 +1,469 @@
+from __future__ import annotations
+
+import argparse
+import html
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Tuple
+
+
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def detect_run_files(run_dir: Path, stem: str | None) -> Dict[str, Path]:
+    if stem:
+        history_path = run_dir / f"{stem}.json"
+        if not history_path.exists():
+            raise FileNotFoundError(f"History file not found: {history_path}")
+    else:
+        history_candidates = sorted(run_dir.glob("history*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if not history_candidates:
+            raise FileNotFoundError(f"No history*.json files found in {run_dir}")
+        history_path = history_candidates[0]
+        stem = history_path.stem
+
+    metrics_path = run_dir / f"metrics_{stem}.json"
+    condition_path = run_dir / f"condition_summary_{stem}.json"
+    public_path = run_dir / f"public_history_{stem}.json"
+
+    return {
+        "history": history_path,
+        "metrics": metrics_path,
+        "condition_summary": condition_path,
+        "public_history": public_path,
+        "stem": Path(stem),
+    }
+
+
+def to_rows(d: Dict[str, Any]) -> str:
+    rows = []
+    for k, v in d.items():
+        rows.append(
+            "<tr>"
+            f"<th>{html.escape(str(k))}</th>"
+            f"<td>{html.escape(json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else str(v))}</td>"
+            "</tr>"
+        )
+    return "\n".join(rows)
+
+
+def svg_line_chart_binary(series: Dict[str, List[int]], width: int = 960, height: int = 240) -> str:
+    pad = 36
+    w = width - 2 * pad
+    h = height - 2 * pad
+    colors = ["#0b84f3", "#f39c12", "#2ecc71", "#e74c3c"]
+    max_len = max((len(v) for v in series.values()), default=0)
+    if max_len <= 1:
+        return "<p>Not enough points for trajectory chart.</p>"
+
+    parts = [
+        f'<svg viewBox="0 0 {width} {height}" width="100%" height="{height}" role="img" aria-label="Binary trajectory chart">',
+        '<rect x="0" y="0" width="100%" height="100%" fill="white"/>',
+        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{pad+h}" stroke="#333" stroke-width="1"/>',
+        f'<line x1="{pad}" y1="{pad+h}" x2="{pad+w}" y2="{pad+h}" stroke="#333" stroke-width="1"/>',
+    ]
+    # y labels for binary chart
+    for y_val in (0, 1):
+        y = pad + (1 - y_val) * h
+        parts.append(f'<line x1="{pad}" y1="{y}" x2="{pad+w}" y2="{y}" stroke="#ddd" stroke-width="1"/>')
+        parts.append(f'<text x="{pad-12}" y="{y+4}" text-anchor="end" font-size="12">{y_val}</text>')
+
+    for idx, (name, values) in enumerate(series.items()):
+        color = colors[idx % len(colors)]
+        points = []
+        for i, val in enumerate(values):
+            x = pad + (i / (max_len - 1)) * w
+            y = pad + (1 - max(0, min(1, val))) * h
+            points.append((x, y))
+        point_str = " ".join(f"{x:.2f},{y:.2f}" for x, y in points)
+        parts.append(f'<polyline fill="none" stroke="{color}" stroke-width="2.5" points="{point_str}"/>')
+        for x, y in points:
+            parts.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="2.2" fill="{color}"/>')
+
+    tick_step = max(1, max_len // 8)
+    for i in range(0, max_len, tick_step):
+        x = pad + (i / (max_len - 1)) * w
+        parts.append(f'<line x1="{x:.2f}" y1="{pad+h}" x2="{x:.2f}" y2="{pad+h+4}" stroke="#333" stroke-width="1"/>')
+        parts.append(f'<text x="{x:.2f}" y="{pad+h+18}" text-anchor="middle" font-size="11">{i}</text>')
+    if (max_len - 1) % tick_step != 0:
+        x = pad + w
+        parts.append(f'<line x1="{x:.2f}" y1="{pad+h}" x2="{x:.2f}" y2="{pad+h+4}" stroke="#333" stroke-width="1"/>')
+        parts.append(f'<text x="{x:.2f}" y="{pad+h+18}" text-anchor="middle" font-size="11">{max_len-1}</text>')
+
+    parts.append("</svg>")
+    return "\n".join(parts)
+
+
+def svg_bar_chart(counts: Iterable[Tuple[str, int]], title: str, width: int = 960, height: int = 260) -> str:
+    items = list(counts)
+    if not items:
+        return f"<p>No data for {html.escape(title)}.</p>"
+    pad = 36
+    w = width - 2 * pad
+    h = height - 2 * pad
+    max_v = max(v for _, v in items) or 1
+    bar_gap = 10
+    bar_w = max(12, (w - (len(items) - 1) * bar_gap) / len(items))
+
+    out = [
+        f'<svg viewBox="0 0 {width} {height}" width="100%" height="{height}" role="img" aria-label="{html.escape(title)}">',
+        '<rect x="0" y="0" width="100%" height="100%" fill="white"/>',
+        f'<text x="{pad}" y="20" font-size="14" font-weight="600">{html.escape(title)}</text>',
+        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{pad+h}" stroke="#333" stroke-width="1"/>',
+        f'<line x1="{pad}" y1="{pad+h}" x2="{pad+w}" y2="{pad+h}" stroke="#333" stroke-width="1"/>',
+    ]
+    for i, (name, value) in enumerate(items):
+        x = pad + i * (bar_w + bar_gap)
+        bh = (value / max_v) * (h - 8)
+        y = pad + h - bh
+        out.append(f'<rect x="{x:.2f}" y="{y:.2f}" width="{bar_w:.2f}" height="{bh:.2f}" fill="#0b84f3" opacity="0.85"/>')
+        out.append(f'<text x="{x + bar_w/2:.2f}" y="{y - 5:.2f}" text-anchor="middle" font-size="11">{value}</text>')
+        short_name = name if len(name) <= 16 else (name[:15] + "…")
+        out.append(
+            f'<text x="{x + bar_w/2:.2f}" y="{pad+h+14:.2f}" text-anchor="middle" font-size="10">{html.escape(short_name)}</text>'
+        )
+    out.append("</svg>")
+    return "\n".join(out)
+
+
+def slot_summary(slot: Dict[str, Any]) -> str:
+    phase = slot.get("phase", "")
+    turn = slot.get("turn_index", "")
+    agent = slot.get("agent", "")
+    top1 = slot.get("top1_exact") or {}
+    top1_label = top1.get("label", slot.get("top1_label", ""))
+    top1_sev = top1.get("severity", slot.get("top1_severity", ""))
+    accept = slot.get("accept")
+    accept_str = "accept=true" if accept is True else ("accept=false" if accept is False else "accept=unknown")
+    return f"{phase} | turn={turn} | {agent} | top1={top1_label}/{top1_sev} | {accept_str}"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate an HTML report for a cyber negotiation run.")
+    parser.add_argument("--run_dir", type=str, required=True, help="Run output directory containing history*.json")
+    parser.add_argument("--run_stem", type=str, default="", help="History stem without .json (example: history18_55_16)")
+    parser.add_argument("--output", type=str, default="", help="Optional output html path")
+    args = parser.parse_args()
+
+    run_dir = Path(args.run_dir).resolve()
+    files = detect_run_files(run_dir, args.run_stem.strip() or None)
+    stem = files["stem"].name
+
+    history = load_json(files["history"])
+    metrics_payload = load_json(files["metrics"]) if files["metrics"].exists() else {}
+    condition_summary = load_json(files["condition_summary"]) if files["condition_summary"].exists() else {}
+    public_history = load_json(files["public_history"]) if files["public_history"].exists() else []
+
+    run_report = metrics_payload.get("run_report", {})
+    headline = run_report.get("headline_metrics", history.get("metrics", {}))
+    derived = run_report.get("derived_metrics", history.get("derived_metrics", {}))
+    appendix = run_report.get("appendix_debug", history.get("appendix_debug", {}))
+    validation_stats = history.get("validation_stats", {})
+    trajectory = history.get("decision_trajectory", [])
+
+    round0 = history.get("round0", [])
+    rounds = history.get("rounds", [])
+    slots = list(round0) + list(rounds)
+
+    agent_accept_counts: Dict[str, int] = defaultdict(int)
+    agent_turn_counts: Dict[str, int] = defaultdict(int)
+    label_counts = Counter()
+    for slot in slots:
+        agent = str(slot.get("agent", ""))
+        if agent:
+            agent_turn_counts[agent] += 1
+            if slot.get("accept") is True:
+                agent_accept_counts[agent] += 1
+        label = slot.get("top1_label")
+        if label:
+            label_counts[str(label)] += 1
+
+    agree_series = [1 if bool(s.get("agreement_exact_with_signoff")) else 0 for s in trajectory]
+    all_accept_series = [1 if bool(s.get("all_accept")) else 0 for s in trajectory]
+    false_agree_series = [1 if bool(s.get("false_agreement_without_signoff")) else 0 for s in trajectory]
+
+    trajectory_chart = svg_line_chart_binary(
+        {
+            "agreement_exact_with_signoff": agree_series,
+            "all_accept": all_accept_series,
+            "false_agreement_without_signoff": false_agree_series,
+        }
+    )
+
+    accept_rate_counts = []
+    for agent, total in sorted(agent_turn_counts.items()):
+        pct = int(round(100 * agent_accept_counts.get(agent, 0) / total)) if total else 0
+        accept_rate_counts.append((agent, pct))
+    accept_chart = svg_bar_chart(accept_rate_counts, "Agent Accept Rate (%)")
+    label_chart = svg_bar_chart(sorted(label_counts.items(), key=lambda kv: (-kv[1], kv[0])), "Top-1 Label Frequency")
+
+    signoff_agents: List[str] = []
+    for slot in slots:
+        agent_name = str(slot.get("agent", "")).strip()
+        if agent_name and agent_name not in signoff_agents:
+            signoff_agents.append(agent_name)
+    for snap in trajectory:
+        accept_map = snap.get("by_agent_accept", {})
+        if not isinstance(accept_map, dict):
+            continue
+        for agent_name in accept_map.keys():
+            agent_name_str = str(agent_name).strip()
+            if agent_name_str and agent_name_str not in signoff_agents:
+                signoff_agents.append(agent_name_str)
+
+    signoff_header_cells = "".join(
+        f"<th>{html.escape(agent_name)} signoff</th>" for agent_name in signoff_agents
+    )
+
+    trajectory_rows = []
+    for snap in trajectory:
+        ce = snap.get("committee_exact")
+        if isinstance(ce, dict):
+            ce_str = f"{ce.get('label','')}/{ce.get('severity','')}"
+        else:
+            ce_str = str(ce)
+        accept_map = snap.get("by_agent_accept", {})
+        if not isinstance(accept_map, dict):
+            accept_map = {}
+        signoff_cells: List[str] = []
+        for agent_name in signoff_agents:
+            raw_accept = accept_map.get(agent_name)
+            if raw_accept is True:
+                accept_str = "True"
+            elif raw_accept is False:
+                accept_str = "False"
+            else:
+                accept_str = "NA"
+            signoff_cells.append(f"<td>{accept_str}</td>")
+        signoff_cells_html = "".join(signoff_cells)
+        trajectory_rows.append(
+            "<tr>"
+            f"<td>{snap.get('turn_index','')}</td>"
+            f"<td>{html.escape(str(snap.get('speaker','')))}</td>"
+            f"{signoff_cells_html}"
+            f"<td>{html.escape(str(snap.get('committee_type','')))}</td>"
+            f"<td>{html.escape(ce_str)}</td>"
+            f"<td>{int(bool(snap.get('all_accept')))}</td>"
+            f"<td>{int(bool(snap.get('agreement_exact_with_signoff')))}</td>"
+            f"<td>{int(bool(snap.get('false_agreement_without_signoff')))}</td>"
+            "</tr>"
+        )
+
+    transcript_rows = []
+    for item in public_history if isinstance(public_history, list) else []:
+        transcript_rows.append(
+            "<tr>"
+            f"<td>{item.get('turn_index','')}</td>"
+            f"<td>{item.get('public_turn_index','')}</td>"
+            f"<td>{html.escape(str(item.get('agent','')))}</td>"
+            f"<td class='answer-cell'><pre>{html.escape(str(item.get('public_answer','')))}</pre></td>"
+            "</tr>"
+        )
+
+    turn_cards = []
+    for slot in slots:
+        validation = slot.get("validation", {})
+        assessment = slot.get("assessment", {})
+        full_prompt = str(slot.get("full_prompt_sent", "")).strip()
+        if not full_prompt:
+            full_prompt = "(Not stored in this run. Re-run with updated runner to capture full prompt text.)"
+        turn_cards.append(
+            "<details class='turn-card'>"
+            f"<summary>{html.escape(slot_summary(slot))}</summary>"
+            "<div class='turn-grid'>"
+            f"<section><h4>Full Prompt Sent</h4><pre>{html.escape(full_prompt)}</pre></section>"
+            f"<section><h4>Turn Prompt (Slot Only)</h4><pre>{html.escape(str(slot.get('prompt','')))}</pre></section>"
+            f"<section><h4>Public Answer</h4><pre>{html.escape(str(slot.get('public_answer','')))}</pre></section>"
+            f"<section><h4>Assessment</h4><pre>{html.escape(json.dumps(assessment, indent=2, ensure_ascii=False))}</pre></section>"
+            f"<section><h4>Validation</h4><pre>{html.escape(json.dumps(validation, indent=2, ensure_ascii=False))}</pre></section>"
+            f"<section><h4>Private Notes</h4><pre>{html.escape(str(slot.get('private_notes','')))}</pre></section>"
+            f"<section><h4>Private Plan</h4><pre>{html.escape(str(slot.get('private_plan','')))}</pre></section>"
+            "</div>"
+            "</details>"
+        )
+
+    html_doc = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cyber Run Report - {html.escape(stem)}</title>
+  <style>
+    :root {{
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #0b84f3;
+      --accent2: #f39c12;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 10% 0%, #eef5ff, var(--bg) 60%);
+    }}
+    .container {{ max-width: 1400px; margin: 24px auto; padding: 0 16px 40px; }}
+    .hero {{
+      background: linear-gradient(135deg, #0b84f3, #3da9fc);
+      color: white;
+      padding: 18px 22px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(11,132,243,0.22);
+      margin-bottom: 16px;
+    }}
+    .meta {{ color: #deecff; font-size: 14px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }}
+    .card {{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    }}
+    .card h3 {{ margin: 0 0 10px; font-size: 16px; }}
+    .table-wrap {{ overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; }}
+    th, td {{ border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: left; vertical-align: top; font-size: 13px; }}
+    th {{ color: #334155; font-weight: 600; }}
+    .kv-table th {{ width: 34%; }}
+    .data-table th {{ width: auto; white-space: nowrap; }}
+    .transcript-table .answer-cell {{ width: 70%; }}
+    .transcript-table pre {{ min-width: 420px; }}
+    .wide {{ grid-column: 1 / -1; }}
+    .section-title {{ margin: 16px 0 8px; font-size: 19px; }}
+    pre {{
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+    }}
+    .turn-card {{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 8px 0;
+      padding: 0 10px 10px;
+    }}
+    summary {{
+      cursor: pointer;
+      padding: 10px 0;
+      font-weight: 600;
+      color: #0f172a;
+    }}
+    .turn-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }}
+    .turn-grid h4 {{ margin: 0 0 6px; font-size: 13px; color: #334155; }}
+    .chart-legend {{ display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #334155; }}
+    .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}
+    .swatch {{ width: 10px; height: 10px; border-radius: 2px; display: inline-block; }}
+    .muted {{ color: #6b7280; font-size: 12px; }}
+    @media (max-width: 1000px) {{
+      .grid {{ grid-template-columns: 1fr; }}
+      .turn-grid {{ grid-template-columns: 1fr; }}
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1 style="margin:0 0 6px;">Cyber Negotiation Report</h1>
+      <div class="meta">
+        run_id: {html.escape(str(history.get("run_id", stem)))} |
+        condition: {html.escape(str(history.get("condition", {}).get("condition_id", "unknown")))} |
+        scenario: {html.escape(str(history.get("scenario_id", "unknown")))} |
+        status: {html.escape(str(history.get("run_status", "unknown")))}
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table">{to_rows(headline)}</table></div></div>
+      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table">{to_rows(derived)}</table></div></div>
+      <div class="card"><h3>Appendix Debug</h3><div class="table-wrap"><table class="kv-table">{to_rows(appendix)}</table></div></div>
+      <div class="card"><h3>Validation Stats</h3><div class="table-wrap"><table class="kv-table">{to_rows(validation_stats)}</table></div></div>
+      <div class="card"><h3>Condition Aggregate (Headline)</h3><div class="table-wrap"><table class="kv-table">{to_rows(condition_summary.get("headline_metrics", {}))}</table></div></div>
+      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table">{to_rows(condition_summary.get("derived_metrics", {}))}</table></div></div>
+    </div>
+
+    <h2 class="section-title">Diagrams</h2>
+    <div class="grid">
+      <div class="card wide">
+        <h3>Committee Agreement Trajectory</h3>
+        {trajectory_chart}
+        <div class="chart-legend">
+          <span class="legend-item"><span class="swatch" style="background:#0b84f3;"></span>exact_agreement_with_signoff</span>
+          <span class="legend-item"><span class="swatch" style="background:#f39c12;"></span>all_signoff</span>
+          <span class="legend-item"><span class="swatch" style="background:#2ecc71;"></span>unanimous_exact_without_signoff</span>
+        </div>
+        <p class="muted">X-axis is trajectory step index (0 = round0 snapshot).</p>
+      </div>
+      <div class="card">
+        <h3>Agent Accept Rate</h3>
+        {accept_chart}
+      </div>
+      <div class="card">
+        <h3>Top-1 Label Frequency</h3>
+        {label_chart}
+      </div>
+    </div>
+
+    <h2 class="section-title">Decision Trajectory</h2>
+    <div class="card">
+      <div class="table-wrap"><table class="data-table">
+        <thead>
+          <tr>
+            <th>turn_index</th><th>speaker</th>{signoff_header_cells}<th>committee_type</th><th>committee_exact</th><th>all_signoff</th><th>exact_agreement_with_signoff</th><th>unanimous_exact_without_signoff</th>
+          </tr>
+        </thead>
+        <tbody>
+          {''.join(trajectory_rows)}
+        </tbody>
+      </table></div>
+      <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
+    </div>
+
+    <h2 class="section-title">Public Transcript</h2>
+    <div class="card">
+      <div class="table-wrap"><table class="data-table transcript-table">
+        <colgroup>
+          <col style="width: 8%;">
+          <col style="width: 10%;">
+          <col style="width: 14%;">
+          <col style="width: 68%;">
+        </colgroup>
+        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
+        <tbody>{''.join(transcript_rows)}</tbody>
+      </table></div>
+    </div>
+
+    <h2 class="section-title">Prompts And Full Turn Data</h2>
+    {''.join(turn_cards)}
+  </div>
+</body>
+</html>
+"""
+
+    output = Path(args.output).resolve() if args.output else (run_dir / f"report_{stem}.html")
+    output.write_text(html_doc, encoding="utf-8")
+    print(f"Report written to: {output}")
+    print(f"History source: {files['history']}")
+    print(f"Metrics source: {files['metrics']}")
+    print(f"Condition summary source: {files['condition_summary']}")
+    print(f"Public history source: {files['public_history']}")
+
+
+if __name__ == "__main__":
+    main()

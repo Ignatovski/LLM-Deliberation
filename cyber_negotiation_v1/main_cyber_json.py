@@ -28,32 +28,6 @@ from cyber_utils import (
     read_config,
 )
 
-
-JSON_PROMPT = """You must respond with ONE JSON object, nothing else:
-{
-  "scratchpad": "<SCRATCHPAD>...</SCRATCHPAD>",
-  "answer": "<ANSWER>Your public negotiation message only.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\":[...],\"decision_summary\":\"...\",\"accept\":true,\"block_reason\":null}</ASSESSMENT>",
-  "plan": "<PLAN>...</PLAN>"
-}
-
-Rules:
-- scratchpad: private reasoning only; keep it concise.
-- answer: must contain exactly one public <ANSWER>...</ANSWER> block and one hidden <ASSESSMENT>{...}</ASSESSMENT> JSON object.
-- plan: private next-step notes; omit or use "<PLAN></PLAN>" if none.
-- assessment.ranked_findings must contain ranks 1, 2, and 3.
-- Every ranked finding must include a `citations` list (use `[]` if none for non-rank-1 findings).
-- The rank-1 finding must include 1-2 line-ID citations (for example: ["L003","L010"]).
-- Severity is required for ranks 1-3 and must be one of Compliance, Info, Low, Medium, High.
-- Labels must come from the configured label set.
-- assessment.accept must be true or false.
-- If assessment.accept is false, assessment.block_reason must be a short non-empty string explaining why you cannot sign off.
-- If assessment.accept is true, assessment.block_reason must be null or an empty string.
-- Public message must stay report-defensible, obey the configured length limits, and must not expose private scratchpad or hidden planning.
-- Output must be valid JSON; no extra text, comments, or Markdown.
-If you cannot comply, reformat to valid JSON with the fields above; never return other text.
-"""
-
-
 class CyberInitialPromptJSON:
     def __init__(
         self,
@@ -105,8 +79,8 @@ class CyberSlotPromptJSON:
         del history
         return (
             "Round 0 independent assessment. All evidence is already visible. "
-            "Produce your own initial cyber finding assessment before public negotiation begins.\n\n"
-            + JSON_PROMPT
+            "Produce your own initial cyber finding assessment before public negotiation begins.\n"
+            "Return only one JSON object matching the required output schema."
         )
 
     def build_slot_prompt(self, history: Dict[str, Any], round_idx: int, *_):
@@ -122,7 +96,7 @@ class CyberSlotPromptJSON:
         if history.get("_current_final_turn"):
             prompt += "This is the final public turn. Commit to your most defensible assessment.\n"
         prompt += f"Current public turn index: {round_idx + 1}\n"
-        prompt += "Return the required JSON object only.\n\n" + JSON_PROMPT
+        prompt += "Return only one JSON object matching the required output schema."
         return prompt
 
 
@@ -144,10 +118,28 @@ def save_state(
     extra_fields: Optional[Dict[str, Any]] = None,
 ):
     scratch = parsed_obj.get("scratchpad", "")
-    answer = parsed_obj.get("answer", "")
+    public_answer = parsed_obj.get("public_answer", "")
+    assessment = parsed_obj.get("assessment")
     plan = parsed_obj.get("plan", "")
-    full_answer = "\n".join(part for part in [scratch, answer, plan] if part)
-    return save_conversation(history, agent_name, full_answer, prompt, phase=phase, extra_fields=extra_fields)
+    answer_parts = []
+    if isinstance(public_answer, str) and public_answer.strip():
+        answer_parts.append(f"<ANSWER>{public_answer}</ANSWER>")
+    if isinstance(assessment, dict):
+        answer_parts.append(f"<ASSESSMENT>{json.dumps(assessment, ensure_ascii=False)}</ASSESSMENT>")
+    answer_block = "\n".join(answer_parts)
+    full_answer = "\n".join(part for part in [scratch, answer_block, plan] if part)
+    return save_conversation(
+        history,
+        agent_name,
+        full_answer,
+        prompt,
+        phase=phase,
+        extra_fields=extra_fields,
+        public_answer=public_answer if isinstance(public_answer, str) else "",
+        private_notes=parsed_obj.get("private_notes", ""),
+        private_plan=parsed_obj.get("private_plan", ""),
+        assessment=assessment if isinstance(assessment, dict) else None,
+    )
 
 
 def derive_role_id(file_name: str) -> str:
@@ -294,13 +286,22 @@ def main():
     stem = Path(history["file"]).stem
     history["content"]["run_id"] = stem
 
-    def record_failed_attempt(agent_name: str, phase: str, attempt: int, prompt: str, response_text: str, error: str) -> None:
+    def record_failed_attempt(
+        agent_name: str,
+        phase: str,
+        attempt: int,
+        prompt: str,
+        full_prompt_sent: str,
+        response_text: str,
+        error: str,
+    ) -> None:
         history["content"]["failed_attempts"].append(
             {
                 "agent": agent_name,
                 "phase": phase,
                 "attempt": attempt,
                 "prompt": prompt,
+                "full_prompt_sent": full_prompt_sent,
                 "response_text": response_text,
                 "error": error,
             }
@@ -332,12 +333,13 @@ def main():
         attempts = 0
         parsed = None
         prompt = ""
+        full_prompt_sent = ""
         error = ""
         response_text = ""
         validation: Dict[str, Any] = {}
         while True:
             attempts += 1
-            prompt, response = agents[agent["name"]]["instance"].execute_round0(history["content"])
+            prompt, full_prompt_sent, response = agents[agent["name"]]["instance"].execute_round0(history["content"])
             response_text = ensure_text(response)
             parsed, error, validation = parse_structured_response(
                 response_text,
@@ -348,7 +350,15 @@ def main():
             )
             if parsed is not None:
                 break
-            record_failed_attempt(agent["name"], "round0", attempts, prompt, response_text, error)
+            record_failed_attempt(
+                agent["name"],
+                "round0",
+                attempts,
+                prompt,
+                full_prompt_sent,
+                response_text,
+                error,
+            )
             if max_attempts_per_turn and attempts >= max_attempts_per_turn:
                 break
             prompt = build_retry_prompt(prompt, attempts, error)
@@ -388,6 +398,7 @@ def main():
                 "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
                 "accept": parsed["assessment"]["accept"],
                 "block_reason": parsed["assessment"]["block_reason"],
+                "full_prompt_sent": full_prompt_sent,
             },
         )
 
@@ -411,12 +422,15 @@ def main():
         attempts = 0
         parsed = None
         prompt = ""
+        full_prompt_sent = ""
         error = ""
         response_text = ""
         validation = {}
         while True:
             attempts += 1
-            prompt, response = agents[current_agent]["instance"].execute_round(history["content"], public_idx)
+            prompt, full_prompt_sent, response = agents[current_agent]["instance"].execute_round(
+                history["content"], public_idx
+            )
             response_text = ensure_text(response)
             parsed, error, validation = parse_structured_response(
                 response_text,
@@ -427,7 +441,15 @@ def main():
             )
             if parsed is not None:
                 break
-            record_failed_attempt(current_agent, "public", attempts, prompt, response_text, error)
+            record_failed_attempt(
+                current_agent,
+                "public",
+                attempts,
+                prompt,
+                full_prompt_sent,
+                response_text,
+                error,
+            )
             if max_attempts_per_turn and attempts >= max_attempts_per_turn:
                 break
             prompt = build_retry_prompt(prompt, attempts, error)
@@ -471,6 +493,7 @@ def main():
                 "rank1_citations": list(parsed["assessment"]["ranked_findings"][0].get("citations") or []),
                 "accept": parsed["assessment"]["accept"],
                 "block_reason": parsed["assessment"]["block_reason"],
+                "full_prompt_sent": full_prompt_sent,
             },
         )
         latest_by_agent[current_agent] = {"assessment": parsed["assessment"]}
