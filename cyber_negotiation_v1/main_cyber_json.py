@@ -402,14 +402,24 @@ def main():
             },
         )
 
-    latest_by_agent = {
+    latest_by_agent_round0 = {
         slot["agent"]: {"assessment": slot["assessment"]}
         for slot in history["content"].get("round0", [])
         if slot.get("assessment")
     }
-    if run_completed and latest_by_agent and not history["content"]["decision_trajectory"]:
+    # Preserve the independent round0 snapshot, but do not carry round0 assessments into
+    # public-phase consensus checks. Public consensus should reflect public turns only.
+    latest_by_agent_public: Dict[str, Dict[str, Any]] = {}
+    if run_completed and latest_by_agent_round0 and not history["content"]["decision_trajectory"]:
         history["content"]["decision_trajectory"].append(
-            make_committee_snapshot(0, "round0", latest_by_agent, public_turn_index=None, speaker=None)
+            make_committee_snapshot(
+                0,
+                "round0",
+                latest_by_agent_round0,
+                public_turn_index=None,
+                speaker=None,
+                expected_agents=agent_names,
+            )
         )
         write_file(history["content"], history["file"])
 
@@ -496,14 +506,15 @@ def main():
                 "full_prompt_sent": full_prompt_sent,
             },
         )
-        latest_by_agent[current_agent] = {"assessment": parsed["assessment"]}
+        latest_by_agent_public[current_agent] = {"assessment": parsed["assessment"]}
         history["content"]["decision_trajectory"].append(
             make_committee_snapshot(
                 public_idx + 1,
                 "public",
-                latest_by_agent,
+                latest_by_agent_public,
                 public_turn_index=public_idx,
                 speaker=current_agent,
+                expected_agents=agent_names,
             )
         )
         write_file(history["content"], history["file"])

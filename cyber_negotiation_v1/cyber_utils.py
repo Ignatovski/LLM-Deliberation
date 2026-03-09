@@ -183,6 +183,8 @@ def format_evidence_packet(packet: Dict[str, Any]) -> str:
     visible = {
         "lines": packet.get("lines", []),
     }
+    if isinstance(packet.get("user_assumption"), str) and packet.get("user_assumption", "").strip():
+        visible["user_assumption"] = packet["user_assumption"].strip()
     return json.dumps(visible, indent=2, ensure_ascii=False)
 
 
@@ -518,37 +520,18 @@ def build_retry_prompt(base_prompt: str, attempt_idx: int, error: str) -> str:
 
 
 def generate_public_schedule(agent_names: List[str], total_public_messages: int, seed: int) -> List[str]:
-    if total_public_messages % len(agent_names) != 0:
+    if not agent_names:
+        return []
+    agent_count = len(agent_names)
+    if total_public_messages % agent_count != 0:
         raise ValueError("total_public_messages must be divisible by number of agents")
-    quota = total_public_messages // len(agent_names)
-    counts = {name: quota for name in agent_names}
-    seq: List[str] = []
+    block_count = total_public_messages // agent_count
     rng = random.Random(seed)
-
-    def feasible() -> bool:
-        remaining = sum(counts.values())
-        if remaining <= 1:
-            return True
-        max_count = max(counts.values())
-        return max_count <= (remaining - max_count) + 1
-
-    def backtrack(last: Optional[str]) -> bool:
-        if len(seq) == total_public_messages:
-            return True
-        candidates = [name for name in agent_names if counts[name] > 0 and name != last]
-        rng.shuffle(candidates)
-        for name in candidates:
-            counts[name] -= 1
-            if feasible():
-                seq.append(name)
-                if backtrack(name):
-                    return True
-                seq.pop()
-            counts[name] += 1
-        return False
-
-    if not backtrack(None):
-        raise RuntimeError("could not construct valid public schedule")
+    seq: List[str] = []
+    for _ in range(block_count):
+        block = list(agent_names)
+        rng.shuffle(block)
+        seq.extend(block)
     return seq
 
 
@@ -586,8 +569,10 @@ def make_committee_snapshot(
     *,
     public_turn_index: Optional[int] = None,
     speaker: Optional[str] = None,
+    expected_agents: Optional[Sequence[str]] = None,
 ) -> Dict[str, Any]:
-    agent_count = len(latest_by_agent)
+    agent_names = list(expected_agents) if expected_agents else list(latest_by_agent.keys())
+    agent_count = len(agent_names)
     by_agent_top1_label: Dict[str, Optional[str]] = {}
     by_agent_top1_severity: Dict[str, Optional[str]] = {}
     by_agent_top1_exact: Dict[str, Optional[Dict[str, str]]] = {}
@@ -595,7 +580,8 @@ def make_committee_snapshot(
     by_agent_accept: Dict[str, Optional[bool]] = {}
     by_agent_block_reason: Dict[str, Optional[str]] = {}
 
-    for agent_name, payload in latest_by_agent.items():
+    for agent_name in agent_names:
+        payload = latest_by_agent.get(agent_name, {})
         assessment = payload.get("assessment")
         label, severity, citations = _top1_from_assessment(assessment)
         accept, block_reason = _signoff_from_assessment(assessment)
