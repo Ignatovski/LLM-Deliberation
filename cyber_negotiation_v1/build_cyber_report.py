@@ -140,6 +140,96 @@ def slot_summary(slot: Dict[str, Any]) -> str:
     return f"{phase} | turn={turn} | {agent} | top1={top1_label}/{top1_sev} | {accept_str}"
 
 
+def _to_pre_block(value: Any) -> str:
+    if value is None:
+        return "(empty)"
+    if isinstance(value, (dict, list)):
+        if not value:
+            return "(empty)"
+        return html.escape(json.dumps(value, indent=2, ensure_ascii=False))
+    text = str(value).strip()
+    return html.escape(text) if text else "(empty)"
+
+
+def render_turn_card(slot: Dict[str, Any]) -> str:
+    assessment = slot.get("assessment", {})
+    if not isinstance(assessment, dict):
+        assessment = {}
+    validation = slot.get("validation", {})
+    if not isinstance(validation, dict):
+        validation = {}
+
+    meta = {
+        "phase": slot.get("phase"),
+        "turn_index": slot.get("turn_index"),
+        "agent": slot.get("agent"),
+        "top1_label": slot.get("top1_label"),
+        "top1_severity": slot.get("top1_severity"),
+        "accept": slot.get("accept"),
+        "block_reason": slot.get("block_reason"),
+        "attempts": slot.get("attempts"),
+        "rank1_citations": slot.get("rank1_citations"),
+        "user_assumption_verdict": slot.get("user_assumption_verdict"),
+    }
+
+    meta_rows = []
+    for key, value in meta.items():
+        if value is None or value == "":
+            continue
+        rendered = json.dumps(value, ensure_ascii=False) if isinstance(value, (dict, list)) else str(value)
+        meta_rows.append(
+            "<tr>"
+            f"<th>{html.escape(str(key))}</th>"
+            f"<td>{html.escape(rendered)}</td>"
+            "</tr>"
+        )
+    meta_table = (
+        "<div class='table-wrap'><table class='kv-table'>"
+        + "".join(meta_rows)
+        + "</table></div>"
+        if meta_rows
+        else "<p class='muted'>No metadata.</p>"
+    )
+
+    # Keep only non-prompt raw fields for optional debugging.
+    raw_turn = dict(slot)
+    raw_turn.pop("prompt", None)
+    raw_turn.pop("full_prompt_sent", None)
+    raw_turn.pop("full_answer", None)
+
+    return (
+        "<details class='turn-card'>"
+        f"<summary>{html.escape(slot_summary(slot))}</summary>"
+        "<div class='turn-meta'>"
+        "<h4>Turn Overview</h4>"
+        f"{meta_table}"
+        "</div>"
+        "<div class='turn-grid'>"
+        "<section class='turn-pane'>"
+        "<h4>Public Answer</h4>"
+        f"<pre>{_to_pre_block(slot.get('public_answer'))}</pre>"
+        "</section>"
+        "<section class='turn-pane'>"
+        "<h4>Assessment</h4>"
+        f"<pre>{_to_pre_block(assessment)}</pre>"
+        "</section>"
+        "</div>"
+        "<details class='turn-sub'><summary>Scratchpad (Private)</summary>"
+        f"<pre>{_to_pre_block(slot.get('private_notes'))}</pre>"
+        "</details>"
+        "<details class='turn-sub'><summary>Plan (Private)</summary>"
+        f"<pre>{_to_pre_block(slot.get('private_plan'))}</pre>"
+        "</details>"
+        "<details class='turn-sub'><summary>Validation</summary>"
+        f"<pre>{_to_pre_block(validation)}</pre>"
+        "</details>"
+        "<details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary>"
+        f"<pre>{_to_pre_block(raw_turn)}</pre>"
+        "</details>"
+        "</details>"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate an HTML report for a cyber negotiation run.")
     parser.add_argument("--run_dir", type=str, required=True, help="Run output directory containing history*.json")
@@ -262,27 +352,7 @@ def main() -> None:
             "</tr>"
         )
 
-    turn_cards = []
-    for slot in slots:
-        validation = slot.get("validation", {})
-        assessment = slot.get("assessment", {})
-        full_prompt = str(slot.get("full_prompt_sent", "")).strip()
-        if not full_prompt:
-            full_prompt = "(Not stored in this run. Re-run with updated runner to capture full prompt text.)"
-        turn_cards.append(
-            "<details class='turn-card'>"
-            f"<summary>{html.escape(slot_summary(slot))}</summary>"
-            "<div class='turn-grid'>"
-            f"<section><h4>Full Prompt Sent</h4><pre>{html.escape(full_prompt)}</pre></section>"
-            f"<section><h4>Turn Prompt (Slot Only)</h4><pre>{html.escape(str(slot.get('prompt','')))}</pre></section>"
-            f"<section><h4>Public Answer</h4><pre>{html.escape(str(slot.get('public_answer','')))}</pre></section>"
-            f"<section><h4>Assessment</h4><pre>{html.escape(json.dumps(assessment, indent=2, ensure_ascii=False))}</pre></section>"
-            f"<section><h4>Validation</h4><pre>{html.escape(json.dumps(validation, indent=2, ensure_ascii=False))}</pre></section>"
-            f"<section><h4>Private Notes</h4><pre>{html.escape(str(slot.get('private_notes','')))}</pre></section>"
-            f"<section><h4>Private Plan</h4><pre>{html.escape(str(slot.get('private_plan','')))}</pre></section>"
-            "</div>"
-            "</details>"
-        )
+    turn_cards = [render_turn_card(slot) for slot in slots]
 
     html_doc = f"""<!doctype html>
 <html lang="en">
@@ -360,6 +430,18 @@ def main() -> None:
       font-weight: 600;
       color: #0f172a;
     }}
+    .turn-meta {{
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+    }}
+    .turn-meta h4 {{
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: #334155;
+    }}
     .turn-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -367,6 +449,24 @@ def main() -> None:
       margin-top: 8px;
     }}
     .turn-grid h4 {{ margin: 0 0 6px; font-size: 13px; color: #334155; }}
+    .turn-pane {{
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+    }}
+    .turn-sub {{
+      margin-top: 8px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0 8px 8px;
+    }}
+    .turn-sub > summary {{
+      padding: 8px 0;
+      font-weight: 600;
+      color: #334155;
+    }}
     .chart-legend {{ display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #334155; }}
     .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}
     .swatch {{ width: 10px; height: 10px; border-radius: 2px; display: inline-block; }}
@@ -449,7 +549,7 @@ def main() -> None:
       </table></div>
     </div>
 
-    <h2 class="section-title">Prompts And Full Turn Data</h2>
+    <h2 class="section-title">Full Turn Data</h2>
     {''.join(turn_cards)}
   </div>
 </body>

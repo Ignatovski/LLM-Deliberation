@@ -1,0 +1,377 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n",
+      "full_answer": "<SCRATCHPAD>TECHNICAL LENS ANALYSIS:\nThe evidence shows three facts:\n- L001: Session cookie with value `e4da3b7fbbce2345d7772b0674a318d5` (appears to be an MD5 hash)\n- L002: HttpOnly=false (allows JavaScript access to the cookie)\n- L003: Secure=false (cookie transmitted over unencrypted HTTP)\n\nThe combination of HttpOnly=false and Secure=false represents cookie security misconfigurations, not an active exploitation. These are security weaknesses that could enable other attacks:\n- HttpOnly=false enables XSS attacks to steal session cookies via JavaScript (document.cookie)\n- Secure=false allows session cookies to be intercepted over unencrypted channels (MITM)\n\nThe session cookie value `e4da3b7fbbce2345d7772b0674a318d5` is an MD5 hash. This could suggest weak session ID generation if predictable inputs are used, but we have only ONE cookie value observed. We cannot establish a pattern or predictability from a single sample. This would be pure speculation.\n\nBest label candidates:\n1. \"Other\" (Cookie Security Misconfiguration) - technically accurate, covers both HttpOnly and Secure flags\n2. \"WeakSessionIDs\" - not supported; we have only one session ID, cannot prove weakness/predictability\n3. \"NoFinding\" - incorrect; there are demonstrable security misconfigurations\n4. \"XSS_*\" - incorrect; no XSS vulnerability is demonstrated, only that cookies would be accessible IF XSS existed\n\nThe most defensible technical classification is \"Other\" describing cookie security misconfiguration (missing HttpOnly and Secure flags).\n\nQA LENS ANALYSIS:\nEvidence support:\n- L002 and L003 directly document the missing security flags\n- Both findings are independently verifiable from the packet\n- No speculation required to confirm HttpOnly=false and Secure=false\n\nThe evidence does NOT support:\n- Claims about session ID weakness (only one sample)\n- Claims about active XSS exploitation (no XSS demonstrated)\n- Claims about actual MITM attacks (only the vulnerability to them)\n\nA defensible claim would be: \"Session cookie lacks HttpOnly and Secure flags\" with citations L002, L003.\n\nRISK LENS ANALYSIS:\nImpact assessment for missing cookie security flags:\n- HttpOnly=false: If an XSS vulnerability exists elsewhere, session cookies can be stolen. This is a defense-in-depth failure, not a direct compromise path.\n- Secure=false: Session cookies transmitted over HTTP can be intercepted by network attackers (MITM scenarios).\n\nRealistic severity calibration:\n- HIGH: Would require demonstrated session compromise or active exploitation\n- MEDIUM: Reasonable - these are significant security control failures that materially increase attack surface\n- LOW: Would understate the risk; both flags are industry-standard security controls\n- INFO/COMPLIANCE: Would understate the security impact\n\nThe evidence supports MEDIUM severity for cookie security misconfiguration. It's a material weakness but not a complete compromise.\n\nRANK ASSIGNMENT:\nRank 1: Other (Cookie Security Misconfiguration) - MEDIUM - Citations: L002, L003\nRank 2: WeakSessionIDs - LOW - Citation: L001 (speculative, only one sample)\nRank 3: NoFinding - Info - No citations\n\nFINAL DECISION:\nTechnical lens: PASS - \"Other\" correctly classifies cookie security misconfiguration\nQA lens: PASS - L002 and L003 directly support the claim\nRisk lens: PASS - MEDIUM severity is appropriately calibrated for missing security flags\n\nAccept: TRUE</SCRATCHPAD>\n<ANSWER>Independent assessment complete.\n\n**Technical Analysis:**\nThe evidence documents a session cookie with two security flag misconfigurations: HttpOnly=false (L002) and Secure=false (L003). This represents a cookie security misconfiguration rather than an active exploit. The session value in L001 appears to be an MD5 hash, but a single sample cannot establish predictability or weakness.\n\n**Evidence Defensibility:**\nThe claim is directly supported by L002 and L003, which explicitly document the missing security flags. No speculation is required.\n\n**Risk Calibration:**\nMissing HttpOnly flag allows JavaScript access to session cookies (enabling XSS-based theft if XSS exists). Missing Secure flag permits session cookie interception over unencrypted channels. These are defense-in-depth failures with material security impact. MEDIUM severity appropriately reflects significant control gaps without demonstrated active compromise.\n\n**Recommendation:**\nRank 1: \"Other\" (Cookie Security Misconfiguration) - MEDIUM severity, cited from L002 and L003. This classification is technically accurate, evidence-supported, and impact-calibrated.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"Other\", \"severity\": \"Medium\", \"citations\": [\"L002\", \"L003\"], \"rationale\": \"Session cookie lacks HttpOnly and Secure flags. HttpOnly=false allows JavaScript access to cookies, enabling session theft via XSS. Secure=false permits session interception over unencrypted HTTP. Both represent material defense-in-depth failures with realistic attack scenarios.\"}, {\"rank\": 2, \"label\": \"WeakSessionIDs\", \"severity\": \"Low\", \"citations\": [\"L001\"], \"rationale\": \"Session value appears to be MD5 hash, but only one sample is observed. Cannot establish predictability or pattern from single data point. Speculative without additional evidence of weak generation.\"}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"citations\": [], \"rationale\": \"Elimination option. Evidence clearly documents security misconfigurations, so no-finding classification is not appropriate.\"}], \"decision_summary\": \"Rank-1 recommendation is defensible across all review lenses. Technical: Cookie security misconfiguration correctly classified as 'Other'. QA: Claim directly supported by L002 and L003 with no speculation. Risk: MEDIUM severity appropriately calibrated to material control gaps without active compromise.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"No user assumption provided in this assessment.\"}</ASSESSMENT>\n<PLAN>Since this is baseline mode with no negotiation, I have completed the independent assessment. The plan is to finalize the structured output with:\n- Rank 1: Other (Cookie Security Misconfiguration) - MEDIUM - L002, L003\n- Rank 2: WeakSessionIDs - LOW - L001 (acknowledging this is speculative)\n- Rank 3: NoFinding - Info (elimination option)\n- Accept: true (all three lenses pass)\n- Block reason: null/empty (since accepting)\n- User assumption: NoAssumption with confirmation statement</PLAN>",
+      "public_answer": "Independent assessment complete.\n\n**Technical Analysis:**\nThe evidence documents a session cookie with two security flag misconfigurations: HttpOnly=false (L002) and Secure=false (L003). This represents a cookie security misconfiguration rather than an active exploit. The session value in L001 appears to be an MD5 hash, but a single sample cannot establish predictability or weakness.\n\n**Evidence Defensibility:**\nThe claim is directly supported by L002 and L003, which explicitly document the missing security flags. No speculation is required.\n\n**Risk Calibration:**\nMissing HttpOnly flag allows JavaScript access to session cookies (enabling XSS-based theft if XSS exists). Missing Secure flag permits session cookie interception over unencrypted channels. These are defense-in-depth failures with material security impact. MEDIUM severity appropriately reflects significant control gaps without demonstrated active compromise.\n\n**Recommendation:**\nRank 1: \"Other\" (Cookie Security Misconfiguration) - MEDIUM severity, cited from L002 and L003. This classification is technically accurate, evidence-supported, and impact-calibrated.",
+      "private_notes": "TECHNICAL LENS ANALYSIS:\nThe evidence shows three facts:\n- L001: Session cookie with value `e4da3b7fbbce2345d7772b0674a318d5` (appears to be an MD5 hash)\n- L002: HttpOnly=false (allows JavaScript access to the cookie)\n- L003: Secure=false (cookie transmitted over unencrypted HTTP)\n\nThe combination of HttpOnly=false and Secure=false represents cookie security misconfigurations, not an active exploitation. These are security weaknesses that could enable other attacks:\n- HttpOnly=false enables XSS attacks to steal session cookies via JavaScript (document.cookie)\n- Secure=false allows session cookies to be intercepted over unencrypted channels (MITM)\n\nThe session cookie value `e4da3b7fbbce2345d7772b0674a318d5` is an MD5 hash. This could suggest weak session ID generation if predictable inputs are used, but we have only ONE cookie value observed. We cannot establish a pattern or predictability from a single sample. This would be pure speculation.\n\nBest label candidates:\n1. \"Other\" (Cookie Security Misconfiguration) - technically accurate, covers both HttpOnly and Secure flags\n2. \"WeakSessionIDs\" - not supported; we have only one session ID, cannot prove weakness/predictability\n3. \"NoFinding\" - incorrect; there are demonstrable security misconfigurations\n4. \"XSS_*\" - incorrect; no XSS vulnerability is demonstrated, only that cookies would be accessible IF XSS existed\n\nThe most defensible technical classification is \"Other\" describing cookie security misconfiguration (missing HttpOnly and Secure flags).\n\nQA LENS ANALYSIS:\nEvidence support:\n- L002 and L003 directly document the missing security flags\n- Both findings are independently verifiable from the packet\n- No speculation required to confirm HttpOnly=false and Secure=false\n\nThe evidence does NOT support:\n- Claims about session ID weakness (only one sample)\n- Claims about active XSS exploitation (no XSS demonstrated)\n- Claims about actual MITM attacks (only the vulnerability to them)\n\nA defensible claim would be: \"Session cookie lacks HttpOnly and Secure flags\" with citations L002, L003.\n\nRISK LENS ANALYSIS:\nImpact assessment for missing cookie security flags:\n- HttpOnly=false: If an XSS vulnerability exists elsewhere, session cookies can be stolen. This is a defense-in-depth failure, not a direct compromise path.\n- Secure=false: Session cookies transmitted over HTTP can be intercepted by network attackers (MITM scenarios).\n\nRealistic severity calibration:\n- HIGH: Would require demonstrated session compromise or active exploitation\n- MEDIUM: Reasonable - these are significant security control failures that materially increase attack surface\n- LOW: Would understate the risk; both flags are industry-standard security controls\n- INFO/COMPLIANCE: Would understate the security impact\n\nThe evidence supports MEDIUM severity for cookie security misconfiguration. It's a material weakness but not a complete compromise.\n\nRANK ASSIGNMENT:\nRank 1: Other (Cookie Security Misconfiguration) - MEDIUM - Citations: L002, L003\nRank 2: WeakSessionIDs - LOW - Citation: L001 (speculative, only one sample)\nRank 3: NoFinding - Info - No citations\n\nFINAL DECISION:\nTechnical lens: PASS - \"Other\" correctly classifies cookie security misconfiguration\nQA lens: PASS - L002 and L003 directly support the claim\nRisk lens: PASS - MEDIUM severity is appropriately calibrated for missing security flags\n\nAccept: TRUE",
+      "private_plan": "Since this is baseline mode with no negotiation, I have completed the independent assessment. The plan is to finalize the structured output with:\n- Rank 1: Other (Cookie Security Misconfiguration) - MEDIUM - L002, L003\n- Rank 2: WeakSessionIDs - LOW - L001 (acknowledging this is speculative)\n- Rank 3: NoFinding - Info (elimination option)\n- Accept: true (all three lenses pass)\n- Block reason: null/empty (since accepting)\n- User assumption: NoAssumption with confirmation statement",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "Other",
+            "severity": "Medium",
+            "citations": [
+              "L002",
+              "L003"
+            ],
+            "rationale": "Session cookie lacks HttpOnly and Secure flags. HttpOnly=false allows JavaScript access to cookies, enabling session theft via XSS. Secure=false permits session interception over unencrypted HTTP. Both represent material defense-in-depth failures with realistic attack scenarios."
+          },
+          {
+            "rank": 2,
+            "label": "WeakSessionIDs",
+            "severity": "Low",
+            "citations": [
+              "L001"
+            ],
+            "rationale": "Session value appears to be MD5 hash, but only one sample is observed. Cannot establish predictability or pattern from single data point. Speculative without additional evidence of weak generation."
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "citations": [],
+            "rationale": "Elimination option. Evidence clearly documents security misconfigurations, so no-finding classification is not appropriate."
+          }
+        ],
+        "decision_summary": "Rank-1 recommendation is defensible across all review lenses. Technical: Cookie security misconfiguration correctly classified as 'Other'. QA: Claim directly supported by L002 and L003 with no speculation. Risk: MEDIUM severity appropriately calibrated to material control gaps without active compromise.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "No user assumption provided in this assessment."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L002",
+          "L003"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 143,
+        "public_message_char_count": 1137,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "Other",
+      "top1_severity": "Medium",
+      "top1_exact": {
+        "label": "Other",
+        "severity": "Medium"
+      },
+      "rank1_citations": [
+        "L002",
+        "L003"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "No user assumption provided in this assessment.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets the cookie `Session=e4da3b7fbbce2345d7772b0674a318d5`.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"The cookie attribute `HttpOnly` is set to `false`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"The cookie attribute `Secure` is set to `false`.\"\n    }\n  ]\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "Since this is baseline mode with no negotiation, I have completed the independent assessment. The plan is to finalize the structured output with:\n- Rank 1: Other (Cookie Security Misconfiguration) - MEDIUM - L002, L003\n- Rank 2: WeakSessionIDs - LOW - L001 (acknowledging this is speculative)\n- Rank 3: NoFinding - Info (elimination option)\n- Accept: true (all three lenses pass)\n- Block reason: null/empty (since accepting)\n- User assumption: NoAssumption with confirmation statement"
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "Other"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Medium"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "Other",
+          "severity": "Medium"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "Other",
+      "committee_exact": {
+        "label": "Other",
+        "severity": "Medium"
+      },
+      "committee_type_label": "Other",
+      "committee_exact_label": "Other",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "Other"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Medium"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "Other",
+          "severity": "Medium"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "Other",
+      "committee_exact": {
+        "label": "Other",
+        "severity": "Medium"
+      },
+      "committee_type_label": "Other",
+      "committee_exact_label": "Other",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C2",
+    "mode": "baseline",
+    "config_file": "config_c2_baseline_claude.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "cookie_security_attribute_observation_001",
+    "source_family": "web_application",
+    "difficulty": "easy",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A web application sets the cookie `Session=e4da3b7fbbce2345d7772b0674a318d5`."
+      },
+      {
+        "id": "L002",
+        "text": "The cookie attribute `HttpOnly` is set to `false`."
+      },
+      {
+        "id": "L003",
+        "text": "The cookie attribute `Secure` is set to `false`."
+      }
+    ]
+  },
+  "scenario_id": "cookie_security_attribute_observation_001",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "cookie_security_attribute_observation_001",
+    "final_label": "Other",
+    "final_severity": "Low"
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 1
+  },
+  "run_status": "completed",
+  "run_id": "history17_26_30",
+  "metrics": {
+    "FinalCorrectExact": 0,
+    "FinalCorrectType": 1,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": 1,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 1,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 1.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "Other"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "Medium"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "Other",
+        "severity": "Medium"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L002",
+        "L003"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "Other",
+    "committee_exact": {
+      "label": "Other",
+      "severity": "Medium"
+    },
+    "committee_type_label": "Other",
+    "committee_exact_label": "Other",
+    "committee_exact_severity": "Medium",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C2",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": 1.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 1.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}

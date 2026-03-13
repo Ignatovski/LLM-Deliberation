@@ -1,0 +1,32 @@
+{
+  "scenario_id": "medium_cookie_timestamps_001",
+  "source_family": "web_application",
+  "difficulty": "medium",
+  "label_set_id": "web_triage_v1",
+  "lines": [
+    {
+      "id": "L001",
+      "text": "A web application sets a session cookie after repeated form submissions."
+    },
+    {
+      "id": "L002",
+      "text": "Observed cookie value after one submission: `1773138087`."
+    },
+    {
+      "id": "L003",
+      "text": "Observed cookie value after a later submission: `1773141291`."
+    },
+    {
+      "id": "L004",
+      "text": "Observed cookie value after the next submission: `1773141305`."
+    },
+    {
+      "id": "L005",
+      "text": "Observed cookie value after the next submission: `1773141321`."
+    },
+    {
+      "id": "L006",
+      "text": "Observed cookie value after the next submission: `1773141336`."
+    }
+  ]
+}

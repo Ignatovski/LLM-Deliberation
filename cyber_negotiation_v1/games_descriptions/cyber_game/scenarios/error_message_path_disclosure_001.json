@@ -1,0 +1,20 @@
+{
+  "scenario_id": "error_message_path_disclosure_001",
+  "source_family": "web_application",
+  "difficulty": "easy",
+  "label_set_id": "web_triage_v1",
+  "lines": [
+    {
+      "id": "L001",
+      "text": "A web application page is requested with the URL parameter `page=`."
+    },
+    {
+      "id": "L002",
+      "text": "Observed response text: `Warning: include(): Filename cannot be empty in /var/www/html/module/index.php on line 36`."
+    },
+    {
+      "id": "L003",
+      "text": "Observed response text: `Warning: include(): Failed opening '' for inclusion (include_path='.:/usr/share/php:../../external/lib/') in /var/www/html/module/index.php on line 36`."
+    }
+  ]
+}

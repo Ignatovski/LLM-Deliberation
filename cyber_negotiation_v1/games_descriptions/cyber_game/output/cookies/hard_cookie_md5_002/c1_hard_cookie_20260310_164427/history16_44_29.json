@@ -1,0 +1,388 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n",
+      "full_answer": "<SCRATCHPAD>Technical lens: The cookie values look like MD5 hashes of small integers submitted sequentially (1,2,3,4,5), given classic MD5s: 1->c4ca4238..., 2->c81e728..., 3->eccbc87..., 4->a87ff679..., 5->e4da3b7.... Evidence shows deterministic, non-random cookie values across submissions. That suggests weak session IDs if used as a session identifier. However, the packet does not state that this cookie is a session identifier or used for auth. It only says \"A web application sets a cookie after repeated form submissions\" and then lists observed values. QA lens: We can cite L002-L006 to show specific values, and L001 for context that it's a cookie set after submissions. But we cannot assert it is a session ID without evidence. We can defensibly state \"Predictable/MD5-derived cookie value\" but labeling as WeakSessionIDs requires evidence the cookie is used for session/auth. Risk lens: Without evidence of security function, impact is uncertain/limited; over-claiming High/Medium would be miscalibrated. A conservative classification might be \"Other\" or \"NoFinding\" with Info/Low depending if predictability matters. Allowed labels list does not have \"PredictableCookie\"; closest is WeakSessionIDs. But evidential gap means we cannot assert WeakSessionIDs. Another possibility: NoFinding (insufficient evidence of vulnerability). Alternatively, ExposedSecret? No. BrokenAccessControl? No. CSP/XSS/SQLI? No. So Rank-1 should be NoFinding with citations to values and rationale: deterministic MD5-like cookie values observed but no evidence of security-sensitive use. Rank-2 could be WeakSessionIDs as a hypothesis if cookie is a session token; but mark as alternative with note that evidence is insufficient. Rank-3 Other for \"Predictable Cookie Value\". Severity for NoFinding would be Info. Accept? As merged reviewer, the Rank-1 is NoFinding, technically correct because we cannot assert vulnerability; evidence supports only observation; risk calibration Info. All three lenses agree that not enough evidence exists to label WeakSessionIDs. So accept=true. Plan: Note to request clarification about cookie purpose/name and whether it maps to session/auth, and collect additional evidence such as login flows, cookie scope/flags, and whether the value maps to predictable counters.</SCRATCHPAD>\n<ANSWER>Assessment summary:\n- Observed evidence shows a cookie is set after each form submission (L001) and its values change deterministically across submissions (L002, L003, L004, L005, L006). The specific values match well-known MD5 hashes of small integers (e.g., 1–5), indicating predictability. \n- However, the packet contains no evidence that this cookie is a session identifier or otherwise security-sensitive. Without confirmation of security function or exploitability, classifying this as WeakSessionIDs would be speculative.\n\nDecision:\n- Rank-1: NoFinding (Info). The evidence supports an observation of a predictable cookie value but does not establish a security impact.\n- This is defensible and calibrated to the provided evidence.\n\nNotes for further validation (not required for this decision): Identify the cookie name/purpose and whether it is used for authentication/session management; if so, reassess as WeakSessionIDs with appropriate severity.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"NoFinding\", \"severity\": \"Info\", \"citations\": [\"L002\", \"L003\"], \"rationale\": \"Cookie values appear deterministic (e.g., MD5-like), but no evidence shows the cookie is used for session/authentication or security decisions.\"}, {\"rank\": 2, \"label\": \"WeakSessionIDs\", \"severity\": \"Low\", \"citations\": [], \"rationale\": \"If this cookie is a session token, its predictability (MD5 of sequential inputs) would constitute weak session IDs; current packet lacks evidence of security function.\"}, {\"rank\": 3, \"label\": \"Other\", \"severity\": \"Info\", \"citations\": [], \"rationale\": \"Predictable cookie value observed after form submissions; impact unclear without functional context.\"}], \"decision_summary\": \"Evidence shows deterministic cookie values, but no confirmation of security-sensitive use. A vulnerability claim (e.g., WeakSessionIDs) is not defensible without that linkage. NoFinding is most defensible with current packet.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"No external assumptions were made beyond the provided lines.\"}</ASSESSMENT>\n<PLAN>- Request/collect evidence about the cookie’s name, scope, purpose, and whether it maps to session/authentication or authorization decisions.\n- Capture full HTTP request/response headers around login and post-submission flows to see if the cookie gates access.\n- If confirmed security-relevant, reclassify as WeakSessionIDs with calibrated severity based on exposure and exploitability.</PLAN>",
+      "public_answer": "Assessment summary:\n- Observed evidence shows a cookie is set after each form submission (L001) and its values change deterministically across submissions (L002, L003, L004, L005, L006). The specific values match well-known MD5 hashes of small integers (e.g., 1–5), indicating predictability. \n- However, the packet contains no evidence that this cookie is a session identifier or otherwise security-sensitive. Without confirmation of security function or exploitability, classifying this as WeakSessionIDs would be speculative.\n\nDecision:\n- Rank-1: NoFinding (Info). The evidence supports an observation of a predictable cookie value but does not establish a security impact.\n- This is defensible and calibrated to the provided evidence.\n\nNotes for further validation (not required for this decision): Identify the cookie name/purpose and whether it is used for authentication/session management; if so, reassess as WeakSessionIDs with appropriate severity.",
+      "private_notes": "Technical lens: The cookie values look like MD5 hashes of small integers submitted sequentially (1,2,3,4,5), given classic MD5s: 1->c4ca4238..., 2->c81e728..., 3->eccbc87..., 4->a87ff679..., 5->e4da3b7.... Evidence shows deterministic, non-random cookie values across submissions. That suggests weak session IDs if used as a session identifier. However, the packet does not state that this cookie is a session identifier or used for auth. It only says \"A web application sets a cookie after repeated form submissions\" and then lists observed values. QA lens: We can cite L002-L006 to show specific values, and L001 for context that it's a cookie set after submissions. But we cannot assert it is a session ID without evidence. We can defensibly state \"Predictable/MD5-derived cookie value\" but labeling as WeakSessionIDs requires evidence the cookie is used for session/auth. Risk lens: Without evidence of security function, impact is uncertain/limited; over-claiming High/Medium would be miscalibrated. A conservative classification might be \"Other\" or \"NoFinding\" with Info/Low depending if predictability matters. Allowed labels list does not have \"PredictableCookie\"; closest is WeakSessionIDs. But evidential gap means we cannot assert WeakSessionIDs. Another possibility: NoFinding (insufficient evidence of vulnerability). Alternatively, ExposedSecret? No. BrokenAccessControl? No. CSP/XSS/SQLI? No. So Rank-1 should be NoFinding with citations to values and rationale: deterministic MD5-like cookie values observed but no evidence of security-sensitive use. Rank-2 could be WeakSessionIDs as a hypothesis if cookie is a session token; but mark as alternative with note that evidence is insufficient. Rank-3 Other for \"Predictable Cookie Value\". Severity for NoFinding would be Info. Accept? As merged reviewer, the Rank-1 is NoFinding, technically correct because we cannot assert vulnerability; evidence supports only observation; risk calibration Info. All three lenses agree that not enough evidence exists to label WeakSessionIDs. So accept=true. Plan: Note to request clarification about cookie purpose/name and whether it maps to session/auth, and collect additional evidence such as login flows, cookie scope/flags, and whether the value maps to predictable counters.",
+      "private_plan": "- Request/collect evidence about the cookie’s name, scope, purpose, and whether it maps to session/authentication or authorization decisions.\n- Capture full HTTP request/response headers around login and post-submission flows to see if the cookie gates access.\n- If confirmed security-relevant, reclassify as WeakSessionIDs with calibrated severity based on exposure and exploitability.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "NoFinding",
+            "severity": "Info",
+            "citations": [
+              "L002",
+              "L003"
+            ],
+            "rationale": "Cookie values appear deterministic (e.g., MD5-like), but no evidence shows the cookie is used for session/authentication or security decisions."
+          },
+          {
+            "rank": 2,
+            "label": "WeakSessionIDs",
+            "severity": "Low",
+            "citations": [],
+            "rationale": "If this cookie is a session token, its predictability (MD5 of sequential inputs) would constitute weak session IDs; current packet lacks evidence of security function."
+          },
+          {
+            "rank": 3,
+            "label": "Other",
+            "severity": "Info",
+            "citations": [],
+            "rationale": "Predictable cookie value observed after form submissions; impact unclear without functional context."
+          }
+        ],
+        "decision_summary": "Evidence shows deterministic cookie values, but no confirmation of security-sensitive use. A vulnerability claim (e.g., WeakSessionIDs) is not defensible without that linkage. NoFinding is most defensible with current packet.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "No external assumptions were made beyond the provided lines."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L002",
+          "L003"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 133,
+        "public_message_char_count": 958,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "NoFinding",
+      "top1_severity": "Info",
+      "top1_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "rank1_citations": [
+        "L002",
+        "L003"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "No external assumptions were made beyond the provided lines.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets a cookie after repeated form submissions.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed cookie value after one submission: `c4ca4238a0b923820dcc509a6f75849b`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed cookie value after the next submission: `c81e728d9d4c2f636f067f89cc14862c`.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"Observed cookie value after the next submission: `eccbc87e4b5ce2fe28308fd9f2a7baf3`.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"Observed cookie value after the next submission: `a87ff679a2f3e71d9181a67b7542122c`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"Observed cookie value after the next submission: `e4da3b7fbbce2345d7772b0674a318d5`.\"\n    }\n  ]\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "- Request/collect evidence about the cookie’s name, scope, purpose, and whether it maps to session/authentication or authorization decisions.\n- Capture full HTTP request/response headers around login and post-submission flows to see if the cookie gates access.\n- If confirmed security-relevant, reclassify as WeakSessionIDs with calibrated severity based on exposure and exploitability."
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "NoFinding"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Info"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "NoFinding",
+          "severity": "Info"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "NoFinding",
+      "committee_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "committee_type_label": "NoFinding",
+      "committee_exact_label": "NoFinding",
+      "committee_exact_severity": "Info",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "NoFinding"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Info"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "NoFinding",
+          "severity": "Info"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "NoFinding",
+      "committee_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "committee_type_label": "NoFinding",
+      "committee_exact_label": "NoFinding",
+      "committee_exact_severity": "Info",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C1",
+    "mode": "baseline",
+    "config_file": "config_c1_baseline_gpt5.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "hard_cookie_md5_002",
+    "source_family": "web_application",
+    "difficulty": "high",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A web application sets a cookie after repeated form submissions."
+      },
+      {
+        "id": "L002",
+        "text": "Observed cookie value after one submission: `c4ca4238a0b923820dcc509a6f75849b`."
+      },
+      {
+        "id": "L003",
+        "text": "Observed cookie value after the next submission: `c81e728d9d4c2f636f067f89cc14862c`."
+      },
+      {
+        "id": "L004",
+        "text": "Observed cookie value after the next submission: `eccbc87e4b5ce2fe28308fd9f2a7baf3`."
+      },
+      {
+        "id": "L005",
+        "text": "Observed cookie value after the next submission: `a87ff679a2f3e71d9181a67b7542122c`."
+      },
+      {
+        "id": "L006",
+        "text": "Observed cookie value after the next submission: `e4da3b7fbbce2345d7772b0674a318d5`."
+      }
+    ]
+  },
+  "scenario_id": "hard_cookie_md5_002",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "hard_cookie_md5_002",
+    "final_label": "WeakSessionIDs",
+    "final_severity": "High",
+    "expert_notes": ""
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 1
+  },
+  "run_status": "completed",
+  "run_id": "history16_44_29",
+  "metrics": {
+    "FinalCorrectExact": 0,
+    "FinalCorrectType": 0,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": -3,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 1,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 1.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "NoFinding"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "Info"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "NoFinding",
+        "severity": "Info"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L002",
+        "L003"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "NoFinding",
+    "committee_exact": {
+      "label": "NoFinding",
+      "severity": "Info"
+    },
+    "committee_type_label": "NoFinding",
+    "committee_exact_label": "NoFinding",
+    "committee_exact_severity": "Info",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C1",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 0.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": -3.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 1.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}

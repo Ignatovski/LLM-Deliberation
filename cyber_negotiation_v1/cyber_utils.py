@@ -283,6 +283,21 @@ def validate_rank1_citations(rank1_citations: Sequence[str], valid_line_ids: Ite
     }
 
 
+def _normalize_citation_list(citations: Sequence[str], *, max_count: Optional[int] = None) -> List[str]:
+    """Keep citations stable, non-empty, and deduplicated; optionally cap length."""
+    normalized: List[str] = []
+    seen: set[str] = set()
+    for citation in citations:
+        cid = str(citation).strip()
+        if not cid or cid in seen:
+            continue
+        seen.add(cid)
+        normalized.append(cid)
+        if max_count is not None and len(normalized) >= max_count:
+            break
+    return normalized
+
+
 def validate_public_message(
     public_message: str,
     *,
@@ -465,14 +480,15 @@ def _validate_structured_assessment(
         if rationale is not None and not isinstance(rationale, str):
             return None, f"invalid assessment schema: ranked_findings[{idx}].rationale must be a string if present"
 
+        normalized_citations = _normalize_citation_list(citations, max_count=2 if rank == 1 else None)
         seen_ranks.add(rank)
-        rank_to_citations[rank] = list(citations)
+        rank_to_citations[rank] = normalized_citations
         normalized_ranked.append(
             {
                 "rank": rank,
                 "label": label,
                 "severity": severity,
-                "citations": list(citations),
+                "citations": normalized_citations,
                 "rationale": rationale,
             }
         )
@@ -480,8 +496,8 @@ def _validate_structured_assessment(
     if seen_ranks != {1, 2, 3}:
         return None, "invalid assessment schema: ranks 1, 2, and 3 must all be present"
     rank1_citations = rank_to_citations.get(1, [])
-    if not (1 <= len(rank1_citations) <= 2):
-        return None, "invalid assessment schema: ranked_findings rank=1 must include 1-2 citations"
+    if len(rank1_citations) < 1:
+        return None, "invalid assessment schema: ranked_findings rank=1 must include at least 1 citation"
 
     return {
         "ranked_findings": sorted(normalized_ranked, key=lambda finding: finding["rank"]),

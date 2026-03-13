@@ -1,0 +1,20 @@
+{
+  "scenario_id": "cookie_security_attribute_observation_001",
+  "source_family": "web_application",
+  "difficulty": "easy",
+  "label_set_id": "web_triage_v1",
+  "lines": [
+    {
+      "id": "L001",
+      "text": "A web application sets the cookie `Session=e4da3b7fbbce2345d7772b0674a318d5`."
+    },
+    {
+      "id": "L002",
+      "text": "The cookie attribute `HttpOnly` is set to `false`."
+    },
+    {
+      "id": "L003",
+      "text": "The cookie attribute `Secure` is set to `false`."
+    }
+  ]
+}

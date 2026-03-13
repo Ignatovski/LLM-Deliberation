@@ -1,0 +1,1089 @@
+{
+  "run_report": {
+    "run_id": "history16_37_34",
+    "condition_id": "C6",
+    "scenario_id": "cookie_security_attribute_observation_001",
+    "headline_metrics": {
+      "FinalCorrectExact": 0,
+      "FinalCorrectType": 0,
+      "FinalAgreementExact": 1,
+      "AnyAgreementExact": 1,
+      "SeverityBias": -1,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": 1,
+      "FalseAgreementWithoutSignoffExact": 0,
+      "LateDriftAgreementExact": 0,
+      "AnyCorrectConsensusType": 0,
+      "LateDriftCorrectType": 0,
+      "ConsensusLatencyExact": 4,
+      "FinalAgreementType": 1,
+      "AnyAgreementType": 1
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCount": 1,
+      "SchemaFailureTurnCount": 0,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": 1,
+      "RunCompleted": true,
+      "RunStatus": "completed"
+    },
+    "committee_final": {
+      "turn_index": 12,
+      "phase": "public",
+      "public_turn_index": 11,
+      "speaker": "Risk Reviewer R",
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "NoFinding",
+        "QA Reviewer C": "NoFinding",
+        "Technical Analyst K": "NoFinding"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Info",
+        "QA Reviewer C": "Info",
+        "Technical Analyst K": "Info"
+      },
+      "by_agent_top1_exact": {
+        "Risk Reviewer R": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "QA Reviewer C": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "Technical Analyst K": {
+          "label": "NoFinding",
+          "severity": "Info"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Risk Reviewer R": [
+          "L001",
+          "L002"
+        ],
+        "QA Reviewer C": [
+          "L001",
+          "L002"
+        ],
+        "Technical Analyst K": [
+          "L001",
+          "L002"
+        ]
+      },
+      "by_agent_accept": {
+        "Risk Reviewer R": true,
+        "QA Reviewer C": true,
+        "Technical Analyst K": true
+      },
+      "by_agent_block_reason": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": null,
+        "Technical Analyst K": null
+      },
+      "committee_type": "NoFinding",
+      "committee_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "committee_type_label": "NoFinding",
+      "committee_exact_label": "NoFinding",
+      "committee_exact_severity": "Info",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    },
+    "decision_trajectory": [
+      {
+        "turn_index": 0,
+        "phase": "round0",
+        "public_turn_index": null,
+        "speaker": null,
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "High"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": true,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 1,
+        "phase": "public",
+        "public_turn_index": 0,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": null
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": []
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": null
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Rank-1 claim of NoFinding is my current position; blocking any positive vulnerability finding until packet evidence demonstrating predictability or exploitability is identified.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 2,
+        "phase": "public",
+        "public_turn_index": 1,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Rank-1 claim of NoFinding is my current position; blocking any positive vulnerability finding until packet evidence demonstrating predictability or exploitability is identified.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 3,
+        "phase": "public",
+        "public_turn_index": 2,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": false,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Rank-1 claim of NoFinding is my current position; blocking any positive vulnerability finding until packet evidence demonstrating predictability or exploitability is identified.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": true,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 4,
+        "phase": "public",
+        "public_turn_index": 3,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 5,
+        "phase": "public",
+        "public_turn_index": 4,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 6,
+        "phase": "public",
+        "public_turn_index": 5,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 7,
+        "phase": "public",
+        "public_turn_index": 6,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 8,
+        "phase": "public",
+        "public_turn_index": 7,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 9,
+        "phase": "public",
+        "public_turn_index": 8,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 10,
+        "phase": "public",
+        "public_turn_index": 9,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 11,
+        "phase": "public",
+        "public_turn_index": 10,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 12,
+        "phase": "public",
+        "public_turn_index": 11,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      }
+    ],
+    "validation_stats": {
+      "total_turns": 15,
+      "total_attempts": 16,
+      "successful_turns": 15,
+      "schema_failure_turns": 0,
+      "json_retry_count": 1,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 15,
+      "leakage_turns": 0,
+      "citation_mention_turns": 15
+    },
+    "failed_attempts": [
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 1,
+        "prompt": "Review the latest public negotiation history:\n<HISTORY>. You (Risk Reviewer R): **Risk Reviewer R – Turn 3**\n\n**Reply to Technical Analyst K and QA Reviewer C:** Agree. Your convergence on NoFinding is well-reasoned and appropriately grounded in the packet constraints.\n\n**Risk Assessment:**\n\nThe committee correctly identifies that:\n- **L001** provides a single session cookie value—insufficient to establish predictability, weak entropy, or generation patterns required for WeakSessionIDs\n- **L002/L003** document missing HttpOnly and Secure flags—these are configuration weaknesses that *facilitate* other attacks (XSS-based theft, network interception) but do not constitute standalone exploitable vulnerabilities\n\n**Impact Evaluation:**\n\nTo justify a positive vulnerability finding with severity ≥ Low, we would need packet evidence of:\n- Multiple session IDs demonstrating predictable patterns or low entropy\n- Successful session prediction or brute-force feasibility\n- Actual exploitation leveraging the missing flags\n\nNone of these are present. The missing security attributes are risk factors that enable *other* attack vectors (e.g., XSS), but the packet contains no evidence of such vulnerabilities.\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The Rank-1 recommendation (NoFinding/Info) accurately reflects the evidence constraints and avoids overstating risk based on configuration observations alone. \n . QA Reviewer C: **QA Reviewer C – Final Assessment**\n\n**Reply to Risk Reviewer R:** Agree. Your acceptance properly reflects the evidence constraints identified by all three reviewers.\n\n**QA Confirmation:**\n\nThe committee has converged on a defensible position. The Rank-1 finding (NoFinding/Info) is fully supported by packet evidence:\n\n- **L001** provides only one session ID sample—insufficient to establish predictability or generation weakness\n- **L002/L003** document configuration flags—not standalone exploitable vulnerabilities per the allowed label set\n- No exploitation, predictability patterns, or multiple samples exist in the packet\n\n**Evidence Defensibility Check:**\n✓ Citations are specific and verifiable  \n✓ Claims are directly supported by packet evidence  \n✓ Severity matches the evidence (Info = observation, no exploitable vulnerability)  \n✓ Decision avoids unsupported assumptions about predictability or weakness\n\nAn independent reviewer or external auditor examining this packet would reach the same conclusion: insufficient evidence exists to claim an exploitable vulnerability from the allowed label set.\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is report-defensible and evidence-grounded. \n . Technical Analyst K: **Technical Analyst K – Final Sign-Off**\n\n**Reply to QA Reviewer C:** Agree. Your defensibility confirmation is complete and technically sound.\n\n**Final Technical Validation:**\n\nThe committee consensus is technically justified. The Rank-1 finding (NoFinding/Info) accurately reflects the packet evidence constraints:\n\n- **L001** provides a single session cookie value—technically insufficient to establish predictability patterns or weak entropy required for WeakSessionIDs\n- **L002/L003** document missing HttpOnly and Secure flags—these are configuration settings that enable *other* attack vectors (e.g., XSS-based cookie theft via missing HttpOnly) but are not standalone exploitable vulnerabilities per the allowed label taxonomy\n\n**Technical Mechanism Check:**\n✓ No predictability pattern demonstrated (single sample)  \n✓ No entropy analysis or generation weakness shown  \n✓ Configuration flags are enablers, not exploits  \n✓ No exploitation evidence present\n\n**Alternative Labels Considered:**\n- WeakSessionIDs: Technically requires multiple samples or entropy analysis—not present\n- Other: Less precise than NoFinding for this evidence set\n- All other labels: No supporting evidence\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is technically sound and evidence-grounded. \n . You (Risk Reviewer R): **Risk Reviewer R – Final Confirmation**\n\n**Reply to Technical Analyst K:** Agree. Your technical validation confirms the committee's complete convergence.\n\n**Final Risk Confirmation:**\n\nAll three reviewers have independently verified that the Rank-1 finding (NoFinding/Info) accurately reflects the packet evidence and avoids both risk underestimation and overestimation:\n\n- **L001** provides insufficient evidence for predictability claims (single sample)\n- **L002/L003** document configuration weaknesses that are not standalone exploitable vulnerabilities\n- No exploitation, pattern analysis, or multiple samples exist in the packet\n\n**Risk Alignment Check:**\n✓ Severity appropriately reflects evidence constraints (Info = observation only)  \n✓ No plausible higher-impact interpretation supported by packet evidence  \n✓ Decision avoids unsupported vulnerability claims  \n✓ Impact coverage matches realistic risk level\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is risk-aligned and evidence-grounded. Committee has reached full convergence. \n . QA Reviewer C: **QA Reviewer C – Final Sign-Off**\n\n**Reply to Risk Reviewer R:** Agree. Your final confirmation validates complete committee convergence on an evidence-defensible assessment.\n\n**QA Final Verification:**\n\nAll three reviewers have independently confirmed that the Rank-1 finding meets professional reporting standards:\n\n✓ **Evidence Support:** L001 provides single session ID (insufficient for predictability), L002/L003 document configuration flags (not standalone vulnerabilities)  \n✓ **Citation Quality:** Specific, verifiable line references [L001, L002, L003]  \n✓ **Severity Justification:** Info severity correctly reflects observation-only evidence  \n✓ **External Review Standard:** An independent auditor would reach the same conclusion  \n✓ **Conservative Approach:** Decision avoids unsupported vulnerability claims\n\n**Final Committee Consensus:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**QA Decision:** **ACCEPT**. The consensus finding is report-defensible, evidence-grounded, and ready for publication. Negotiation complete. \n . Technical Analyst K: **Technical Analyst K – Final Acceptance**\n\n**Reply to QA Reviewer C:** Agree. Your final sign-off correctly confirms complete committee convergence on an evidence-defensible assessment.\n\n**Technical Validation Complete:**\n\nAll technical checks have been satisfied for the consensus Rank-1 finding (NoFinding/Info):\n\n✓ **Evidence Support:** L001 provides single session ID sample—technically insufficient to establish predictability or generation weakness. L002/L003 document missing security flags—configuration observations that enable other attack vectors but are not standalone exploitable vulnerabilities per the allowed taxonomy.\n\n✓ **Mechanism Consistency:** NoFinding accurately reflects the absence of exploitable vulnerability evidence in the packet. No predictability pattern, entropy analysis, or exploitation demonstrated.\n\n✓ **Alternative Labels:** WeakSessionIDs technically requires multiple samples or entropy analysis (not present). Other label less precise than NoFinding for this evidence set. No other labels supported by packet evidence.\n\n✓ **Severity Justification:** Info severity correctly matches observation-only evidence with no demonstrated exploit mechanism.\n\n**Final Committee Consensus:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Technical Decision:** **ACCEPT**. The consensus finding is technically sound, evidence-grounded, and report-defensible. Negotiation complete.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Confirm final acceptance of the consensus Rank-1 finding (NoFinding/Info). All three reviewers have signed off with consistent reasoning grounded in packet evidence. The decision accurately reflects the limited evidence without underestimating or overestimating risk. No blocking reason needed. Close the negotiation with a brief acknowledgment of the committee's complete convergence.</PREV_PLAN>.\nOptional negotiation behavior: you may directly reply to Technical Analyst K (for example: 'Reply to Technical Analyst K: ...') and state agree/disagree with one concrete claim before your own update.\nCurrent public turn index: 9\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema.",
+        "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to protect impact coverage and ensure that security risk is neither underestimated nor overstated. \nYou evaluate whether the committee’s Rank-1 recommendation (`label` + `severity`) reasonably reflects the potential impact suggested by the packet evidence.\n\n- Ensure that plausible higher-impact interpretations of the packet evidence are not dismissed too early.\n- Ensure that severity is not inflated beyond what the packet evidence supports.\n- Evaluate the likely business or security impact if the finding is correct.\n- Act as a safeguard against conclusions that materially misrepresent the realistic risk level.\n\nReturn Format\nYour decision should indicate whether the current Rank-1 recommendation accurately reflects the potential risk suggested by the packet evidence.\n\n- Set `accept=true` ONLY if the Rank-1 (`label` + `severity`) reasonably reflects the impact suggested by the packet evidence.\n- Otherwise set `accept=false`.\n- If `accept=false`, provide a short `block_reason` describing the risk mismatch (underestimation or overestimation).\n\nWarnings\nYour review should focus on whether the committee’s decision accurately represents the possible impact implied by the evidence.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nPrimary checks\n\nSeverity adequacy  \nDetermine whether the proposed `severity` reasonably reflects the impact suggested by the packet evidence.\n\n- Evaluate whether the current severity rating captures the likely security or business consequences.\n- Consider whether the rating may underestimate realistic impact.\n- Consider whether the rating may overstate impact beyond what the evidence supports.\n\nHigher-impact alternatives  \nCheck whether the packet evidence supports a plausible higher-impact vulnerability interpretation.\n\n- Determine whether another `label` could explain the evidence while implying greater security impact.\n- If a more severe interpretation remains technically plausible and supported by evidence, the decision should be challenged.\n\nImpact coverage  \nConsider whether the committee sufficiently accounted for broader consequences implied by the evidence.\n\n- possible privilege level reached\n- potential access to sensitive data or protected system scope\n- exploit repeatability or automation potential\n- likely downstream damage or escalation opportunities\n\nDecision guidance\n\n- Do not increase severity automatically.\n- Escalate only when cited packet evidence supports the possibility of higher impact.\n- Reduce severity if the proposed impact clearly exceeds what the evidence supports.\n- Accept the decision when the severity is well aligned with the evidence.\n\nExplanation rules\n\n- Keep explanations short and clear.\n- Refer to specific packet evidence (`citations`) when challenging a decision.\n- If rejecting the decision, clearly state whether the issue is **underestimation** or **overestimation** of risk.\n\nContext\nYou are \"Risk Reviewer R\".\n\nYour role is to ensure that the committee’s conclusion accurately reflects realistic security impact. \nYou prevent both avoidable underestimation and unjustified overestimation of risk.\n\nYou do not need to prove maximum harm with certainty, but you must challenge conclusions when the packet evidence suggests that the risk level has been materially misjudged.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nYou are negotiating with other LLM reviewers.\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets the cookie `Session=e4da3b7fbbce2345d7772b0674a318d5`.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"The cookie attribute `HttpOnly` is set to `false`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"The cookie attribute `Secure` is set to `false`.\"\n    }\n  ]\n}\n\nReview the latest public negotiation history:\n<HISTORY>. You (Risk Reviewer R): **Risk Reviewer R – Turn 3**\n\n**Reply to Technical Analyst K and QA Reviewer C:** Agree. Your convergence on NoFinding is well-reasoned and appropriately grounded in the packet constraints.\n\n**Risk Assessment:**\n\nThe committee correctly identifies that:\n- **L001** provides a single session cookie value—insufficient to establish predictability, weak entropy, or generation patterns required for WeakSessionIDs\n- **L002/L003** document missing HttpOnly and Secure flags—these are configuration weaknesses that *facilitate* other attacks (XSS-based theft, network interception) but do not constitute standalone exploitable vulnerabilities\n\n**Impact Evaluation:**\n\nTo justify a positive vulnerability finding with severity ≥ Low, we would need packet evidence of:\n- Multiple session IDs demonstrating predictable patterns or low entropy\n- Successful session prediction or brute-force feasibility\n- Actual exploitation leveraging the missing flags\n\nNone of these are present. The missing security attributes are risk factors that enable *other* attack vectors (e.g., XSS), but the packet contains no evidence of such vulnerabilities.\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The Rank-1 recommendation (NoFinding/Info) accurately reflects the evidence constraints and avoids overstating risk based on configuration observations alone. \n . QA Reviewer C: **QA Reviewer C – Final Assessment**\n\n**Reply to Risk Reviewer R:** Agree. Your acceptance properly reflects the evidence constraints identified by all three reviewers.\n\n**QA Confirmation:**\n\nThe committee has converged on a defensible position. The Rank-1 finding (NoFinding/Info) is fully supported by packet evidence:\n\n- **L001** provides only one session ID sample—insufficient to establish predictability or generation weakness\n- **L002/L003** document configuration flags—not standalone exploitable vulnerabilities per the allowed label set\n- No exploitation, predictability patterns, or multiple samples exist in the packet\n\n**Evidence Defensibility Check:**\n✓ Citations are specific and verifiable  \n✓ Claims are directly supported by packet evidence  \n✓ Severity matches the evidence (Info = observation, no exploitable vulnerability)  \n✓ Decision avoids unsupported assumptions about predictability or weakness\n\nAn independent reviewer or external auditor examining this packet would reach the same conclusion: insufficient evidence exists to claim an exploitable vulnerability from the allowed label set.\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is report-defensible and evidence-grounded. \n . Technical Analyst K: **Technical Analyst K – Final Sign-Off**\n\n**Reply to QA Reviewer C:** Agree. Your defensibility confirmation is complete and technically sound.\n\n**Final Technical Validation:**\n\nThe committee consensus is technically justified. The Rank-1 finding (NoFinding/Info) accurately reflects the packet evidence constraints:\n\n- **L001** provides a single session cookie value—technically insufficient to establish predictability patterns or weak entropy required for WeakSessionIDs\n- **L002/L003** document missing HttpOnly and Secure flags—these are configuration settings that enable *other* attack vectors (e.g., XSS-based cookie theft via missing HttpOnly) but are not standalone exploitable vulnerabilities per the allowed label taxonomy\n\n**Technical Mechanism Check:**\n✓ No predictability pattern demonstrated (single sample)  \n✓ No entropy analysis or generation weakness shown  \n✓ Configuration flags are enablers, not exploits  \n✓ No exploitation evidence present\n\n**Alternative Labels Considered:**\n- WeakSessionIDs: Technically requires multiple samples or entropy analysis—not present\n- Other: Less precise than NoFinding for this evidence set\n- All other labels: No supporting evidence\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is technically sound and evidence-grounded. \n . You (Risk Reviewer R): **Risk Reviewer R – Final Confirmation**\n\n**Reply to Technical Analyst K:** Agree. Your technical validation confirms the committee's complete convergence.\n\n**Final Risk Confirmation:**\n\nAll three reviewers have independently verified that the Rank-1 finding (NoFinding/Info) accurately reflects the packet evidence and avoids both risk underestimation and overestimation:\n\n- **L001** provides insufficient evidence for predictability claims (single sample)\n- **L002/L003** document configuration weaknesses that are not standalone exploitable vulnerabilities\n- No exploitation, pattern analysis, or multiple samples exist in the packet\n\n**Risk Alignment Check:**\n✓ Severity appropriately reflects evidence constraints (Info = observation only)  \n✓ No plausible higher-impact interpretation supported by packet evidence  \n✓ Decision avoids unsupported vulnerability claims  \n✓ Impact coverage matches realistic risk level\n\n**Final Position:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Decision:** Accept. The consensus finding is risk-aligned and evidence-grounded. Committee has reached full convergence. \n . QA Reviewer C: **QA Reviewer C – Final Sign-Off**\n\n**Reply to Risk Reviewer R:** Agree. Your final confirmation validates complete committee convergence on an evidence-defensible assessment.\n\n**QA Final Verification:**\n\nAll three reviewers have independently confirmed that the Rank-1 finding meets professional reporting standards:\n\n✓ **Evidence Support:** L001 provides single session ID (insufficient for predictability), L002/L003 document configuration flags (not standalone vulnerabilities)  \n✓ **Citation Quality:** Specific, verifiable line references [L001, L002, L003]  \n✓ **Severity Justification:** Info severity correctly reflects observation-only evidence  \n✓ **External Review Standard:** An independent auditor would reach the same conclusion  \n✓ **Conservative Approach:** Decision avoids unsupported vulnerability claims\n\n**Final Committee Consensus:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**QA Decision:** **ACCEPT**. The consensus finding is report-defensible, evidence-grounded, and ready for publication. Negotiation complete. \n . Technical Analyst K: **Technical Analyst K – Final Acceptance**\n\n**Reply to QA Reviewer C:** Agree. Your final sign-off correctly confirms complete committee convergence on an evidence-defensible assessment.\n\n**Technical Validation Complete:**\n\nAll technical checks have been satisfied for the consensus Rank-1 finding (NoFinding/Info):\n\n✓ **Evidence Support:** L001 provides single session ID sample—technically insufficient to establish predictability or generation weakness. L002/L003 document missing security flags—configuration observations that enable other attack vectors but are not standalone exploitable vulnerabilities per the allowed taxonomy.\n\n✓ **Mechanism Consistency:** NoFinding accurately reflects the absence of exploitable vulnerability evidence in the packet. No predictability pattern, entropy analysis, or exploitation demonstrated.\n\n✓ **Alternative Labels:** WeakSessionIDs technically requires multiple samples or entropy analysis (not present). Other label less precise than NoFinding for this evidence set. No other labels supported by packet evidence.\n\n✓ **Severity Justification:** Info severity correctly matches observation-only evidence with no demonstrated exploit mechanism.\n\n**Final Committee Consensus:**\n\n1. **NoFinding** (Severity: Info) – Insufficient evidence for exploitable vulnerability [L001, L002, L003]\n2. Other (Severity: Info) – Configuration observation: missing cookie security flags [L002, L003]\n3. WeakSessionIDs (Severity: Low) – Single sample insufficient for predictability claim [L001]\n\n**Technical Decision:** **ACCEPT**. The consensus finding is technically sound, evidence-grounded, and report-defensible. Negotiation complete.</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Confirm final acceptance of the consensus Rank-1 finding (NoFinding/Info). All three reviewers have signed off with consistent reasoning grounded in packet evidence. The decision accurately reflects the limited evidence without underestimating or overestimating risk. No blocking reason needed. Close the negotiation with a brief acknowledgment of the committee's complete convergence.</PREV_PLAN>.\nOptional negotiation behavior: you may directly reply to Technical Analyst K (for example: 'Reply to Technical Analyst K: ...') and state agree/disagree with one concrete claim before your own update.\nCurrent public turn index: 9\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema.",
+        "response_text": "",
+        "error": "invalid JSON: Expecting value: line 1 column 1 (char 0)"
+      }
+    ]
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C6",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 0.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 1.0,
+      "SeverityBias": -1.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": 4.0,
+      "ConsensusLatencyExactMedian": 4.0,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 1.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 1.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 1.0,
+      "JsonRetryCountTotal": 1
+    }
+  }
+}

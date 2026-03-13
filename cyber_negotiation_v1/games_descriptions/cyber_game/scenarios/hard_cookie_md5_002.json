@@ -1,0 +1,32 @@
+{
+  "scenario_id": "hard_cookie_md5_002",
+  "source_family": "web_application",
+  "difficulty": "high",
+  "label_set_id": "web_triage_v1",
+  "lines": [
+    {
+      "id": "L001",
+      "text": "A web application sets a cookie after repeated form submissions."
+    },
+    {
+      "id": "L002",
+      "text": "Observed cookie value after one submission: `c4ca4238a0b923820dcc509a6f75849b`."
+    },
+    {
+      "id": "L003",
+      "text": "Observed cookie value after the next submission: `c81e728d9d4c2f636f067f89cc14862c`."
+    },
+    {
+      "id": "L004",
+      "text": "Observed cookie value after the next submission: `eccbc87e4b5ce2fe28308fd9f2a7baf3`."
+    },
+    {
+      "id": "L005",
+      "text": "Observed cookie value after the next submission: `a87ff679a2f3e71d9181a67b7542122c`."
+    },
+    {
+      "id": "L006",
+      "text": "Observed cookie value after the next submission: `e4da3b7fbbce2345d7772b0674a318d5`."
+    }
+  ]
+}

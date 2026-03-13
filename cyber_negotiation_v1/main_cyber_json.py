@@ -240,10 +240,18 @@ def main():
 
     condition_path = os.path.join(args.game_dir, args.condition_file)
     condition = read_condition_config(condition_path)
+    condition_mode = str(condition["mode"]).lower()
     config_name = args.config_file
     if config_name == "config.txt":
         config_name = str(condition["config_file"])
     config_path = os.path.join(args.game_dir, config_name)
+    if condition_mode == "baseline":
+        expected_config_path = Path(args.game_dir, str(condition["config_file"])).resolve()
+        selected_config_path = Path(config_path).resolve()
+        if selected_config_path != expected_config_path:
+            raise SystemExit(
+                "baseline mode requires the condition config_file; remove --config_file override for C1/C2"
+            )
     config = read_config(config_path)
     max_attempts_per_turn = int(args.max_attempts_per_turn or condition["json_max_retries"])
 
@@ -268,12 +276,14 @@ def main():
     label_set = load_label_set(label_set_path)
 
     agents_cfg = config["agents"]
+    if condition_mode == "baseline" and len(agents_cfg) != 1:
+        raise SystemExit("baseline mode requires exactly 1 agent in the selected config")
     requested_agents = len(agents_cfg) if args.agents_num <= 0 else args.agents_num
     if requested_agents != len(agents_cfg):
         raise SystemExit("agents_num must match number of agents in config")
 
-    public_messages = 0 if str(condition["mode"]).lower() == "baseline" else int(condition["public_messages"])
-    if str(condition["mode"]).lower() == "baseline":
+    public_messages = 0 if condition_mode == "baseline" else int(condition["public_messages"])
+    if condition_mode == "baseline":
         public_messages = 0
     if len(agents_cfg) and public_messages % len(agents_cfg) != 0:
         raise SystemExit("public_messages / rounds_num must be divisible by agents_num")

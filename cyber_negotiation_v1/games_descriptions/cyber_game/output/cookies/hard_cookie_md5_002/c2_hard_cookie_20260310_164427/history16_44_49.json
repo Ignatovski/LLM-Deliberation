@@ -1,0 +1,395 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n",
+      "full_answer": "<SCRATCHPAD>**Technical Lens Analysis:**\n\nFirst, I need to decode the observed cookie values. These appear to be MD5 hashes (32 hex characters each):\n- L002: c4ca4238a0b923820dcc509a6f75849b = MD5(\"1\")\n- L003: c81e728d9d4c2f636f067f89cc14862c = MD5(\"2\")\n- L004: eccbc87e4b5ce2fe28308fd9f2a7baf3 = MD5(\"3\")\n- L005: a87ff679a2f3e71d9181a67b7542122c = MD5(\"4\")\n- L006: e4da3b7fbbce2345d7772b0674a318d5 = MD5(\"5\")\n\nThe sequence is sequential integers (1, 2, 3, 4, 5) hashed with MD5. This is a predictable session identifier pattern.\n\n**Mechanism:** The application is generating session cookies based on predictable sequential values. An attacker can:\n1. Recognize the pattern (MD5 of sequential integers)\n2. Generate valid session IDs for other users\n3. Potentially hijack other user sessions by predicting their session tokens\n\nThis matches the \"WeakSessionIDs\" vulnerability label perfectly. The session identifiers lack sufficient entropy and randomness.\n\n**QA Lens Analysis:**\n\nEvidence support:\n- L002-L006 provide five sequential cookie observations\n- The pattern is directly observable from the cited lines\n- An independent reviewer can verify the MD5 hash pattern from these exact values\n- No external assumptions needed - the sequential MD5 pattern is evident from the packet alone\n\nCitations L002-L006 collectively demonstrate the predictable pattern. For the rank-1 finding, I'll cite L002 and L006 to show the start and end of the sequence, though any pair would work.\n\n**Risk Lens Analysis:**\n\nImpact of weak session IDs:\n- High severity is appropriate because:\n  - Predictable session IDs enable session hijacking\n  - Attacker can potentially access other user accounts\n  - Authentication bypass is possible\n  - No brute-force needed - simple prediction\n  - Direct path to unauthorized access\n\nHowever, I should consider if this warrants \"High\" or \"Medium\":\n- High: Complete session prediction → unauthorized account access\n- The evidence shows a trivially predictable pattern (sequential MD5)\n- This is a critical authentication control failure\n\nSeverity assessment: **High** is defensible. Predictable session IDs that allow session hijacking typically warrant High severity in professional pentest reports.\n\n**Alternative Labels Considered:**\n- BrokenAccessControl: Less specific; WeakSessionIDs is more precise\n- AuthBypass: Possible but less direct; the root cause is weak session generation\n- NoFinding: Clearly incorrect; there's an obvious security issue\n\n**Decision:**\n- Rank 1: WeakSessionIDs / High (L002, L006)\n- Rank 2: AuthBypass / High (viable interpretation but less precise)\n- Rank 3: BrokenAccessControl / Medium (too generic)\n\nThe Rank-1 recommendation is technically correct, evidence-supported, and appropriately severe. Accept = true.</SCRATCHPAD>\n<ANSWER>**Round 0 Independent Assessment**\n\nThe evidence packet (L002-L006) shows five sequential cookie values that are MD5 hashes of the integers 1 through 5. This pattern indicates predictable session identifier generation.\n\n**Rank-1 Finding: WeakSessionIDs / High**\n- The application generates session cookies using sequential integers hashed with MD5\n- An attacker can predict future and past session identifiers by recognizing this pattern\n- This enables session hijacking without requiring brute-force attacks\n- Direct path to unauthorized account access justifies High severity\n\n**Technical correctness:** The mechanism is a classic weak session ID vulnerability. Sequential token generation removes cryptographic randomness required for secure sessions.\n\n**Evidence support:** Citations L002 and L006 anchor the observed sequence. All five observations confirm the predictable pattern.\n\n**Risk calibration:** High severity is appropriate. Predictable session tokens allow trivial session hijacking, representing a critical authentication control failure.\n\n**Decision:** Accept Rank-1 recommendation. The finding is defensible across technical, QA, and risk lenses.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"WeakSessionIDs\", \"severity\": \"High\", \"citations\": [\"L002\", \"L006\"], \"rationale\": \"Sequential cookie values (L002-L006) are MD5 hashes of integers 1-5, creating predictable session identifiers. Attacker can generate valid session tokens for other users, enabling session hijacking and unauthorized account access.\"}, {\"rank\": 2, \"label\": \"AuthBypass\", \"severity\": \"High\", \"citations\": [\"L002\", \"L003\", \"L004\"], \"rationale\": \"Predictable session generation allows authentication bypass via session prediction. While technically valid, WeakSessionIDs more precisely identifies the root cause mechanism.\"}, {\"rank\": 3, \"label\": \"BrokenAccessControl\", \"severity\": \"Medium\", \"citations\": [\"L002\", \"L006\"], \"rationale\": \"Session prediction could be framed as broken access control, but this label is too generic. The specific mechanism (weak session generation) is better captured by WeakSessionIDs.\"}], \"decision_summary\": \"Rank-1 finding (WeakSessionIDs/High) is technically correct, fully supported by packet evidence, and appropriately severe. The observed cookie sequence demonstrates MD5-hashed sequential integers, creating trivially predictable session identifiers that enable session hijacking.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"No user assumption was provided in this assessment request.\"}</ASSESSMENT>\n<PLAN>Since this is Round 0 baseline mode with no negotiation:\n1. Return final assessment with WeakSessionIDs/High as Rank-1\n2. Set accept=true (all three lenses pass)\n3. Provide defensible alternatives for Rank-2 and Rank-3\n4. Set block_reason to null/empty since accepting\n5. Confirm NoAssumption for user_assumption_verdict</PLAN>",
+      "public_answer": "**Round 0 Independent Assessment**\n\nThe evidence packet (L002-L006) shows five sequential cookie values that are MD5 hashes of the integers 1 through 5. This pattern indicates predictable session identifier generation.\n\n**Rank-1 Finding: WeakSessionIDs / High**\n- The application generates session cookies using sequential integers hashed with MD5\n- An attacker can predict future and past session identifiers by recognizing this pattern\n- This enables session hijacking without requiring brute-force attacks\n- Direct path to unauthorized account access justifies High severity\n\n**Technical correctness:** The mechanism is a classic weak session ID vulnerability. Sequential token generation removes cryptographic randomness required for secure sessions.\n\n**Evidence support:** Citations L002 and L006 anchor the observed sequence. All five observations confirm the predictable pattern.\n\n**Risk calibration:** High severity is appropriate. Predictable session tokens allow trivial session hijacking, representing a critical authentication control failure.\n\n**Decision:** Accept Rank-1 recommendation. The finding is defensible across technical, QA, and risk lenses.",
+      "private_notes": "**Technical Lens Analysis:**\n\nFirst, I need to decode the observed cookie values. These appear to be MD5 hashes (32 hex characters each):\n- L002: c4ca4238a0b923820dcc509a6f75849b = MD5(\"1\")\n- L003: c81e728d9d4c2f636f067f89cc14862c = MD5(\"2\")\n- L004: eccbc87e4b5ce2fe28308fd9f2a7baf3 = MD5(\"3\")\n- L005: a87ff679a2f3e71d9181a67b7542122c = MD5(\"4\")\n- L006: e4da3b7fbbce2345d7772b0674a318d5 = MD5(\"5\")\n\nThe sequence is sequential integers (1, 2, 3, 4, 5) hashed with MD5. This is a predictable session identifier pattern.\n\n**Mechanism:** The application is generating session cookies based on predictable sequential values. An attacker can:\n1. Recognize the pattern (MD5 of sequential integers)\n2. Generate valid session IDs for other users\n3. Potentially hijack other user sessions by predicting their session tokens\n\nThis matches the \"WeakSessionIDs\" vulnerability label perfectly. The session identifiers lack sufficient entropy and randomness.\n\n**QA Lens Analysis:**\n\nEvidence support:\n- L002-L006 provide five sequential cookie observations\n- The pattern is directly observable from the cited lines\n- An independent reviewer can verify the MD5 hash pattern from these exact values\n- No external assumptions needed - the sequential MD5 pattern is evident from the packet alone\n\nCitations L002-L006 collectively demonstrate the predictable pattern. For the rank-1 finding, I'll cite L002 and L006 to show the start and end of the sequence, though any pair would work.\n\n**Risk Lens Analysis:**\n\nImpact of weak session IDs:\n- High severity is appropriate because:\n  - Predictable session IDs enable session hijacking\n  - Attacker can potentially access other user accounts\n  - Authentication bypass is possible\n  - No brute-force needed - simple prediction\n  - Direct path to unauthorized access\n\nHowever, I should consider if this warrants \"High\" or \"Medium\":\n- High: Complete session prediction → unauthorized account access\n- The evidence shows a trivially predictable pattern (sequential MD5)\n- This is a critical authentication control failure\n\nSeverity assessment: **High** is defensible. Predictable session IDs that allow session hijacking typically warrant High severity in professional pentest reports.\n\n**Alternative Labels Considered:**\n- BrokenAccessControl: Less specific; WeakSessionIDs is more precise\n- AuthBypass: Possible but less direct; the root cause is weak session generation\n- NoFinding: Clearly incorrect; there's an obvious security issue\n\n**Decision:**\n- Rank 1: WeakSessionIDs / High (L002, L006)\n- Rank 2: AuthBypass / High (viable interpretation but less precise)\n- Rank 3: BrokenAccessControl / Medium (too generic)\n\nThe Rank-1 recommendation is technically correct, evidence-supported, and appropriately severe. Accept = true.",
+      "private_plan": "Since this is Round 0 baseline mode with no negotiation:\n1. Return final assessment with WeakSessionIDs/High as Rank-1\n2. Set accept=true (all three lenses pass)\n3. Provide defensible alternatives for Rank-2 and Rank-3\n4. Set block_reason to null/empty since accepting\n5. Confirm NoAssumption for user_assumption_verdict",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "WeakSessionIDs",
+            "severity": "High",
+            "citations": [
+              "L002",
+              "L006"
+            ],
+            "rationale": "Sequential cookie values (L002-L006) are MD5 hashes of integers 1-5, creating predictable session identifiers. Attacker can generate valid session tokens for other users, enabling session hijacking and unauthorized account access."
+          },
+          {
+            "rank": 2,
+            "label": "AuthBypass",
+            "severity": "High",
+            "citations": [
+              "L002",
+              "L003",
+              "L004"
+            ],
+            "rationale": "Predictable session generation allows authentication bypass via session prediction. While technically valid, WeakSessionIDs more precisely identifies the root cause mechanism."
+          },
+          {
+            "rank": 3,
+            "label": "BrokenAccessControl",
+            "severity": "Medium",
+            "citations": [
+              "L002",
+              "L006"
+            ],
+            "rationale": "Session prediction could be framed as broken access control, but this label is too generic. The specific mechanism (weak session generation) is better captured by WeakSessionIDs."
+          }
+        ],
+        "decision_summary": "Rank-1 finding (WeakSessionIDs/High) is technically correct, fully supported by packet evidence, and appropriately severe. The observed cookie sequence demonstrates MD5-hashed sequential integers, creating trivially predictable session identifiers that enable session hijacking.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "No user assumption was provided in this assessment request."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L002",
+          "L006"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 151,
+        "public_message_char_count": 1165,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "WeakSessionIDs",
+      "top1_severity": "High",
+      "top1_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "High"
+      },
+      "rank1_citations": [
+        "L002",
+        "L006"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "No user assumption was provided in this assessment request.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets a cookie after repeated form submissions.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed cookie value after one submission: `c4ca4238a0b923820dcc509a6f75849b`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed cookie value after the next submission: `c81e728d9d4c2f636f067f89cc14862c`.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"Observed cookie value after the next submission: `eccbc87e4b5ce2fe28308fd9f2a7baf3`.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"Observed cookie value after the next submission: `a87ff679a2f3e71d9181a67b7542122c`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"Observed cookie value after the next submission: `e4da3b7fbbce2345d7772b0674a318d5`.\"\n    }\n  ]\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "Since this is Round 0 baseline mode with no negotiation:\n1. Return final assessment with WeakSessionIDs/High as Rank-1\n2. Set accept=true (all three lenses pass)\n3. Provide defensible alternatives for Rank-2 and Rank-3\n4. Set block_reason to null/empty since accepting\n5. Confirm NoAssumption for user_assumption_verdict"
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "WeakSessionIDs",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L006"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "High"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "WeakSessionIDs",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L006"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "High"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C2",
+    "mode": "baseline",
+    "config_file": "config_c2_baseline_claude.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "hard_cookie_md5_002",
+    "source_family": "web_application",
+    "difficulty": "high",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A web application sets a cookie after repeated form submissions."
+      },
+      {
+        "id": "L002",
+        "text": "Observed cookie value after one submission: `c4ca4238a0b923820dcc509a6f75849b`."
+      },
+      {
+        "id": "L003",
+        "text": "Observed cookie value after the next submission: `c81e728d9d4c2f636f067f89cc14862c`."
+      },
+      {
+        "id": "L004",
+        "text": "Observed cookie value after the next submission: `eccbc87e4b5ce2fe28308fd9f2a7baf3`."
+      },
+      {
+        "id": "L005",
+        "text": "Observed cookie value after the next submission: `a87ff679a2f3e71d9181a67b7542122c`."
+      },
+      {
+        "id": "L006",
+        "text": "Observed cookie value after the next submission: `e4da3b7fbbce2345d7772b0674a318d5`."
+      }
+    ]
+  },
+  "scenario_id": "hard_cookie_md5_002",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "hard_cookie_md5_002",
+    "final_label": "WeakSessionIDs",
+    "final_severity": "High",
+    "expert_notes": ""
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 1
+  },
+  "run_status": "completed",
+  "run_id": "history16_44_49",
+  "metrics": {
+    "FinalCorrectExact": 1,
+    "FinalCorrectType": 1,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": 0,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 0,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 1.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "WeakSessionIDs"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "High"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "WeakSessionIDs",
+        "severity": "High"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L002",
+        "L006"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "WeakSessionIDs",
+    "committee_exact": {
+      "label": "WeakSessionIDs",
+      "severity": "High"
+    },
+    "committee_type_label": "WeakSessionIDs",
+    "committee_exact_label": "WeakSessionIDs",
+    "committee_exact_severity": "High",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C2",
+      "run_count": 1,
+      "FinalCorrectExact": 1.0,
+      "FinalCorrectType": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 0.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}
