@@ -56,6 +56,7 @@ class RunEntry:
     llm_eval: Optional[Dict[str, Any]]
     public_turns: int
     type_transitions: int
+    severity_transitions: int
     exact_transitions: int
     type_states: int
     exact_states: int
@@ -108,6 +109,18 @@ def committee_exact_value(snapshot: Dict[str, Any]) -> str:
     exact_severity = snapshot.get("committee_exact_severity")
     if exact_label or exact_severity:
         return f"{exact_label}/{exact_severity}"
+    return "None"
+
+
+def committee_severity_value(snapshot: Dict[str, Any]) -> str:
+    value = snapshot.get("committee_exact")
+    if isinstance(value, dict):
+        severity = str(value.get("severity", "")).strip()
+        if severity:
+            return severity
+    exact_severity = snapshot.get("committee_exact_severity")
+    if exact_severity:
+        return str(exact_severity)
     return "None"
 
 
@@ -170,6 +183,7 @@ def scan_runs(output_root: Path) -> Tuple[List[RunEntry], Optional[Path]]:
 
         trajectory = list(run_report.get("decision_trajectory") or history.get("decision_trajectory") or [])
         type_path = [committee_type_value(snapshot) for snapshot in trajectory]
+        severity_path = [committee_severity_value(snapshot) for snapshot in trajectory]
         exact_path = [committee_exact_value(snapshot) for snapshot in trajectory]
         key = (category, scenario_id, condition_id)
 
@@ -187,6 +201,7 @@ def scan_runs(output_root: Path) -> Tuple[List[RunEntry], Optional[Path]]:
             llm_eval=llm_eval_map.get((scenario_id, condition_id, run_id)),
             public_turns=len(list(history.get("rounds") or [])),
             type_transitions=count_transitions(type_path),
+            severity_transitions=count_transitions(severity_path),
             exact_transitions=count_transitions(exact_path),
             type_states=len(set(type_path)) if type_path else 0,
             exact_states=len(set(exact_path)) if exact_path else 0,
@@ -209,6 +224,7 @@ def aggregate_entries(entries: Sequence[RunEntry], label: str) -> Dict[str, Any]
     aggregate["extras"] = {
         "public_turns_mean": mean_optional([float(entry.public_turns) for entry in entries]),
         "type_transitions_mean": mean_optional([float(entry.type_transitions) for entry in entries]),
+        "severity_transitions_mean": mean_optional([float(entry.severity_transitions) for entry in entries]),
         "exact_transitions_mean": mean_optional([float(entry.exact_transitions) for entry in entries]),
         "type_states_mean": mean_optional([float(entry.type_states) for entry in entries]),
         "exact_states_mean": mean_optional([float(entry.exact_states) for entry in entries]),
@@ -240,6 +256,7 @@ def metric_bundle(aggregate: Dict[str, Any]) -> Dict[str, Optional[float]]:
         "under": get_metric(aggregate, "derived_metrics", "UnderSeverityRate"),
         "latency": get_metric(aggregate, "derived_metrics", "ConsensusLatencyExactMean"),
         "type_transitions": get_metric(aggregate, "extras", "type_transitions_mean"),
+        "severity_transitions": get_metric(aggregate, "extras", "severity_transitions_mean"),
         "exact_transitions": get_metric(aggregate, "extras", "exact_transitions_mean"),
         "public_turns": get_metric(aggregate, "extras", "public_turns_mean"),
     }
@@ -658,6 +675,7 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
             },
             "extras": {
                 "type_transitions_mean": mean_optional([get_metric(item, "extras", "type_transitions_mean") for item in items]),
+                "severity_transitions_mean": mean_optional([get_metric(item, "extras", "severity_transitions_mean") for item in items]),
                 "exact_transitions_mean": mean_optional([get_metric(item, "extras", "exact_transitions_mean") for item in items]),
             },
             "label": label,
@@ -698,13 +716,16 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
         )
 
         type_gap = None
+        severity_gap = None
         exact_gap = None
-        if negotiation_metrics["type_transitions"] is not None and negotiation_metrics["exact_transitions"] is not None:
+        if negotiation_metrics["type_transitions"] is not None and negotiation_metrics["severity_transitions"] is not None:
             type_gap = negotiation_metrics["type_transitions"]
+            severity_gap = negotiation_metrics["severity_transitions"]
+        if negotiation_metrics["exact_transitions"] is not None:
             exact_gap = negotiation_metrics["exact_transitions"]
-        if exact_gap is not None and type_gap is not None and exact_gap > type_gap + 0.25:
+        if severity_gap is not None and type_gap is not None and severity_gap > type_gap + 0.25:
             status = "Supported"
-        elif exact_gap is not None and type_gap is not None and exact_gap > type_gap:
+        elif severity_gap is not None and type_gap is not None and severity_gap > type_gap:
             status = "Partially Supported"
         else:
             status = "Not Supported"
@@ -714,8 +735,8 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
                 "title": "H2 — Severity Is Less Stable Than Type",
                 "status": status,
                 "summary": (
-                    f"Negotiation mean type transitions {num(type_gap)} vs exact transitions {num(exact_gap)}; "
-                    f"final type agreement {pct(negotiation_metrics['final_type_agreement'])} vs final exact agreement {pct(negotiation_metrics['agreement'])}."
+                    f"Negotiation mean type transitions {num(type_gap)} vs severity transitions {num(severity_gap)}; "
+                    f"combined exact transitions {num(exact_gap)}."
                 ),
             }
         )
