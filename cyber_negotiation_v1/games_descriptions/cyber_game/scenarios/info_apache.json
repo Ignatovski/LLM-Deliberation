@@ -1,0 +1,56 @@
+{
+  "scenario_id": "info_apache",
+  "source_family": "web_application",
+  "difficulty": "easy",
+  "label_set_id": "web_triage_v1",
+  "lines": [
+    {
+      "id": "L001",
+      "text": "A user opens the web application for the first time."
+    },
+    {
+      "id": "L002",
+      "text": "The server responds with: `HTTP/1.1 302 Found`."
+    },
+    {
+      "id": "L003",
+      "text": "The response includes the header: `Date: Tue, 17 Mar 2026 10:20:33 GMT`."
+    },
+    {
+      "id": "L004",
+      "text": "The response includes the header: `Server: Apache`."
+    },
+    {
+      "id": "L005",
+      "text": "The response includes the header: `Expires: Thu, 19 Nov 1981 08:52:00 GMT`."
+    },
+    {
+      "id": "L006",
+      "text": "The response includes the header: `Cache-Control: no-store, no-cache, must-revalidate`."
+    },
+    {
+      "id": "L007",
+      "text": "The response includes the header: `Pragma: no-cache`."
+    },
+    {
+      "id": "L008",
+      "text": "The response includes the header: `Location: index.php`."
+    },
+    {
+      "id": "L009",
+      "text": "The response includes the header: `Content-Length: 0`."
+    },
+    {
+      "id": "L010",
+      "text": "The response includes the header: `Keep-Alive: timeout=5, max=94`."
+    },
+    {
+      "id": "L011",
+      "text": "The response includes the header: `Connection: Keep-Alive`."
+    },
+    {
+      "id": "L012",
+      "text": "The response includes the header: `Content-Type: text/html; charset=UTF-8`."
+    }
+  ]
+}

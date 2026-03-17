@@ -33,6 +33,7 @@ SCENARIO_TITLES = {
     "ping_form_exec_output_001": "Ping Form Command Injection",
     "cookie_security_attribute_observation_001": "Cookie Flags Observation",
     "hard_cookie_md5_002": "MD5-Like Cookie Pattern",
+    "info_apache": "Apache Header Disclosure",
     "medium_cookie_timestamps_001": "Timestamp Cookie Pattern",
     "reflected_input_password_change_guard_001": "Reflected Input Password Change Guard",
     "error_message_path_disclosure_001": "Error Message Path Disclosure",
