@@ -822,6 +822,7 @@ def compute_metrics(
     if gt_label is None or gt_severity is None or final is None:
         final_correct_exact = None
         final_correct_type = None
+        final_correct_severity = None
         severity_bias = None
         any_correct_consensus_type = None
         late_drift_correct_type = None
@@ -832,6 +833,10 @@ def compute_metrics(
             and final_committee_exact.get("severity") == gt_severity
         )
         final_correct_type = int(final_committee_type == gt_label)
+        final_correct_severity = int(
+            isinstance(final_committee_exact, dict)
+            and final_committee_exact.get("severity") == gt_severity
+        )
         severity_bias = None
         if isinstance(final_committee_exact, dict):
             severity_bias = SEVERITY_ORDER[final_committee_exact["severity"]] - SEVERITY_ORDER[gt_severity]
@@ -905,6 +910,7 @@ def compute_metrics(
     headline_metrics = {
         "FinalCorrectExact": final_correct_exact,
         "FinalCorrectType": final_correct_type,
+        "FinalCorrectSeverity": final_correct_severity,
         "FinalAgreementExact": final_agreement_exact,
         "AnyAgreementExact": any_agreement_exact,
         "SeverityBias": severity_bias,
@@ -970,6 +976,7 @@ def aggregate_condition_results(run_reports: Sequence[Dict[str, Any]], condition
                 "run_count": 0,
                 "FinalCorrectExact": None,
                 "FinalCorrectType": None,
+                "FinalCorrectSeverity": None,
                 "FinalAgreementExact": None,
                 "AnyAgreementExact": None,
                 "SeverityBias": None,
@@ -986,6 +993,7 @@ def aggregate_condition_results(run_reports: Sequence[Dict[str, Any]], condition
         "run_count": len(run_reports),
         "FinalCorrectExact": _mean_optional([report["headline_metrics"].get("FinalCorrectExact") for report in run_reports]),
         "FinalCorrectType": _mean_optional([report["headline_metrics"].get("FinalCorrectType") for report in run_reports]),
+        "FinalCorrectSeverity": _rate_matching(severity_bias_values, lambda value: value == 0),
         "FinalAgreementExact": _mean_optional([report["headline_metrics"].get("FinalAgreementExact") for report in run_reports]),
         "AnyAgreementExact": _mean_optional([report["headline_metrics"].get("AnyAgreementExact") for report in run_reports]),
         "SeverityBias": _mean_optional(severity_bias_values),

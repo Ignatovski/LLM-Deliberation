@@ -26,6 +26,7 @@ CATEGORY_TITLES = {
     "command_injection": "Command Injection",
     "cookies": "Cookies",
     "csrf": "CSRF",
+    "info_findings": "Info Findings",
     "path_disclosure": "Path Disclosure",
 }
 
@@ -224,6 +225,7 @@ def metric_bundle(aggregate: Dict[str, Any]) -> Dict[str, Optional[float]]:
     return {
         "exact": get_metric(aggregate, "headline_metrics", "FinalCorrectExact"),
         "type": get_metric(aggregate, "headline_metrics", "FinalCorrectType"),
+        "severity_correct": get_metric(aggregate, "headline_metrics", "FinalCorrectSeverity"),
         "agreement": get_metric(aggregate, "headline_metrics", "FinalAgreementExact"),
         "any_agreement": get_metric(aggregate, "headline_metrics", "AnyAgreementExact"),
         "bias": get_metric(aggregate, "headline_metrics", "SeverityBias"),
@@ -259,6 +261,16 @@ def signed_num(value: Optional[float], digits: int = 2) -> str:
     if value is None:
         return "n/a"
     return f"{value:+.{digits}f}"
+
+
+def severity_correct_from_headline(headline: Dict[str, Any]) -> Optional[float]:
+    explicit = as_float(headline.get("FinalCorrectSeverity"))
+    if explicit is not None:
+        return explicit
+    bias = as_float(headline.get("SeverityBias"))
+    if bias is None:
+        return None
+    return 1.0 if bias == 0 else 0.0
 
 
 def svg_rate_chart(
@@ -364,18 +376,20 @@ def comparison_score(reference: Dict[str, Optional[float]], candidate: Dict[str,
 
     exact_delta = None if reference["exact"] is None or candidate["exact"] is None else candidate["exact"] - reference["exact"]
     type_delta = None if reference["type"] is None or candidate["type"] is None else candidate["type"] - reference["type"]
+    severity_delta = None if reference["severity_correct"] is None or candidate["severity_correct"] is None else candidate["severity_correct"] - reference["severity_correct"]
     wrong_delta = None if reference["wrong"] is None or candidate["wrong"] is None else reference["wrong"] - candidate["wrong"]
     drift_delta = None if reference["late_drift"] is None or candidate["late_drift"] is None else reference["late_drift"] - candidate["late_drift"]
-    trust_delta = None if reference["trust"] is None or candidate["trust"] is None else reference["trust"] - candidate["trust"]
+    under_delta = None if reference["under"] is None or candidate["under"] is None else reference["under"] - candidate["under"]
     bias_delta = None
     if reference["bias"] is not None and candidate["bias"] is not None:
         bias_delta = abs(reference["bias"]) - abs(candidate["bias"])
 
     add_if(exact_delta, 0.05, 3 if not trust_focus else 2)
     add_if(type_delta, 0.05, 2 if not trust_focus else 1)
+    add_if(severity_delta, 0.05, 2 if not trust_focus else 1)
     add_if(wrong_delta, 0.05, 2 if not trust_focus else 3)
     add_if(drift_delta, 0.05, 1 if not trust_focus else 2)
-    add_if(trust_delta, 0.05, 1 if not trust_focus else 2)
+    add_if(under_delta, 0.05, 1 if not trust_focus else 2)
     add_if(bias_delta, 0.25, 1)
     return score
 
@@ -390,11 +404,20 @@ def verdict_from_score(score: int) -> str:
     return "Mixed"
 
 
+def make_comparison_table(columns: Sequence[str], rows: Sequence[Sequence[str]]) -> Dict[str, Any]:
+    return {
+        "columns": [str(column) for column in columns],
+        "rows": [[str(cell) for cell in row] for row in rows],
+    }
+
+
 def summarize_comparison(
     title: str,
     reference_aggregate: Optional[Dict[str, Any]],
     candidate_aggregate: Optional[Dict[str, Any]],
     *,
+    reference_label: str,
+    candidate_label: str,
     trust_focus: bool = False,
 ) -> Dict[str, Any]:
     if reference_aggregate is None or candidate_aggregate is None:
@@ -403,6 +426,7 @@ def summarize_comparison(
             "status": "Insufficient Data",
             "summary": "At least one side of the comparison is missing completed runs.",
             "evidence": [],
+            "comparison_table": make_comparison_table(("Metric", reference_label, candidate_label), ()),
         }
 
     reference = metric_bundle(reference_aggregate)
@@ -412,15 +436,15 @@ def summarize_comparison(
 
     if trust_focus:
         summary = (
-            "Trust-related metrics do not show a clear advantage."
+            "Coordination-quality metrics do not show a clear advantage."
             if status == "No Clear Change"
             else (
-                "Trust-related metrics improve on the candidate side."
+                "Coordination-quality metrics improve on the candidate side."
                 if status == "Better"
                 else (
-                    "Trust-related metrics degrade on the candidate side."
+                    "Coordination-quality metrics degrade on the candidate side."
                     if status == "Worse"
-                    else "Correctness and trust metrics move in different directions."
+                    else "Correctness and coordination metrics move in different directions."
                 )
             )
         )
@@ -442,11 +466,30 @@ def summarize_comparison(
     evidence = [
         f"Final exact correctness: {pct(reference['exact'])} -> {pct(candidate['exact'])}",
         f"Final type correctness: {pct(reference['type'])} -> {pct(candidate['type'])}",
+        f"Final severity correctness: {pct(reference['severity_correct'])} -> {pct(candidate['severity_correct'])}",
         f"Wrong consensus rate: {pct(reference['wrong'])} -> {pct(candidate['wrong'])}",
-        f"Trust hygiene rate: {pct(reference['trust'])} -> {pct(candidate['trust'])}",
+        f"Over-severity rate: {pct(reference['over'])} -> {pct(candidate['over'])}",
+        f"Under-severity rate: {pct(reference['under'])} -> {pct(candidate['under'])}",
         f"Severity bias: {signed_num(reference['bias'])} -> {signed_num(candidate['bias'])}",
     ]
-    return {"title": title, "status": status, "summary": summary, "evidence": evidence}
+    return {
+        "title": title,
+        "status": status,
+        "summary": summary,
+        "evidence": evidence,
+        "comparison_table": make_comparison_table(
+            ("Metric", reference_label, candidate_label),
+            (
+                ("Final exact correctness", pct(reference["exact"]), pct(candidate["exact"])),
+                ("Final type correctness", pct(reference["type"]), pct(candidate["type"])),
+                ("Final severity correctness", pct(reference["severity_correct"]), pct(candidate["severity_correct"])),
+                ("Wrong consensus rate", pct(reference["wrong"]), pct(candidate["wrong"])),
+                ("Over-severity rate", pct(reference["over"]), pct(candidate["over"])),
+                ("Under-severity rate", pct(reference["under"]), pct(candidate["under"])),
+                ("Severity bias", signed_num(reference["bias"]), signed_num(candidate["bias"])),
+            ),
+        ),
+    }
 
 
 def summarize_instruction_priors(
@@ -461,6 +504,7 @@ def summarize_instruction_priors(
             "status": "Insufficient Data",
             "summary": "The prior/non-prior comparison is incomplete.",
             "evidence": [],
+            "comparison_table": make_comparison_table(("Scope", "Metric", "No Prior", "With Prior"), ()),
         }
 
     gpt_reference = metric_bundle(gpt_base)
@@ -489,7 +533,29 @@ def summarize_instruction_priors(
         f"Claude prior (C4 -> C7): exact {pct(claude_reference['exact'])} -> {pct(claude_candidate['exact'])}, type {pct(claude_reference['type'])} -> {pct(claude_candidate['type'])}, wrong consensus {pct(claude_reference['wrong'])} -> {pct(claude_candidate['wrong'])}",
         f"Stability proxy (exact transitions): GPT {num(gpt_reference['exact_transitions'])} -> {num(gpt_candidate['exact_transitions'])}, Claude {num(claude_reference['exact_transitions'])} -> {num(claude_candidate['exact_transitions'])}",
     ]
-    return {"title": "Instruction-Only Priors", "status": status, "summary": summary, "evidence": evidence}
+    return {
+        "title": "Instruction-Only Priors",
+        "status": status,
+        "summary": summary,
+        "evidence": evidence,
+        "comparison_table": make_comparison_table(
+            ("Scope", "Metric", "No Prior", "With Prior"),
+            (
+                ("GPT-5", "Final exact correctness", pct(gpt_reference["exact"]), pct(gpt_candidate["exact"])),
+                ("GPT-5", "Final type correctness", pct(gpt_reference["type"]), pct(gpt_candidate["type"])),
+                ("GPT-5", "Final severity correctness", pct(gpt_reference["severity_correct"]), pct(gpt_candidate["severity_correct"])),
+                ("GPT-5", "Wrong consensus rate", pct(gpt_reference["wrong"]), pct(gpt_candidate["wrong"])),
+                ("GPT-5", "Over-severity rate", pct(gpt_reference["over"]), pct(gpt_candidate["over"])),
+                ("GPT-5", "Exact transitions", num(gpt_reference["exact_transitions"]), num(gpt_candidate["exact_transitions"])),
+                ("Claude", "Final exact correctness", pct(claude_reference["exact"]), pct(claude_candidate["exact"])),
+                ("Claude", "Final type correctness", pct(claude_reference["type"]), pct(claude_candidate["type"])),
+                ("Claude", "Final severity correctness", pct(claude_reference["severity_correct"]), pct(claude_candidate["severity_correct"])),
+                ("Claude", "Wrong consensus rate", pct(claude_reference["wrong"]), pct(claude_candidate["wrong"])),
+                ("Claude", "Over-severity rate", pct(claude_reference["over"]), pct(claude_candidate["over"])),
+                ("Claude", "Exact transitions", num(claude_reference["exact_transitions"]), num(claude_candidate["exact_transitions"])),
+            ),
+        ),
+    }
 
 
 def summarize_c7_expectation(
@@ -503,6 +569,10 @@ def summarize_c7_expectation(
             "status": "Insufficient Data",
             "summary": "Cannot compare Claude conditions cleanly.",
             "evidence": [],
+            "comparison_table": make_comparison_table(
+                ("Metric", "Single Claude", "3x Claude", "3x Claude + Human Prior"),
+                (),
+            ),
         }
 
     c2_metrics = metric_bundle(c2)
@@ -524,9 +594,26 @@ def summarize_c7_expectation(
         f"C2 exact/type: {pct(c2_metrics['exact'])} / {pct(c2_metrics['type'])}",
         f"C4 exact/type: {pct(c4_metrics['exact'])} / {pct(c4_metrics['type'])}",
         f"C7 exact/type: {pct(c7_metrics['exact'])} / {pct(c7_metrics['type'])}",
+        f"C2/C4/C7 severity correctness: {pct(c2_metrics['severity_correct'])} / {pct(c4_metrics['severity_correct'])} / {pct(c7_metrics['severity_correct'])}",
         f"C7 wrong consensus / bias: {pct(c7_metrics['wrong'])} / {signed_num(c7_metrics['bias'])}",
     ]
-    return {"title": "C7 Expectation", "status": status, "summary": summary, "evidence": evidence}
+    return {
+        "title": "C7 Expectation",
+        "status": status,
+        "summary": summary,
+        "evidence": evidence,
+        "comparison_table": make_comparison_table(
+            ("Metric", "Single Claude", "3x Claude", "3x Claude + Human Prior"),
+            (
+                ("Final exact correctness", pct(c2_metrics["exact"]), pct(c4_metrics["exact"]), pct(c7_metrics["exact"])),
+                ("Final type correctness", pct(c2_metrics["type"]), pct(c4_metrics["type"]), pct(c7_metrics["type"])),
+                ("Final severity correctness", pct(c2_metrics["severity_correct"]), pct(c4_metrics["severity_correct"]), pct(c7_metrics["severity_correct"])),
+                ("Wrong consensus rate", pct(c2_metrics["wrong"]), pct(c4_metrics["wrong"]), pct(c7_metrics["wrong"])),
+                ("Over-severity rate", pct(c2_metrics["over"]), pct(c4_metrics["over"]), pct(c7_metrics["over"])),
+                ("Severity bias", signed_num(c2_metrics["bias"]), signed_num(c4_metrics["bias"]), signed_num(c7_metrics["bias"])),
+            ),
+        ),
+    }
 
 
 def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -708,7 +795,7 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
     return hypotheses
 
 
-def category_synopsis(category: str, condition_aggregates: Dict[str, Dict[str, Any]]) -> str:
+def synopsis_for_scope(title: str, condition_aggregates: Dict[str, Dict[str, Any]]) -> str:
     exact_values = [
         get_metric(aggregate, "headline_metrics", "FinalCorrectExact")
         for aggregate in condition_aggregates.values()
@@ -752,8 +839,16 @@ def category_synopsis(category: str, condition_aggregates: Dict[str, Dict[str, A
     else:
         trust_line = "Wrong-consensus risk does not appear in the current runs."
 
-    title = CATEGORY_TITLES.get(category, category.replace("_", " ").title())
     return f"{title}: {outcome_line} {bias_line} {trust_line}"
+
+
+def category_synopsis(category: str, condition_aggregates: Dict[str, Dict[str, Any]]) -> str:
+    title = CATEGORY_TITLES.get(category, category.replace("_", " ").title())
+    return synopsis_for_scope(title, condition_aggregates)
+
+
+def overall_synopsis(condition_aggregates: Dict[str, Dict[str, Any]]) -> str:
+    return synopsis_for_scope("Overall Portfolio", condition_aggregates)
 
 
 def rate_style(value: Optional[float], *, higher_is_better: bool = True) -> str:
@@ -815,12 +910,13 @@ def render_condition_table(
             f"<td>{html.escape(meta.get('mode', 'n/a'))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
+            f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalAgreementExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalAgreementExact')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('WrongConsensusExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExactRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('LateDriftAgreementExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('LateDriftAgreementExactRate')))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
-            f"<td>{pct(as_float(headline.get('TrustHygieneRate')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
             f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
             f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
@@ -832,9 +928,9 @@ def render_condition_table(
         "<table>"
         "<thead><tr>"
         "<th>Condition</th><th>Setup</th><th>Family</th><th>Mode</th>"
-        "<th>Exact Correct</th><th>Type Correct</th><th>Final Agreement</th>"
+        "<th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Final Agreement</th>"
         "<th>Wrong Consensus</th><th>Late Drift</th><th>Severity Bias</th>"
-        "<th>Over-Severity</th><th>Trust Hygiene</th><th>Type Transitions</th>"
+        "<th>Over-Severity</th><th>Under-Severity</th><th>Type Transitions</th>"
         "<th>Exact Transitions</th><th>Latency</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
@@ -844,12 +940,32 @@ def render_condition_table(
 
 
 def render_question_card(item: Dict[str, Any]) -> str:
+    table_html = ""
+    comparison_table = dict(item.get("comparison_table") or {})
+    columns = [str(column) for column in list(comparison_table.get("columns") or [])]
+    rows = [list(row) for row in list(comparison_table.get("rows") or [])]
+    if columns:
+        header_html = "".join(f"<th>{html.escape(column)}</th>" for column in columns)
+        body_html = "".join(
+            "<tr>" + "".join(f"<td>{html.escape(str(cell))}</td>" for cell in row) + "</tr>"
+            for row in rows
+        )
+        table_html = (
+            "<div class='question-table-wrap'>"
+            "<table class='question-table'>"
+            f"<thead><tr>{header_html}</tr></thead>"
+            f"<tbody>{body_html}</tbody>"
+            "</table>"
+            "</div>"
+        )
     evidence_items = "".join(f"<li>{html.escape(line)}</li>" for line in list(item.get("evidence") or []))
+    list_html = f"<ul>{evidence_items}</ul>" if evidence_items and not table_html else ""
     return (
         "<article class='question-card'>"
         f"<div class='card-head'><h3>{html.escape(str(item.get('title', '')))}</h3><span class='status-badge'>{html.escape(str(item.get('status', '')))}</span></div>"
         f"<p>{html.escape(str(item.get('summary', '')))}</p>"
-        f"<ul>{evidence_items}</ul>"
+        f"{table_html}"
+        f"{list_html}"
         "</article>"
     )
 
@@ -876,6 +992,74 @@ def render_metric_charts(condition_aggregates: Dict[str, Dict[str, Any]]) -> str
         f"<div class='chart-card'>{svg_bias_chart(bias_items, 'Severity Bias by Condition')}</div>"
         "</div>"
     )
+
+
+def build_question_items(
+    entries: Sequence[RunEntry],
+    condition_aggregates: Dict[str, Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    c1 = condition_aggregates.get("C1")
+    c2 = condition_aggregates.get("C2")
+    c3 = condition_aggregates.get("C3")
+    c4 = condition_aggregates.get("C4")
+    c5 = condition_aggregates.get("C5")
+    c6 = condition_aggregates.get("C6")
+    c7 = condition_aggregates.get("C7")
+
+    def combine_from_ids(label: str, ids: Sequence[str]) -> Optional[Dict[str, Any]]:
+        items = [entry for entry in entries if entry.condition_id in ids]
+        if not items:
+            return None
+        return aggregate_entries(items, label)
+
+    gpt_committee = combine_from_ids("GPT Committee", ("C3", "C6"))
+    claude_committee = combine_from_ids("Claude Committee", ("C4", "C7"))
+    homogeneous_committees = combine_from_ids("Homogeneous Committees", ("C3", "C4", "C6", "C7"))
+
+    return [
+        summarize_comparison(
+            "GPT-5 Committee vs Single GPT-5",
+            c1,
+            gpt_committee,
+            reference_label="Single GPT-5",
+            candidate_label="GPT-5 Committee",
+            trust_focus=False,
+        ),
+        summarize_comparison(
+            "Claude Committee vs Single Claude",
+            c2,
+            claude_committee,
+            reference_label="Single Claude",
+            candidate_label="Claude Committee",
+            trust_focus=False,
+        ),
+        summarize_comparison(
+            "Mixed-Model Negotiation Trust",
+            homogeneous_committees,
+            c5,
+            reference_label="Homogeneous Committees",
+            candidate_label="Mixed Committee",
+            trust_focus=True,
+        ),
+        summarize_comparison(
+            "LLM Prior Effect (C3 -> C6)",
+            c3,
+            c6,
+            reference_label="C3 (No Prior)",
+            candidate_label="C6 (LLM Prior)",
+            trust_focus=False,
+        ),
+        summarize_comparison(
+            "Human Prior Effect (C4 -> C7)",
+            c4,
+            c7,
+            reference_label="C4 (No Prior)",
+            candidate_label="C7 (Human Prior)",
+            trust_focus=False,
+        ),
+        summarize_c7_expectation(c2, c4, c7),
+        summarize_instruction_priors(c3, c6, c4, c7),
+    ]
 
 
 def scenario_synopsis(scenario_id: str, condition_aggregates: Dict[str, Dict[str, Any]]) -> str:
@@ -937,6 +1121,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
         headline = entry.run_report.get("headline_metrics", {})
         derived = entry.run_report.get("derived_metrics", {})
         committee_final = dict(entry.run_report.get("committee_final") or {})
+        severity_correct = severity_correct_from_headline(headline)
         final_exact = committee_final.get("committee_exact")
         if isinstance(final_exact, dict):
             final_label = str(final_exact.get("label", ""))
@@ -957,6 +1142,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
             f"<td>{html.escape(str(ground_truth.get('final_severity', '')))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
+            f"<td style='{rate_style(severity_correct, higher_is_better=True)}'>{pct(severity_correct)}</td>"
             f"<td style='{rate_style(as_float(derived.get('WrongConsensusExact')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExact')))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
             f"<td>{entry.public_turns}</td>"
@@ -972,13 +1158,107 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
         "<table>"
         "<thead><tr>"
         "<th>Scenario</th><th>Condition</th><th>Setup</th><th>Final Label</th><th>Final Severity</th>"
-        "<th>GT Label</th><th>GT Severity</th><th>Exact Correct</th><th>Type Correct</th>"
+        "<th>GT Label</th><th>GT Severity</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
         "<th>Wrong Consensus</th><th>Severity Bias</th><th>Public Turns</th>"
         "<th>Type Transitions</th><th>Exact Transitions</th><th>LLM Q4</th><th>Report</th><th>History</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
         "</div>"
+    )
+
+
+def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -> str:
+    rows: List[str] = []
+    for category in sorted({entry.category for entry in runs}):
+        category_runs = [entry for entry in runs if entry.category == category]
+        aggregate = aggregate_entries(category_runs, category)
+        headline = aggregate.get("headline_metrics", {})
+        derived = aggregate.get("derived_metrics", {})
+        extras = aggregate.get("extras", {})
+        sample_entries = sorted(category_runs, key=lambda entry: entry.report_path.name)
+        sample_entry = sample_entries[0] if sample_entries else None
+        sample_report = (
+            f"<a href='{link_href(sample_entry.report_path, output_path)}'>{html.escape(sample_entry.report_path.name)}</a>"
+            if sample_entry
+            else "n/a"
+        )
+        rows.append(
+            "<tr>"
+            f"<td>{html.escape(CATEGORY_TITLES.get(category, category.replace('_', ' ').title()))}</td>"
+            f"<td>{len(category_runs)}</td>"
+            f"<td>{len({entry.scenario_id for entry in category_runs})}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
+            f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('WrongConsensusExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExactRate')))}</td>"
+            f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
+            f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
+            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
+            f"<td>{sample_report}</td>"
+            "</tr>"
+        )
+    return (
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Category</th><th>Runs</th><th>Scenarios</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
+        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>Avg Public Turns</th>"
+        "<th>Avg Exact Transitions</th><th>Avg Latency</th><th>Sample Report</th>"
+        "</tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
+
+
+def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
+    condition_aggregates = {
+        condition_id: aggregate_entries([entry for entry in runs if entry.condition_id == condition_id], condition_id)
+        for condition_id in sorted({entry.condition_id for entry in runs}, key=condition_sort_key)
+    }
+    questions = build_question_items(runs, condition_aggregates)
+    hypotheses = evaluate_hypotheses(condition_aggregates)
+    question_cards = "".join(render_question_card(item) for item in questions)
+    hypothesis_cards = "".join(render_hypothesis_card(item) for item in hypotheses)
+    category_count = len({entry.category for entry in runs})
+    scenario_count = len({entry.scenario_id for entry in runs})
+    llm_q4_coverage = sum(1 for entry in runs if entry.llm_eval and entry.llm_eval.get("q4_report_defensibility"))
+
+    return (
+        "<section class='category-section' id='overall'>"
+        f"<div class='section-head'><h2>Overall Overview</h2><p>{html.escape(overall_synopsis(condition_aggregates))}</p></div>"
+        "<div class='meta-line'>"
+        f"<span>{len(runs)} completed runs</span>"
+        f"<span>{category_count} categories</span>"
+        f"<span>{scenario_count} scenarios</span>"
+        f"<span>{llm_q4_coverage} runs with LLM evaluator Q4 coverage</span>"
+        "</div>"
+        "<div class='card-grid'>"
+        f"{question_cards}"
+        "</div>"
+        "<div class='card-grid card-grid-small'>"
+        f"{hypothesis_cards}"
+        "</div>"
+        "<div class='panel'>"
+        "<h3>Overall Metric Graphs</h3>"
+        "<p class='muted'>These charts aggregate each condition across every completed cyber run in the output tree.</p>"
+        f"{render_metric_charts(condition_aggregates)}"
+        "</div>"
+        "<div class='panel'>"
+        "<h3>Category Comparison</h3>"
+        "<p class='muted'>Each row aggregates all completed runs for one category so you can compare where the framework succeeds or fails overall.</p>"
+        f"{render_category_summary_table(runs, output_path)}"
+        "</div>"
+        "<div class='panel'>"
+        "<h3>Condition Comparison Across All Runs</h3>"
+        "<p class='muted'>These condition rows pool all categories together, showing how each setup performs across the full portfolio.</p>"
+        f"{render_condition_table(runs, condition_aggregates, output_path)}"
+        "</div>"
+        "</section>"
     )
 
 
@@ -992,33 +1272,7 @@ def render_category_section(
         for condition_id in sorted({entry.condition_id for entry in category_runs})
     }
 
-    c1 = condition_aggregates.get("C1")
-    c2 = condition_aggregates.get("C2")
-    c3 = condition_aggregates.get("C3")
-    c4 = condition_aggregates.get("C4")
-    c5 = condition_aggregates.get("C5")
-    c6 = condition_aggregates.get("C6")
-    c7 = condition_aggregates.get("C7")
-
-    def combine_from_ids(label: str, ids: Sequence[str]) -> Optional[Dict[str, Any]]:
-        items = [entry for entry in category_runs if entry.condition_id in ids]
-        if not items:
-            return None
-        return aggregate_entries(items, label)
-
-    gpt_committee = combine_from_ids("GPT Committee", ("C3", "C6"))
-    claude_committee = combine_from_ids("Claude Committee", ("C4", "C7"))
-    homogeneous_committees = combine_from_ids("Homogeneous Committees", ("C3", "C4", "C6", "C7"))
-
-    questions = [
-        summarize_comparison("GPT-5 Committee vs Single GPT-5", c1, gpt_committee, trust_focus=False),
-        summarize_comparison("Claude Committee vs Single Claude", c2, claude_committee, trust_focus=False),
-        summarize_comparison("Mixed-Model Negotiation Trust", homogeneous_committees, c5, trust_focus=True),
-        summarize_comparison("LLM Prior Effect (C3 -> C6)", c3, c6, trust_focus=False),
-        summarize_comparison("Human Prior Effect (C4 -> C7)", c4, c7, trust_focus=False),
-        summarize_c7_expectation(c2, c4, c7),
-        summarize_instruction_priors(c3, c6, c4, c7),
-    ]
+    questions = build_question_items(category_runs, condition_aggregates)
     hypotheses = evaluate_hypotheses(condition_aggregates)
 
     question_cards = "".join(render_question_card(item) for item in questions)
@@ -1075,14 +1329,17 @@ def render_category_section(
 
 def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: Path, llm_eval_source: Optional[Path]) -> str:
     categories = sorted({entry.category for entry in runs})
-    sections = []
+    sections = [render_overall_section(runs, output_path)]
     for category in categories:
         category_runs = [entry for entry in runs if entry.category == category]
         sections.append(render_category_section(category, category_runs, output_path))
 
-    nav_links = "".join(
+    nav_links = (
+        "<button type='button' class='nav-link' data-target='overall'>Overall Overview</button>"
+        + "".join(
         f"<button type='button' class='nav-link' data-target='{html.escape(category)}'>{html.escape(CATEGORY_TITLES.get(category, category.replace('_', ' ').title()))}</button>"
         for category in categories
+        )
     )
     generated_note = f"LLM evaluator source: {llm_eval_source.name}" if llm_eval_source else "No LLM evaluator file detected."
 
@@ -1301,6 +1558,48 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       margin: 0 0 6px 0;
       line-height: 1.45;
     }}
+    .question-table-wrap {{
+      margin-top: 10px;
+      overflow: auto;
+      border: 1px solid rgba(205, 214, 223, 0.88);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.84);
+    }}
+    .question-table {{
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 420px;
+      font-size: 12px;
+    }}
+    .question-table thead th {{
+      position: static;
+      top: auto;
+      z-index: auto;
+      background: #f3f7fa;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #475569;
+    }}
+    .question-table th,
+    .question-table td {{
+      border-bottom: 1px solid rgba(205, 214, 223, 0.72);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }}
+    .question-table tbody tr:last-child td {{
+      border-bottom: none;
+    }}
+    .question-table td {{
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }}
+    .question-table td:first-child,
+    .question-table td:nth-child(2) {{
+      color: #334155;
+      white-space: nowrap;
+    }}
     .panel h3 {{
       margin: 0 0 8px 0;
       font-size: 18px;
@@ -1429,7 +1728,7 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       <p>
         This dashboard scans completed cyber triage runs in <code>{html.escape(str(output_root))}</code>,
         groups them by category, and answers the current research questions directly from the stored metrics.
-        Comparisons use exact correctness, type correctness, wrong-consensus rate, trust-hygiene rate,
+        Comparisons use exact correctness, type correctness, wrong-consensus rate, under-severity rate,
         severity bias, consensus latency, and trajectory volatility.
       </p>
       <div class="meta-strip">

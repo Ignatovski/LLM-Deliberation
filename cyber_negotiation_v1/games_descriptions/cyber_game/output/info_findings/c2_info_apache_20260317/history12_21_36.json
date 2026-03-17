@@ -1,0 +1,415 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n",
+      "full_answer": "<SCRATCHPAD>## Three-Lens Evaluation Framework\n\n### Evidence Review\nThe packet shows:\n- Initial HTTP request to web application (L001)\n- 302 redirect response (L002)\n- Standard Apache server headers (L003-L012)\n- Cache-control headers preventing caching (L005-L007)\n- Redirect to index.php (L008)\n- No security headers mentioned (no Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, CSP, etc.)\n- No session cookies visible\n- No authentication mechanisms shown\n- No exploit attempts or abnormal behavior\n\n### Technical Lens Assessment\n\n**What vulnerability labels could apply?**\n\n1. **NoFinding**: The packet shows a normal HTTP redirect with standard cache-control headers. No exploit mechanism is demonstrated.\n\n2. **ExposedSecret**: No credentials, API keys, or sensitive data are present in the headers.\n\n3. **WeakSessionIDs**: No session IDs are present in this packet at all.\n\n4. **BrokenAccessControl**: No access control mechanism is demonstrated or bypassed.\n\nThe packet shows completely normal HTTP behavior - a redirect response. There is no demonstrated vulnerability mechanism. The absence of security headers (HSTS, CSP, etc.) might be a security hardening issue, but those are typically \"Info\" or \"Compliance\" findings, not exploitable vulnerabilities with a distinct attack vector.\n\n**Technical verdict**: NoFinding is the only technically defensible label. There is no exploit mechanism present.\n\n### QA Lens Assessment\n\n**Is there evidence to support any vulnerability claim?**\n\n- For any vulnerability label other than NoFinding, we would need evidence of:\n  - An exploit attempt\n  - Abnormal server behavior\n  - Exposed sensitive data\n  - Bypassed security controls\n  \nThe packet contains none of these. It shows a single normal redirect response. The headers are standard Apache defaults.\n\n**Missing security headers?**\nWhile the absence of modern security headers (HSTS, CSP, X-Frame-Options) could be noted, this packet doesn't demonstrate those headers' absence - it just shows one redirect response. We cannot defensibly claim a vulnerability based on headers not present in a 302 redirect that wouldn't normally include them anyway.\n\n**QA verdict**: Only NoFinding is defensible. Any vulnerability claim would rely on assumptions beyond the packet evidence.\n\n### Risk Lens Assessment\n\n**What impact is demonstrated?**\n\nThe packet shows normal application behavior. No impact is demonstrated. No confidentiality, integrity, or availability issue is shown.\n\n**Risk verdict**: Info severity at most if we claimed missing security headers, but even that is not supportable from this single redirect. NoFinding/Info is the only defensible position.\n\n### Conclusion\n\nAll three lenses agree:\n- **Rank 1**: NoFinding (Info) - The packet shows normal HTTP redirect behavior with no demonstrated vulnerability\n- **Rank 2**: ExposedSecret (Info) - Weak alternative; server version disclosure via \"Server: Apache\" header (L004) could be considered information leakage, but this is extremely weak\n- **Rank 3**: WeakSessionIDs (Low) - Not applicable; no session mechanism is shown in this packet\n\n**Decision**: Accept Rank-1 as NoFinding/Info</SCRATCHPAD>\n<ANSWER>The evidence packet shows a single HTTP 302 redirect response with standard Apache server headers. No exploit attempt, abnormal behavior, or security control bypass is demonstrated. The response contains normal cache-control directives and a redirect to index.php.\n\nTechnical assessment: No vulnerability mechanism is present in the packet. The response represents normal HTTP behavior.\n\nQA assessment: No packet evidence supports any vulnerability claim. The headers shown are standard for a redirect response.\n\nRisk assessment: No impact to confidentiality, integrity, or availability is demonstrated.\n\nThe only defensible label is NoFinding with Info severity, indicating normal application behavior with no identified vulnerability based on the provided evidence.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"NoFinding\", \"severity\": \"Info\", \"citations\": [\"L001\", \"L002\"], \"rationale\": \"The packet shows a normal HTTP 302 redirect response to an initial web application request. No exploit mechanism, security control bypass, or abnormal behavior is demonstrated. All headers are standard Apache defaults for a redirect response.\"}, {\"rank\": 2, \"label\": \"ExposedSecret\", \"severity\": \"Info\", \"citations\": [\"L004\"], \"rationale\": \"Server version disclosure via 'Server: Apache' header could be considered minor information leakage, but this is extremely weak and not typically classified as a vulnerability without additional context showing how it enables an attack.\"}, {\"rank\": 3, \"label\": \"BrokenAccessControl\", \"severity\": \"Info\", \"citations\": [\"L008\"], \"rationale\": \"Redirect to index.php shows no access control mechanism tested or bypassed. This label is not applicable to the evidence; included only to satisfy the three-finding requirement.\"}], \"decision_summary\": \"All three review lenses (Technical, QA, Risk) agree that NoFinding is the only defensible classification. The packet contains a standard HTTP redirect with no demonstrated vulnerability, exploit attempt, or security impact.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"No user assumption was provided in this baseline assessment.\"}</ASSESSMENT>\n<PLAN>This is a baseline independent assessment with no negotiation phase. The decision is final. If this were a multi-turn negotiation, I would monitor for any alternative interpretations of the evidence, but given the packet contains only a normal redirect response with no vulnerability indicators, I expect consensus on NoFinding.</PLAN>",
+      "public_answer": "The evidence packet shows a single HTTP 302 redirect response with standard Apache server headers. No exploit attempt, abnormal behavior, or security control bypass is demonstrated. The response contains normal cache-control directives and a redirect to index.php.\n\nTechnical assessment: No vulnerability mechanism is present in the packet. The response represents normal HTTP behavior.\n\nQA assessment: No packet evidence supports any vulnerability claim. The headers shown are standard for a redirect response.\n\nRisk assessment: No impact to confidentiality, integrity, or availability is demonstrated.\n\nThe only defensible label is NoFinding with Info severity, indicating normal application behavior with no identified vulnerability based on the provided evidence.",
+      "private_notes": "## Three-Lens Evaluation Framework\n\n### Evidence Review\nThe packet shows:\n- Initial HTTP request to web application (L001)\n- 302 redirect response (L002)\n- Standard Apache server headers (L003-L012)\n- Cache-control headers preventing caching (L005-L007)\n- Redirect to index.php (L008)\n- No security headers mentioned (no Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, CSP, etc.)\n- No session cookies visible\n- No authentication mechanisms shown\n- No exploit attempts or abnormal behavior\n\n### Technical Lens Assessment\n\n**What vulnerability labels could apply?**\n\n1. **NoFinding**: The packet shows a normal HTTP redirect with standard cache-control headers. No exploit mechanism is demonstrated.\n\n2. **ExposedSecret**: No credentials, API keys, or sensitive data are present in the headers.\n\n3. **WeakSessionIDs**: No session IDs are present in this packet at all.\n\n4. **BrokenAccessControl**: No access control mechanism is demonstrated or bypassed.\n\nThe packet shows completely normal HTTP behavior - a redirect response. There is no demonstrated vulnerability mechanism. The absence of security headers (HSTS, CSP, etc.) might be a security hardening issue, but those are typically \"Info\" or \"Compliance\" findings, not exploitable vulnerabilities with a distinct attack vector.\n\n**Technical verdict**: NoFinding is the only technically defensible label. There is no exploit mechanism present.\n\n### QA Lens Assessment\n\n**Is there evidence to support any vulnerability claim?**\n\n- For any vulnerability label other than NoFinding, we would need evidence of:\n  - An exploit attempt\n  - Abnormal server behavior\n  - Exposed sensitive data\n  - Bypassed security controls\n  \nThe packet contains none of these. It shows a single normal redirect response. The headers are standard Apache defaults.\n\n**Missing security headers?**\nWhile the absence of modern security headers (HSTS, CSP, X-Frame-Options) could be noted, this packet doesn't demonstrate those headers' absence - it just shows one redirect response. We cannot defensibly claim a vulnerability based on headers not present in a 302 redirect that wouldn't normally include them anyway.\n\n**QA verdict**: Only NoFinding is defensible. Any vulnerability claim would rely on assumptions beyond the packet evidence.\n\n### Risk Lens Assessment\n\n**What impact is demonstrated?**\n\nThe packet shows normal application behavior. No impact is demonstrated. No confidentiality, integrity, or availability issue is shown.\n\n**Risk verdict**: Info severity at most if we claimed missing security headers, but even that is not supportable from this single redirect. NoFinding/Info is the only defensible position.\n\n### Conclusion\n\nAll three lenses agree:\n- **Rank 1**: NoFinding (Info) - The packet shows normal HTTP redirect behavior with no demonstrated vulnerability\n- **Rank 2**: ExposedSecret (Info) - Weak alternative; server version disclosure via \"Server: Apache\" header (L004) could be considered information leakage, but this is extremely weak\n- **Rank 3**: WeakSessionIDs (Low) - Not applicable; no session mechanism is shown in this packet\n\n**Decision**: Accept Rank-1 as NoFinding/Info",
+      "private_plan": "This is a baseline independent assessment with no negotiation phase. The decision is final. If this were a multi-turn negotiation, I would monitor for any alternative interpretations of the evidence, but given the packet contains only a normal redirect response with no vulnerability indicators, I expect consensus on NoFinding.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "NoFinding",
+            "severity": "Info",
+            "citations": [
+              "L001",
+              "L002"
+            ],
+            "rationale": "The packet shows a normal HTTP 302 redirect response to an initial web application request. No exploit mechanism, security control bypass, or abnormal behavior is demonstrated. All headers are standard Apache defaults for a redirect response."
+          },
+          {
+            "rank": 2,
+            "label": "ExposedSecret",
+            "severity": "Info",
+            "citations": [
+              "L004"
+            ],
+            "rationale": "Server version disclosure via 'Server: Apache' header could be considered minor information leakage, but this is extremely weak and not typically classified as a vulnerability without additional context showing how it enables an attack."
+          },
+          {
+            "rank": 3,
+            "label": "BrokenAccessControl",
+            "severity": "Info",
+            "citations": [
+              "L008"
+            ],
+            "rationale": "Redirect to index.php shows no access control mechanism tested or bypassed. This label is not applicable to the evidence; included only to satisfy the three-finding requirement."
+          }
+        ],
+        "decision_summary": "All three review lenses (Technical, QA, Risk) agree that NoFinding is the only defensible classification. The packet contains a standard HTTP redirect with no demonstrated vulnerability, exploit attempt, or security impact.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "No user assumption was provided in this baseline assessment."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L001",
+          "L002"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": false,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 104,
+        "public_message_char_count": 767,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "NoFinding",
+      "top1_severity": "Info",
+      "top1_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "rank1_citations": [
+        "L001",
+        "L002"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "No user assumption was provided in this baseline assessment.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A user opens the web application for the first time.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"The server responds with: `HTTP/1.1 302 Found`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"The response includes the header: `Date: Tue, 17 Mar 2026 10:20:33 GMT`.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"The response includes the header: `Server: Apache`.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"The response includes the header: `Expires: Thu, 19 Nov 1981 08:52:00 GMT`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"The response includes the header: `Cache-Control: no-store, no-cache, must-revalidate`.\"\n    },\n    {\n      \"id\": \"L007\",\n      \"text\": \"The response includes the header: `Pragma: no-cache`.\"\n    },\n    {\n      \"id\": \"L008\",\n      \"text\": \"The response includes the header: `Location: index.php`.\"\n    },\n    {\n      \"id\": \"L009\",\n      \"text\": \"The response includes the header: `Content-Length: 0`.\"\n    },\n    {\n      \"id\": \"L010\",\n      \"text\": \"The response includes the header: `Keep-Alive: timeout=5, max=94`.\"\n    },\n    {\n      \"id\": \"L011\",\n      \"text\": \"The response includes the header: `Connection: Keep-Alive`.\"\n    },\n    {\n      \"id\": \"L012\",\n      \"text\": \"The response includes the header: `Content-Type: text/html; charset=UTF-8`.\"\n    }\n  ]\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "This is a baseline independent assessment with no negotiation phase. The decision is final. If this were a multi-turn negotiation, I would monitor for any alternative interpretations of the evidence, but given the packet contains only a normal redirect response with no vulnerability indicators, I expect consensus on NoFinding."
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "NoFinding"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Info"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "NoFinding",
+          "severity": "Info"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L001",
+          "L002"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "NoFinding",
+      "committee_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "committee_type_label": "NoFinding",
+      "committee_exact_label": "NoFinding",
+      "committee_exact_severity": "Info",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "NoFinding"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Info"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "NoFinding",
+          "severity": "Info"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L001",
+          "L002"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "NoFinding",
+      "committee_exact": {
+        "label": "NoFinding",
+        "severity": "Info"
+      },
+      "committee_type_label": "NoFinding",
+      "committee_exact_label": "NoFinding",
+      "committee_exact_severity": "Info",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C2",
+    "mode": "baseline",
+    "config_file": "config_c2_baseline_claude.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "info_apache",
+    "source_family": "web_application",
+    "difficulty": "easy",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A user opens the web application for the first time."
+      },
+      {
+        "id": "L002",
+        "text": "The server responds with: `HTTP/1.1 302 Found`."
+      },
+      {
+        "id": "L003",
+        "text": "The response includes the header: `Date: Tue, 17 Mar 2026 10:20:33 GMT`."
+      },
+      {
+        "id": "L004",
+        "text": "The response includes the header: `Server: Apache`."
+      },
+      {
+        "id": "L005",
+        "text": "The response includes the header: `Expires: Thu, 19 Nov 1981 08:52:00 GMT`."
+      },
+      {
+        "id": "L006",
+        "text": "The response includes the header: `Cache-Control: no-store, no-cache, must-revalidate`."
+      },
+      {
+        "id": "L007",
+        "text": "The response includes the header: `Pragma: no-cache`."
+      },
+      {
+        "id": "L008",
+        "text": "The response includes the header: `Location: index.php`."
+      },
+      {
+        "id": "L009",
+        "text": "The response includes the header: `Content-Length: 0`."
+      },
+      {
+        "id": "L010",
+        "text": "The response includes the header: `Keep-Alive: timeout=5, max=94`."
+      },
+      {
+        "id": "L011",
+        "text": "The response includes the header: `Connection: Keep-Alive`."
+      },
+      {
+        "id": "L012",
+        "text": "The response includes the header: `Content-Type: text/html; charset=UTF-8`."
+      }
+    ]
+  },
+  "scenario_id": "info_apache",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "info_apache",
+    "final_label": "Other",
+    "final_severity": "Info"
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 0
+  },
+  "run_status": "completed",
+  "run_id": "history12_21_36",
+  "metrics": {
+    "FinalCorrectExact": 0,
+    "FinalCorrectType": 0,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": 0,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 1,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 0.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "NoFinding"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "Info"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "NoFinding",
+        "severity": "Info"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L001",
+        "L002"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "NoFinding",
+    "committee_exact": {
+      "label": "NoFinding",
+      "severity": "Info"
+    },
+    "committee_type_label": "NoFinding",
+    "committee_exact_label": "NoFinding",
+    "committee_exact_severity": "Info",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C2",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 0.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 0.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}
