@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -330,49 +328,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>QA Reviewer C opening position: The evidence indicates a PHP include/require call is being invoked with an empty or missing filename derived from a URL parameter, producing path resolution warnings. Specifically: L002 shows “Filename cannot be empty” at module/index.php:36, and L003 shows PHP attempting to resolve the include path, including a relative component ../../external/lib/. Combined with L001 noting a page= URL parameter, this supports a FileInclusion class of issue (user-controllable path likely used in an include) even though successful file retrieval isn’t demonstrated.
-
-Severity: Low. We have error leakage confirming unsanitized include usage, but we do not have evidence of actual file read or code execution. The impact remains plausible but unproven beyond warning disclosures.
-
-Question to Technical Analyst K: Can you demonstrate, via a specific request example and response line(s), that a non-empty page value changes the include target (e.g., different warning path or successful inclusion)? That would strengthen severity beyond Low.</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. The warnings at module/index.php:36 show an include/require being called with an empty filename and PHP resolving include_path components, which is consistent with user-influenced dynamic inclusion sourced from the page= parameter. Specifically, L002 shows “Filename cannot be empty,” and L003 shows PHP attempting to open a file using include_path entries. This supports a FileInclusion classification. Without evidence of a successful inclusion or traversal to read/execute files, keeping severity at Low is technically defensible.
-
-Rank-1 is technically plausible, supported by the cited evidence, and better-fitting than nearby alternatives (e.g., Other/NoFinding), because the mechanics specifically point to dynamic include usage rather than a generic error leak.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree that the evidence supports a FileInclusion mechanism driven by the page parameter, given the PHP warnings. Based on L002 (“Filename cannot be empty”) and L003 (PHP resolving include_path) tied to L001’s page parameter, Rank-1 as FileInclusion with Low severity reasonably reflects the demonstrated impact: error leakage indicating dynamic include without evidence of successful file read or code execution. There is a plausible higher-impact path (e.g., LFI/RFI), but the packet does not show it occurring. Therefore, Low is not understating nor overstating the risk based on current evidence.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your conclusion. The packet shows dynamic include/require behavior influenced by the URL parameter without evidence of successful file inclusion or traversal exploitation.
-
-Assessment: The Rank-1 claim (FileInclusion, Low) is defensible based on the evidence.
-- Evidence supports the label: L001 establishes a URL parameter page=, and L002–L003 show PHP include/require warnings at /var/www/html/module/index.php:36 indicating an empty filename and include_path resolution. This is consistent with user-influenced dynamic inclusion logic.
-- Severity justification: With only warning leakage (L002, L003) and no demonstrated successful inclusion, file read, or code execution, Low is appropriate and avoids speculative impact.
-
-No blocking issues remain given the current packet; the citations are specific and sufficient for external verification.</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree with the committee’s assessment. The Rank-1 classification FileInclusion with Low severity is technically justified by the packet:
-- Evidence support: L002 (“Filename cannot be empty”) and L003 (PHP resolving include_path) at module/index.php:36 are consistent with a PHP include/require being called with user-influenced input. L001 establishes the page= parameter as the likely source. This aligns with a FileInclusion mechanism.
-- Mechanism consistency: An empty page value triggering include/require warnings fits dynamic inclusion behavior. No evidence shows a successful file read or code execution.
-- Alternatives: Generic error leakage (Other/NoFinding) is less precise than FileInclusion given the explicit include/require warnings. XSS/SQLi/CommandInjection do not match the observed behavior.
-I can sign off on Rank-1 as FileInclusion, Low based on L001–L003.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your technical assessment. The packet supports a FileInclusion mechanism influenced by the page parameter (L001) with PHP include/require warnings showing an empty filename (L002) and include_path resolution (L003). There’s no evidence of successful file inclusion, traversal, or code execution. The Rank-1 recommendation FileInclusion with Low severity accurately reflects the impact shown by the evidence and avoids speculative escalation.</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree. The packet supports a dynamic include/require influenced by the page parameter, producing include warnings without evidence of successful inclusion or traversal. Rank-1 FileInclusion with Low severity is defensible.
-
-Decision: Accept. The Rank-1 claim is supported by specific evidence:
-- L001 shows the page= URL parameter present.
-- L002 and L003 show PHP include/require warnings at /var/www/html/module/index.php:36, including “Filename cannot be empty” and include_path resolution, consistent with user-influenced dynamic inclusion invoked with an empty value. 
-Severity: Low is appropriate because the only demonstrated impact is error leakage (L002–L003). There is no evidence of successful file read, traversal, or code execution.
-Citations are precise and sufficient for independent verification.</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. L001 shows a page= parameter, and L002–L003 show PHP include/require warnings at /var/www/html/module/index.php:36 (“Filename cannot be empty” and include_path resolution). This supports a FileInclusion mechanism influenced by user input. With only warning leakage and no demonstrated successful inclusion or traversal, Low severity is technically justified.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. The packet supports a FileInclusion mechanism influenced by page= (L001) with PHP include/require warnings showing an empty filename and include_path resolution (L002, L003). No evidence demonstrates successful file inclusion, traversal, or code execution. Rank-1 FileInclusion with Low severity accurately reflects the risk shown by the evidence.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The evidence supports a user-influenced dynamic include/require. L001 shows a page= parameter, and L002–L003 show PHP warnings at /var/www/html/module/index.php:36 (“Filename cannot be empty” and include_path resolution), which is consistent with a FileInclusion mechanism invoked with an empty value. There is no evidence of successful inclusion, traversal, or code execution, so Low severity is appropriate. I can sign off on Rank-1 (FileInclusion, Low) based on L001–L003.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree with your specific claim that L002–L003 show PHP include/require warnings at module/index.php:36 consistent with a user-influenced dynamic include. This, combined with the presence of a page= parameter (L001), supports a FileInclusion mechanism without evidence of successful inclusion or traversal, justifying Low severity.
-
-Decision: Accept. The Rank-1 claim (FileInclusion, Low) is defensible based on precise evidence:
-- L002 and L003 show PHP include/require warnings (“Filename cannot be empty” and include_path resolution) at /var/www/html/module/index.php:36, directly indicating a file include operation invoked with an empty filename.
-- The demonstrated impact is limited to warning/error leakage; there is no evidence of successful file read, traversal, or code execution.
-Citations are specific and sufficient for independent verification.</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree with your precise claim that L002–L003 show PHP include/require warnings at /var/www/html/module/index.php:36, consistent with a user-influenced dynamic include triggered by an empty page parameter (L001). There is no evidence of successful inclusion, traversal, or code execution. Rank-1 FileInclusion with Low severity accurately reflects the demonstrated impact (warning leakage) based on L002–L003.
-
-Final assessment: Accept. The Rank-1 (FileInclusion, Low) is proportionate to the evidence. No higher-impact interpretation (e.g., successful LFI/RFI) is supported by the packet as given.</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

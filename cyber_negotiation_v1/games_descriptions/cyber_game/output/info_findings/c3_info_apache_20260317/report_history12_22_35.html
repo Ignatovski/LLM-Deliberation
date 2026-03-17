@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -328,71 +326,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>QA Reviewer C opening position: Based on the provided packet, I see only a standard HTTP 302 response with common headers and a redirect to index.php (L002, L008). There is no evidence of exploitable behavior (e.g., input handling, sensitive data exposure, authentication bypass, or injection). As such, a defensible, evidence-backed conclusion is NoFinding at this time.
-
-Challenge question to Technical Analyst K: Do you see any packet lines that indicate user-controlled input, sensitive data exposure, or misconfiguration impact beyond a normal redirect and cache-control headers? If so, please cite the exact line IDs.</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree. The packet shows a standard HTTP redirect with common headers and no evidence of user-controlled input, sensitive data, or exploit mechanics.
-
-- Evidence: L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) indicate a normal redirect. Other headers (L003–L007, L010–L012) are standard and do not imply a vulnerability.
-
-Conclusion: The most defensible assessment is NoFinding based on the provided lines and lack of exploit indicators.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your assessment that the packet shows a routine 302 redirect and standard headers with no evidence of exploitable behavior (L002, L008). There is no indication of user-controlled input, sensitive data exposure, or misconfiguration impact in the provided lines.
-
-Risk Reviewer R update: The proposed Rank-1 of NoFinding reasonably reflects the packet. The evidence (L002, L008) supports a normal redirect without security impact. Other headers (L003–L007, L010–L012) appear standard and do not indicate risk. No plausible higher-impact interpretation (e.g., open redirect, auth bypass, caching leak) is supported by these lines. I accept the committee’s Rank-1 recommendation.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your conclusion that the packet shows a routine 302 redirect and standard headers without evidence of exploitable behavior (L002, L008). There are no indicators of user-controlled input, sensitive data exposure, or misconfiguration impact in the provided lines.
-
-Committee Update:
-- Rank-1: NoFinding is defensible. The evidence reflects a normal redirect (L002, L008) and common headers (L003–L007, L010–L012) without security impact.
-- No further evidence suggests any listed vulnerability type.
-
-I can sign off on NoFinding based on the cited lines.</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim—there are no lines indicating user-controlled input, sensitive data exposure, or misconfiguration impact beyond a normal redirect. L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) reflect routine behavior; other headers (L003–L007, L010–L012) are standard and do not evidence a vulnerability.
-
-Technical Analyst K update:
-- Rank-1 (NoFinding) is technically plausible and best supported by the packet. The cited lines L002 and L008 show a normal redirect without indicators of exploit mechanics or misconfiguration. No alternative label (e.g., open redirect, auth bypass, injection) is better supported by the evidence.
-- I accept the Rank-1 recommendation.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) reflect routine redirect behavior without indicators of exploit mechanics.
-
-Risk Reviewer R update: The Rank-1 recommendation (NoFinding) accurately reflects the packet evidence. The observed 302 redirect (L002) to a static path (L008) and standard headers (L003–L007, L010–L012) do not suggest user-controlled input, sensitive data exposure, or misconfiguration with security impact. No plausible higher-impact interpretation (e.g., open redirect, auth bypass, caching risk) is supported by these lines. I accept the committee’s Rank-1 decision.</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that the packet shows a routine 302 redirect (L002) to a static path (L008) with standard headers and no indicators of exploitable behavior.
-
-Committee Update:
-- Rank-1 (NoFinding) is defensible based on L002 and L008 indicating a normal redirect without evidence of user-controlled input, sensitive data exposure, or misconfiguration impact. Other headers (L003–L007, L010–L012) appear standard and do not suggest a vulnerability.
-- No additional evidence supports any listed vulnerability type.
-I can sign off on NoFinding given the cited lines.</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) reflect a routine redirect to a static path with no evidence of user-controlled input or exploit mechanics. Other headers (L003–L007, L010–L012) are standard and do not indicate a vulnerability.
-
-Technical Analyst K update:
-- Rank-1 (NoFinding) is technically plausible and best supported by the packet. The evidence (L002, L008) shows normal redirect behavior without indicators of injection, open redirect, auth bypass, or data exposure. No alternative label better fits the observed behavior.
-- I accept the Rank-1 recommendation.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L002 and L008 show a routine 302 redirect to a static path without evidence of exploit mechanics.
-
-Risk Reviewer R update: The Rank-1 recommendation (NoFinding) accurately reflects the packet evidence. The 302 redirect (L002) to a fixed Location (L008) and standard headers (L003–L007, L010–L012) do not indicate user-controlled input, sensitive data exposure, or misconfiguration with security impact. No plausible higher-impact interpretation (e.g., open redirect, auth bypass, caching risk) is supported by these lines. I accept the committee’s Rank-1 decision.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L002 and L008 show a routine 302 redirect to a static path without indicators of exploit mechanics.
-
-Technical Analyst K update:
-- Rank-1 (NoFinding) is technically justified by the packet. L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) depict a normal redirect to a fixed path, not a user-controlled destination. Other headers (L003–L007, L010–L012) are standard and do not evidence injection, open redirect, auth bypass, or data exposure. No alternative label better explains the observed behavior.
-- I accept the Rank-1 recommendation.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) show a routine redirect to a fixed path, with no evidence of user-controlled input or exploit mechanics. Other headers (L003–L007, L010–L012) are standard and do not indicate a vulnerability.
-
-Committee Decision Update:
-- Rank-1 (NoFinding) is defensible. The evidence (L002, L008) supports a normal redirect without signs of injection, open redirect, auth bypass, or data exposure. No additional lines indicate any listed vulnerability type.
-- I can sign off on NoFinding based on the cited evidence.</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) indicate a normal redirect to a fixed path, with no evidence of user-controlled input or exploit mechanics in the packet.
-
-Risk Reviewer R update: The Rank-1 recommendation (NoFinding) remains appropriate. The packet shows a standard 302 redirect (L002) to a static location (L008) with common headers (L003–L007, L010–L012). There is no evidence of user-controlled redirection, sensitive data exposure, or misconfiguration that would justify a higher-impact label. No plausible higher-impact interpretation (e.g., open redirect, auth bypass, caching issue) is supported by the cited lines. I accept the committee’s Rank-1 decision.</pre></td></tr><tr><td>13</td><td>12</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) indicate a routine redirect to a fixed path with no evidence of user-controlled input or exploit mechanics.
-
-Technical Analyst K update:
-- Rank-1 (NoFinding) is technically justified. The cited lines (L002, L008) show a standard server-driven redirect to a static endpoint, and other headers (L003–L007, L010–L012) are common and not indicative of a vulnerability. No evidence supports injection, open redirect, access control issues, or data exposure.
-- I accept the Rank-1 recommendation.</pre></td></tr><tr><td>14</td><td>13</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L002 and L008 show a routine server-driven redirect to a fixed path without indicators of exploit mechanics.
-
-Risk Reviewer R update: The Rank-1 recommendation (NoFinding) remains appropriate. The packet shows a standard 302 redirect (L002) to a static Location header (L008), and other headers (L003–L007, L010–L012) are common and not indicative of a vulnerability. There is no evidence of user-controlled redirection, data exposure, or misconfiguration implying higher impact. I accept the committee’s Rank-1 decision.</pre></td></tr><tr><td>15</td><td>14</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L002 (HTTP/1.1 302 Found) and L008 (Location: index.php) indicate a normal redirect to a fixed path, with no evidence of user-controlled input or exploit mechanics.
-
-Committee Decision Update:
-- Rank-1 (NoFinding) is defensible. The packet shows a standard 302 redirect (L002) to a static location (L008). Other headers (L003–L007, L010–L012) are common and do not evidence injection, open redirect, access control issues, or data exposure.
-- I can sign off on NoFinding based on the cited evidence.</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

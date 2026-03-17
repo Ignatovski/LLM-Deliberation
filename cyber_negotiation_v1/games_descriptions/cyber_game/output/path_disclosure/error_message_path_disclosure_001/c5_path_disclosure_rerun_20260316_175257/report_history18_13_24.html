@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -331,99 +329,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Opening position:
-
-The packet shows error messages revealing internal file paths and a potential file inclusion mechanism (L002, L003). However, we observe only failed attempts—no successful file inclusion, arbitrary file read, or code execution is demonstrated.
-
-From a defensibility standpoint, I see two viable interpretations:
-
-**Option 1: FileInclusion (Low severity)**  
-The error messages indicate the `page` parameter drives file inclusion logic. Citation: L002 shows &quot;Filename cannot be empty&quot; and L003 shows &quot;Failed opening&quot; with include_path exposed. While suggestive, the packet lacks proof of successful exploitation.
-
-**Option 2: Information Disclosure via Other (Info severity)**  
-The error messages directly expose internal paths (/var/www/html/module/index.php, include_path configuration). This is immediately observable and defensible. Citations: L002, L003.
-
-**Initial assessment: I cannot yet accept a FileInclusion claim** because the packet does not demonstrate successful file inclusion—only error messages from a failed attempt. A professional report would need exploitation evidence to label this FileInclusion with confidence.
-
-**Question to Technical Analyst K:** Do these error messages alone constitute sufficient evidence to label this FileInclusion, or would you require demonstrated file read capability?</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree that the current evidence demonstrates error-based information disclosure rather than a confirmed file inclusion exploit. The messages show inclusion logic tied to the page parameter and disclose internal paths and include_path (L002, L003), but there is no demonstrated ability to include/read arbitrary files. Therefore, the most defensible Rank-1 is Information Disclosure under Other at Info severity, with FileInclusion as a secondary hypothesis pending exploit confirmation.
-
-Ranked recommendation:
-1) Other (Info) — Error messages disclose internal filesystem paths and include_path configuration (L002, L003). This is directly evidenced and immediately reportable.
-2) FileInclusion (Low) — The page parameter appears to drive include/require behavior, suggested by “Filename cannot be empty” and “Failed opening” tied to include_path (L002, L003). However, exploitability (successful inclusion/read) is not shown.
-3) NoFinding — Not appropriate given clear error disclosures, but included for completeness.
-
-Decision: Accept. The Rank-1 (Other, Info) is technically plausible, directly supported by L002–L003, and is a better fit than FileInclusion given the absence of demonstrated file read or successful inclusion in the packet.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree that the evidence supports error-based information disclosure rather than a confirmed file inclusion exploit. The warnings expose internal paths and include_path (L002, L003), but there is no demonstrated successful inclusion or file read.
-
-Risk view: The Rank-1 (Other, Info) reasonably reflects the impact shown. While a FileInclusion scenario is plausible given the include warnings and include_path disclosure (L002, L003), the packet does not evidence actual file access or execution. Elevating severity based on potential alone would overstate the risk beyond what is supported by the packet.
-
-I accept the committee’s Rank-1 as accurate for the evidenced impact.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree that elevating severity based on potential alone would overstate the risk beyond what the packet supports.
-
-**Final assessment:**
-
-The committee has converged on a defensible conclusion. The Rank-1 finding (Other, Info severity) is directly supported by packet evidence:
-
-- **Citations L002, L003** show error messages that explicitly disclose internal filesystem paths (/var/www/html/module/index.php) and include_path configuration.
-- The label &quot;Other&quot; appropriately categorizes information disclosure via error messages.
-- The severity &quot;Info&quot; is conservative and proportionate to the observed impact—path disclosure without demonstrated exploitation.
-
-This finding could withstand external review and publication in a professional vulnerability report. Every claim is verifiable from the cited packet evidence.
-
-**I accept the committee&#x27;s Rank-1 assessment.**</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. The packet shows error-based information disclosure, not a confirmed file inclusion. The warnings expose internal paths and include_path (L002, L003) without evidence of successful inclusion or file read.
-
-Decision: Accept. The Rank-1 (Other, Info) is technically justified and best supported by the evidence. It directly maps to the disclosed internal paths/include_path (L002, L003). A FileInclusion label would overstate the evidence since no successful inclusion is demonstrated.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. The evidence supports error-based information disclosure without demonstrated file inclusion or file read. L002–L003 show internal path and include_path disclosure, but no successful inclusion.
-
-Assessment: The Rank-1 (Other, Info) accurately reflects the evidenced impact. Elevating to FileInclusion would overstate risk given the lack of demonstrated file access.
-
-Ranked recommendation:
-1) Other (Info) — Error messages disclose internal paths and include_path (L002, L003).
-2) FileInclusion (Low) — Inclusion logic is suggested by the warnings, but no successful include/read is shown (L002, L003).
-3) NoFinding — Not applicable due to clear error-based disclosure (L002, L003).</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. Your ranked recommendation matches the committee consensus and is well-justified by the packet evidence.
-
-**Consensus confirmed:**
-
-All three reviewers have independently validated the committee&#x27;s Rank-1 assessment. The finding (Other, Info severity) is directly supported by L002 and L003, which show error messages exposing internal filesystem paths and include_path configuration.
-
-This conclusion is:
-- Evidence-based (no assumptions required)
-- Conservative (severity proportionate to observed impact)
-- Defensible in a professional vulnerability report
-
-**I accept the committee&#x27;s final assessment.**</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. The evidence shows error-based information disclosure via PHP warnings that reveal internal paths and include_path (L002, L003), without demonstrating a successful file inclusion or read.
-
-Decision: Accept. The Rank-1 (Other, Info) is technically justified by L002–L003 and better fits the observed behavior than FileInclusion, which lacks evidence of successful inclusion.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. The evidence shows PHP warnings disclosing internal paths and include_path (L002, L003) without demonstrating successful inclusion or file read. The Rank-1 (Other, Info) matches the evidenced impact and does not overstate risk.
-
-Decision: Accept. The severity is proportionate to error-based information disclosure only, as supported by L002–L003.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The packet only shows PHP warnings disclosing internal paths and include_path (L002, L003) without evidence of a successful include or file read. The Rank-1 (Other, Info) is technically accurate and better-fitting than FileInclusion given the observed behavior.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. Full consensus has been reached by all three reviewers. The Rank-1 (Other, Info) is directly supported by the packet evidence showing PHP warnings that disclose internal paths and include_path configuration (L002, L003), without evidence of successful file inclusion.
-
-**Final consensus confirmed:**
-
-The committee&#x27;s assessment is defensible and ready for publication. The finding accurately reflects error-based information disclosure with severity proportionate to the observed impact. All claims are grounded in verifiable packet evidence.
-
-**I accept the committee&#x27;s final assessment.**</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. L002–L003 show PHP warnings that disclose internal paths and include_path, with no evidence of successful file inclusion or file read.
-
-Decision: Accept. The Rank-1 (Other, Info) reasonably reflects the evidenced impact. Elevating to FileInclusion would overstate risk given no demonstrated inclusion/read (L002, L003).</pre></td></tr><tr><td>13</td><td>12</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. L002–L003 show PHP warnings disclosing internal paths and include_path configuration without evidence of a successful include or file read. The Rank-1 (Other, Info) is technically accurate and better-fitting than FileInclusion for the observed behavior.
-
-Decision: Accept. The classification is supported by L002–L003 and reflects error-based information disclosure only.</pre></td></tr><tr><td>14</td><td>13</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree with your assessment. The evidence shows PHP warnings disclosing internal paths and include_path (L002, L003) without any demonstrated successful include or file read. The Rank-1 (Other, Info) reflects the observed, evidence-backed impact and does not understate or overstate risk.
-
-Decision: Accept. The severity is proportionate to error-based information disclosure only, as supported by L002–L003.</pre></td></tr><tr><td>15</td><td>14</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The committee has reached unanimous consensus. The Rank-1 (Other, Info) is fully supported by L002–L003, which show PHP warnings disclosing internal paths and include_path configuration without evidence of successful file inclusion.
-
-**Final decision: Accept.**
-
-The assessment is defensible and ready for publication. All claims are grounded in verifiable packet evidence (L002, L003), the severity is proportionate to the observed error-based information disclosure, and the classification accurately reflects the evidenced behavior without overstating impact.
-
-The committee&#x27;s work is complete.</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

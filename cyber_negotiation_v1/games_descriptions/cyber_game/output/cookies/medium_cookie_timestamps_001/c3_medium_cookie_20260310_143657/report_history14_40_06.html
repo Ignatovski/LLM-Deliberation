@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -328,111 +326,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>QA Reviewer C opening position: Based on the packet, the most defensible primary finding is WeakSessionIDs with Low severity.
-
-Evidence-backed basis:
-- The application sets a session cookie after form submissions (L001).
-- The observed cookie values increase in a predictable, monotonically increasing numeric sequence across subsequent submissions: 1773138087 → 1773141291 → 1773141305 → 1773141321 → 1773141336 (L002, L003, L004, L005, L006). This suggests a simplistic, potentially predictable session identifier.
-
-Severity rationale:
-- The evidence shows a simple, increasing pattern but does not demonstrate cross-user predictability, entropy characteristics, or an exploit path to hijack sessions. Given the limited scope, Low severity is defensible and conservative.
-
-Challenge question to Technical Analyst K: Can you confirm whether these sequential values were observed across different user sessions/browsers or within a single continuous session flow? This distinction would solidify the predictability impact assessment.</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: The evidence supports WeakSessionIDs as the primary finding. L001 shows a session cookie is set, and the observed values form a monotonically increasing numeric pattern (e.g., L003/L004, also consistent across L005/L006), indicating low-entropy, predictable session identifiers. This behavior aligns with WeakSessionIDs and is better fitting than alternatives like AuthBypass or BrokenAccessControl, which are not evidenced. Low severity is appropriate given the lack of demonstrated cross-user predictability or session hijack, while still noting the predictability risk signaled by the numeric sequence.
-
-To your question: The packet does not specify whether these values are across different users or a single session flow; the evidence only confirms sequential increases per submissions (L001-L006). This limits impact assessment, supporting a Low severity rating.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that the packet does not establish cross-user/session predictability and only shows monotonically increasing numeric values per submission (L001-L006). 
-
-Risk Reviewer R update:
-- Rank-1: WeakSessionIDs with Low severity remains defensible. Evidence shows a session cookie is set (L001) and that its value appears to be a monotonically increasing number across submissions (L002-L006). This supports low-entropy, potentially predictable session identifiers but does not demonstrate cross-user predictability or an exploit leading to session hijack.
-- Higher-impact alternatives (e.g., BrokenAccessControl, AuthBypass) are not supported by the packet. A higher severity for WeakSessionIDs would require evidence of predictability across users or feasible hijacking, which is not present.
-
-Decision: The current Rank-1 recommendation reasonably reflects the potential impact suggested by the evidence.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree with your concrete claim that the packet does not establish cross-user/session predictability and only shows monotonically increasing numeric values between observed cookie values. The Rank-1 proposal (WeakSessionIDs, Low) is defensible on the provided evidence.
-
-Committee update:
-- Rank-1: WeakSessionIDs (Low). Evidence shows a session cookie is set after submissions (L001) and that observed cookie values increase in a predictable numeric sequence across submissions (e.g., 1773141291 → 1773141305, L003-L004). This supports the conclusion that session identifiers appear low-entropy/predictable. Impact remains limited in the packet because there is no demonstration of cross-user predictability or session hijack.
-- No evidence supports higher-impact categories like BrokenAccessControl or AuthBypass.
-
-Signing position: Acceptable as Low severity given current evidence. No blocking issues.</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values but does not establish cross-user/session predictability. 
-
-Technical Analyst K update:
-- Rank-1 WeakSessionIDs (Low) is technically justified. Evidence shows a session cookie is set (L001) and observed values increase in a predictable numeric pattern across submissions (e.g., 1773141291 → 1773141305, L003-L004), which is consistent with low-entropy, potentially predictable session identifiers. No evidence supports higher-impact labels like BrokenAccessControl or AuthBypass.
-- The mechanism implied by WeakSessionIDs aligns with the observed behavior and is better fitting than alternatives given the packet. Severity remains Low due to lack of demonstrated cross-user predictability or session hijack.
-
-I can sign off on WeakSessionIDs (Low) based on L001 and L003-L004.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values (e.g., L003/L004) but does not establish cross-user/session predictability.
-
-Risk Reviewer R decision:
-- The Rank-1 recommendation WeakSessionIDs with Low severity reasonably reflects the impact suggested by the evidence. The packet shows a session cookie is set (L001) and that values progress in a predictable, monotonically increasing numeric pattern (L003/L004), indicating low-entropy session identifiers. However, there is no evidence of cross-user predictability or a demonstrated path to session hijack in the packet, which constrains impact.
-- No higher-impact alternative label is supported by the evidence, and increasing severity would overstate impact beyond what is shown.
-
-Signing position: Acceptable as Low severity given current evidence.</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values (e.g., L003/L004) without evidence of cross-user predictability. The Rank-1 (WeakSessionIDs, Low) is defensible based on the provided lines.
-
-Committee assessment update:
-- Rank-1: WeakSessionIDs (Low). Evidence: session cookie set after submissions (L001) and predictable, increasing numeric cookie values across submissions (e.g., 1773141291 → 1773141305, L003-L004). This supports low-entropy/predictable session identifiers. Impact remains limited due to no demonstrated cross-user predictability or session hijack in the packet.
-- Rank-2: NoFinding — No additional supported vulnerability category exceeds the evidence for WeakSessionIDs.
-- Rank-3: Other — Placeholder for any future clarification, but current packet does not substantiate another specific label.
-
-I can sign off on WeakSessionIDs (Low) based on L001 and L003-L004.</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values (e.g., L003/L004) without evidence of cross-user predictability.
-
-Technical Analyst K decision:
-- Rank-1: WeakSessionIDs (Low) is technically justified. Evidence indicates a session cookie is set (L001) and the values increase in a predictable numeric pattern across submissions (e.g., 1773141291 → 1773141305 in L003-L004), supporting low-entropy/predictable session identifiers. The mechanism aligns with WeakSessionIDs and fits better than alternatives such as AuthBypass or BrokenAccessControl, which the packet does not support. Impact is limited due to no demonstrated cross-user predictability or session hijack.
-
-I can sign off on WeakSessionIDs (Low) based on L001 and L003-L004.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values (e.g., L003/L004) but does not establish cross-user/session predictability.
-
-Risk Reviewer R assessment:
-- The Rank-1 recommendation WeakSessionIDs (Low) reasonably reflects the impact suggested by the evidence. The packet shows a session cookie is set (L001) and the values progress in a predictable, monotonically increasing numeric pattern (L003/L004), indicating low-entropy session identifiers. There is no evidence of cross-user predictability or session hijack, keeping impact limited.
-- No higher-impact alternative (e.g., BrokenAccessControl, AuthBypass) is supported by the packet.
-
-Decision: Accept WeakSessionIDs (Low) as aligned with the evidence.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree with your concrete claim that the packet shows monotonically increasing numeric session cookie values (e.g., L003/L004) without establishing cross-user/session predictability.
-
-Technical Analyst K decision:
-- Rank-1: WeakSessionIDs (Low) remains technically justified. Evidence shows a session cookie is set (L001) and that observed values increase in a predictable numeric pattern across submissions (e.g., 1773141291 → 1773141305 in L003-L004), consistent with low-entropy/predictable session identifiers. No evidence demonstrates cross-user predictability or session hijack.
-- Alternatives like AuthBypass or BrokenAccessControl are not supported by the packet.
-
-Signing position: Accept WeakSessionIDs (Low) based on L001 and L003-L004.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree with your concrete claim that the packet shows monotonically increasing numeric cookie values across submissions (e.g., 1773141291 → 1773141305, L003-L004) and that the packet notes this cookie is a session cookie (L001). 
-
-QA Reviewer C assessment:
-- Rank-1: WeakSessionIDs (Low) is defensible. Evidence shows a session cookie is being set (L001) and that observed cookie values increase in a predictable numeric sequence across submissions (e.g., 1773141291 → 1773141305, L003-L004). This supports low-entropy/predictable session identifiers. There is no evidence in the packet of cross-user predictability or session hijack, so Low severity is appropriate.
-- Rank-2: NoFinding — No other vulnerability label is better supported by the evidence.
-- Rank-3: Other — Placeholder; the packet does not substantiate an alternative label.
-
-Decision: Accept Rank-1 WeakSessionIDs (Low) as defensible based on L001 and L003-L004.</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim that the packet shows a session cookie is set (L001) and that cookie values increase predictably across submissions (e.g., 1773141291 → 1773141305, L003-L004), without evidence of cross-user predictability.
-
-Risk Reviewer R decision:
-- Rank-1: WeakSessionIDs (Low) remains appropriate. The evidence indicates a session cookie (L001) with monotonically increasing numeric values (L003-L004), suggesting low-entropy/predictable identifiers. The packet does not demonstrate cross-user/session predictability or session hijack, keeping realistic impact limited.
-- No higher-impact alternative is supported by the provided lines.
-
-Signing position: Accept WeakSessionIDs (Low) as aligned with the evidence.</pre></td></tr><tr><td>13</td><td>12</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree with your concrete claim that the packet shows a session cookie is set (L001) and that values increase predictably across submissions (e.g., 1773141291 → 1773141305, L003-L004) without evidence of cross-user predictability.
-
-Technical Analyst K decision:
-- Rank-1: WeakSessionIDs (Low) is technically justified. Evidence shows a session cookie is set (L001) and the observed values increase in a predictable numeric sequence across submissions (e.g., 1773141291 → 1773141305, L003-L004), indicating low-entropy/predictable identifiers. No evidence shows cross-user predictability or session hijack, keeping impact limited.
-- Alternatives like AuthBypass or BrokenAccessControl are not supported by the packet.
-
-Signing position: Accept WeakSessionIDs (Low) based on L001 and L003-L004.</pre></td></tr><tr><td>14</td><td>13</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree with your concrete claim that the evidence shows a session cookie is set (L001) and that its value increases predictably across submissions (e.g., 1773141291 → 1773141305, L003-L004), with no demonstration of cross-user predictability.
-
-Risk Reviewer R decision:
-- Rank-1: WeakSessionIDs (Low) remains appropriate. The packet indicates a session cookie (L001) with monotonically increasing numeric values across submissions (L003-L004), supporting low-entropy/predictable identifiers. There is no evidence of cross-user/session predictability or session hijack, so Low severity aligns with the realistic impact.
-- No higher-impact alternative is supported by the packet evidence.
-
-Decision: Accept Rank-1 WeakSessionIDs (Low) as aligned with the evidence.</pre></td></tr><tr><td>15</td><td>14</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree with your concrete claim that the evidence shows a session cookie is set (L001) and its value increases predictably across submissions (e.g., 1773141291 → 1773141305, L003-L004), with no demonstration of cross-user predictability. 
-
-QA Reviewer C assessment:
-- Rank-1: WeakSessionIDs (Low) is defensible. The packet establishes a session cookie is set (L001) and that observed cookie values increase in a predictable numeric sequence across submissions (e.g., 1773141291 → 1773141305, L003-L004). This supports a weak/predictable session identifier conclusion. There is no evidence of cross-user or cross-session predictability or session hijack, so Low severity is appropriate.
-- Rank-2: NoFinding — No alternative label is better supported by the evidence.
-- Rank-3: Other — Placeholder; the packet does not substantiate another specific vulnerability label.
-
-Decision: Accept Rank-1 WeakSessionIDs (Low) as defensible based on L001 and L003-L004.</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

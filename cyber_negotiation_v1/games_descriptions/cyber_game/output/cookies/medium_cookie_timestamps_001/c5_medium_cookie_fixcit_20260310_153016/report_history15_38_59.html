@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -328,94 +326,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Opening position from QA Reviewer C:
-
-The evidence packet shows five session cookie values captured across repeated form submissions (L002-L006). The values form a pattern: 1773138087, 1773141291, 1773141305, 1773141321, 1773141336. 
-
-The later four values show small increments (14-16 units), consistent with predictable sequential or time-based generation. This pattern directly supports a **WeakSessionIDs** finding.
-
-Severity **Medium** is defensible: predictable session IDs enable session hijacking but require timing or enumeration effort—not immediately critical but a recognized security flaw.
-
-My Rank-1 proposal: **WeakSessionIDs / Medium**, citing L002, L003, L004 as representative evidence of the predictable pattern.
-
-I invite Technical Analyst K and Risk Reviewer R to share their assessments. Specifically, I&#x27;d like to hear from **Technical Analyst K**: Do you see technical evidence in the packet that would suggest a different vulnerability label, or does the incremental pattern in L003-L006 support WeakSessionIDs as the primary finding?</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree that the evidence supports WeakSessionIDs. L001 establishes these values are session cookies, and the later values increase by small, consistent increments (e.g., L003→L006). The numeric, near-sequential progression is consistent with predictable session ID generation rather than random, high-entropy tokens. I see no alternative label that better explains this behavior. Medium severity is reasonable given predictability could enable session prediction with some timing/enumeration effort.
-
-Rank-1 recommendation appears technically justified based on the packet.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree the packet supports WeakSessionIDs. L001 confirms these are session cookies, and the near-sequential numeric progression across submissions (e.g., L003–L006) indicates predictability. Without evidence of authenticated session scope or broader impact, Medium severity reasonably reflects the potential risk: session prediction may be feasible but would require timing/enumeration.
-
-Decision: Accept Rank-1 WeakSessionIDs / Medium as aligned with the evidence.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your acceptance. The convergence is clear and evidence-backed.
-
-**Final position from QA Reviewer C:**
-
-The committee has reached consensus on **WeakSessionIDs / Medium** as Rank-1, supported by:
-- L001 confirming session cookie context
-- L002-L006 documenting five cookie values with a predictable incremental pattern
-
-All three reviewers agree this finding is defensible. The label accurately describes predictable session ID generation, the severity appropriately reflects enumeration/timing requirements, and every claim traces to specific packet evidence.
-
-**Decision: Accept.** The Rank-1 finding is ready for reporting.</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with the committee’s Rank-1 decision. The evidence shows session cookies (L001) whose values progress in small, near-sequential increments across submissions (e.g., L003 to L006), consistent with predictable session ID generation rather than high-entropy randomness. This supports the WeakSessionIDs label. Medium severity is technically plausible given that exploitation would likely require timing or enumeration.
-
-I find no alternative vulnerability label that better explains the observed behavior based on the provided lines.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L001 establishes these are session cookies and that L003–L006 show near-sequential increments consistent with predictability. Based on the current packet, WeakSessionIDs with Medium severity reasonably reflects the potential impact: session prediction could enable hijacking but would likely require timing/enumeration; we lack evidence of authenticated session scope or broader impact beyond what’s shown.
-
-Decision: Accept the Rank-1 WeakSessionIDs / Medium as aligned with the evidence (L001, L003–L006).</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your acceptance statement that L001 establishes session cookie context and L003–L006 demonstrate the predictable incremental pattern supporting WeakSessionIDs.
-
-**Final decision from QA Reviewer C:**
-
-The committee has achieved full consensus. The Rank-1 finding **WeakSessionIDs / Medium** is defensible and ready for reporting:
-
-- **Label justification**: L002-L006 document five session cookie values with small, consistent increments (14-16 units), indicating predictable generation rather than cryptographically random IDs.
-- **Severity justification**: Medium appropriately reflects that session prediction is feasible through enumeration/timing but requires effort; no evidence of immediate exploit or broader authenticated impact.
-- **Citation quality**: L001, L003, L004 provide specific, verifiable packet references.
-
-All claims are evidence-backed and report-defensible. **Accept.**</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your specific claim that L001 establishes these values are session cookies and L003–L006 show small, predictable increments. This behavior is technically consistent with WeakSessionIDs and not better explained by alternative labels.
-
-Decision: Accept Rank-1 WeakSessionIDs / Medium as technically justified by the evidence.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L001 confirms these are session cookies and that L003–L006 show small, near-sequential increments consistent with predictability. Based on the evidence, WeakSessionIDs with Medium severity reflects the plausible impact: session prediction could enable hijacking but likely requires timing/enumeration. No higher-impact alternative is supported by L001–L006.
-
-Decision: Accept Rank-1 WeakSessionIDs / Medium as aligned with the evidence.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L001 confirms these are session cookies and that L003–L006 show near-sequential increments consistent with predictability.
-
-Assessment: The Rank-1 WeakSessionIDs / Medium is technically justified. L001 establishes session cookie context, and the small, consistent increments in observed values (e.g., L003–L006) align with predictable, low-entropy session ID generation. No alternative label better explains the evidence.
-
-Decision: Accept.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L001 confirms session cookie context and L003–L006 demonstrate near-sequential increments consistent with predictable session ID generation.
-
-**Final QA confirmation:**
-
-The committee has achieved unanimous consensus. The Rank-1 finding **WeakSessionIDs / Medium** is fully defensible for publication:
-
-- **Evidence basis**: L001 establishes session cookies; L002-L006 document five values with small, consistent increments (14-16 units between L003-L006), proving predictable generation.
-- **Label justification**: The incremental pattern directly supports WeakSessionIDs; no alternative label better explains the observed behavior.
-- **Severity justification**: Medium reflects that session prediction is feasible via enumeration/timing but requires effort; no evidence of immediate exploit or authenticated scope.
-- **Citation quality**: L001, L003, L004 provide specific, independently verifiable references.
-
-All claims are evidence-backed and report-defensible. **Accept.**</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: I agree with your concrete claim that L001 confirms these are session cookies and that L003–L006 show small, near-sequential increments consistent with predictable session ID generation.
-
-Decision: The Rank-1 WeakSessionIDs / Medium appropriately reflects the potential impact supported by the packet. L001 establishes session cookie context, and the near-sequential increments in observed values (e.g., L003–L006) support predictability. Medium severity is proportional given plausible session prediction/hijacking requiring enumeration/timing, with no evidence of broader authenticated scope or immediate exploitation beyond what is shown.</pre></td></tr><tr><td>13</td><td>12</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L001 confirms the values are session cookies and that L003–L006 show near-sequential increments consistent with predictability.
-
-Decision: Accept Rank-1 WeakSessionIDs / Medium. The mechanism is technically consistent: L001 establishes session cookie context, and the small, consistent increments in observed values (e.g., L003–L006) support low-entropy, predictable session ID generation. No alternative label (e.g., AuthBypass, BrokenAccessControl) better explains the numeric, near-sequential session IDs. Citations directly support the exploit mechanism.</pre></td></tr><tr><td>14</td><td>13</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: I agree with your concrete claim that L001 establishes these values are session cookies and L003–L006 show near-sequential increments consistent with predictability.
-
-Decision: Accept Rank-1 WeakSessionIDs / Medium as aligned with the evidence. The packet supports predictable, low-entropy session IDs (L001, L003/L004), which can enable session prediction and hijacking with effort. No evidence supports a higher-impact label or immediate broader compromise beyond this mechanism.</pre></td></tr><tr><td>15</td><td>14</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: I agree with your concrete claim that L001 establishes session cookie context and L003–L006 demonstrate near-sequential increments consistent with predictability.
-
-**Final QA decision:**
-
-The committee has achieved unanimous consensus across all reviewers. The Rank-1 finding **WeakSessionIDs / Medium** is fully defensible for professional publication:
-
-- **Evidence basis**: L001 confirms session cookie context; L002-L006 document five observed values with small, consistent increments proving predictable generation.
-- **Label justification**: The incremental pattern directly supports WeakSessionIDs; no alternative label better explains the observed behavior.
-- **Severity justification**: Medium appropriately reflects feasible session prediction via enumeration/timing without evidence of immediate broader exploit.
-- **Citation quality**: L001, L003, L004 provide specific, independently verifiable references.
-
-All claims are evidence-backed and report-defensible. **Accept.**</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

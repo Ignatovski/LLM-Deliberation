@@ -46,8 +46,6 @@
     th { color: #334155; font-weight: 600; }
     .kv-table th { width: 34%; }
     .data-table th { width: auto; white-space: nowrap; }
-    .transcript-table .answer-cell { width: 70%; }
-    .transcript-table pre { min-width: 420px; }
     .wide { grid-column: 1 / -1; }
     .section-title { margin: 16px 0 8px; font-size: 19px; }
     pre {
@@ -328,101 +326,6 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
-    </div>
-
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody><tr><td>1</td><td>0</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Position (QA Reviewer C): Based on the packet, a FileInclusion risk is evidenced. The application exposes PHP include/require warnings tied to a page parameter, indicating a dynamic include pattern using user input and a broadened include_path. However, we do not have evidence of successful arbitrary file read or code execution—only error disclosure from an attempted empty filename include.
-
-- Evidence of dynamic include tied to user input: L001 shows the page parameter usage; L003 shows a failed opening with an include_path that includes a relative traversal segment (../../external/lib/), consistent with a dynamic include context. L002 further corroborates the include warning.
-- Severity: Low. Impact observed is information disclosure via warnings and a misconfiguration that could enable Local File Inclusion under certain conditions, but the packet lacks proof of successful file retrieval or traversal exploitation.
-
-Ranked Findings:
-1) FileInclusion — Low (citations: L001, L003)
-2) Other — Info (citations: L002) [PHP warning disclosure]
-3) NoFinding — Info (no additional substantiated issues beyond the include warning)
-
-Question to Technical Analyst K: Can you confirm from L003 that the include_path containing ../../external/lib/ is application-configured (not default) and thus increases risk surface, or do we need further evidence to assert that?</pre></td></tr><tr><td>2</td><td>1</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: We cannot confirm from L003 whether the include_path entry ../../external/lib/ is application-configured versus inherited from the environment; L003 only shows that, at runtime, include_path includes that relative segment. No further attribution is supported by the packet.
-
-Assessment of Rank-1: FileInclusion — Low is technically plausible and supported by the evidence. L001 indicates a page parameter is in use, and L003 shows a failed include/require with an empty filename at /var/www/html/module/index.php:36 and an include_path that includes ../../external/lib/. Together, these support a dynamic include pattern tied to user input and explain the PHP warnings (L002/L003) without demonstrating successful file retrieval. Among alternatives, classifying this primarily as FileInclusion risk is more precise than a generic “Other/info disclosure,” since the behavior stems from include/require handling of user-influenced input.
-
-I can sign off on Rank-1 as stated.</pre></td></tr><tr><td>3</td><td>2</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Position (Risk Reviewer R): I agree with Rank-1 as stated. The packet supports a FileInclusion risk but only demonstrates warning disclosure from an empty filename include, not a successful file read or code execution. 
-
-- Evidence: L001 shows a user-controlled page parameter; L003 shows include/require behavior with an include_path that includes a relative segment and the empty filename failure; L002 shows the related PHP warning. This supports a dynamic include pattern, implying potential for LFI, but no confirmed exploitation beyond warnings. 
-- Severity: Low is appropriate given the current impact (information disclosure) and unproven inclusion capability. Elevating severity would require evidence of actual file retrieval or traversal success, which the packet does not provide.
-
-I can sign off on the Rank-1 recommendation.</pre></td></tr><tr><td>4</td><td>3</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The packet supports a FileInclusion risk, with only warning disclosures observed and no confirmed file retrieval. Severity Low is appropriate based on current evidence.
-
-Decision: The Rank-1 claim (FileInclusion — Low) is defensible using the cited evidence.
-- Evidence linkage: L001 shows a user-controlled page parameter. L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 with an empty filename and an include_path search, indicating dynamic include behavior consistent with user-influenced input. L002 corroborates the include-related warning.
-- Severity: Low is supported because the observed impact is limited to error information disclosure; no evidence of successful file inclusion or traversal is present in the packet.
-
-I can sign off on Rank-1 as stated.</pre></td></tr><tr><td>5</td><td>4</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree with your clarification—L003 confirms at runtime that include_path contains a relative segment (../../external/lib/), but we cannot attribute whether it’s application-configured or environment-inherited from the packet alone.
-
-Assessment of Rank-1: FileInclusion — Low remains technically justified.
-- Evidence support: L001 indicates a user-controlled page parameter. L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 with an empty filename and an include_path search, which is consistent with a dynamic include pattern tied to user input. L002 corroborates the include warning. These lines substantiate a FileInclusion risk mechanism without demonstrating successful file retrieval.
-- Mechanism consistency: The observed warnings (empty filename include and include_path search) align with a user-influenced include flow that could lead to LFI under certain conditions, but only information disclosure is evidenced.
-- Alternatives: Classifying this as generic information disclosure (Other) would be less precise than FileInclusion because the behavior specifically arises from include/require handling.
-
-I can sign off on Rank-1 as stated.</pre></td></tr><tr><td>6</td><td>5</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agreed—L003 confirms the include_path contains ../../external/lib/ at runtime but does not attribute its origin.
-
-Decision: Accept Rank-1. The evidence supports a FileInclusion mechanism with only warning disclosure observed. L001 shows a user-controlled page parameter, and L003/L002 show include/require warnings from an empty filename and include_path search. There is no demonstrated successful file read or traversal, so Low severity reasonably reflects the current impact.
-
-Next step (if further testing were possible): Attempt non-empty and traversal values in page= to validate local file inclusion; reassess severity if actual file retrieval is demonstrated.</pre></td></tr><tr><td>7</td><td>6</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The evidence supports a FileInclusion mechanism with only warning disclosure demonstrated.
-
-Assessment: The Rank-1 claim (FileInclusion — Low) is defensible.
-- Evidence linkage: L001 shows a user-controlled parameter page=. L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 with an empty filename and include_path search, consistent with dynamic include behavior influenced by the parameter. L002 corroborates the include warning context but is not required beyond L003 for Rank-1 citation.
-- Severity: Low is appropriate because the observed impact is limited to error information disclosure; there is no packet evidence of successful file retrieval or traversal.
-
-Ranked Findings:
-1) FileInclusion — Low (citations: L001, L003)
-2) Other — Info (citations: L002) [PHP warning disclosure]
-3) NoFinding — Info (no additional substantiated issues)
-
-I can sign off on Rank-1 as stated.</pre></td></tr><tr><td>8</td><td>7</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. The evidence indicates a dynamic include tied to the page parameter with only warning disclosure observed; no successful file retrieval is shown.
-
-Decision: Accept Rank-1. The label FileInclusion with severity Low is technically plausible and better fitting than alternatives.
-- Evidence support: L001 shows a user-controlled parameter (page=). L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 and an include_path search after an empty filename, consistent with dynamic include behavior influenced by user input. L002 aligns as a related warning but is not essential beyond L003.
-- Mechanism consistency: The include failure and include_path search logically follow from a user-influenced include mechanism; observed impact is limited to error disclosures, not successful file inclusion.
-- Alternatives: A generic information disclosure label would be less precise because the behavior specifically arises from include/require handling consistent with a FileInclusion risk pattern.</pre></td></tr><tr><td>9</td><td>8</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. The include_path detail in L003 indicates dynamic include behavior at runtime, but the packet does not evidence successful file retrieval.
-
-Decision: Accept Rank-1. The label FileInclusion with severity Low aligns with the evidence: L001 shows a user-controlled page parameter, and L003/L002 show include/require warnings from an empty filename and include_path search. No lines demonstrate successful file inclusion or traversal, so higher severity would be speculative.
-
-Next step: If testing were possible, try non-empty and traversal values in page= to confirm LFI; reassess severity only upon demonstrated file retrieval or broader impact.</pre></td></tr><tr><td>10</td><td>9</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The evidence supports a user-influenced dynamic include with only warning disclosure observed; no successful file retrieval is shown.
-
-Decision: Accept Rank-1. The FileInclusion — Low classification is technically plausible, directly supported by the packet, and better fitting than generic alternatives.
-- Evidence support: L001 shows a user-controlled page parameter. L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 with an empty filename and an include_path search, consistent with a dynamic include pattern tied to user input. L002 is a related warning but not required for Rank-1.
-- Mechanism consistency: The include failure and include_path search align with a user-influenced include mechanism; observed impact is limited to error disclosure, not successful file inclusion.
-- Alternatives: A generic information disclosure label would be less precise than FileInclusion because the behavior is specifically from include/require handling.</pre></td></tr><tr><td>11</td><td>10</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree. The evidence demonstrates a user-controlled page parameter (L001) and a PHP include/require warning showing an empty filename and include_path search at /var/www/html/module/index.php:36 (L003). This supports a FileInclusion mechanism with only error disclosure observed and no successful file retrieval.
-
-Decision: Accept Rank-1 as defensible. Label FileInclusion with severity Low is supported by the cited evidence. Important claims are directly tied to specific lines (L001, L003), and severity remains conservative given the absence of demonstrated file inclusion or traversal impact.
-
-Ranked Findings:
-1) FileInclusion — Low (citations: L001, L003)
-2) Other — Info (citations: L002) [PHP warning information disclosure]
-3) NoFinding — Info (no additional substantiated issues)</pre></td></tr><tr><td>12</td><td>11</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to QA Reviewer C: Agree. The packet shows a user-controlled parameter (L001) and include/require warnings with an empty filename and include_path search at /var/www/html/module/index.php:36 (L003). The observed impact is limited to error disclosure; no successful file inclusion or traversal is evidenced.
-
-Decision: Accept Rank-1. FileInclusion — Low appropriately reflects the realistic impact indicated by the evidence. There is no cited line showing actual file retrieval or higher-impact consequences.
-
-Next step: If further testing were available, attempt non-empty and traversal values in page= to validate LFI and reassess severity only upon demonstrated file read or broader impact.</pre></td></tr><tr><td>13</td><td>12</td><td>Technical Analyst K</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. The cited evidence shows a user-controlled parameter (L001) and a PHP include/require warning with an empty filename and include_path search at /var/www/html/module/index.php:36 (L003), which is consistent with a dynamic include mechanism influenced by user input. No lines demonstrate successful file retrieval or traversal, so Low severity is appropriate.
-
-Decision: Accept Rank-1. FileInclusion — Low is technically plausible, directly supported by L001 and L003, and better fitting than generic alternatives given the include/require context.</pre></td></tr><tr><td>14</td><td>13</td><td>Risk Reviewer R</td><td class='answer-cell'><pre>Reply to Technical Analyst K: Agree with your claim that L001 and L003 support a user-influenced dynamic include with only warning disclosure and no demonstrated file retrieval.
-
-Decision: Accept Rank-1. The label FileInclusion with severity Low reasonably reflects the impact supported by the evidence.
-- Evidence: L001 indicates a user-controlled page parameter; L003 shows a PHP include/require failure at /var/www/html/module/index.php:36 with an empty filename and include_path search, consistent with a dynamic include tied to user input. L002 is a related warning but does not demonstrate successful inclusion.
-- Severity fit: Observed impact is limited to error disclosure; there is no evidence of successful file read or traversal, so a higher severity would be speculative.
-- Higher-impact alternatives: While LFI could plausibly exist, the packet does not show successful inclusion. Without demonstrated file retrieval, a higher severity is not supported by the current evidence.</pre></td></tr><tr><td>15</td><td>14</td><td>QA Reviewer C</td><td class='answer-cell'><pre>Reply to Risk Reviewer R: Agree. L001 shows a user-controlled page parameter, and L003 shows a PHP include/require failure with an empty filename and include_path search at /var/www/html/module/index.php:36, consistent with user-influenced dynamic include behavior. No lines demonstrate successful file retrieval or traversal, so Low severity is appropriate and defensible.
-
-Decision: Accept Rank-1. The FileInclusion — Low finding is directly supported by the cited evidence without relying on assumptions beyond the packet.</pre></td></tr></tbody>
-      </table></div>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

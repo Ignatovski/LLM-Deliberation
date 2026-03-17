@@ -26,13 +26,10 @@ def detect_run_files(run_dir: Path, stem: str | None) -> Dict[str, Path]:
 
     metrics_path = run_dir / f"metrics_{stem}.json"
     condition_path = run_dir / f"condition_summary_{stem}.json"
-    public_path = run_dir / f"public_history_{stem}.json"
-
     return {
         "history": history_path,
         "metrics": metrics_path,
         "condition_summary": condition_path,
-        "public_history": public_path,
         "stem": Path(stem),
     }
 
@@ -244,7 +241,6 @@ def main() -> None:
     history = load_json(files["history"])
     metrics_payload = load_json(files["metrics"]) if files["metrics"].exists() else {}
     condition_summary = load_json(files["condition_summary"]) if files["condition_summary"].exists() else {}
-    public_history = load_json(files["public_history"]) if files["public_history"].exists() else []
 
     run_report = metrics_payload.get("run_report", {})
     headline = run_report.get("headline_metrics", history.get("metrics", {}))
@@ -341,17 +337,6 @@ def main() -> None:
             "</tr>"
         )
 
-    transcript_rows = []
-    for item in public_history if isinstance(public_history, list) else []:
-        transcript_rows.append(
-            "<tr>"
-            f"<td>{item.get('turn_index','')}</td>"
-            f"<td>{item.get('public_turn_index','')}</td>"
-            f"<td>{html.escape(str(item.get('agent','')))}</td>"
-            f"<td class='answer-cell'><pre>{html.escape(str(item.get('public_answer','')))}</pre></td>"
-            "</tr>"
-        )
-
     turn_cards = [render_turn_card(slot) for slot in slots]
 
     html_doc = f"""<!doctype html>
@@ -402,8 +387,6 @@ def main() -> None:
     th {{ color: #334155; font-weight: 600; }}
     .kv-table th {{ width: 34%; }}
     .data-table th {{ width: auto; white-space: nowrap; }}
-    .transcript-table .answer-cell {{ width: 70%; }}
-    .transcript-table pre {{ min-width: 420px; }}
     .wide {{ grid-column: 1 / -1; }}
     .section-title {{ margin: 16px 0 8px; font-size: 19px; }}
     pre {{
@@ -535,20 +518,6 @@ def main() -> None:
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
     </div>
 
-    <h2 class="section-title">Public Transcript</h2>
-    <div class="card">
-      <div class="table-wrap"><table class="data-table transcript-table">
-        <colgroup>
-          <col style="width: 8%;">
-          <col style="width: 10%;">
-          <col style="width: 14%;">
-          <col style="width: 68%;">
-        </colgroup>
-        <thead><tr><th>turn_index</th><th>public_turn_index</th><th>agent</th><th>public_answer</th></tr></thead>
-        <tbody>{''.join(transcript_rows)}</tbody>
-      </table></div>
-    </div>
-
     <h2 class="section-title">Full Turn Data</h2>
     {''.join(turn_cards)}
   </div>
@@ -562,7 +531,6 @@ def main() -> None:
     print(f"History source: {files['history']}")
     print(f"Metrics source: {files['metrics']}")
     print(f"Condition summary source: {files['condition_summary']}")
-    print(f"Public history source: {files['public_history']}")
 
 
 if __name__ == "__main__":
