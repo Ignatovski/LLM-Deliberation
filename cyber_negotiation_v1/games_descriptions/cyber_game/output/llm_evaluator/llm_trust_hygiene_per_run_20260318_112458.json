@@ -1,0 +1,1383 @@
+{
+  "created_at": "2026-03-18T11:25:03.463873+00:00",
+  "metric_name": "TrustHygieneRate_LLM_GPT5",
+  "metric_definition": "Per run this is a binary flag cast to float: 1.0 if any citation violation, invalid public message, leakage, or schema failure after retries occurred anywhere in the run, else 0.0.",
+  "model": "gpt-5",
+  "output_root": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output",
+  "dry_run": false,
+  "run_count": 49,
+  "runs": [
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_45_53",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\history17_45_53.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\metrics_history17_45_53.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0dea46395df4102c0169ba8b911d84819699b6f97467bcf324"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_47_50",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c2_command_injection_v2\\history17_47_50.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c2_command_injection_v2\\metrics_history17_47_50.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0706f4a8ab5a9a7d0169ba8b95d06081908982b65e59b8c246"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history17_40_54",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c3_command_injection_v2\\history17_40_54.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c3_command_injection_v2\\metrics_history17_40_54.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0d9103f9e3f85dea0169ba8b9a1d5c8194b6288734cafcce0b"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history17_48_25",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c4_command_injection_v2\\history17_48_25.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c4_command_injection_v2\\metrics_history17_48_25.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_07a0ab50272702bb0169ba8b9e73a881979b2bb0dfe43318c2"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history18_02_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c5_command_injection_v2\\history18_02_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c5_command_injection_v2\\metrics_history18_02_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged in the traces.",
+        "response_id": "resp_0a0edf07d614c4700169ba8ba1d9388194a8743d497135fec2"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history18_06_35",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c6_command_injection_v2\\history18_06_35.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c6_command_injection_v2\\metrics_history18_06_35.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_028d907036319e2e0169ba8ba6a8748197a3f0486a2f7b5d46"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history18_09_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c7_command_injection_v2\\history18_09_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c7_command_injection_v2\\metrics_history18_09_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were reported in the traces.",
+        "response_id": "resp_05a2aeb3fe06a1720169ba8bab5ae881949364000896feecb1"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_32_04",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c1_cookie_attr_20260311_160805\\history17_32_04.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c1_cookie_attr_20260311_160805\\metrics_history17_32_04.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were reported in the traces.",
+        "response_id": "resp_08099b18e405f2660169ba8badd8348195997c7d6c1896f4f8"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_26_30",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c2_cookie_attr_20260311_160805\\history17_26_30.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c2_cookie_attr_20260311_160805\\metrics_history17_26_30.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were reported in the run.",
+        "response_id": "resp_0a70d912922dfd250169ba8bb0ea8c81959788f3554e9b30dd"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history16_12_00",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c3_cookie_attr_20260311_160805\\history16_12_00.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c3_cookie_attr_20260311_160805\\metrics_history16_12_00.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0e4f50ab1309f13b0169ba8bb35ac081939afe5c45d150e3cd"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history16_19_41",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c4_cookie_attr_20260311_160805\\history16_19_41.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c4_cookie_attr_20260311_160805\\metrics_history16_19_41.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures after retries were recorded.",
+        "response_id": "resp_024d2e48fe3e62650169ba8bb69d688193a5750b869b7eef29"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history16_28_52",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c5_cookie_attr_20260311_160805\\history16_28_52.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c5_cookie_attr_20260311_160805\\metrics_history16_28_52.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged in the run.",
+        "response_id": "resp_08a22d2884405da00169ba8bbadd90819484450d48cdcbbf0b"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history16_37_34",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c6_cookie_attr_20260311_160805\\history16_37_34.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c6_cookie_attr_20260311_160805\\metrics_history16_37_34.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures after retries were recorded in the run.",
+        "response_id": "resp_00b1095e9cbf22c50169ba8bbfa0c0819686f4c90345161b6e"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history16_44_20",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c7_cookie_attr_20260311_160805\\history16_44_20.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c7_cookie_attr_20260311_160805\\metrics_history16_44_20.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures; stored metrics and flags are all clean.",
+        "response_id": "resp_0812c02093bb2f060169ba8bc268c88195bd175c0788347fd1"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history16_44_29",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c1_hard_cookie_20260310_164427\\history16_44_29.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c1_hard_cookie_20260310_164427\\metrics_history16_44_29.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_08ba320de3bde0da0169ba8bc75ee8819689b39a018ef8f29f"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history16_44_49",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c2_hard_cookie_20260310_164427\\history16_44_49.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c2_hard_cookie_20260310_164427\\metrics_history16_44_49.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0cfc9e45f38018410169ba8bcb80ac819383f05b97c8498f04"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history16_45_25",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c3_hard_cookie_20260310_164427\\history16_45_25.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c3_hard_cookie_20260310_164427\\metrics_history16_45_25.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were found in the run.",
+        "response_id": "resp_056be0ed79247f950169ba8bce9b2081969179fe29606b4868"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history16_48_36",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c4_hard_cookie_20260310_164427\\history16_48_36.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c4_hard_cookie_20260310_164427\\metrics_history16_48_36.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged; one JSON error was retried successfully.",
+        "response_id": "resp_0aab1f4ae69fccae0169ba8bd20b5081969cb1cb25ccbbf1b9"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history16_56_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c5_hard_cookie_20260310_164427\\history16_56_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c5_hard_cookie_20260310_164427\\metrics_history16_56_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded; stored metrics and validation stats are clean.",
+        "response_id": "resp_02e995f380e8b7ed0169ba8bd53dd481958f9dab7ed549f7e1"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history17_02_04",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c6_hard_cookie_20260310_164427\\history17_02_04.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c6_hard_cookie_20260310_164427\\metrics_history17_02_04.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded; stored flags are all clear.",
+        "response_id": "resp_0b7f20b22a4b6e330169ba8bd9a77c8196a72044470e28a8ae"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history17_05_31",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c7_hard_cookie_20260310_164427\\history17_05_31.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c7_hard_cookie_20260310_164427\\metrics_history17_05_31.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures after retries were recorded for this run.",
+        "response_id": "resp_08d7463a5c75b8260169ba8bdc936c81948e25fe6109b22b0c"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history14_36_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c1_medium_cookie_20260310_143657\\history14_36_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c1_medium_cookie_20260310_143657\\metrics_history14_36_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0684a1ce05c81f5d0169ba8be0333c81978a39992ff5a446cb"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history15_30_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c2_medium_cookie_fixcit_20260310_153016\\history15_30_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c2_medium_cookie_fixcit_20260310_153016\\metrics_history15_30_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were found in the run.",
+        "response_id": "resp_02850ec8412c29bd0169ba8be2af648197954c7eb7234e43a4"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history14_40_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c3_medium_cookie_20260310_143657\\history14_40_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c3_medium_cookie_20260310_143657\\metrics_history14_40_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": true,
+        "invalid_public_message": false,
+        "leakage": true,
+        "schema_failure_after_retries": false,
+        "violated_run": true,
+        "trust_hygiene_rate": 1.0,
+        "summary": "Stored traces show schema errors for missing/too many citations and public-message leakage of private scratchpad content in failed attempts.",
+        "response_id": "resp_00aba6636ec4b8f60169ba8be587208195b91285b054d14b41"
+      },
+      "matches_stored_metric": false
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history15_31_10",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c4_medium_cookie_fixcit_20260310_153016\\history15_31_10.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c4_medium_cookie_fixcit_20260310_153016\\metrics_history15_31_10.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded anywhere in the run.",
+        "response_id": "resp_0190fcaad83c1edc0169ba8beb3e2081978fdabcc0e3fda09f"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history15_38_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c5_medium_cookie_fixcit_20260310_153016\\history15_38_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c5_medium_cookie_fixcit_20260310_153016\\metrics_history15_38_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were reported in the run.",
+        "response_id": "resp_0624541735b94bfe0169ba8bf015848193a0b514fdb238fa84"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history14_51_38",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c6_medium_cookie_20260310_143657\\history14_51_38.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c6_medium_cookie_20260310_143657\\metrics_history14_51_38.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakages, or schema failures observed in the run.",
+        "response_id": "resp_09cc660eef2a545e0169ba8bf3cb14819497d7c27e87a27a11"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history15_43_49",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c7_medium_cookie_fixcit_20260310_153016\\history15_43_49.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c7_medium_cookie_fixcit_20260310_153016\\metrics_history15_43_49.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0c85d7c2a521efdf0169ba8bf88ff08190b9e750c18fe070b7"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_32_19",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c1_csrf_guard_20260311_160805\\history17_32_19.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c1_csrf_guard_20260311_160805\\metrics_history17_32_19.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_00fd9555a29eab2a0169ba8bfb230081909cfbb3ffcf9d52d8"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_33_46",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c2_csrf_guard_20260311_160805\\history17_33_46.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c2_csrf_guard_20260311_160805\\metrics_history17_33_46.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0fb69727bd3321570169ba8bff846881958f42b0cf50061922"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history20_45_16",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c3_csrf_guard_rerun_20260311_204514\\history20_45_16.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c3_csrf_guard_rerun_20260311_204514\\metrics_history20_45_16.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0b2a0dd5dd130a310169ba8c01e0fc8196abd0a1cf4a4fc7a0"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history20_50_09",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c4_csrf_guard_rerun_20260311_204514\\history20_50_09.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c4_csrf_guard_rerun_20260311_204514\\metrics_history20_50_09.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures are flagged; all turns passed validation.",
+        "response_id": "resp_017152763e3ee81d0169ba8c048d308196996aef53a1dd50e3"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history21_04_43",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c5_csrf_guard_rerun_20260311_204514\\history21_04_43.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c5_csrf_guard_rerun_20260311_204514\\metrics_history21_04_43.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded; stored metrics and flags are all clean.",
+        "response_id": "resp_09bd1ba16c1f48ba0169ba8c0946788190800a1f8fb40cc26f"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history21_11_55",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c6_csrf_guard_rerun_20260311_204514\\history21_11_55.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c6_csrf_guard_rerun_20260311_204514\\metrics_history21_11_55.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0ddcc393d2dfa36b0169ba8c0c0b288193bc420207a0398fa7"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history10_57_15",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c7_csrf_guard_rerun_20260312_105713\\history10_57_15.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c7_csrf_guard_rerun_20260312_105713\\metrics_history10_57_15.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakages, or schema failures after retries were recorded; stored metrics and flags are all clear.",
+        "response_id": "resp_09c81a1294a8735f0169ba8c10d734819387fee6e4fca35722"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history12_20_57",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c1_info_apache_20260317\\history12_20_57.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c1_info_apache_20260317\\metrics_history12_20_57.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were observed in the run.",
+        "response_id": "resp_0d4114652f8640850169ba8c1434cc819485e9181b4672ab99"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history12_21_36",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c2_info_apache_20260317\\history12_21_36.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c2_info_apache_20260317\\metrics_history12_21_36.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0213d471a39d0ac40169ba8c171608819094eb0ed21a719dcc"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history12_22_35",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c3_info_apache_20260317\\history12_22_35.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c3_info_apache_20260317\\metrics_history12_22_35.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged; stored metrics and validations are all clean.",
+        "response_id": "resp_03ed6fc9533f8a9b0169ba8c1baf408194b9bc13eee10a0a6b"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history12_30_08",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c4_info_apache_20260317\\history12_30_08.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c4_info_apache_20260317\\metrics_history12_30_08.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures; one JSON retry but resolved successfully.",
+        "response_id": "resp_0de9d90e70cfa67f0169ba8c1e8a58819399303b1fb14c3f03"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history12_49_43",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c5_info_apache_20260317\\history12_49_43.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c5_info_apache_20260317\\metrics_history12_49_43.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures; stored metrics and flags are all clear.",
+        "response_id": "resp_04048733a09b1bcb0169ba8c218ab08190a64d24522b326f96"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history12_55_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c6_info_apache_20260317\\history12_55_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c6_info_apache_20260317\\metrics_history12_55_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged; one API timeout occurred but was not a public/schema issue.",
+        "response_id": "resp_0723536d1803c0900169ba8c24735481939eca4d3856c31c2f"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history12_59_54",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c7_info_apache_20260317\\history12_59_54.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c7_info_apache_20260317\\metrics_history12_59_54.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures are flagged in the traces.",
+        "response_id": "resp_094b9181ef3813910169ba8c27131481978f247be9a21b7f66"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_53_17",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c1_path_disclosure_rerun_20260316_175257\\history17_53_17.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c1_path_disclosure_rerun_20260316_175257\\metrics_history17_53_17.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0625e44cce237a190169ba8c2a8f9c8190868c8b5def64a160"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_54_01",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c2_path_disclosure_rerun_20260316_175257\\history17_54_01.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c2_path_disclosure_rerun_20260316_175257\\metrics_history17_54_01.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0e530142cd1600930169ba8c2f3d088193a1dcbfc478736b2e"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history17_56_40",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c3_path_disclosure_rerun_20260316_175257\\history17_56_40.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c3_path_disclosure_rerun_20260316_175257\\metrics_history17_56_40.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_048dc8c24fac1db10169ba8c326364819782db43394e614029"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history18_01_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c4_path_disclosure_rerun_20260316_175257_utf8\\history18_01_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c4_path_disclosure_rerun_20260316_175257_utf8\\metrics_history18_01_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_06d5a5e951e0aca20169ba8c3567388190888a87149ff9e606"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history18_13_24",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c5_path_disclosure_rerun_20260316_175257\\history18_13_24.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c5_path_disclosure_rerun_20260316_175257\\metrics_history18_13_24.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were recorded in the run.",
+        "response_id": "resp_0c34acbee2c44e310169ba8c3877a48197929e538ee2813171"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history18_17_51",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c6_path_disclosure_rerun_20260316_175257\\history18_17_51.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c6_path_disclosure_rerun_20260316_175257\\metrics_history18_17_51.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures were flagged anywhere in the run.",
+        "response_id": "resp_0d54f98efd4825960169ba8c3d42c08193b4bfb5cd340a1b09"
+      },
+      "matches_stored_metric": true
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history18_20_16",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c7_path_disclosure_rerun_20260316_175257_utf8\\history18_20_16.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c7_path_disclosure_rerun_20260316_175257_utf8\\metrics_history18_20_16.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "completed",
+      "llm_evaluation": {
+        "citation_violation": false,
+        "invalid_public_message": false,
+        "leakage": false,
+        "schema_failure_after_retries": false,
+        "violated_run": false,
+        "trust_hygiene_rate": 0.0,
+        "summary": "No citation violations, invalid public messages, leakage, or schema failures; one JSON retry succeeded and no turns were flagged.",
+        "response_id": "resp_079016d79b22ec300169ba8c404e9481949075342b20b9d34e"
+      },
+      "matches_stored_metric": true
+    }
+  ]
+}

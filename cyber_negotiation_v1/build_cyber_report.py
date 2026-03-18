@@ -5,11 +5,188 @@ import html
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def as_float(value: Any) -> Optional[float]:
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def find_output_root(run_dir: Path) -> Optional[Path]:
+    for candidate in (run_dir, *run_dir.parents):
+        if (candidate / "llm_evaluator").exists():
+            return candidate
+    return None
+
+
+def load_llm_eval_map(output_root: Optional[Path]) -> Tuple[Dict[Tuple[str, str, str], Dict[str, Any]], Optional[Path]]:
+    if output_root is None:
+        return {}, None
+    eval_dir = output_root / "llm_evaluator"
+    if not eval_dir.exists():
+        return {}, None
+
+    candidates = list(eval_dir.glob("llm_trust_hygiene_per_run_*.json")) + list(eval_dir.glob("llm_eval_per_run_*.json"))
+    if not candidates:
+        return {}, None
+
+    scored_candidates: List[Tuple[int, int, int, float, Path, Dict[str, Any]]] = []
+    for path in candidates:
+        payload = load_json(path)
+        items = list(payload.get("runs") or [])
+        completed_count = sum(1 for item in items if str(item.get("status") or "") == "completed")
+        trust_metric = str(payload.get("metric_name") or "") == "TrustHygieneRate_LLM_GPT5" or path.name.startswith(
+            "llm_trust_hygiene_per_run_"
+        )
+        scored_candidates.append(
+            (
+                1 if trust_metric else 0,
+                completed_count,
+                len(items),
+                path.stat().st_mtime,
+                path,
+                payload,
+            )
+        )
+
+    _, _, _, _, source_path, payload = max(scored_candidates, key=lambda item: item[:4])
+    records: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+    for item in list(payload.get("runs") or []):
+        key = (str(item.get("scenario_id", "")), str(item.get("condition_id", "")), str(item.get("run_id", "")))
+        if all(key):
+            records[key] = item
+    return records, source_path
+
+
+def bool_text(value: Any) -> str:
+    if value is True:
+        return "True"
+    if value is False:
+        return "False"
+    return "n/a"
+
+
+def llm_trust_hygiene_value(llm_eval: Optional[Dict[str, Any]]) -> Optional[float]:
+    if not llm_eval or str(llm_eval.get("status") or "") != "completed":
+        return None
+    evaluation = dict(llm_eval.get("llm_evaluation") or {})
+    value = as_float(evaluation.get("trust_hygiene_rate"))
+    if value is not None:
+        return value
+    violated = evaluation.get("violated_run")
+    if isinstance(violated, bool):
+        return 1.0 if violated else 0.0
+    return as_float(llm_eval.get("trust_hygiene_rate"))
+
+
+def render_llm_audit_card(
+    llm_eval: Optional[Dict[str, Any]],
+    *,
+    llm_eval_source: Optional[Path],
+    stored_trust_hygiene_rate: Any,
+) -> str:
+    source_note = html.escape(llm_eval_source.name) if llm_eval_source else "none"
+    if not llm_eval:
+        return (
+            "<div class='card wide'>"
+            "<h3>GPT-5 Trust Audit</h3>"
+            f"<p class='muted'>Audit source: {source_note}</p>"
+            "<p class='muted'>No GPT-5 trust-audit record was found for this run.</p>"
+            "</div>"
+        )
+
+    status = str(llm_eval.get("status") or "unknown")
+    if status != "completed":
+        error_text = str(llm_eval.get("error") or "")
+        return (
+            "<div class='card wide'>"
+            "<h3>GPT-5 Trust Audit</h3>"
+            f"<p class='muted'>Audit source: {source_note}</p>"
+            "<div class='table-wrap'><table class='kv-table'>"
+            f"<tr><th>Audit Status</th><td>{html.escape(status)}</td></tr>"
+            f"<tr><th>Error</th><td>{html.escape(error_text or 'n/a')}</td></tr>"
+            "</table></div>"
+            "</div>"
+        )
+
+    evaluation = dict(llm_eval.get("llm_evaluation") or {})
+    audit_rate = llm_trust_hygiene_value(llm_eval)
+    summary = str(evaluation.get("summary") or "").strip()
+    evidence_refs = list(evaluation.get("evidence_refs") or [])
+    rows = {
+        "Audit Status": status,
+        "Stored TrustHygieneRate": stored_trust_hygiene_rate,
+        "GPT-5 TrustHygieneRate": audit_rate,
+        "Violated Run": bool_text(evaluation.get("violated_run")),
+        "Citation Violation": bool_text(evaluation.get("citation_violation")),
+        "Invalid Public Message": bool_text(evaluation.get("invalid_public_message")),
+        "Leakage": bool_text(evaluation.get("leakage")),
+        "Schema Failure After Retries": bool_text(evaluation.get("schema_failure_after_retries")),
+        "Matches Stored Metric": bool_text(llm_eval.get("matches_stored_metric")),
+        "Response ID": evaluation.get("response_id") or "n/a",
+    }
+
+    evidence_html = ""
+    if evidence_refs:
+        evidence_rows: List[str] = []
+        for item in evidence_refs:
+            if not isinstance(item, dict):
+                continue
+            location_bits = []
+            if item.get("agent"):
+                location_bits.append(f"agent={item.get('agent')}")
+            if item.get("turn_index") is not None:
+                location_bits.append(f"turn={item.get('turn_index')}")
+            if item.get("public_turn_index") is not None:
+                location_bits.append(f"public_turn={item.get('public_turn_index')}")
+            if item.get("line_ids"):
+                location_bits.append("lines=" + ", ".join(str(x) for x in list(item.get("line_ids") or [])))
+            location = " | ".join(location_bits) if location_bits else "n/a"
+            evidence_rows.append(
+                "<tr>"
+                f"<td>{html.escape(str(item.get('issue_type') or 'n/a'))}</td>"
+                f"<td>{html.escape(str(item.get('source_type') or 'n/a'))}</td>"
+                f"<td>{html.escape(location)}</td>"
+                f"<td>{html.escape(str(item.get('excerpt') or ''))}</td>"
+                f"<td>{html.escape(str(item.get('reason') or ''))}</td>"
+                "</tr>"
+            )
+        if evidence_rows:
+            evidence_html = (
+                "<div style='margin-top:10px;'>"
+                "<h3 style='margin:0 0 8px; font-size:15px;'>Evidence References</h3>"
+                "<div class='table-wrap'><table class='data-table'>"
+                "<thead><tr><th>Issue</th><th>Source</th><th>Location</th><th>Excerpt</th><th>Reason</th></tr></thead>"
+                f"<tbody>{''.join(evidence_rows)}</tbody>"
+                "</table></div>"
+                "</div>"
+            )
+
+    return (
+        "<div class='card wide'>"
+        "<h3>GPT-5 Trust Audit</h3>"
+        f"<p class='muted'>Audit source: {source_note}</p>"
+        f"<div class='table-wrap'><table class='kv-table'>{to_rows(rows)}</table></div>"
+        + evidence_html
+        + (
+            "<div style='margin-top:10px;'>"
+            "<h3 style='margin:0 0 8px; font-size:15px;'>GPT-5 Decision Summary</h3>"
+            f"<pre>{html.escape(summary)}</pre>"
+            "</div>"
+            if summary
+            else ""
+        )
+        + "</div>"
+    )
 
 
 def detect_run_files(run_dir: Path, stem: str | None) -> Dict[str, Path]:
@@ -227,6 +404,52 @@ def render_turn_card(slot: Dict[str, Any]) -> str:
     )
 
 
+def render_failed_attempt_card(item: Dict[str, Any]) -> str:
+    meta = {
+        "agent": item.get("agent"),
+        "phase": item.get("phase"),
+        "attempt": item.get("attempt"),
+        "error": item.get("error"),
+    }
+    meta_rows = []
+    for key, value in meta.items():
+        if value is None or value == "":
+            continue
+        meta_rows.append(
+            "<tr>"
+            f"<th>{html.escape(str(key))}</th>"
+            f"<td>{html.escape(str(value))}</td>"
+            "</tr>"
+        )
+    meta_table = (
+        "<div class='table-wrap'><table class='kv-table'>"
+        + "".join(meta_rows)
+        + "</table></div>"
+        if meta_rows
+        else "<p class='muted'>No metadata.</p>"
+    )
+
+    return (
+        "<details class='turn-card'>"
+        f"<summary>failed attempt | {html.escape(str(item.get('agent') or 'unknown'))} | attempt={html.escape(str(item.get('attempt') or 'n/a'))}</summary>"
+        "<div class='turn-meta'>"
+        "<h4>Attempt Overview</h4>"
+        f"{meta_table}"
+        "</div>"
+        "<div class='turn-grid'>"
+        "<section class='turn-pane'>"
+        "<h4>Response Text</h4>"
+        f"<pre>{_to_pre_block(item.get('response_text'))}</pre>"
+        "</section>"
+        "<section class='turn-pane'>"
+        "<h4>Failure Context</h4>"
+        f"<pre>{_to_pre_block({'error': item.get('error'), 'phase': item.get('phase'), 'agent': item.get('agent'), 'attempt': item.get('attempt')})}</pre>"
+        "</section>"
+        "</div>"
+        "</details>"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate an HTML report for a cyber negotiation run.")
     parser.add_argument("--run_dir", type=str, required=True, help="Run output directory containing history*.json")
@@ -241,6 +464,8 @@ def main() -> None:
     history = load_json(files["history"])
     metrics_payload = load_json(files["metrics"]) if files["metrics"].exists() else {}
     condition_summary = load_json(files["condition_summary"]) if files["condition_summary"].exists() else {}
+    output_root = find_output_root(run_dir)
+    llm_eval_map, llm_eval_source = load_llm_eval_map(output_root)
 
     run_report = metrics_payload.get("run_report", {})
     headline = run_report.get("headline_metrics", history.get("metrics", {}))
@@ -248,10 +473,20 @@ def main() -> None:
     appendix = run_report.get("appendix_debug", history.get("appendix_debug", {}))
     validation_stats = history.get("validation_stats", {})
     trajectory = history.get("decision_trajectory", [])
+    failed_attempts = list(history.get("failed_attempts") or [])
 
     round0 = history.get("round0", [])
     rounds = history.get("rounds", [])
     slots = list(round0) + list(rounds)
+    scenario_id = str(history.get("scenario_id") or run_report.get("scenario_id") or "")
+    condition_id = str(history.get("condition", {}).get("condition_id") or run_report.get("condition_id") or "")
+    run_id = str(history.get("run_id", stem) or stem)
+    llm_eval = llm_eval_map.get((scenario_id, condition_id, run_id))
+    llm_audit_card = render_llm_audit_card(
+        llm_eval,
+        llm_eval_source=llm_eval_source,
+        stored_trust_hygiene_rate=headline.get("TrustHygieneRate"),
+    )
 
     agent_accept_counts: Dict[str, int] = defaultdict(int)
     agent_turn_counts: Dict[str, int] = defaultdict(int)
@@ -338,6 +573,7 @@ def main() -> None:
         )
 
     turn_cards = [render_turn_card(slot) for slot in slots]
+    failed_attempt_cards = [render_failed_attempt_card(item) for item in failed_attempts]
 
     html_doc = f"""<!doctype html>
 <html lang="en">
@@ -479,6 +715,7 @@ def main() -> None:
       <div class="card"><h3>Validation Stats</h3><div class="table-wrap"><table class="kv-table">{to_rows(validation_stats)}</table></div></div>
       <div class="card"><h3>Condition Aggregate (Headline)</h3><div class="table-wrap"><table class="kv-table">{to_rows(condition_summary.get("headline_metrics", {}))}</table></div></div>
       <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table">{to_rows(condition_summary.get("derived_metrics", {}))}</table></div></div>
+      {llm_audit_card}
     </div>
 
     <h2 class="section-title">Diagrams</h2>
@@ -516,6 +753,12 @@ def main() -> None:
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
+    </div>
+
+    <h2 class="section-title">Failed Attempts</h2>
+    <div class="card">
+      <p class="muted">These are rejected or failed generation attempts captured separately from the accepted public turns. Trust-hygiene issues can come from here even when the final visible turn stream looks clean.</p>
+      {''.join(failed_attempt_cards) if failed_attempt_cards else "<p class='muted'>No failed attempts recorded for this run.</p>"}
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

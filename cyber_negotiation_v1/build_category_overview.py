@@ -22,6 +22,12 @@ CONDITION_META: Dict[str, Dict[str, str]] = {
     "C7": {"label": "3x Claude + Human Prior", "family": "Claude", "mode": "negotiation"},
 }
 
+AGENT_ORDER = [
+    "Risk Reviewer R",
+    "QA Reviewer C",
+    "Technical Analyst K",
+]
+
 CATEGORY_TITLES = {
     "command_injection": "Command Injection",
     "cookies": "Cookies",
@@ -124,6 +130,30 @@ def committee_severity_value(snapshot: Dict[str, Any]) -> str:
     return "None"
 
 
+def round0_top1_label(item: Dict[str, Any]) -> str:
+    value = item.get("top1_exact")
+    if isinstance(value, dict):
+        label = str(value.get("label", "")).strip()
+        if label:
+            return label
+    raw = item.get("top1_label")
+    return str(raw).strip() if raw is not None else ""
+
+
+def round0_top1_exact(item: Dict[str, Any]) -> str:
+    value = item.get("top1_exact")
+    if isinstance(value, dict):
+        label = str(value.get("label", "")).strip()
+        severity = str(value.get("severity", "")).strip()
+        if label or severity:
+            return f"{label}/{severity}"
+    label = str(item.get("top1_label") or "").strip()
+    severity = str(item.get("top1_severity") or "").strip()
+    if label or severity:
+        return f"{label}/{severity}"
+    return ""
+
+
 def count_transitions(values: Sequence[str]) -> int:
     if not values:
         return 0
@@ -138,16 +168,49 @@ def load_llm_eval_map(output_root: Path) -> Tuple[Dict[Tuple[str, str, str], Dic
     eval_dir = output_root / "llm_evaluator"
     if not eval_dir.exists():
         return {}, None
-    candidates = sorted(eval_dir.glob("llm_eval_per_run_*.json"), key=lambda path: path.stat().st_mtime, reverse=True)
+    candidates = list(eval_dir.glob("llm_trust_hygiene_per_run_*.json")) + list(eval_dir.glob("llm_eval_per_run_*.json"))
     if not candidates:
         return {}, None
-    payload = load_json(candidates[0])
+
+    scored_candidates: List[Tuple[int, int, int, float, Path, Dict[str, Any]]] = []
+    for path in candidates:
+        payload = load_json(path)
+        items = list(payload.get("runs") or [])
+        completed_count = sum(1 for item in items if str(item.get("status") or "") == "completed")
+        trust_metric = str(payload.get("metric_name") or "") == "TrustHygieneRate_LLM_GPT5" or path.name.startswith(
+            "llm_trust_hygiene_per_run_"
+        )
+        scored_candidates.append(
+            (
+                1 if trust_metric else 0,
+                completed_count,
+                len(items),
+                path.stat().st_mtime,
+                path,
+                payload,
+            )
+        )
+
+    _, _, _, _, source_path, payload = max(scored_candidates, key=lambda item: item[:4])
     records: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
     for item in list(payload.get("runs") or []):
         key = (str(item.get("scenario_id", "")), str(item.get("condition_id", "")), str(item.get("run_id", "")))
         if all(key):
             records[key] = item
-    return records, candidates[0]
+    return records, source_path
+
+
+def llm_trust_hygiene_value(llm_eval: Optional[Dict[str, Any]]) -> Optional[float]:
+    if not llm_eval or str(llm_eval.get("status") or "") != "completed":
+        return None
+    evaluation = dict(llm_eval.get("llm_evaluation") or {})
+    value = as_float(evaluation.get("trust_hygiene_rate"))
+    if value is not None:
+        return value
+    violated = evaluation.get("violated_run")
+    if isinstance(violated, bool):
+        return 1.0 if violated else 0.0
+    return as_float(llm_eval.get("trust_hygiene_rate"))
 
 
 def scan_runs(output_root: Path) -> Tuple[List[RunEntry], Optional[Path]]:
@@ -220,6 +283,7 @@ def scan_runs(output_root: Path) -> Tuple[List[RunEntry], Optional[Path]]:
 
 def aggregate_entries(entries: Sequence[RunEntry], label: str) -> Dict[str, Any]:
     reports = [entry.run_report for entry in entries]
+    llm_trust_values = [llm_trust_hygiene_value(entry.llm_eval) for entry in entries]
     aggregate = aggregate_condition_results(reports, condition_id=label)
     aggregate["extras"] = {
         "public_turns_mean": mean_optional([float(entry.public_turns) for entry in entries]),
@@ -228,6 +292,8 @@ def aggregate_entries(entries: Sequence[RunEntry], label: str) -> Dict[str, Any]
         "exact_transitions_mean": mean_optional([float(entry.exact_transitions) for entry in entries]),
         "type_states_mean": mean_optional([float(entry.type_states) for entry in entries]),
         "exact_states_mean": mean_optional([float(entry.exact_states) for entry in entries]),
+        "llm_trust_gpt5_mean": mean_optional(llm_trust_values),
+        "llm_trust_gpt5_coverage": float(sum(1 for value in llm_trust_values if value is not None)),
         "scenario_count": len({entry.scenario_id for entry in entries}),
     }
     return aggregate
@@ -633,7 +699,7 @@ def summarize_c7_expectation(
     }
 
 
-def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]], entries: Sequence[RunEntry]) -> List[Dict[str, Any]]:
     all_entries = [condition_aggregates[key] for key in sorted(condition_aggregates)]
     baseline = [condition_aggregates[key] for key in ("C1", "C2") if key in condition_aggregates]
     negotiation = [condition_aggregates[key] for key in ("C3", "C4", "C5", "C6", "C7") if key in condition_aggregates]
@@ -715,17 +781,15 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
             }
         )
 
-        type_gap = None
-        severity_gap = None
-        exact_gap = None
-        if negotiation_metrics["type_transitions"] is not None and negotiation_metrics["severity_transitions"] is not None:
-            type_gap = negotiation_metrics["type_transitions"]
-            severity_gap = negotiation_metrics["severity_transitions"]
-        if negotiation_metrics["exact_transitions"] is not None:
-            exact_gap = negotiation_metrics["exact_transitions"]
-        if severity_gap is not None and type_gap is not None and severity_gap > type_gap + 0.25:
+        run_count = len(entries)
+        type_total = sum(entry.type_transitions for entry in entries)
+        severity_total = sum(entry.severity_transitions for entry in entries)
+        exact_total = sum(entry.exact_transitions for entry in entries)
+        if run_count == 0:
+            status = "Insufficient Data"
+        elif severity_total >= type_total + 2:
             status = "Supported"
-        elif severity_gap is not None and type_gap is not None and severity_gap > type_gap:
+        elif severity_total > type_total:
             status = "Partially Supported"
         else:
             status = "Not Supported"
@@ -735,8 +799,8 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
                 "title": "H2 — Severity Is Less Stable Than Type",
                 "status": status,
                 "summary": (
-                    f"Negotiation mean type transitions {num(type_gap)} vs severity transitions {num(severity_gap)}; "
-                    f"combined exact transitions {num(exact_gap)}."
+                    f"Across all {run_count} completed runs: type changes {type_total} vs severity changes {severity_total}; "
+                    f"combined exact changes {exact_total}."
                 ),
             }
         )
@@ -752,7 +816,7 @@ def evaluate_hypotheses(condition_aggregates: Dict[str, Dict[str, Any]]) -> List
             {
                 "title": "H2 — Severity Is Less Stable Than Type",
                 "status": "Insufficient Data",
-                "summary": "Negotiation-group trajectory metrics are required.",
+                "summary": "Run-level trajectory metrics are required.",
             }
         )
 
@@ -938,6 +1002,7 @@ def render_condition_table(
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
             f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
             f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
@@ -951,7 +1016,7 @@ def render_condition_table(
         "<th>Condition</th><th>Setup</th><th>Family</th><th>Mode</th>"
         "<th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Final Agreement</th>"
         "<th>Wrong Consensus</th><th>Late Drift</th><th>Severity Bias</th>"
-        "<th>Over-Severity</th><th>Under-Severity</th><th>Type Transitions</th>"
+        "<th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Type Transitions</th>"
         "<th>Exact Transitions</th><th>Latency</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
@@ -1151,7 +1216,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
             final_label = str(committee_final.get("committee_type") or "")
             final_severity = ""
         ground_truth = dict(entry.history.get("ground_truth") or {})
-        llm_eval = entry.llm_eval or {}
+        llm_trust = llm_trust_hygiene_value(entry.llm_eval)
         rows.append(
             "<tr>"
             f"<td>{html.escape(entry.scenario_id)}</td>"
@@ -1169,7 +1234,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
             f"<td>{entry.public_turns}</td>"
             f"<td>{entry.type_transitions}</td>"
             f"<td>{entry.exact_transitions}</td>"
-            f"<td>{html.escape(str(llm_eval.get('q4_report_defensibility', '')) or 'n/a')}</td>"
+            f"<td style='{rate_style(llm_trust, higher_is_better=False)}'>{num(llm_trust, 1)}</td>"
             f"<td><a href='{link_href(entry.report_path, output_path)}'>report</a></td>"
             f"<td><a href='{link_href(entry.history_path, output_path)}'>history</a></td>"
             "</tr>"
@@ -1181,7 +1246,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
         "<th>Scenario</th><th>Condition</th><th>Setup</th><th>Final Label</th><th>Final Severity</th>"
         "<th>GT Label</th><th>GT Severity</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
         "<th>Wrong Consensus</th><th>Severity Bias</th><th>Public Turns</th>"
-        "<th>Type Transitions</th><th>Exact Transitions</th><th>LLM Q4</th><th>Report</th><th>History</th>"
+        "<th>Type Transitions</th><th>Exact Transitions</th><th>GPT-5 Trust Hygiene</th><th>Report</th><th>History</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1191,13 +1256,17 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
 
 def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -> str:
     rows: List[str] = []
-    for category in sorted({entry.category for entry in runs}):
-        category_runs = [entry for entry in runs if entry.category == category]
-        aggregate = aggregate_entries(category_runs, category)
+    grouped = sorted(
+        {(entry.category, entry.scenario_id) for entry in runs},
+        key=lambda item: (CATEGORY_TITLES.get(item[0], item[0].replace("_", " ").title()), scenario_title(item[1])),
+    )
+    for category, scenario_id in grouped:
+        scenario_runs = [entry for entry in runs if entry.category == category and entry.scenario_id == scenario_id]
+        aggregate = aggregate_entries(scenario_runs, scenario_id)
         headline = aggregate.get("headline_metrics", {})
         derived = aggregate.get("derived_metrics", {})
         extras = aggregate.get("extras", {})
-        sample_entries = sorted(category_runs, key=lambda entry: entry.report_path.name)
+        sample_entries = sorted(scenario_runs, key=lambda entry: entry.report_path.name)
         sample_entry = sample_entries[0] if sample_entries else None
         sample_report = (
             f"<a href='{link_href(sample_entry.report_path, output_path)}'>{html.escape(sample_entry.report_path.name)}</a>"
@@ -1207,8 +1276,8 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
         rows.append(
             "<tr>"
             f"<td>{html.escape(CATEGORY_TITLES.get(category, category.replace('_', ' ').title()))}</td>"
-            f"<td>{len(category_runs)}</td>"
-            f"<td>{len({entry.scenario_id for entry in category_runs})}</td>"
+            f"<td>{html.escape(scenario_title(scenario_id))}</td>"
+            f"<td>{len(scenario_runs)}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
             f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
@@ -1216,6 +1285,7 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
             f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
             f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
@@ -1226,13 +1296,242 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
         "<div class='table-wrap'>"
         "<table>"
         "<thead><tr>"
-        "<th>Category</th><th>Runs</th><th>Scenarios</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
-        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>Avg Public Turns</th>"
+        "<th>Category</th><th>Scenario</th><th>Runs</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
+        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th>"
         "<th>Avg Exact Transitions</th><th>Avg Latency</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
         "</div>"
+    )
+
+
+def ordered_agents(agent_names: Sequence[str]) -> List[str]:
+    preferred = [agent for agent in AGENT_ORDER if agent in agent_names]
+    extras = sorted(agent for agent in agent_names if agent not in AGENT_ORDER)
+    return preferred + extras
+
+
+def share_text(count: int, total: int) -> str:
+    if total <= 0:
+        return "n/a"
+    return pct(count / total)
+
+
+def collect_agent_alignment(entries: Sequence[RunEntry]) -> Dict[str, Any]:
+    negotiation_entries = [
+        entry for entry in entries if CONDITION_META.get(entry.condition_id, {}).get("mode") == "negotiation"
+    ]
+    agent_names = {
+        str(item.get("agent") or "").strip()
+        for entry in negotiation_entries
+        for item in list(entry.history.get("round0") or [])
+        if str(item.get("agent") or "").strip()
+    }
+    ordered = ordered_agents(agent_names)
+    agent_stats: Dict[str, Dict[str, int]] = {
+        agent: {
+            "exact_matches": 0,
+            "type_matches": 0,
+            "unique_exact_wins": 0,
+            "unique_type_wins": 0,
+        }
+        for agent in ordered
+    }
+    condition_stats: Dict[str, Dict[str, Any]] = {
+        condition_id: {
+            "runs": 0,
+            "exact_matches": {agent: 0 for agent in ordered},
+            "type_matches": {agent: 0 for agent in ordered},
+            "unique_exact_wins": {agent: 0 for agent in ordered},
+            "unique_type_wins": {agent: 0 for agent in ordered},
+        }
+        for condition_id in ("C3", "C4", "C5", "C6", "C7")
+    }
+
+    runs_with_round0 = 0
+    runs_with_any_exact = 0
+    runs_with_any_type = 0
+    runs_with_unique_exact = 0
+    runs_with_unique_type = 0
+
+    for entry in negotiation_entries:
+        round0 = list(entry.history.get("round0") or [])
+        if not round0:
+            continue
+
+        final_snapshot = dict(entry.run_report.get("committee_final") or {})
+        final_type = committee_type_value(final_snapshot)
+        final_exact = committee_exact_value(final_snapshot)
+        if final_type == "None" or final_exact == "None":
+            continue
+
+        runs_with_round0 += 1
+        condition_stats[entry.condition_id]["runs"] += 1
+        exact_agents: List[str] = []
+        type_agents: List[str] = []
+
+        for item in round0:
+            agent = str(item.get("agent") or "").strip()
+            if not agent:
+                continue
+            if agent not in agent_stats:
+                agent_stats[agent] = {
+                    "exact_matches": 0,
+                    "type_matches": 0,
+                    "unique_exact_wins": 0,
+                    "unique_type_wins": 0,
+                }
+                for stats in condition_stats.values():
+                    stats["exact_matches"][agent] = 0
+                    stats["type_matches"][agent] = 0
+                    stats["unique_exact_wins"][agent] = 0
+                    stats["unique_type_wins"][agent] = 0
+
+            initial_type = round0_top1_label(item)
+            initial_exact = round0_top1_exact(item)
+
+            if initial_type and initial_type == final_type:
+                agent_stats[agent]["type_matches"] += 1
+                condition_stats[entry.condition_id]["type_matches"][agent] += 1
+                type_agents.append(agent)
+
+            if initial_exact and initial_exact == final_exact:
+                agent_stats[agent]["exact_matches"] += 1
+                condition_stats[entry.condition_id]["exact_matches"][agent] += 1
+                exact_agents.append(agent)
+
+        if type_agents:
+            runs_with_any_type += 1
+        if exact_agents:
+            runs_with_any_exact += 1
+        if len(type_agents) == 1:
+            winner = type_agents[0]
+            agent_stats[winner]["unique_type_wins"] += 1
+            condition_stats[entry.condition_id]["unique_type_wins"][winner] += 1
+            runs_with_unique_type += 1
+        if len(exact_agents) == 1:
+            winner = exact_agents[0]
+            agent_stats[winner]["unique_exact_wins"] += 1
+            condition_stats[entry.condition_id]["unique_exact_wins"][winner] += 1
+            runs_with_unique_exact += 1
+
+    ordered = ordered_agents(agent_stats.keys())
+    total_exact_matches = sum(stats["exact_matches"] for stats in agent_stats.values())
+    total_type_matches = sum(stats["type_matches"] for stats in agent_stats.values())
+    agent_rows = [
+        {
+            "agent": agent,
+            "exact_matches": agent_stats[agent]["exact_matches"],
+            "exact_rate": (agent_stats[agent]["exact_matches"] / runs_with_round0) if runs_with_round0 else None,
+            "exact_share": (agent_stats[agent]["exact_matches"] / total_exact_matches) if total_exact_matches else None,
+            "unique_exact_wins": agent_stats[agent]["unique_exact_wins"],
+            "type_matches": agent_stats[agent]["type_matches"],
+            "type_rate": (agent_stats[agent]["type_matches"] / runs_with_round0) if runs_with_round0 else None,
+            "type_share": (agent_stats[agent]["type_matches"] / total_type_matches) if total_type_matches else None,
+            "unique_type_wins": agent_stats[agent]["unique_type_wins"],
+        }
+        for agent in ordered
+    ]
+
+    return {
+        "run_count": runs_with_round0,
+        "agents": ordered,
+        "agent_rows": agent_rows,
+        "condition_stats": condition_stats,
+        "runs_with_any_exact": runs_with_any_exact,
+        "runs_with_any_type": runs_with_any_type,
+        "runs_with_unique_exact": runs_with_unique_exact,
+        "runs_with_unique_type": runs_with_unique_type,
+        "total_exact_matches": total_exact_matches,
+        "total_type_matches": total_type_matches,
+    }
+
+
+def dominant_agents_text(values: Dict[str, int]) -> str:
+    if not values:
+        return "n/a"
+    top_value = max(values.values())
+    if top_value <= 0:
+        return "None"
+    leaders = [agent for agent in ordered_agents(values.keys()) if values.get(agent, 0) == top_value]
+    if len(leaders) == 1:
+        return f"{leaders[0]} ({top_value})"
+    return f"Tie: {', '.join(leaders)} ({top_value})"
+
+
+def agent_alignment_summary(alignment: Dict[str, Any]) -> str:
+    run_count = int(alignment.get("run_count") or 0)
+    rows = list(alignment.get("agent_rows") or [])
+    if run_count == 0 or not rows:
+        return "No completed negotiation runs with round-0 reviewer assessments were available for comparison."
+
+    exact_leader_value = max(int(row["exact_matches"]) for row in rows)
+    exact_leaders = [row for row in rows if int(row["exact_matches"]) == exact_leader_value]
+    unique_exact_value = max(int(row["unique_exact_wins"]) for row in rows)
+    unique_exact_leaders = [row for row in rows if int(row["unique_exact_wins"]) == unique_exact_value and unique_exact_value > 0]
+
+    parts = [
+        f"This compares each final committee result against the three reviewers' round-0 top choice across {run_count} negotiation runs."
+    ]
+    if len(exact_leaders) == 1:
+        leader = exact_leaders[0]
+        parts.append(
+            f"The committee most often ends at {leader['agent']}'s starting label + severity: "
+            f"{leader['exact_matches']} of {run_count} runs."
+        )
+    else:
+        parts.append("No single reviewer clearly leads on starting label + severity alignment.")
+
+    if unique_exact_leaders:
+        if len(unique_exact_leaders) == 1:
+            parts.append(
+                f"When only one reviewer started on the final label + severity, that was {unique_exact_leaders[0]['agent']} "
+                f"in {unique_exact_leaders[0]['unique_exact_wins']} runs."
+            )
+        else:
+            parts.append("Unique starting matches are split across multiple reviewers.")
+    else:
+        parts.append("Most matches happen in tied starting positions, not unique ones.")
+
+    return " ".join(parts)
+
+
+def render_agent_alignment_section(runs: Sequence[RunEntry]) -> str:
+    alignment = collect_agent_alignment(runs)
+    run_count = int(alignment.get("run_count") or 0)
+    rows = list(alignment.get("agent_rows") or [])
+
+    agent_rows_html = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(row['agent']))}</td>"
+        f"<td>{int(row['exact_matches'])}</td>"
+        f"<td>{int(row['type_matches'])}</td>"
+        f"<td>{int(row['unique_exact_wins'])}</td>"
+        "</tr>"
+        for row in rows
+    )
+
+    return (
+        "<section class='category-section' id='agent-alignment'>"
+        "<div class='section-head'><h2>Agent Alignment Tendency</h2>"
+        "<p>This is a simple alignment check, not a causal influence claim: it asks whose round-0 choice the final committee result most often matches.</p></div>"
+        "<div class='meta-line'>"
+        f"<span>{run_count} negotiation runs analysed</span>"
+        "</div>"
+        "<div class='panel'>"
+        "<h3>Label / Severity Alignment</h3>"
+        f"<p class='muted'>{html.escape(agent_alignment_summary(alignment))}</p>"
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Agent</th><th>Label + Severity Matches</th><th>Label Matches</th><th>Unique Label + Severity Wins</th>"
+        "</tr></thead>"
+        f"<tbody>{agent_rows_html}</tbody>"
+        "</table>"
+        "</div>"
+        "</div>"
+        "</section>"
     )
 
 
@@ -1242,12 +1541,12 @@ def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
         for condition_id in sorted({entry.condition_id for entry in runs}, key=condition_sort_key)
     }
     questions = build_question_items(runs, condition_aggregates)
-    hypotheses = evaluate_hypotheses(condition_aggregates)
+    hypotheses = evaluate_hypotheses(condition_aggregates, runs)
     question_cards = "".join(render_question_card(item) for item in questions)
     hypothesis_cards = "".join(render_hypothesis_card(item) for item in hypotheses)
     category_count = len({entry.category for entry in runs})
     scenario_count = len({entry.scenario_id for entry in runs})
-    llm_q4_coverage = sum(1 for entry in runs if entry.llm_eval and entry.llm_eval.get("q4_report_defensibility"))
+    llm_trust_coverage = sum(1 for entry in runs if llm_trust_hygiene_value(entry.llm_eval) is not None)
 
     return (
         "<section class='category-section' id='overall'>"
@@ -1256,7 +1555,7 @@ def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
         f"<span>{len(runs)} completed runs</span>"
         f"<span>{category_count} categories</span>"
         f"<span>{scenario_count} scenarios</span>"
-        f"<span>{llm_q4_coverage} runs with LLM evaluator Q4 coverage</span>"
+        f"<span>{llm_trust_coverage} runs with GPT-5 trust audit</span>"
         "</div>"
         "<div class='card-grid'>"
         f"{question_cards}"
@@ -1270,13 +1569,13 @@ def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
         f"{render_metric_charts(condition_aggregates)}"
         "</div>"
         "<div class='panel'>"
-        "<h3>Category Comparison</h3>"
-        "<p class='muted'>Each row aggregates all completed runs for one category so you can compare where the framework succeeds or fails overall.</p>"
+        "<h3>Category and Scenario Comparison</h3>"
+        "<p class='muted'>Each row aggregates all completed runs for one scenario, with its parent category shown alongside it. GPT-5 Trust Hygiene is the share of runs flagged by the external GPT-5 audit, so lower is better.</p>"
         f"{render_category_summary_table(runs, output_path)}"
         "</div>"
         "<div class='panel'>"
         "<h3>Condition Comparison Across All Runs</h3>"
-        "<p class='muted'>These condition rows pool all categories together, showing how each setup performs across the full portfolio.</p>"
+        "<p class='muted'>These condition rows pool all categories together, showing how each setup performs across the full portfolio. GPT-5 Trust Hygiene is the share of runs flagged by the external GPT-5 audit, so lower is better.</p>"
         f"{render_condition_table(runs, condition_aggregates, output_path)}"
         "</div>"
         "</section>"
@@ -1294,12 +1593,12 @@ def render_category_section(
     }
 
     questions = build_question_items(category_runs, condition_aggregates)
-    hypotheses = evaluate_hypotheses(condition_aggregates)
+    hypotheses = evaluate_hypotheses(condition_aggregates, category_runs)
 
     question_cards = "".join(render_question_card(item) for item in questions)
     hypothesis_cards = "".join(render_hypothesis_card(item) for item in hypotheses)
     scenario_count = len({entry.scenario_id for entry in category_runs})
-    llm_q4_coverage = sum(1 for entry in category_runs if entry.llm_eval and entry.llm_eval.get("q4_report_defensibility"))
+    llm_trust_coverage = sum(1 for entry in category_runs if llm_trust_hygiene_value(entry.llm_eval) is not None)
     title = CATEGORY_TITLES.get(category, category.replace("_", " ").title())
     scenario_blocks = "".join(
         render_scenario_block(scenario_id, [entry for entry in category_runs if entry.scenario_id == scenario_id], output_path)
@@ -1312,7 +1611,7 @@ def render_category_section(
         "<div class='meta-line'>"
         f"<span>{len(category_runs)} completed runs</span>"
         f"<span>{scenario_count} scenarios</span>"
-        f"<span>{llm_q4_coverage} runs with LLM evaluator Q4 coverage</span>"
+        f"<span>{llm_trust_coverage} runs with GPT-5 trust audit</span>"
         "</div>"
         "<div class='card-grid'>"
         f"{question_cards}"
@@ -1337,7 +1636,7 @@ def render_category_section(
         +
         "<div class='panel'>"
         "<h3>Condition Comparison</h3>"
-        "<p class='muted'>Condition rows are aggregated over all completed runs in this category. Higher is better for correctness, lower is better for wrong-consensus and late-drift.</p>"
+        "<p class='muted'>Condition rows are aggregated over all completed runs in this category. Higher is better for correctness, lower is better for wrong-consensus, late-drift, and GPT-5 Trust Hygiene.</p>"
         f"{render_condition_table(category_runs, condition_aggregates, output_path)}"
         "</div>"
         "<div class='panel'>"
@@ -1354,6 +1653,7 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
     for category in categories:
         category_runs = [entry for entry in runs if entry.category == category]
         sections.append(render_category_section(category, category_runs, output_path))
+    sections.append(render_agent_alignment_section(runs))
 
     nav_links = (
         "<button type='button' class='nav-link' data-target='overall'>Overall Overview</button>"
@@ -1361,8 +1661,11 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
         f"<button type='button' class='nav-link' data-target='{html.escape(category)}'>{html.escape(CATEGORY_TITLES.get(category, category.replace('_', ' ').title()))}</button>"
         for category in categories
         )
+        + "<button type='button' class='nav-link' data-target='agent-alignment'>Agent Alignment</button>"
     )
-    generated_note = f"LLM evaluator source: {llm_eval_source.name}" if llm_eval_source else "No LLM evaluator file detected."
+    generated_note = (
+        f"GPT-5 trust evaluator source: {llm_eval_source.name}" if llm_eval_source else "No LLM evaluator file detected."
+    )
 
     return f"""<!doctype html>
 <html lang="en">

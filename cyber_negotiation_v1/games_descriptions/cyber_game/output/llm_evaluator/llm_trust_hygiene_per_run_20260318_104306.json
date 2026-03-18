@@ -1,0 +1,893 @@
+{
+  "created_at": "2026-03-18T10:43:16.374721+00:00",
+  "metric_name": "TrustHygieneRate_LLM_GPT5",
+  "metric_definition": "Per run this is a binary flag cast to float: 1.0 if any citation violation, invalid public message, leakage, or schema failure after retries occurred anywhere in the run, else 0.0.",
+  "model": "gpt-5",
+  "output_root": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output",
+  "dry_run": false,
+  "run_count": 49,
+  "runs": [
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_45_53",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\history17_45_53.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\metrics_history17_45_53.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_47_50",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c2_command_injection_v2\\history17_47_50.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c2_command_injection_v2\\metrics_history17_47_50.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history17_40_54",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c3_command_injection_v2\\history17_40_54.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c3_command_injection_v2\\metrics_history17_40_54.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history17_48_25",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c4_command_injection_v2\\history17_48_25.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c4_command_injection_v2\\metrics_history17_48_25.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history18_02_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c5_command_injection_v2\\history18_02_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c5_command_injection_v2\\metrics_history18_02_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history18_06_35",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c6_command_injection_v2\\history18_06_35.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c6_command_injection_v2\\metrics_history18_06_35.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history18_09_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c7_command_injection_v2\\history18_09_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c7_command_injection_v2\\metrics_history18_09_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_32_04",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c1_cookie_attr_20260311_160805\\history17_32_04.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c1_cookie_attr_20260311_160805\\metrics_history17_32_04.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_26_30",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c2_cookie_attr_20260311_160805\\history17_26_30.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c2_cookie_attr_20260311_160805\\metrics_history17_26_30.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history16_12_00",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c3_cookie_attr_20260311_160805\\history16_12_00.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c3_cookie_attr_20260311_160805\\metrics_history16_12_00.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history16_19_41",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c4_cookie_attr_20260311_160805\\history16_19_41.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c4_cookie_attr_20260311_160805\\metrics_history16_19_41.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history16_28_52",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c5_cookie_attr_20260311_160805\\history16_28_52.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c5_cookie_attr_20260311_160805\\metrics_history16_28_52.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history16_37_34",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c6_cookie_attr_20260311_160805\\history16_37_34.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c6_cookie_attr_20260311_160805\\metrics_history16_37_34.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "cookie_security_attribute_observation_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history16_44_20",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c7_cookie_attr_20260311_160805\\history16_44_20.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\cookie_security_attribute_observation_001\\c7_cookie_attr_20260311_160805\\metrics_history16_44_20.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history16_44_29",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c1_hard_cookie_20260310_164427\\history16_44_29.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c1_hard_cookie_20260310_164427\\metrics_history16_44_29.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history16_44_49",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c2_hard_cookie_20260310_164427\\history16_44_49.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c2_hard_cookie_20260310_164427\\metrics_history16_44_49.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history16_45_25",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c3_hard_cookie_20260310_164427\\history16_45_25.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c3_hard_cookie_20260310_164427\\metrics_history16_45_25.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history16_48_36",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c4_hard_cookie_20260310_164427\\history16_48_36.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c4_hard_cookie_20260310_164427\\metrics_history16_48_36.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history16_56_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c5_hard_cookie_20260310_164427\\history16_56_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c5_hard_cookie_20260310_164427\\metrics_history16_56_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history17_02_04",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c6_hard_cookie_20260310_164427\\history17_02_04.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c6_hard_cookie_20260310_164427\\metrics_history17_02_04.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "hard_cookie_md5_002",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history17_05_31",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c7_hard_cookie_20260310_164427\\history17_05_31.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\hard_cookie_md5_002\\c7_hard_cookie_20260310_164427\\metrics_history17_05_31.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history14_36_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c1_medium_cookie_20260310_143657\\history14_36_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c1_medium_cookie_20260310_143657\\metrics_history14_36_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history15_30_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c2_medium_cookie_fixcit_20260310_153016\\history15_30_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c2_medium_cookie_fixcit_20260310_153016\\metrics_history15_30_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history14_40_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c3_medium_cookie_20260310_143657\\history14_40_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c3_medium_cookie_20260310_143657\\metrics_history14_40_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history15_31_10",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c4_medium_cookie_fixcit_20260310_153016\\history15_31_10.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c4_medium_cookie_fixcit_20260310_153016\\metrics_history15_31_10.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history15_38_59",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c5_medium_cookie_fixcit_20260310_153016\\history15_38_59.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c5_medium_cookie_fixcit_20260310_153016\\metrics_history15_38_59.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history14_51_38",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c6_medium_cookie_20260310_143657\\history14_51_38.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c6_medium_cookie_20260310_143657\\metrics_history14_51_38.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "cookies",
+      "scenario_id": "medium_cookie_timestamps_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history15_43_49",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c7_medium_cookie_fixcit_20260310_153016\\history15_43_49.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\cookies\\medium_cookie_timestamps_001\\c7_medium_cookie_fixcit_20260310_153016\\metrics_history15_43_49.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_32_19",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c1_csrf_guard_20260311_160805\\history17_32_19.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c1_csrf_guard_20260311_160805\\metrics_history17_32_19.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_33_46",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c2_csrf_guard_20260311_160805\\history17_33_46.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c2_csrf_guard_20260311_160805\\metrics_history17_33_46.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history20_45_16",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c3_csrf_guard_rerun_20260311_204514\\history20_45_16.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c3_csrf_guard_rerun_20260311_204514\\metrics_history20_45_16.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history20_50_09",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c4_csrf_guard_rerun_20260311_204514\\history20_50_09.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c4_csrf_guard_rerun_20260311_204514\\metrics_history20_50_09.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history21_04_43",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c5_csrf_guard_rerun_20260311_204514\\history21_04_43.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c5_csrf_guard_rerun_20260311_204514\\metrics_history21_04_43.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history21_11_55",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c6_csrf_guard_rerun_20260311_204514\\history21_11_55.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c6_csrf_guard_rerun_20260311_204514\\metrics_history21_11_55.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "csrf",
+      "scenario_id": "reflected_input_password_change_guard_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history10_57_15",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c7_csrf_guard_rerun_20260312_105713\\history10_57_15.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\csrf\\reflected_input_password_change_guard_001\\c7_csrf_guard_rerun_20260312_105713\\metrics_history10_57_15.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history12_20_57",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c1_info_apache_20260317\\history12_20_57.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c1_info_apache_20260317\\metrics_history12_20_57.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history12_21_36",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c2_info_apache_20260317\\history12_21_36.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c2_info_apache_20260317\\metrics_history12_21_36.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history12_22_35",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c3_info_apache_20260317\\history12_22_35.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c3_info_apache_20260317\\metrics_history12_22_35.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history12_30_08",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c4_info_apache_20260317\\history12_30_08.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c4_info_apache_20260317\\metrics_history12_30_08.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history12_49_43",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c5_info_apache_20260317\\history12_49_43.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c5_info_apache_20260317\\metrics_history12_49_43.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history12_55_06",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c6_info_apache_20260317\\history12_55_06.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c6_info_apache_20260317\\metrics_history12_55_06.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "info_findings",
+      "scenario_id": "info_apache",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history12_59_54",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c7_info_apache_20260317\\history12_59_54.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\info_findings\\c7_info_apache_20260317\\metrics_history12_59_54.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_53_17",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c1_path_disclosure_rerun_20260316_175257\\history17_53_17.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c1_path_disclosure_rerun_20260316_175257\\metrics_history17_53_17.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C2",
+      "condition_label": "Single Claude",
+      "run_id": "history17_54_01",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c2_path_disclosure_rerun_20260316_175257\\history17_54_01.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c2_path_disclosure_rerun_20260316_175257\\metrics_history17_54_01.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C3",
+      "condition_label": "3x GPT-5",
+      "run_id": "history17_56_40",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c3_path_disclosure_rerun_20260316_175257\\history17_56_40.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c3_path_disclosure_rerun_20260316_175257\\metrics_history17_56_40.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C4",
+      "condition_label": "3x Claude",
+      "run_id": "history18_01_22",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c4_path_disclosure_rerun_20260316_175257_utf8\\history18_01_22.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c4_path_disclosure_rerun_20260316_175257_utf8\\metrics_history18_01_22.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C5",
+      "condition_label": "Mixed Committee",
+      "run_id": "history18_13_24",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c5_path_disclosure_rerun_20260316_175257\\history18_13_24.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c5_path_disclosure_rerun_20260316_175257\\metrics_history18_13_24.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C6",
+      "condition_label": "3x GPT-5 + LLM Prior",
+      "run_id": "history18_17_51",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c6_path_disclosure_rerun_20260316_175257\\history18_17_51.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c6_path_disclosure_rerun_20260316_175257\\metrics_history18_17_51.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "category": "path_disclosure",
+      "scenario_id": "error_message_path_disclosure_001",
+      "condition_id": "C7",
+      "condition_label": "3x Claude + Human Prior",
+      "run_id": "history18_20_16",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c7_path_disclosure_rerun_20260316_175257_utf8\\history18_20_16.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\path_disclosure\\error_message_path_disclosure_001\\c7_path_disclosure_rerun_20260316_175257_utf8\\metrics_history18_20_16.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "error",
+      "error": "BadRequestError: Error code: 400 - {'error': {'message': \"Unsupported parameter: 'verbosity'. In the Responses API, this parameter has moved to 'text.verbosity'. Try again with the new parameter. See the API documentation for more information: https://platform.openai.com/docs/api-reference/responses/create.\", 'type': 'invalid_request_error', 'param': None, 'code': 'unsupported_parameter'}}"
+    }
+  ]
+}

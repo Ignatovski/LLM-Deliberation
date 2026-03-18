@@ -1,0 +1,128 @@
+{
+  "created_at": "2026-03-17T18:16:10.498012+00:00",
+  "metric_name": "TrustHygieneRate_LLM_GPT5",
+  "metric_definition": "Per run this is a binary flag cast to float: 1.0 if any citation violation, invalid public message, leakage, or schema failure after retries occurred anywhere in the run, else 0.0.",
+  "model": "gpt-5",
+  "output_root": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output",
+  "dry_run": true,
+  "run_count": 1,
+  "runs": [
+    {
+      "category": "command_injection",
+      "scenario_id": "ping_form_exec_output_001",
+      "condition_id": "C1",
+      "condition_label": "Single GPT-5",
+      "run_id": "history17_45_53",
+      "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\history17_45_53.json",
+      "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\metrics_history17_45_53.json",
+      "stored_trust_hygiene_rate": 0.0,
+      "stored_appendix_debug": {
+        "CitationViolation": 0,
+        "InvalidPublic": 0,
+        "Leakage": 0,
+        "SchemaFail": 0
+      },
+      "status": "dry_run",
+      "audit_packet": {
+        "metric_definition": "Per run this is a binary flag cast to float: 1.0 if any citation violation, invalid public message, leakage, or schema failure after retries occurred anywhere in the run, else 0.0.",
+        "scenario": {
+          "scenario_id": "ping_form_exec_output_001",
+          "source_family": "dvwa_inspired_webapp",
+          "difficulty": "easy",
+          "label_set_id": "web_triage_v1",
+          "lines": [
+            {
+              "id": "L001",
+              "text": "A web page contains a form that asks for an IP address and returns output in the response body after submission."
+            },
+            {
+              "id": "L002",
+              "text": "Form field label: 'Enter an IP address:'; action button: 'Submit'."
+            },
+            {
+              "id": "L003",
+              "text": "Submitted value in the IP field: `127.0.0.1;uname -a;ls -la;pwd;whoami;ip -r;ip -a;ls -la /.dockerenv`."
+            },
+            {
+              "id": "L004",
+              "text": "Linux e54f77df513f 6.16.8+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.16.8-1kali1 (2025-09-24) x86_64 x86_64 x86_64 GNU/Linux"
+            },
+            {
+              "id": "L005",
+              "text": "total 20"
+            },
+            {
+              "id": "L006",
+              "text": "drwxr-xr-x  2 root root 4096 Jun  5  2018 help"
+            },
+            {
+              "id": "L007",
+              "text": "-rw-r--r--  1 root root 1830 Jun  5  2018 index.php"
+            },
+            {
+              "id": "L008",
+              "text": "drwxr-xr-x  2 root root 4096 Jun  5  2018 source"
+            },
+            {
+              "id": "L009",
+              "text": "/app/vulnerabilities/exec"
+            },
+            {
+              "id": "L010",
+              "text": "www-data"
+            },
+            {
+              "id": "L011",
+              "text": "-rwxr-xr-x 1 root root 0 Feb  6 12:35 /.dockerenv"
+            }
+          ],
+          "user_assumption": "By executing the command, we can directly retrieve system information from the server, including kernel details, network configuration, and filesystem structure. The output shows that the application executes attacker-supplied input with root-level access on the system, allowing full interaction with the server environment. As a result, an attacker could enumerate directories, inspect system files, and potentially access any resource available on the host."
+        },
+        "ground_truth": {
+          "scenario_id": "command_injection_ping_001",
+          "final_label": "CommandInjection",
+          "final_severity": "High",
+          "expert_notes": ""
+        },
+        "run_metadata": {
+          "category": "command_injection",
+          "scenario_id": "ping_form_exec_output_001",
+          "condition_id": "C1",
+          "condition_label": "Single GPT-5",
+          "run_id": "history17_45_53",
+          "public_turns": 0,
+          "history_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\history17_45_53.json",
+          "metrics_path": "D:\\Drive\\OneDrive\\git\\LLM-Deliberation\\cyber_negotiation_v1\\games_descriptions\\cyber_game\\output\\command_injection\\c1_command_injection_v2\\metrics_history17_45_53.json"
+        },
+        "stored_run_level_metric": {
+          "TrustHygieneRate": 0.0,
+          "CitationViolation": 0,
+          "InvalidPublic": 0,
+          "Leakage": 0,
+          "SchemaFail": 0
+        },
+        "validation_stats": {
+          "json_retry_count": 0,
+          "schema_failure_turns": 0,
+          "citation_violation_turns": 0,
+          "invalid_public_turns": 0,
+          "leakage_turns": 0
+        },
+        "turn_flag_summary": [
+          {
+            "phase": "round0",
+            "turn_index": 0,
+            "public_turn_index": null,
+            "agent": "Baseline Reviewer",
+            "citation_violation": false,
+            "invalid_public_message": false,
+            "leakage_flag": false,
+            "schema_failure_after_retries": false
+          }
+        ],
+        "flagged_turn_details": [],
+        "failed_attempts": []
+      }
+    }
+  ]
+}
