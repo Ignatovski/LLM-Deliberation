@@ -4091,7 +4091,7 @@
   "schedule_seed": 143,
   "ground_truth": {
     "scenario_id": "info_apache",
-    "final_label": "Other",
+    "final_label": "NoFinding",
     "final_severity": "Info"
   },
   "validation_stats": {
@@ -4109,18 +4109,19 @@
   "run_status": "completed",
   "run_id": "history12_30_08",
   "metrics": {
-    "FinalCorrectExact": 0,
-    "FinalCorrectType": 0,
+    "FinalCorrectExact": 1,
+    "FinalCorrectType": 1,
+    "FinalCorrectSeverity": 1,
     "FinalAgreementExact": 1,
     "AnyAgreementExact": 1,
     "SeverityBias": 0,
     "TrustHygieneRate": 0.0
   },
   "derived_metrics": {
-    "WrongConsensusExact": 1,
+    "WrongConsensusExact": 0,
     "FalseAgreementWithoutSignoffExact": 0,
     "LateDriftAgreementExact": 0,
-    "AnyCorrectConsensusType": 0,
+    "AnyCorrectConsensusType": 1,
     "LateDriftCorrectType": 0,
     "ConsensusLatencyExact": 3,
     "FinalAgreementType": 1,
@@ -4218,8 +4219,9 @@
     "headline_metrics": {
       "condition_id": "C4",
       "run_count": 1,
-      "FinalCorrectExact": 0.0,
-      "FinalCorrectType": 0.0,
+      "FinalCorrectExact": 1.0,
+      "FinalCorrectType": 1.0,
+      "FinalCorrectSeverity": 1.0,
       "FinalAgreementExact": 1.0,
       "AnyAgreementExact": 1.0,
       "SeverityBias": 0.0,
@@ -4227,10 +4229,10 @@
       "TrustHygieneRate": 0.0
     },
     "derived_metrics": {
-      "WrongConsensusExactRate": 1.0,
+      "WrongConsensusExactRate": 0.0,
       "FalseAgreementWithoutSignoffExactRate": 0.0,
       "LateDriftAgreementExactRate": 0.0,
-      "AnyCorrectConsensusTypeRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 1.0,
       "LateDriftCorrectTypeRate": 0.0,
       "ConsensusLatencyExactMean": 3.0,
       "ConsensusLatencyExactMedian": 3.0,

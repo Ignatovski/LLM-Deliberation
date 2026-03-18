@@ -2,8 +2,9 @@
   "headline_metrics": {
     "condition_id": "C6",
     "run_count": 1,
-    "FinalCorrectExact": 0.0,
-    "FinalCorrectType": 0.0,
+    "FinalCorrectExact": 1.0,
+    "FinalCorrectType": 1.0,
+    "FinalCorrectSeverity": 1.0,
     "FinalAgreementExact": 1.0,
     "AnyAgreementExact": 1.0,
     "SeverityBias": 0.0,
@@ -11,10 +12,10 @@
     "TrustHygieneRate": 0.0
   },
   "derived_metrics": {
-    "WrongConsensusExactRate": 1.0,
+    "WrongConsensusExactRate": 0.0,
     "FalseAgreementWithoutSignoffExactRate": 0.0,
     "LateDriftAgreementExactRate": 0.0,
-    "AnyCorrectConsensusTypeRate": 0.0,
+    "AnyCorrectConsensusTypeRate": 1.0,
     "LateDriftCorrectTypeRate": 0.0,
     "ConsensusLatencyExactMean": 3.0,
     "ConsensusLatencyExactMedian": 3.0,

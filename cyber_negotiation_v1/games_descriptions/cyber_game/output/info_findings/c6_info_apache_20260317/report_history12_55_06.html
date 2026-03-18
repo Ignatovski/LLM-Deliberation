@@ -132,16 +132,17 @@
     </div>
 
     <div class="grid">
-      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>FinalCorrectExact</th><td>0</td></tr>
-<tr><th>FinalCorrectType</th><td>0</td></tr>
+      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>FinalCorrectExact</th><td>1</td></tr>
+<tr><th>FinalCorrectType</th><td>1</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1</td></tr>
 <tr><th>FinalAgreementExact</th><td>1</td></tr>
 <tr><th>AnyAgreementExact</th><td>1</td></tr>
 <tr><th>SeverityBias</th><td>0</td></tr>
 <tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
-      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExact</th><td>1</td></tr>
+      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExact</th><td>0</td></tr>
 <tr><th>FalseAgreementWithoutSignoffExact</th><td>0</td></tr>
 <tr><th>LateDriftAgreementExact</th><td>0</td></tr>
-<tr><th>AnyCorrectConsensusType</th><td>0</td></tr>
+<tr><th>AnyCorrectConsensusType</th><td>1</td></tr>
 <tr><th>LateDriftCorrectType</th><td>0</td></tr>
 <tr><th>ConsensusLatencyExact</th><td>3</td></tr>
 <tr><th>FinalAgreementType</th><td>1</td></tr>
@@ -172,17 +173,18 @@
 <tr><th>citation_mention_turns</th><td>14</td></tr></table></div></div>
       <div class="card"><h3>Condition Aggregate (Headline)</h3><div class="table-wrap"><table class="kv-table"><tr><th>condition_id</th><td>C6</td></tr>
 <tr><th>run_count</th><td>1</td></tr>
-<tr><th>FinalCorrectExact</th><td>0.0</td></tr>
-<tr><th>FinalCorrectType</th><td>0.0</td></tr>
+<tr><th>FinalCorrectExact</th><td>1.0</td></tr>
+<tr><th>FinalCorrectType</th><td>1.0</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1.0</td></tr>
 <tr><th>FinalAgreementExact</th><td>1.0</td></tr>
 <tr><th>AnyAgreementExact</th><td>1.0</td></tr>
 <tr><th>SeverityBias</th><td>0.0</td></tr>
 <tr><th>SeverityBiasMissingCount</th><td>0</td></tr>
 <tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
-      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExactRate</th><td>1.0</td></tr>
+      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExactRate</th><td>0.0</td></tr>
 <tr><th>FalseAgreementWithoutSignoffExactRate</th><td>0.0</td></tr>
 <tr><th>LateDriftAgreementExactRate</th><td>0.0</td></tr>
-<tr><th>AnyCorrectConsensusTypeRate</th><td>0.0</td></tr>
+<tr><th>AnyCorrectConsensusTypeRate</th><td>1.0</td></tr>
 <tr><th>LateDriftCorrectTypeRate</th><td>0.0</td></tr>
 <tr><th>ConsensusLatencyExactMean</th><td>3.0</td></tr>
 <tr><th>ConsensusLatencyExactMedian</th><td>3.0</td></tr>
@@ -335,6 +337,17 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
+    </div>
+
+    <h2 class="section-title">Failed Attempts</h2>
+    <div class="card">
+      <p class="muted">These are rejected or failed generation attempts captured separately from the accepted public turns. Trust-hygiene issues can come from here even when the final visible turn stream looks clean.</p>
+      <details class='turn-card'><summary>failed attempt | QA Reviewer C | attempt=1</summary><div class='turn-meta'><h4>Attempt Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>phase</th><td>public</td></tr><tr><th>attempt</th><td>1</td></tr><tr><th>error</th><td>api_error: APITimeoutError: Request timed out.</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Response Text</h4><pre>(empty)</pre></section><section class='turn-pane'><h4>Failure Context</h4><pre>{
+  &quot;error&quot;: &quot;api_error: APITimeoutError: Request timed out.&quot;,
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;attempt&quot;: 1
+}</pre></section></div></details>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>

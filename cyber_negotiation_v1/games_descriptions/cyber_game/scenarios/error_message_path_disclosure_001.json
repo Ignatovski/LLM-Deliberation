@@ -10,11 +10,11 @@
     },
     {
       "id": "L002",
-      "text": "Observed response text: `Warning: Filename cannot be empty in /var/www/html/module/index.php on line 36`."
+      "text": "Observed response text: `Warning:  include(): Filename cannot be empty in /var/www/html/vulnerabilities/fi/index.php on line 36`."
     },
     {
       "id": "L003",
-      "text": "Observed response text: `Warning: Failed opening ''(path='.:/usr/share/php:../../external/lib/') in /var/www/html/module/index.php on line 36`."
+      "text": "Observed response text: `Warning:  include(): Failed opening '' for inclusion (include_path='.:/usr/share/php:../../external/phpids/0.6/lib/') in /var/www/html/vulnerabilities/fi/index.php on line 36`."
     }
   ]
 }

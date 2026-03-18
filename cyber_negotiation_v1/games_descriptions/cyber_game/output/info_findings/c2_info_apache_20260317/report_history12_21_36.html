@@ -132,13 +132,14 @@
     </div>
 
     <div class="grid">
-      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>FinalCorrectExact</th><td>0</td></tr>
-<tr><th>FinalCorrectType</th><td>0</td></tr>
+      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>FinalCorrectExact</th><td>1</td></tr>
+<tr><th>FinalCorrectType</th><td>1</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1</td></tr>
 <tr><th>FinalAgreementExact</th><td>1</td></tr>
 <tr><th>AnyAgreementExact</th><td>0</td></tr>
 <tr><th>SeverityBias</th><td>0</td></tr>
 <tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
-      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExact</th><td>1</td></tr>
+      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExact</th><td>0</td></tr>
 <tr><th>FalseAgreementWithoutSignoffExact</th><td>0</td></tr>
 <tr><th>LateDriftAgreementExact</th><td>0</td></tr>
 <tr><th>AnyCorrectConsensusType</th><td>0</td></tr>
@@ -172,14 +173,15 @@
 <tr><th>citation_mention_turns</th><td>0</td></tr></table></div></div>
       <div class="card"><h3>Condition Aggregate (Headline)</h3><div class="table-wrap"><table class="kv-table"><tr><th>condition_id</th><td>C2</td></tr>
 <tr><th>run_count</th><td>1</td></tr>
-<tr><th>FinalCorrectExact</th><td>0.0</td></tr>
-<tr><th>FinalCorrectType</th><td>0.0</td></tr>
+<tr><th>FinalCorrectExact</th><td>1.0</td></tr>
+<tr><th>FinalCorrectType</th><td>1.0</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1.0</td></tr>
 <tr><th>FinalAgreementExact</th><td>1.0</td></tr>
 <tr><th>AnyAgreementExact</th><td>0.0</td></tr>
 <tr><th>SeverityBias</th><td>0.0</td></tr>
 <tr><th>SeverityBiasMissingCount</th><td>0</td></tr>
 <tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
-      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExactRate</th><td>1.0</td></tr>
+      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExactRate</th><td>0.0</td></tr>
 <tr><th>FalseAgreementWithoutSignoffExactRate</th><td>0.0</td></tr>
 <tr><th>LateDriftAgreementExactRate</th><td>0.0</td></tr>
 <tr><th>AnyCorrectConsensusTypeRate</th><td>0.0</td></tr>
@@ -253,6 +255,12 @@
         </tbody>
       </table></div>
       <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
+    </div>
+
+    <h2 class="section-title">Failed Attempts</h2>
+    <div class="card">
+      <p class="muted">These are rejected or failed generation attempts captured separately from the accepted public turns. Trust-hygiene issues can come from here even when the final visible turn stream looks clean.</p>
+      <p class='muted'>No failed attempts recorded for this run.</p>
     </div>
 
     <h2 class="section-title">Full Turn Data</h2>
