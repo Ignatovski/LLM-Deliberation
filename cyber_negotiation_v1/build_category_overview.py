@@ -1192,9 +1192,21 @@ def render_scenario_block(
         condition_id: aggregate_entries([entry for entry in scenario_runs if entry.condition_id == condition_id], condition_id)
         for condition_id in sorted({entry.condition_id for entry in scenario_runs}, key=condition_sort_key)
     }
+    questions = build_question_items(scenario_runs, condition_aggregates)
+    hypotheses = evaluate_hypotheses(condition_aggregates, scenario_runs)
+    question_cards = "".join(render_question_card(item) for item in questions)
+    hypothesis_cards = "".join(render_hypothesis_card(item) for item in hypotheses)
     return (
         "<article class='scenario-block'>"
         f"<div class='scenario-head'><h4>{html.escape(scenario_title(scenario_id))}</h4><p>{html.escape(scenario_synopsis(scenario_id, condition_aggregates))}</p></div>"
+        "<h5>Scenario Questions</h5>"
+        "<div class='card-grid'>"
+        f"{question_cards}"
+        "</div>"
+        "<h5>Scenario Hypotheses</h5>"
+        "<div class='card-grid card-grid-small'>"
+        f"{hypothesis_cards}"
+        "</div>"
         f"{render_metric_charts(condition_aggregates)}"
         f"{render_condition_table(scenario_runs, condition_aggregates, output_path)}"
         "</article>"
@@ -1965,6 +1977,13 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
+    }}
+    .scenario-block h5 {{
+      margin: 14px 0 10px 0;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #384657;
     }}
     .table-wrap {{
       overflow: auto;
