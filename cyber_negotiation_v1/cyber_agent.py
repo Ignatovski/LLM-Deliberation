@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import socket
+import urllib.error
+import urllib.parse
+import urllib.request
 from typing import Any, Dict, Optional
 
 
@@ -26,6 +30,8 @@ class CyberAgent:
         self.role_id = role_id
         self.client = None
         self.claude_client = None
+        self.azure_runtime: Optional[Dict[str, Any]] = None
+        self.claude_runtime: Optional[Dict[str, Any]] = None
         self.claude = "claude" in self.model.lower()
 
         if self.claude:
@@ -33,7 +39,7 @@ class CyberAgent:
             if not api_key:
                 raise ValueError("Anthropic model selected but no ANTHROPIC_API_KEY / ANTHROPIC_API found")
             base_url = self._resolve_env("ANTHROPIC_BASE_URL")
-            self.claude_client = self._build_anthropic_client(api_key=api_key, base_url=base_url)
+            self.claude_runtime = self._build_anthropic_runtime(api_key=api_key, base_url=base_url)
         elif self.azure:
             endpoint = self._resolve_env(
                 "AZURE_OPENAI_ENDPOINT",
@@ -44,7 +50,7 @@ class CyberAgent:
             api_key = self._resolve_env("AZURE_OPENAI_API_KEY", "AZURE_OPENAI_API", "OPENAI_API_KEY")
             if not endpoint or not api_key:
                 raise ValueError("Azure mode requires endpoint and API key in environment variables")
-            self.client = self._build_azure_client(endpoint=endpoint, api_key=api_key)
+            self.azure_runtime = self._build_azure_runtime(endpoint=endpoint, api_key=api_key)
         else:
             raise ValueError(
                 "CyberAgent supports Anthropic models containing 'claude' or Azure OpenAI via --azure."
@@ -57,16 +63,78 @@ class CyberAgent:
                 return value
         return None
 
-    def _build_anthropic_client(self, *, api_key: str, base_url: Optional[str]):
-        try:
-            from anthropic import Anthropic  # type: ignore
-        except Exception as exc:  # noqa: BLE001
-            raise RuntimeError("anthropic package is required for Claude models") from exc
+    def _resolve_claude_max_tokens(self) -> int:
+        raw_value = (
+            self._resolve_env("ANTHROPIC_MAX_TOKENS", "CLAUDE_MAX_TOKENS", "OPENAI_MAX_COMPLETION_TOKENS") or ""
+        ).strip()
+        if raw_value:
+            try:
+                parsed = int(raw_value)
+                if parsed > 0:
+                    return parsed
+            except Exception:
+                pass
+        return 2048
 
-        kwargs: Dict[str, Any] = {"api_key": api_key}
-        if base_url:
-            kwargs["base_url"] = base_url
-        return Anthropic(**kwargs)
+    def _build_anthropic_runtime(self, *, api_key: str, base_url: Optional[str]) -> Dict[str, Any]:
+        timeout_raw = (
+            self._resolve_env("ANTHROPIC_TIMEOUT_SECONDS", "OPENAI_TIMEOUT_SECONDS") or "90"
+        ).strip()
+        retries_raw = (
+            self._resolve_env("ANTHROPIC_MAX_RETRIES", "OPENAI_MAX_RETRIES") or "0"
+        ).strip()
+        try:
+            timeout_seconds = float(timeout_raw)
+        except Exception:
+            timeout_seconds = 90.0
+        try:
+            max_retries = int(retries_raw)
+        except Exception:
+            max_retries = 0
+
+        return {
+            "api_key": api_key,
+            "base_url": (base_url or "https://api.anthropic.com").strip(),
+            "timeout": timeout_seconds,
+            "max_retries": max_retries,
+        }
+
+    def _build_anthropic_messages_url(self) -> str:
+        assert self.claude_runtime is not None
+        base_url = str(self.claude_runtime["base_url"]).rstrip("/")
+        if base_url.lower().endswith("/v1/messages"):
+            return base_url
+        return base_url + "/v1/messages"
+
+    def _anthropic_request_json(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        assert self.claude_runtime is not None
+        url = self._build_anthropic_messages_url()
+        timeout_seconds = float(self.claude_runtime["timeout"])
+        max_retries = int(self.claude_runtime["max_retries"])
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        last_exc: Optional[BaseException] = None
+
+        for attempt in range(max_retries + 1):
+            request = urllib.request.Request(url, data=body, method="POST")
+            request.add_header("x-api-key", str(self.claude_runtime["api_key"]))
+            request.add_header("anthropic-version", "2023-06-01")
+            request.add_header("content-type", "application/json")
+            try:
+                with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+                    raw = response.read().decode("utf-8")
+                try:
+                    return json.loads(raw)
+                except Exception as exc:  # noqa: BLE001
+                    raise RuntimeError("Anthropic returned non-JSON response") from exc
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode("utf-8", errors="replace")
+                raise RuntimeError(f"Anthropic HTTP {exc.code}: {detail[:1000]}") from exc
+            except (urllib.error.URLError, TimeoutError, socket.timeout) as exc:
+                last_exc = exc
+                if attempt >= max_retries:
+                    break
+
+        raise TimeoutError(f"Anthropic request timed out after {timeout_seconds:.0f}s") from last_exc
 
     def _resolve_azure_api_version(self) -> str:
         requested_api_version = (
@@ -88,12 +156,7 @@ class CyberAgent:
             return required_api_version
         return requested_api_version or required_api_version
 
-    def _build_azure_client(self, *, endpoint: str, api_key: str):
-        try:
-            from openai import AzureOpenAI  # type: ignore
-        except Exception as exc:  # noqa: BLE001
-            raise RuntimeError("openai package is required for Azure OpenAI models") from exc
-
+    def _build_azure_runtime(self, *, endpoint: str, api_key: str) -> Dict[str, Any]:
         timeout_raw = (
             self._resolve_env("AZURE_OPENAI_TIMEOUT_SECONDS", "OPENAI_TIMEOUT_SECONDS") or "90"
         ).strip()
@@ -109,13 +172,100 @@ class CyberAgent:
         except Exception:
             max_retries = 0
 
-        return AzureOpenAI(
-            azure_endpoint=endpoint,
-            api_key=api_key,
-            api_version=self._resolve_azure_api_version(),
-            timeout=timeout_seconds,
-            max_retries=max_retries,
-        )
+        return {
+            "endpoint": endpoint.strip(),
+            "api_key": api_key,
+            "api_version": self._resolve_azure_api_version(),
+            "timeout_seconds": timeout_seconds,
+            "max_retries": max_retries,
+        }
+
+    def _build_azure_chat_url(self, model: str) -> str:
+        assert self.azure_runtime is not None
+        endpoint = str(self.azure_runtime["endpoint"]).rstrip("/")
+        quoted_model = urllib.parse.quote(model, safe="")
+        lowered_endpoint = endpoint.lower()
+        if lowered_endpoint.endswith("/chat/completions"):
+            url = endpoint
+        elif "/openai/deployments/" in lowered_endpoint:
+            url = endpoint + "/chat/completions"
+        else:
+            url = endpoint + f"/openai/deployments/{quoted_model}/chat/completions"
+        if "api-version=" not in url:
+            separator = "&" if "?" in url else "?"
+            url += f"{separator}api-version={urllib.parse.quote(str(self.azure_runtime['api_version']), safe='')}"
+        return url
+
+    def _azure_request_json(self, *, model: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        assert self.azure_runtime is not None
+        url = self._build_azure_chat_url(model)
+        timeout_seconds = float(self.azure_runtime["timeout_seconds"])
+        max_retries = int(self.azure_runtime["max_retries"])
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        last_exc: Optional[BaseException] = None
+
+        for attempt in range(max_retries + 1):
+            request = urllib.request.Request(url, data=body, method="POST")
+            request.add_header("api-key", str(self.azure_runtime["api_key"]))
+            request.add_header("Content-Type", "application/json")
+            try:
+                with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+                    raw = response.read().decode("utf-8")
+                try:
+                    return json.loads(raw)
+                except Exception as exc:  # noqa: BLE001
+                    raise RuntimeError("Azure returned non-JSON response") from exc
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode("utf-8", errors="replace")
+                raise RuntimeError(f"Azure HTTP {exc.code}: {detail[:1000]}") from exc
+            except (urllib.error.URLError, TimeoutError, socket.timeout) as exc:
+                last_exc = exc
+                if attempt >= max_retries:
+                    break
+
+        raise TimeoutError(f"Azure request timed out after {timeout_seconds:.0f}s") from last_exc
+
+    def _resolve_max_completion_tokens(self) -> Optional[int]:
+        raw_value = (
+            self._resolve_env("AZURE_OPENAI_MAX_COMPLETION_TOKENS", "OPENAI_MAX_COMPLETION_TOKENS") or ""
+        ).strip()
+        if raw_value:
+            try:
+                parsed = int(raw_value)
+                if parsed > 0:
+                    return parsed
+            except Exception:
+                return None
+        if "gpt-5" in self.model.lower():
+            return 1024
+        return None
+
+    def _azure_chat_completion(self, request_kwargs: Dict[str, Any]) -> str:
+        model = str(request_kwargs["model"])
+        token_cap = self._resolve_max_completion_tokens()
+        caps_to_try: list[Optional[int]]
+        if "gpt-5" in model.lower() and (
+            self._resolve_env("AZURE_OPENAI_MAX_COMPLETION_TOKENS", "OPENAI_MAX_COMPLETION_TOKENS") or ""
+        ).strip() == "":
+            caps_to_try = [token_cap or 1024, max((token_cap or 1024) * 2, 1536)]
+        else:
+            caps_to_try = [token_cap]
+
+        for idx, cap in enumerate(caps_to_try):
+            payload = dict(request_kwargs)
+            if cap is not None:
+                payload["max_completion_tokens"] = cap
+            response = self._azure_request_json(model=model, payload=payload)
+            choices = response.get("choices") or []
+            if not choices:
+                return ""
+            first_choice = choices[0] or {}
+            message = first_choice.get("message") or {}
+            content = message.get("content") or ""
+            finish_reason = str(first_choice.get("finish_reason") or "")
+            if content or finish_reason != "length" or idx == len(caps_to_try) - 1:
+                return str(content)
+        return ""
 
     def _structured_output_schema(self) -> Dict[str, Any]:
         return {
@@ -175,28 +325,56 @@ class CyberAgent:
             "strict": True,
         }
 
-    def _extract_claude_tool_json(self, response: Any, *, tool_name: str) -> Optional[str]:
-        for block in getattr(response, "content", []) or []:
-            block_type = getattr(block, "type", None)
-            block_name = getattr(block, "name", None)
+    def _extract_claude_tool_payload(self, response: Any, *, tool_name: str) -> Optional[Dict[str, Any]]:
+        content_blocks = response.get("content") if isinstance(response, dict) else getattr(response, "content", [])
+        for block in content_blocks or []:
+            if isinstance(block, dict):
+                block_type = block.get("type")
+                block_name = block.get("name")
+                payload = block.get("input")
+            else:
+                block_type = getattr(block, "type", None)
+                block_name = getattr(block, "name", None)
+                payload = getattr(block, "input", None)
             if block_type != "tool_use" or block_name != tool_name:
                 continue
-            payload = getattr(block, "input", None)
             if not isinstance(payload, dict):
                 continue
-            expected_keys = {"scratchpad", "public_answer", "assessment", "plan"}
-            if set(payload.keys()) != expected_keys:
-                continue
-            if not isinstance(payload.get("scratchpad"), str):
-                continue
-            if not isinstance(payload.get("public_answer"), str):
-                continue
-            if not isinstance(payload.get("plan"), str):
-                continue
-            if not isinstance(payload.get("assessment"), dict):
-                continue
-            return json.dumps(payload, ensure_ascii=False)
+            return payload
         return None
+
+    def _extract_claude_tool_json(self, response: Any, *, tool_name: str) -> Optional[str]:
+        payload = self._extract_claude_tool_payload(response, tool_name=tool_name)
+        if not isinstance(payload, dict):
+            return None
+        expected_keys = {"scratchpad", "public_answer", "assessment", "plan"}
+        if set(payload.keys()) != expected_keys:
+            return None
+        if not isinstance(payload.get("scratchpad"), str):
+            return None
+        if not isinstance(payload.get("public_answer"), str):
+            return None
+        if not isinstance(payload.get("plan"), str):
+            return None
+        if not isinstance(payload.get("assessment"), dict):
+            return None
+        return json.dumps(payload, ensure_ascii=False)
+
+    def _extract_claude_text(self, response: Any) -> str:
+        parts: list[str] = []
+        content_blocks = response.get("content") if isinstance(response, dict) else getattr(response, "content", [])
+        for block in content_blocks or []:
+            text = block.get("text") if isinstance(block, dict) else getattr(block, "text", None)
+            if isinstance(text, str):
+                parts.append(text)
+        return "".join(parts)
+
+    def _claude_tool_output_is_incomplete(self, response: Any, *, tool_name: str) -> bool:
+        payload = self._extract_claude_tool_payload(response, tool_name=tool_name)
+        if not isinstance(payload, dict):
+            return False
+        expected_keys = {"scratchpad", "public_answer", "assessment", "plan"}
+        return set(payload.keys()) != expected_keys
 
     def execute_round(self, answer_history: Dict[str, Any], round_idx: int):
         slot_prompt = self.round_prompt_cls.build_slot_prompt(answer_history, round_idx)
@@ -228,32 +406,45 @@ class CyberAgent:
         json_schema = self._structured_output_schema()
 
         if self.claude:
-            assert self.claude_client is not None
-            response = self.claude_client.messages.create(
-                model=self.model,
-                max_tokens=2048,
-                messages=[{"role": "user", "content": full_prompt}],
-                tools=[
+            base_cap = self._resolve_claude_max_tokens()
+            caps_to_try = [base_cap, max(base_cap + 1024, int(base_cap * 1.5)), max(base_cap + 2048, base_cap * 2)]
+            last_response: Optional[Dict[str, Any]] = None
+            for idx, cap in enumerate(caps_to_try):
+                response = self._anthropic_request_json(
                     {
-                        "name": json_schema["name"],
-                        "description": "Return only the required structured output fields.",
-                        "input_schema": json_schema["schema"],
+                        "model": self.model,
+                        "max_tokens": cap,
+                        "messages": [{"role": "user", "content": full_prompt}],
+                        "tools": [
+                            {
+                                "name": json_schema["name"],
+                                "description": "Return only the required structured output fields.",
+                                "input_schema": json_schema["schema"],
+                            }
+                        ],
+                        "tool_choice": {"type": "tool", "name": json_schema["name"]},
                     }
-                ],
-                tool_choice={"type": "tool", "name": json_schema["name"]},
-            )
-            tool_json = self._extract_claude_tool_json(response, tool_name=json_schema["name"])
-            if tool_json is not None:
-                return tool_json
+                )
+                last_response = response
+                tool_json = self._extract_claude_tool_json(response, tool_name=json_schema["name"])
+                if tool_json is not None:
+                    return tool_json
+                stop_reason = ""
+                if isinstance(response, dict):
+                    stop_reason = str(response.get("stop_reason") or "")
+                if (
+                    self._claude_tool_output_is_incomplete(response, tool_name=json_schema["name"])
+                    and stop_reason == "max_tokens"
+                    and idx < len(caps_to_try) - 1
+                ):
+                    continue
+                text_output = self._extract_claude_text(response)
+                if text_output or idx == len(caps_to_try) - 1:
+                    return text_output
+            if last_response is not None:
+                return self._extract_claude_text(last_response)
+            return ""
 
-            parts: list[str] = []
-            for block in getattr(response, "content", []) or []:
-                text = getattr(block, "text", None)
-                if isinstance(text, str):
-                    parts.append(text)
-            return "".join(parts)
-
-        assert self.client is not None
         request_kwargs: Dict[str, Any] = {
             "model": self.model,
             "messages": [{"role": "user", "content": full_prompt}],
@@ -267,17 +458,4 @@ class CyberAgent:
             if reasoning_effort:
                 request_kwargs["reasoning_effort"] = reasoning_effort
 
-        max_completion_tokens_raw = (
-            self._resolve_env("AZURE_OPENAI_MAX_COMPLETION_TOKENS", "OPENAI_MAX_COMPLETION_TOKENS") or ""
-        ).strip()
-        if max_completion_tokens_raw:
-            try:
-                max_completion_tokens = int(max_completion_tokens_raw)
-                if max_completion_tokens > 0:
-                    request_kwargs["max_completion_tokens"] = max_completion_tokens
-            except Exception:
-                pass
-
-        response = self.client.chat.completions.create(**request_kwargs)
-        content = response.choices[0].message.content
-        return content or ""
+        return self._azure_chat_completion(request_kwargs)

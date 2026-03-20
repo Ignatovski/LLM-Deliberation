@@ -614,7 +614,7 @@ def summarize_instruction_priors(
     evidence = [
         f"GPT prior (C3 -> C6): exact {pct(gpt_reference['exact'])} -> {pct(gpt_candidate['exact'])}, type {pct(gpt_reference['type'])} -> {pct(gpt_candidate['type'])}, wrong consensus {pct(gpt_reference['wrong'])} -> {pct(gpt_candidate['wrong'])}",
         f"Claude prior (C4 -> C7): exact {pct(claude_reference['exact'])} -> {pct(claude_candidate['exact'])}, type {pct(claude_reference['type'])} -> {pct(claude_candidate['type'])}, wrong consensus {pct(claude_reference['wrong'])} -> {pct(claude_candidate['wrong'])}",
-        f"Stability proxy (exact transitions): GPT {num(gpt_reference['exact_transitions'])} -> {num(gpt_candidate['exact_transitions'])}, Claude {num(claude_reference['exact_transitions'])} -> {num(claude_candidate['exact_transitions'])}",
+        f"Stability proxy (severity transitions): GPT {num(gpt_reference['severity_transitions'])} -> {num(gpt_candidate['severity_transitions'])}, Claude {num(claude_reference['severity_transitions'])} -> {num(claude_candidate['severity_transitions'])}",
     ]
     return {
         "title": "Instruction-Only Priors",
@@ -629,13 +629,13 @@ def summarize_instruction_priors(
                 ("GPT-5", "Final severity correctness", pct(gpt_reference["severity_correct"]), pct(gpt_candidate["severity_correct"])),
                 ("GPT-5", "Wrong consensus rate", pct(gpt_reference["wrong"]), pct(gpt_candidate["wrong"])),
                 ("GPT-5", "Over-severity rate", pct(gpt_reference["over"]), pct(gpt_candidate["over"])),
-                ("GPT-5", "Exact transitions", num(gpt_reference["exact_transitions"]), num(gpt_candidate["exact_transitions"])),
+                ("GPT-5", "Severity transitions", num(gpt_reference["severity_transitions"]), num(gpt_candidate["severity_transitions"])),
                 ("Claude", "Final exact correctness", pct(claude_reference["exact"]), pct(claude_candidate["exact"])),
                 ("Claude", "Final type correctness", pct(claude_reference["type"]), pct(claude_candidate["type"])),
                 ("Claude", "Final severity correctness", pct(claude_reference["severity_correct"]), pct(claude_candidate["severity_correct"])),
                 ("Claude", "Wrong consensus rate", pct(claude_reference["wrong"]), pct(claude_candidate["wrong"])),
                 ("Claude", "Over-severity rate", pct(claude_reference["over"]), pct(claude_candidate["over"])),
-                ("Claude", "Exact transitions", num(claude_reference["exact_transitions"]), num(claude_candidate["exact_transitions"])),
+                ("Claude", "Severity transitions", num(claude_reference["severity_transitions"]), num(claude_candidate["severity_transitions"])),
             ),
         ),
     }
@@ -1004,7 +1004,7 @@ def render_condition_table(
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
-            f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
             f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             f"<td>{sample_report}</td>"
             "</tr>"
@@ -1017,7 +1017,7 @@ def render_condition_table(
         "<th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Final Agreement</th>"
         "<th>Wrong Consensus</th><th>Late Drift</th><th>Severity Bias</th>"
         "<th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Type Transitions</th>"
-        "<th>Exact Transitions</th><th>Latency</th><th>Sample Report</th>"
+        "<th>Severity Transitions</th><th>Latency</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1207,8 +1207,23 @@ def render_scenario_block(
         "<div class='card-grid card-grid-small'>"
         f"{hypothesis_cards}"
         "</div>"
+        "<h5>Scenario Metric Graphs</h5>"
         f"{render_metric_charts(condition_aggregates)}"
         f"{render_condition_table(scenario_runs, condition_aggregates, output_path)}"
+        "</article>"
+    )
+
+
+def render_scenario_run_block(
+    scenario_id: str,
+    scenario_runs: Sequence[RunEntry],
+    output_path: Path,
+) -> str:
+    return (
+        "<article class='scenario-block'>"
+        f"<div class='scenario-head'><h4>{html.escape(scenario_title(scenario_id))}</h4>"
+        "<p>Run-level rows for this scenario only, so you can read its C1 to C7 sequence without mixing in the other scenarios.</p></div>"
+        f"{render_run_table(scenario_runs, output_path)}"
         "</article>"
     )
 
@@ -1245,7 +1260,8 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
             f"<td>{entry.public_turns}</td>"
             f"<td>{entry.type_transitions}</td>"
-            f"<td>{entry.exact_transitions}</td>"
+            f"<td>{entry.severity_transitions}</td>"
+            f"<td>{num(as_float(derived.get('ConsensusLatencyExact')), 0)}</td>"
             f"<td style='{rate_style(llm_trust, higher_is_better=False)}'>{num(llm_trust, 1)}</td>"
             f"<td><a href='{link_href(entry.report_path, output_path)}'>report</a></td>"
             f"<td><a href='{link_href(entry.history_path, output_path)}'>history</a></td>"
@@ -1258,7 +1274,7 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
         "<th>Scenario</th><th>Condition</th><th>Setup</th><th>Final Label</th><th>Final Severity</th>"
         "<th>GT Label</th><th>GT Severity</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
         "<th>Wrong Consensus</th><th>Severity Bias</th><th>Public Turns</th>"
-        "<th>Type Transitions</th><th>Exact Transitions</th><th>GPT-5 Trust Hygiene</th><th>Report</th><th>History</th>"
+        "<th>Type Transitions</th><th>Severity Transitions</th><th>Latency</th><th>GPT-5 Trust Hygiene</th><th>Report</th><th>History</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1299,7 +1315,7 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
-            f"<td>{num(as_float(extras.get('exact_transitions_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
             f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             f"<td>{sample_report}</td>"
             "</tr>"
@@ -1310,7 +1326,114 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
         "<thead><tr>"
         "<th>Category</th><th>Scenario</th><th>Runs</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
         "<th>Wrong Consensus</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th>"
-        "<th>Avg Exact Transitions</th><th>Avg Latency</th><th>Sample Report</th>"
+        "<th>Avg Severity Transitions</th><th>Avg Latency</th><th>Sample Report</th>"
+        "</tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
+
+
+def render_overall_category_summary_tables(runs: Sequence[RunEntry], output_path: Path) -> str:
+    outcome_rows: List[str] = []
+    stability_rows: List[str] = []
+    grouped = sorted(
+        {(entry.category, entry.scenario_id) for entry in runs},
+        key=lambda item: (CATEGORY_TITLES.get(item[0], item[0].replace("_", " ").title()), scenario_title(item[1])),
+    )
+    for category, scenario_id in grouped:
+        scenario_runs = [entry for entry in runs if entry.category == category and entry.scenario_id == scenario_id]
+        aggregate = aggregate_entries(scenario_runs, scenario_id)
+        headline = aggregate.get("headline_metrics", {})
+        derived = aggregate.get("derived_metrics", {})
+        extras = aggregate.get("extras", {})
+        sample_entries = sorted(scenario_runs, key=lambda entry: entry.report_path.name)
+        sample_entry = sample_entries[0] if sample_entries else None
+        sample_report = (
+            f"<a href='{link_href(sample_entry.report_path, output_path)}'>report</a>"
+            if sample_entry
+            else "n/a"
+        )
+        category_title = html.escape(CATEGORY_TITLES.get(category, category.replace("_", " ").title()))
+        scenario_label = html.escape(scenario_title(scenario_id))
+        outcome_rows.append(
+            "<tr>"
+            f"<td>{category_title}</td>"
+            f"<td>{scenario_label}</td>"
+            f"<td>{len(scenario_runs)}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
+            f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('WrongConsensusExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExactRate')))}</td>"
+            "</tr>"
+        )
+        stability_rows.append(
+            "<tr>"
+            f"<td>{category_title}</td>"
+            f"<td>{scenario_label}</td>"
+            f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
+            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
+            f"<td>{sample_report}</td>"
+            "</tr>"
+        )
+    return (
+        "<h4>Outcome</h4>"
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Category</th><th>Scenario</th><th>Runs</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Wrong Consensus</th>"
+        "</tr></thead>"
+        f"<tbody>{''.join(outcome_rows)}</tbody>"
+        "</table>"
+        "</div>"
+        "<h4>Severity / Stability</h4>"
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Category</th><th>Scenario</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th><th>Avg Severity Transitions</th><th>Avg Latency</th><th>Report</th>"
+        "</tr></thead>"
+        f"<tbody>{''.join(stability_rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
+
+
+def render_overall_condition_tables(
+    category_runs: Sequence[RunEntry],
+    condition_aggregates: Dict[str, Dict[str, Any]],
+    output_path: Path,
+) -> str:
+    rows: List[str] = []
+    for condition_id in sorted(condition_aggregates, key=condition_sort_key):
+        aggregate = condition_aggregates[condition_id]
+        meta = CONDITION_META.get(condition_id, {})
+        headline = aggregate.get("headline_metrics", {})
+        derived = aggregate.get("derived_metrics", {})
+        extras = aggregate.get("extras", {})
+        rows.append(
+            "<tr>"
+            f"<td><span class='cond-tag'>{html.escape(condition_id)}</span><br>{html.escape(meta.get('label', condition_id))}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectExact')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectExact')))}</td>"
+            f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
+            f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
+            f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
+            f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
+            f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
+            f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
+            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
+            "</tr>"
+        )
+    return (
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Condition</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>Type Transitions</th><th>Severity Transitions</th><th>Latency</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1582,13 +1705,13 @@ def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
         "</div>"
         "<div class='panel'>"
         "<h3>Category and Scenario Comparison</h3>"
-        "<p class='muted'>Each row aggregates all completed runs for one scenario, with its parent category shown alongside it. GPT-5 Trust Hygiene is the share of runs flagged by the external GPT-5 audit, so lower is better.</p>"
-        f"{render_category_summary_table(runs, output_path)}"
+        "<p class='muted'>The overall scenario summary is split into narrower outcome and stability tables so everything fits without horizontal scrolling.</p>"
+        f"{render_overall_category_summary_tables(runs, output_path)}"
         "</div>"
         "<div class='panel'>"
         "<h3>Condition Comparison Across All Runs</h3>"
-        "<p class='muted'>These condition rows pool all categories together, showing how each setup performs across the full portfolio. GPT-5 Trust Hygiene is the share of runs flagged by the external GPT-5 audit, so lower is better.</p>"
-        f"{render_condition_table(runs, condition_aggregates, output_path)}"
+        "<p class='muted'>This is one compact condition table with the core correctness and severity metrics.</p>"
+        f"{render_overall_condition_tables(runs, condition_aggregates, output_path)}"
         "</div>"
         "</section>"
     )
@@ -1616,6 +1739,10 @@ def render_category_section(
         render_scenario_block(scenario_id, [entry for entry in category_runs if entry.scenario_id == scenario_id], output_path)
         for scenario_id in sorted({entry.scenario_id for entry in category_runs})
     )
+    run_detail_blocks = "".join(
+        render_scenario_run_block(scenario_id, [entry for entry in category_runs if entry.scenario_id == scenario_id], output_path)
+        for scenario_id in sorted({entry.scenario_id for entry in category_runs})
+    )
 
     return (
         f"<section class='category-section' id='{html.escape(category)}'>"
@@ -1631,31 +1758,43 @@ def render_category_section(
         "<div class='card-grid card-grid-small'>"
         f"{hypothesis_cards}"
         "</div>"
-        "<div class='panel'>"
-        "<h3>Metric Graphs</h3>"
-        "<p class='muted'>These charts use the same aggregated condition metrics as the tables below, so you can spot strong cases and failure patterns faster.</p>"
-        f"{render_metric_charts(condition_aggregates)}"
-        "</div>"
+        + (
+            "<div class='panel'>"
+            "<h3>Metric Graphs</h3>"
+            "<p class='muted'>These charts use the same aggregated condition metrics as the tables below, so you can spot strong cases and failure patterns faster.</p>"
+            f"{render_metric_charts(condition_aggregates)}"
+            "</div>"
+            if scenario_count == 1
+            else ""
+        )
         + (
             "<div class='panel'>"
             "<h3>Scenario Subcategories</h3>"
-            "<p class='muted'>Categories with multiple scenarios are broken out below so the hard cookie cases do not get averaged together.</p>"
+            "<p class='muted'>Categories with multiple scenarios are broken out below so each scenario keeps its own graphs and condition table instead of being averaged into one combined chart block.</p>"
             f"<div class='scenario-stack'>{scenario_blocks}</div>"
             "</div>"
             if scenario_count > 1
             else ""
         )
-        +
-        "<div class='panel'>"
-        "<h3>Condition Comparison</h3>"
-        "<p class='muted'>Condition rows are aggregated over all completed runs in this category. Higher is better for correctness, lower is better for wrong-consensus, late-drift, and GPT-5 Trust Hygiene.</p>"
-        f"{render_condition_table(category_runs, condition_aggregates, output_path)}"
-        "</div>"
-        "<div class='panel'>"
-        "<h3>Run-Level Details</h3>"
-        f"{render_run_table(category_runs, output_path)}"
-        "</div>"
-        "</section>"
+        + "<div class='panel'>"
+        + "<h3>Condition Comparison</h3>"
+        + "<p class='muted'>Condition rows are aggregated over all completed runs in this category. Higher is better for correctness, lower is better for wrong-consensus, late-drift, and GPT-5 Trust Hygiene.</p>"
+        + f"{render_condition_table(category_runs, condition_aggregates, output_path)}"
+        + "</div>"
+        + (
+            "<div class='panel'>"
+            "<h3>Run-Level Details</h3>"
+            "<p class='muted'>Each scenario gets its own run-level table below, with one C1 to C7 block per scenario instead of one combined table.</p>"
+            f"<div class='scenario-stack'>{run_detail_blocks}</div>"
+            "</div>"
+            if scenario_count > 1
+            else
+            "<div class='panel'>"
+            "<h3>Run-Level Details</h3>"
+            f"{render_run_table(category_runs, output_path)}"
+            "</div>"
+        )
+        + "</section>"
     )
 
 
@@ -1896,7 +2035,7 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
     }}
     .question-table-wrap {{
       margin-top: 10px;
-      overflow: auto;
+      overflow: visible;
       border: 1px solid rgba(205, 214, 223, 0.88);
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.84);
@@ -1904,8 +2043,9 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
     .question-table {{
       width: 100%;
       border-collapse: collapse;
-      min-width: 420px;
-      font-size: 12px;
+      min-width: 0;
+      table-layout: fixed;
+      font-size: 11px;
     }}
     .question-table thead th {{
       position: static;
@@ -1916,13 +2056,18 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #475569;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }}
     .question-table th,
     .question-table td {{
       border-bottom: 1px solid rgba(205, 214, 223, 0.72);
-      padding: 8px 10px;
+      padding: 7px 8px;
       text-align: left;
       vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }}
     .question-table tbody tr:last-child td {{
       border-bottom: none;
@@ -1931,14 +2076,24 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       color: var(--ink);
       font-variant-numeric: tabular-nums;
     }}
+    .question-table th:first-child,
+    .question-table td:first-child {{
+      width: 42%;
+    }}
     .question-table td:first-child,
-    .question-table td:nth-child(2) {{
+    .question-table td:nth-child(2),
+    .question-table th:nth-child(2) {{
       color: #334155;
-      white-space: nowrap;
+      white-space: normal;
     }}
     .panel h3 {{
       margin: 0 0 8px 0;
       font-size: 18px;
+    }}
+    .panel h4 {{
+      margin: 12px 0 8px 0;
+      font-size: 15px;
+      color: #334155;
     }}
     .muted {{
       color: var(--muted);
@@ -2042,6 +2197,13 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       }}
       .card-grid, .card-grid-small {{
         grid-template-columns: 1fr;
+      }}
+      .question-table {{
+        font-size: 10px;
+      }}
+      .question-table th,
+      .question-table td {{
+        padding: 6px 6px;
       }}
     }}
 </style>

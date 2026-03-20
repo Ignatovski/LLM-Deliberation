@@ -11,6 +11,13 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+PROJECT_DIR = Path(__file__).resolve().parent
+VENDOR_DIR = PROJECT_DIR / ".vendor"
+if VENDOR_DIR.exists():
+    vendor_path = str(VENDOR_DIR)
+    if vendor_path not in sys.path:
+        sys.path.insert(0, vendor_path)
+
 from cyber_agent import CyberAgent
 from cyber_save_utils import create_outfiles, save_conversation, write_file
 from cyber_utils import (
@@ -210,6 +217,17 @@ def derive_role_id(file_name: str) -> str:
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(errors="backslashreplace")
+        except Exception:
+            pass
+    if hasattr(sys.stderr, "reconfigure"):
+        try:
+            sys.stderr.reconfigure(errors="backslashreplace")
+        except Exception:
+            pass
+
     parser = argparse.ArgumentParser(description="Cyber negotiation game (polynomial-style JSON runner)")
     parser.add_argument("--temp", type=float, default=0.0)
     parser.add_argument("--agents_num", type=int, default=0)
@@ -236,7 +254,15 @@ def main():
     parser.add_argument("--retry_sleep", type=float, default=0.0)
     args = parser.parse_args()
 
-    load_env_file(args.env_file)
+    env_file_path = args.env_file
+    if not os.path.isabs(env_file_path):
+        cwd_candidate = os.path.join(os.getcwd(), env_file_path)
+        project_candidate = str(PROJECT_DIR / env_file_path)
+        if os.path.exists(cwd_candidate):
+            env_file_path = cwd_candidate
+        elif os.path.exists(project_candidate):
+            env_file_path = project_candidate
+    load_env_file(env_file_path)
 
     condition_path = os.path.join(args.game_dir, args.condition_file)
     condition = read_condition_config(condition_path)

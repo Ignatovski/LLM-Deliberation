@@ -1,0 +1,413 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nThe evidence packet includes a user_assumption. You must evaluate it and set assessment.user_assumption_verdict to Correct or Wrong with a short assessment.user_assumption_statement. Also include one final sentence in public_answer stating whether the user_assumption is correct or wrong.\n",
+      "full_answer": "<SCRATCHPAD>Technical lens: Evidence shows reflected XSS via name parameter (L003-L006). Additionally, password change anti-CSRF relies on Referer header check (L010-L011), which is insufficient and bypassable; presence of reflected XSS on same origin increases risk of CSRF because attacker can host a link that executes script on victim’s browser and then forge a same-origin appearing request (Referer will be webapp/displayname per L007). Thus CSRF is present. Label best for primary: CSRF, severity likely High due to account takeover via password change. QA lens: Cite L010-L011 (mechanism) and L007 (referer observed from exploited page), plus L009 (endpoint requires only GET with params). Two citations required for rank1: choose L010 and L011 or L010 and L009? Need 1-2 citations; ensure they support the claim. L010 shows referer check, L009 shows change endpoint pattern allowing GET request parameters; together defensible. Risk lens: Impact is account takeover; high. User assumption is wrong: relying on Referer is not sufficient; reflected XSS exists and can originate request from within app, and Referer can be spoofed/absent; evidence shows referer header from injected page (L007). Plan: Rank1 CSRF High with citations L010/L009. Rank2 XSS_Reflected Medium with L003/L004. Rank3 BrokenAccessControl or Other? Could choose BrokenAccessControl Low? Better: Other Info? Perhaps choose Other Low? But should stay within evidence: Weak CSRF defense by referer is CSRF. Third finding could be NoFinding? We must include three items. Choose XSS_Reflected, CSRF, and NoFinding Info. Accept=true if all lenses agree. Yes.</SCRATCHPAD>\n<ANSWER>Rank-1 Finding: CSRF in password change functionality (High)\n- Mechanism: The password change endpoint relies on a Referer header check to gate requests (if stripos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false), which is not a reliable anti-CSRF control (L010). The endpoint accepts parameters directly in the request (e.g., /changepassword?password_new=...&password_conf=...) (L009), enabling a forged request from within the same origin context. Evidence also shows requests triggered from the page where injected script executed include a Referer pointing to the application (L007), demonstrating that a request can appear to originate from within the app even when attacker-controlled content executes. This supports that an attacker can induce a victim to send a same-origin-labeled request to change the password.\n- Impact: An attacker can cause unauthorized password changes, leading to account compromise.\n\nRank-2 Finding: Reflected XSS in name parameter (Medium)\n- Evidence: HTML provided in the name parameter is rendered and executes JavaScript, e.g., <img src=q onerror=prompt(8)> (L003, L004).\n- Impact: Session hijacking or user action manipulation within the application context.\n\nRank-3 Finding: NoFinding (Info)\n- No additional distinct vulnerability is evidenced beyond the above.\n\nDecision: Accept. The Rank-1 recommendation (CSRF, High) is technically plausible, directly supported by the cited lines, and the severity reflects the potential for account takeover.\n\nUser assumption verdict: Wrong. The referer-based policy does not ensure requests only originate from within the application (L010-L011), and observed behavior shows requests triggered from injected script present a Referer within the app (L007).</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"CSRF\", \"severity\": \"High\", \"citations\": [\"L010\", \"L009\"], \"rationale\": null}, {\"rank\": 2, \"label\": \"XSS_Reflected\", \"severity\": \"Medium\", \"citations\": [\"L003\", \"L004\"], \"rationale\": null}, {\"rank\": 3, \"label\": \"NoFinding\", \"severity\": \"Info\", \"citations\": [], \"rationale\": null}], \"decision_summary\": \"CSRF via Referer-based check on password change is evidenced and high impact; reflected XSS is corroborated and secondary.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"Wrong\", \"user_assumption_statement\": \"Relying on the Referer header to restrict password-change requests is insufficient; evidence shows the header can present as internal while attacker-controlled content executes, enabling CSRF.\"}</ASSESSMENT>\n<PLAN>- If further validation were needed: capture a proof-of-concept request to /changepassword initiated from the reflected XSS page and confirm password changes without additional CSRF tokens. - Verify HTTP method handling and confirm absence of same-site cookies or additional anti-CSRF controls in code or responses.</PLAN>",
+      "public_answer": "Rank-1 Finding: CSRF in password change functionality (High)\n- Mechanism: The password change endpoint relies on a Referer header check to gate requests (if stripos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false), which is not a reliable anti-CSRF control (L010). The endpoint accepts parameters directly in the request (e.g., /changepassword?password_new=...&password_conf=...) (L009), enabling a forged request from within the same origin context. Evidence also shows requests triggered from the page where injected script executed include a Referer pointing to the application (L007), demonstrating that a request can appear to originate from within the app even when attacker-controlled content executes. This supports that an attacker can induce a victim to send a same-origin-labeled request to change the password.\n- Impact: An attacker can cause unauthorized password changes, leading to account compromise.\n\nRank-2 Finding: Reflected XSS in name parameter (Medium)\n- Evidence: HTML provided in the name parameter is rendered and executes JavaScript, e.g., <img src=q onerror=prompt(8)> (L003, L004).\n- Impact: Session hijacking or user action manipulation within the application context.\n\nRank-3 Finding: NoFinding (Info)\n- No additional distinct vulnerability is evidenced beyond the above.\n\nDecision: Accept. The Rank-1 recommendation (CSRF, High) is technically plausible, directly supported by the cited lines, and the severity reflects the potential for account takeover.\n\nUser assumption verdict: Wrong. The referer-based policy does not ensure requests only originate from within the application (L010-L011), and observed behavior shows requests triggered from injected script present a Referer within the app (L007).",
+      "private_notes": "Technical lens: Evidence shows reflected XSS via name parameter (L003-L006). Additionally, password change anti-CSRF relies on Referer header check (L010-L011), which is insufficient and bypassable; presence of reflected XSS on same origin increases risk of CSRF because attacker can host a link that executes script on victim’s browser and then forge a same-origin appearing request (Referer will be webapp/displayname per L007). Thus CSRF is present. Label best for primary: CSRF, severity likely High due to account takeover via password change. QA lens: Cite L010-L011 (mechanism) and L007 (referer observed from exploited page), plus L009 (endpoint requires only GET with params). Two citations required for rank1: choose L010 and L011 or L010 and L009? Need 1-2 citations; ensure they support the claim. L010 shows referer check, L009 shows change endpoint pattern allowing GET request parameters; together defensible. Risk lens: Impact is account takeover; high. User assumption is wrong: relying on Referer is not sufficient; reflected XSS exists and can originate request from within app, and Referer can be spoofed/absent; evidence shows referer header from injected page (L007). Plan: Rank1 CSRF High with citations L010/L009. Rank2 XSS_Reflected Medium with L003/L004. Rank3 BrokenAccessControl or Other? Could choose BrokenAccessControl Low? Better: Other Info? Perhaps choose Other Low? But should stay within evidence: Weak CSRF defense by referer is CSRF. Third finding could be NoFinding? We must include three items. Choose XSS_Reflected, CSRF, and NoFinding Info. Accept=true if all lenses agree. Yes.",
+      "private_plan": "- If further validation were needed: capture a proof-of-concept request to /changepassword initiated from the reflected XSS page and confirm password changes without additional CSRF tokens. - Verify HTTP method handling and confirm absence of same-site cookies or additional anti-CSRF controls in code or responses.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "CSRF",
+            "severity": "High",
+            "citations": [
+              "L010",
+              "L009"
+            ],
+            "rationale": null
+          },
+          {
+            "rank": 2,
+            "label": "XSS_Reflected",
+            "severity": "Medium",
+            "citations": [
+              "L003",
+              "L004"
+            ],
+            "rationale": null
+          },
+          {
+            "rank": 3,
+            "label": "NoFinding",
+            "severity": "Info",
+            "citations": [],
+            "rationale": null
+          }
+        ],
+        "decision_summary": "CSRF via Referer-based check on password change is evidenced and high impact; reflected XSS is corroborated and secondary.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "Wrong",
+        "user_assumption_statement": "Relying on the Referer header to restrict password-change requests is insufficient; evidence shows the header can present as internal while attacker-controlled content executes, enabling CSRF."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L010",
+          "L009"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 237,
+        "public_message_char_count": 1747,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "CSRF",
+      "top1_severity": "High",
+      "top1_exact": {
+        "label": "CSRF",
+        "severity": "High"
+      },
+      "rank1_citations": [
+        "L010",
+        "L009"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "Wrong",
+      "user_assumption_statement": "Relying on the Referer header to restrict password-change requests is insufficient; evidence shows the header can present as internal while attacker-controlled content executes, enabling CSRF.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application contains a page where users can provide their name through a URL parameter.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"The value of the parameter is displayed in the returned HTML page.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"A tester already observed a XSS reflected vulnerability. He observed that HTML input submitted through this parameter is rendered by the browser when the page loads.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"For example, the payload `<img src=q onerror=prompt(8)>` results in JavaScript execution when the page is opened.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"The request URL for this page becomes `/displayname?name=%3Cimg%20src%3Dq%20onerror%3Dprompt%288%29%3E`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"When a user opens this link in the browser, the alert dialog appears, indicating that the injected script is executed.\"\n    },\n    {\n      \"id\": \"L007\",\n      \"text\": \"A request triggered from the page where the injected script executed includes the header `Referer: http://webapp/displayname`.\"\n    },\n    {\n      \"id\": \"L008\",\n      \"text\": \"Another page of the application allows authenticated users to change their password.\"\n    },\n    {\n      \"id\": \"L009\",\n      \"text\": \"Changing the password generates a request such as `/changepassword?password_new=newpass&password_conf=newpass&Change=Change`.\"\n    },\n    {\n      \"id\": \"L010\",\n      \"text\": \"During code review, the following condition was identified in the password change logic: `if ( stripos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false )`.\"\n    },\n    {\n      \"id\": \"L011\",\n      \"text\": \"The developer states that this check ensures that password-change requests originate from pages within the application.\"\n    }\n  ],\n  \"user_assumption\": \"The tester believes the password change functionality is safe because the integrated referer-based policy in the code ensures requests only originate from within the application. He believes that there is no other vulnerability besides the already known reflected XSS.\"\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nThe evidence packet includes a user_assumption. You must evaluate it and set assessment.user_assumption_verdict to Correct or Wrong with a short assessment.user_assumption_statement. Also include one final sentence in public_answer stating whether the user_assumption is correct or wrong.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "- If further validation were needed: capture a proof-of-concept request to /changepassword initiated from the reflected XSS page and confirm password changes without additional CSRF tokens. - Verify HTTP method handling and confirm absence of same-site cookies or additional anti-CSRF controls in code or responses."
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "CSRF"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "CSRF",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L010",
+          "L009"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "CSRF",
+      "committee_exact": {
+        "label": "CSRF",
+        "severity": "High"
+      },
+      "committee_type_label": "CSRF",
+      "committee_exact_label": "CSRF",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "CSRF"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "CSRF",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L010",
+          "L009"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "CSRF",
+      "committee_exact": {
+        "label": "CSRF",
+        "severity": "High"
+      },
+      "committee_type_label": "CSRF",
+      "committee_exact_label": "CSRF",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C1",
+    "mode": "baseline",
+    "config_file": "config_c1_baseline_gpt5.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "reflected_input_password_change_guard_001",
+    "source_family": "web_application",
+    "difficulty": "hard",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A web application contains a page where users can provide their name through a URL parameter."
+      },
+      {
+        "id": "L002",
+        "text": "The value of the parameter is displayed in the returned HTML page."
+      },
+      {
+        "id": "L003",
+        "text": "A tester already observed a XSS reflected vulnerability. He observed that HTML input submitted through this parameter is rendered by the browser when the page loads."
+      },
+      {
+        "id": "L004",
+        "text": "For example, the payload `<img src=q onerror=prompt(8)>` results in JavaScript execution when the page is opened."
+      },
+      {
+        "id": "L005",
+        "text": "The request URL for this page becomes `/displayname?name=%3Cimg%20src%3Dq%20onerror%3Dprompt%288%29%3E`."
+      },
+      {
+        "id": "L006",
+        "text": "When a user opens this link in the browser, the alert dialog appears, indicating that the injected script is executed."
+      },
+      {
+        "id": "L007",
+        "text": "A request triggered from the page where the injected script executed includes the header `Referer: http://webapp/displayname`."
+      },
+      {
+        "id": "L008",
+        "text": "Another page of the application allows authenticated users to change their password."
+      },
+      {
+        "id": "L009",
+        "text": "Changing the password generates a request such as `/changepassword?password_new=newpass&password_conf=newpass&Change=Change`."
+      },
+      {
+        "id": "L010",
+        "text": "During code review, the following condition was identified in the password change logic: `if ( stripos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false )`."
+      },
+      {
+        "id": "L011",
+        "text": "The developer states that this check ensures that password-change requests originate from pages within the application."
+      }
+    ],
+    "user_assumption": "The tester believes the password change functionality is safe because the integrated referer-based policy in the code ensures requests only originate from within the application. He believes that there is no other vulnerability besides the already known reflected XSS."
+  },
+  "scenario_id": "reflected_input_password_change_guard_001",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "reflected_input_password_change_guard_001",
+    "final_label": "CSRF",
+    "final_severity": "High"
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 1
+  },
+  "run_status": "completed",
+  "run_id": "history12_06_53",
+  "metrics": {
+    "FinalCorrectExact": 1,
+    "FinalCorrectType": 1,
+    "FinalCorrectSeverity": 1,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": 0,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 0,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 1.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "CSRF"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "High"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "CSRF",
+        "severity": "High"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L010",
+        "L009"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "CSRF",
+    "committee_exact": {
+      "label": "CSRF",
+      "severity": "High"
+    },
+    "committee_type_label": "CSRF",
+    "committee_exact_label": "CSRF",
+    "committee_exact_severity": "High",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C1",
+      "run_count": 1,
+      "FinalCorrectExact": 1.0,
+      "FinalCorrectType": 1.0,
+      "FinalCorrectSeverity": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 0.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}

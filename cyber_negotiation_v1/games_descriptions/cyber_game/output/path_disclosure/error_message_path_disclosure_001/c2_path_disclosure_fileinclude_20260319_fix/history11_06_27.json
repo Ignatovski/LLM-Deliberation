@@ -1,0 +1,383 @@
+{
+  "round0": [
+    {
+      "agent": "Baseline Reviewer",
+      "prompt": "Round 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n",
+      "full_answer": "<SCRATCHPAD>## Technical Analysis (Technical Lens)\n\nEvidence review:\n- L001: URL parameter `page=` is being passed (empty value)\n- L002: Warning shows `include()` function failing with \"Filename cannot be empty\" at /var/www/html/vulnerabilities/fi/index.php line 36\n- L003: Warning shows `include()` function failing to open empty string, revealing include_path configuration\n\nTechnical interpretation:\nThe application is using the `page` parameter directly in a PHP `include()` function without validation. The error messages reveal:\n1. Server-side file path (/var/www/html/vulnerabilities/fi/index.php)\n2. The include() function is being called with user input\n3. The include_path configuration (.:/usr/share/php:../../external/phpids/0.6/lib/)\n\nThis is a classic File Inclusion vulnerability pattern. The `page` parameter controls what file gets included. While the current test used an empty value (causing an error), this mechanism could allow:\n- Local File Inclusion (LFI) by providing local file paths\n- Potential RFI if allow_url_include is enabled\n- Path traversal attempts (../../etc/passwd)\n\nThe label should be **FileInclusion** - this is the correct technical classification.\n\n## QA Analysis (QA Lens)\n\nEvidence support:\n- L001 establishes the attack vector: page parameter\n- L002 and L003 both show include() function errors, directly confirming the parameter is used unsafely in an include operation\n- Citations L002, L003 provide clear, verifiable evidence\n\nThe claim is defensible:\n- The vulnerability mechanism (unsafe include with user input) is directly observable\n- An independent reviewer can verify the include() errors from the cited lines\n- No assumptions needed - the error messages explicitly show the vulnerability\n\n## Risk Analysis (Risk Lens)\n\nImpact assessment for File Inclusion:\n- File Inclusion vulnerabilities typically allow attackers to read arbitrary files on the server\n- Can expose sensitive configuration files, credentials, source code\n- May lead to Remote Code Execution if combined with file upload or log poisoning\n- Common CVSS base scores: 7.5-8.6 (High)\n\nSeverity calibration:\n- The evidence shows clear File Inclusion behavior\n- Standard severity for File Inclusion is **High** due to:\n  - Confidentiality impact: reading arbitrary files\n  - Potential integrity/availability impact via RCE\n  - Commonly exploited in real attacks\n\n**High** severity is appropriate and evidence-calibrated.\n\n## Alternative Rankings\n\nRank 2: BrokenAccessControl\n- The vulnerability does involve access control (accessing files that shouldn't be accessible)\n- However, FileInclusion is more specific and technically precise\n- Severity: High (similar impact)\n\nRank 3: ExposedSecret\n- The error messages do expose sensitive information (file paths, include_path config)\n- This is a secondary finding, less severe than the inclusion vulnerability itself\n- Severity: Low (information disclosure only)\n\n## Final Decision\n\nAll three lenses align:\n- Technical: FileInclusion is the correct classification\n- QA: Evidence from L002, L003 directly supports the claim\n- Risk: High severity is appropriate for File Inclusion\n\n**ACCEPT = TRUE**</SCRATCHPAD>\n<ANSWER>## Independent Assessment - Round 0\n\n**Technical Lens:**\nThe evidence shows a PHP `include()` function accepting unsanitized user input via the `page` parameter (L001). The error messages in L002 and L003 confirm the parameter value is passed directly to `include()`, revealing the file inclusion mechanism and server paths. This is a textbook File Inclusion vulnerability.\n\n**QA Lens:**\nThe claim is directly supported by packet evidence. L002 shows \"include(): Filename cannot be empty\" at the vulnerable code location. L003 confirms \"Failed opening '' for inclusion\" with the include_path. Both citations allow independent verification of the unsafe include operation.\n\n**Risk Lens:**\nFile Inclusion vulnerabilities enable arbitrary file reading and potential remote code execution. The evidence demonstrates exploitable behavior with user-controlled file operations. High severity is appropriate for this vulnerability class given the confidentiality, integrity, and availability risks.\n\n**Verdict:** The Rank-1 recommendation (FileInclusion, High severity) is technically correct, evidence-backed, and impact-calibrated. All three review lenses align. Assessment is defensible for final report inclusion.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"FileInclusion\", \"severity\": \"High\", \"citations\": [\"L002\", \"L003\"], \"rationale\": \"The page parameter is passed unsafely to PHP include() function, as confirmed by error messages showing 'include(): Filename cannot be empty' and include_path disclosure. This enables local file inclusion attacks with potential for arbitrary file reading and remote code execution.\"}, {\"rank\": 2, \"label\": \"BrokenAccessControl\", \"severity\": \"High\", \"citations\": [\"L002\", \"L003\"], \"rationale\": \"The application allows user input to control file access operations without proper authorization checks, enabling access to files beyond intended scope. However, FileInclusion is more technically precise for this include-based mechanism.\"}, {\"rank\": 3, \"label\": \"ExposedSecret\", \"severity\": \"Low\", \"citations\": [\"L002\", \"L003\"], \"rationale\": \"Error messages expose sensitive server configuration including full file paths (/var/www/html/vulnerabilities/fi/index.php) and include_path settings. This information disclosure aids attackers but is secondary to the primary inclusion vulnerability.\"}], \"decision_summary\": \"FileInclusion at High severity is technically correct, evidence-supported by L002/L003 showing unsafe include() usage, and appropriately calibrated to the confidentiality and potential RCE impact. All review lenses align.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"No user assumption provided in this assessment request.\"}</ASSESSMENT>\n<PLAN>This is Round 0 baseline mode with no negotiation. I will:\n1. Provide the structured assessment with three ranked findings\n2. Set accept=true as all lenses agree on FileInclusion/High\n3. Rank alternatives: BrokenAccessControl (High), ExposedSecret (Low)\n4. Confirm no user assumption present\n5. Complete the assessment with proper citations</PLAN>",
+      "public_answer": "## Independent Assessment - Round 0\n\n**Technical Lens:**\nThe evidence shows a PHP `include()` function accepting unsanitized user input via the `page` parameter (L001). The error messages in L002 and L003 confirm the parameter value is passed directly to `include()`, revealing the file inclusion mechanism and server paths. This is a textbook File Inclusion vulnerability.\n\n**QA Lens:**\nThe claim is directly supported by packet evidence. L002 shows \"include(): Filename cannot be empty\" at the vulnerable code location. L003 confirms \"Failed opening '' for inclusion\" with the include_path. Both citations allow independent verification of the unsafe include operation.\n\n**Risk Lens:**\nFile Inclusion vulnerabilities enable arbitrary file reading and potential remote code execution. The evidence demonstrates exploitable behavior with user-controlled file operations. High severity is appropriate for this vulnerability class given the confidentiality, integrity, and availability risks.\n\n**Verdict:** The Rank-1 recommendation (FileInclusion, High severity) is technically correct, evidence-backed, and impact-calibrated. All three review lenses align. Assessment is defensible for final report inclusion.",
+      "private_notes": "## Technical Analysis (Technical Lens)\n\nEvidence review:\n- L001: URL parameter `page=` is being passed (empty value)\n- L002: Warning shows `include()` function failing with \"Filename cannot be empty\" at /var/www/html/vulnerabilities/fi/index.php line 36\n- L003: Warning shows `include()` function failing to open empty string, revealing include_path configuration\n\nTechnical interpretation:\nThe application is using the `page` parameter directly in a PHP `include()` function without validation. The error messages reveal:\n1. Server-side file path (/var/www/html/vulnerabilities/fi/index.php)\n2. The include() function is being called with user input\n3. The include_path configuration (.:/usr/share/php:../../external/phpids/0.6/lib/)\n\nThis is a classic File Inclusion vulnerability pattern. The `page` parameter controls what file gets included. While the current test used an empty value (causing an error), this mechanism could allow:\n- Local File Inclusion (LFI) by providing local file paths\n- Potential RFI if allow_url_include is enabled\n- Path traversal attempts (../../etc/passwd)\n\nThe label should be **FileInclusion** - this is the correct technical classification.\n\n## QA Analysis (QA Lens)\n\nEvidence support:\n- L001 establishes the attack vector: page parameter\n- L002 and L003 both show include() function errors, directly confirming the parameter is used unsafely in an include operation\n- Citations L002, L003 provide clear, verifiable evidence\n\nThe claim is defensible:\n- The vulnerability mechanism (unsafe include with user input) is directly observable\n- An independent reviewer can verify the include() errors from the cited lines\n- No assumptions needed - the error messages explicitly show the vulnerability\n\n## Risk Analysis (Risk Lens)\n\nImpact assessment for File Inclusion:\n- File Inclusion vulnerabilities typically allow attackers to read arbitrary files on the server\n- Can expose sensitive configuration files, credentials, source code\n- May lead to Remote Code Execution if combined with file upload or log poisoning\n- Common CVSS base scores: 7.5-8.6 (High)\n\nSeverity calibration:\n- The evidence shows clear File Inclusion behavior\n- Standard severity for File Inclusion is **High** due to:\n  - Confidentiality impact: reading arbitrary files\n  - Potential integrity/availability impact via RCE\n  - Commonly exploited in real attacks\n\n**High** severity is appropriate and evidence-calibrated.\n\n## Alternative Rankings\n\nRank 2: BrokenAccessControl\n- The vulnerability does involve access control (accessing files that shouldn't be accessible)\n- However, FileInclusion is more specific and technically precise\n- Severity: High (similar impact)\n\nRank 3: ExposedSecret\n- The error messages do expose sensitive information (file paths, include_path config)\n- This is a secondary finding, less severe than the inclusion vulnerability itself\n- Severity: Low (information disclosure only)\n\n## Final Decision\n\nAll three lenses align:\n- Technical: FileInclusion is the correct classification\n- QA: Evidence from L002, L003 directly supports the claim\n- Risk: High severity is appropriate for File Inclusion\n\n**ACCEPT = TRUE**",
+      "private_plan": "This is Round 0 baseline mode with no negotiation. I will:\n1. Provide the structured assessment with three ranked findings\n2. Set accept=true as all lenses agree on FileInclusion/High\n3. Rank alternatives: BrokenAccessControl (High), ExposedSecret (Low)\n4. Confirm no user assumption present\n5. Complete the assessment with proper citations",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "FileInclusion",
+            "severity": "High",
+            "citations": [
+              "L002",
+              "L003"
+            ],
+            "rationale": "The page parameter is passed unsafely to PHP include() function, as confirmed by error messages showing 'include(): Filename cannot be empty' and include_path disclosure. This enables local file inclusion attacks with potential for arbitrary file reading and remote code execution."
+          },
+          {
+            "rank": 2,
+            "label": "BrokenAccessControl",
+            "severity": "High",
+            "citations": [
+              "L002",
+              "L003"
+            ],
+            "rationale": "The application allows user input to control file access operations without proper authorization checks, enabling access to files beyond intended scope. However, FileInclusion is more technically precise for this include-based mechanism."
+          },
+          {
+            "rank": 3,
+            "label": "ExposedSecret",
+            "severity": "Low",
+            "citations": [
+              "L002",
+              "L003"
+            ],
+            "rationale": "Error messages expose sensitive server configuration including full file paths (/var/www/html/vulnerabilities/fi/index.php) and include_path settings. This information disclosure aids attackers but is secondary to the primary inclusion vulnerability."
+          }
+        ],
+        "decision_summary": "FileInclusion at High severity is technically correct, evidence-supported by L002/L003 showing unsafe include() usage, and appropriately calibrated to the confidentiality and potential RCE impact. All review lenses align.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "No user assumption provided in this assessment request."
+      },
+      "phase": "round0",
+      "turn_index": 0,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L002",
+          "L003"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 160,
+        "public_message_char_count": 1209,
+        "public_reply_required": false,
+        "public_reply_starts_with_expected_prefix": false,
+        "public_reply_mentions_previous_speaker": false,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": true,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "FileInclusion",
+      "top1_severity": "High",
+      "top1_exact": {
+        "label": "FileInclusion",
+        "severity": "High"
+      },
+      "rank1_citations": [
+        "L002",
+        "L003"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "No user assumption provided in this assessment request.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to act as a merged reviewer combining the perspectives of a Technical Analyst, QA Reviewer, and Risk Reviewer. \nYou must produce the most defensible vulnerability assessment that could be signed off in a final penetration testing report.\n\n- Evaluate the technical correctness of the vulnerability classification.\n- Verify that the claim is supported by packet evidence and defensible in a professional report.\n- Ensure that the proposed severity reasonably reflects the potential impact suggested by the evidence.\n\nReturn Format\nYour decision should reflect whether the Rank-1 recommendation (`label` + `severity`) is defensible across all three review perspectives.\n\n- Set `accept=true` ONLY if all three evaluation lenses agree that the Rank-1 recommendation is technically correct, evidence-supported, and impact-calibrated.\n- Set `accept=false` if any lens fails.\n- If `accept=false`, provide a short `block_reason` identifying the exact failure (for example: evidence gap, mechanism conflict, citation weakness, severity mismatch, or risk miscalibration).\n\nWarnings\nYour review must evaluate the claim through three independent lenses before making a final decision.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nTechnical lens  \nEvaluate whether the vulnerability classification is technically plausible.\n\n- Determine whether the proposed `label` corresponds to a realistic exploit mechanism.\n- Confirm that the mechanism logically explains the observed packet behavior.\n- Check whether another vulnerability `label` would explain the evidence better.\n\nQA lens  \nEvaluate whether the claim is defensible in a professional vulnerability report.\n\n- Confirm that the claim is directly supported by packet evidence (`citations`).\n- Ensure that cited packet lines allow an independent reviewer to verify the claim.\n- Block conclusions that rely on assumptions or missing evidence.\n\nRisk lens  \nEvaluate whether the proposed `severity` accurately reflects the likely impact.\n\n- Determine whether the current severity understates the potential impact suggested by the evidence.\n- Determine whether the severity overstates impact beyond what the evidence supports.\n- Accept the decision only when the severity is realistically calibrated to the evidence.\n\nExplanation rules\n\n- Keep explanations short and technically precise.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on mechanism, evidence defensibility, and impact calibration.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are a single-model pentest finding reviewer operating in baseline mode.\n\nThere is no public negotiation in this mode. Treat the task as an independent expert assessment that must integrate technical correctness, evidence defensibility, and realistic risk evaluation into one final decision.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application page is requested with the URL parameter `page=`.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed response text: `Warning:  include(): Filename cannot be empty in /var/www/html/vulnerabilities/fi/index.php on line 36`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed response text: `Warning:  include(): Failed opening '' for inclusion (include_path='.:/usr/share/php:../../external/phpids/0.6/lib/') in /var/www/html/vulnerabilities/fi/index.php on line 36`.\"\n    }\n  ]\n}\n\nRound 0 independent assessment. All evidence is already visible. Produce your own initial cyber finding assessment before public negotiation begins.\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nReturn only one JSON object matching the required output schema.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\n"
+    }
+  ],
+  "rounds": [],
+  "plan": {
+    "Baseline Reviewer": [
+      "This is Round 0 baseline mode with no negotiation. I will:\n1. Provide the structured assessment with three ranked findings\n2. Set accept=true as all lenses agree on FileInclusion/High\n3. Rank alternatives: BrokenAccessControl (High), ExposedSecret (Low)\n4. Confirm no user assumption present\n5. Complete the assessment with proper citations"
+    ]
+  },
+  "finished_rounds": 1,
+  "finished_public_rounds": 0,
+  "failed_attempts": [],
+  "decision_trajectory": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "FileInclusion"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "FileInclusion",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "FileInclusion",
+      "committee_exact": {
+        "label": "FileInclusion",
+        "severity": "High"
+      },
+      "committee_type_label": "FileInclusion",
+      "committee_exact_label": "FileInclusion",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "committee_snapshots": [
+    {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "FileInclusion"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "High"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "FileInclusion",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "FileInclusion",
+      "committee_exact": {
+        "label": "FileInclusion",
+        "severity": "High"
+      },
+      "committee_type_label": "FileInclusion",
+      "committee_exact_label": "FileInclusion",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    }
+  ],
+  "slot_assignment": [],
+  "condition": {
+    "condition_id": "C2",
+    "mode": "baseline",
+    "config_file": "config_c2_baseline_claude.txt",
+    "json_max_retries": 5,
+    "prior_round0": "",
+    "public_message_max_words": 1200,
+    "forbidden_public_tokens": [
+      "PRIVATE",
+      "scratchpad",
+      "private notes",
+      "private plan",
+      "chain-of-thought",
+      "CoT"
+    ]
+  },
+  "scenario": {
+    "scenario_id": "error_message_path_disclosure_001",
+    "source_family": "web_application",
+    "difficulty": "easy",
+    "label_set_id": "web_triage_v1",
+    "lines": [
+      {
+        "id": "L001",
+        "text": "A web application page is requested with the URL parameter `page=`."
+      },
+      {
+        "id": "L002",
+        "text": "Observed response text: `Warning:  include(): Filename cannot be empty in /var/www/html/vulnerabilities/fi/index.php on line 36`."
+      },
+      {
+        "id": "L003",
+        "text": "Observed response text: `Warning:  include(): Failed opening '' for inclusion (include_path='.:/usr/share/php:../../external/phpids/0.6/lib/') in /var/www/html/vulnerabilities/fi/index.php on line 36`."
+      }
+    ]
+  },
+  "scenario_id": "error_message_path_disclosure_001",
+  "scenario_title": null,
+  "schedule_seed": 143,
+  "ground_truth": {
+    "scenario_id": "error_message_path_disclosure_001",
+    "final_label": "FileInclusion",
+    "final_severity": "High"
+  },
+  "validation_stats": {
+    "total_turns": 1,
+    "total_attempts": 1,
+    "successful_turns": 1,
+    "schema_failure_turns": 0,
+    "json_retry_count": 0,
+    "citation_violation_turns": 0,
+    "invalid_public_turns": 0,
+    "non_reply_turns": 1,
+    "leakage_turns": 0,
+    "citation_mention_turns": 1
+  },
+  "run_status": "completed",
+  "run_id": "history11_06_27",
+  "metrics": {
+    "FinalCorrectExact": 1,
+    "FinalCorrectType": 1,
+    "FinalCorrectSeverity": 1,
+    "FinalAgreementExact": 1,
+    "AnyAgreementExact": 0,
+    "SeverityBias": 0,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExact": 0,
+    "FalseAgreementWithoutSignoffExact": 0,
+    "LateDriftAgreementExact": 0,
+    "AnyCorrectConsensusType": 0,
+    "LateDriftCorrectType": 0,
+    "ConsensusLatencyExact": null,
+    "FinalAgreementType": 1,
+    "AnyAgreementType": 0
+  },
+  "appendix_debug": {
+    "CitationViolation": 0,
+    "SchemaFail": 0,
+    "InvalidPublic": 0,
+    "Leakage": 0,
+    "CitationMentionRate": 1.0,
+    "JsonRetryCount": 0,
+    "SchemaFailureTurnCount": 0,
+    "CitationViolationTurnCount": 0,
+    "InvalidPublicTurnCount": 0,
+    "LeakageTurnCount": 0,
+    "TrustHygieneViolated": 0,
+    "FinalAllAccept": 1,
+    "RunCompleted": true,
+    "RunStatus": "completed"
+  },
+  "committee_final": {
+    "turn_index": 0,
+    "phase": "round0",
+    "public_turn_index": null,
+    "speaker": null,
+    "by_agent_top1_label": {
+      "Baseline Reviewer": "FileInclusion"
+    },
+    "by_agent_top1_severity": {
+      "Baseline Reviewer": "High"
+    },
+    "by_agent_top1_exact": {
+      "Baseline Reviewer": {
+        "label": "FileInclusion",
+        "severity": "High"
+      }
+    },
+    "by_agent_rank1_citations": {
+      "Baseline Reviewer": [
+        "L002",
+        "L003"
+      ]
+    },
+    "by_agent_accept": {
+      "Baseline Reviewer": true
+    },
+    "by_agent_block_reason": {
+      "Baseline Reviewer": null
+    },
+    "committee_type": "FileInclusion",
+    "committee_exact": {
+      "label": "FileInclusion",
+      "severity": "High"
+    },
+    "committee_type_label": "FileInclusion",
+    "committee_exact_label": "FileInclusion",
+    "committee_exact_severity": "High",
+    "committee_type_status": "Majority",
+    "committee_exact_status": "Majority",
+    "unanimous_type": true,
+    "unanimous_exact": true,
+    "all_accept": true,
+    "agreement_type_with_signoff": true,
+    "agreement_exact_with_signoff": true,
+    "false_agreement_without_signoff": false,
+    "full_agreement_type": true,
+    "full_agreement_exact": true
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C2",
+      "run_count": 1,
+      "FinalCorrectExact": 1.0,
+      "FinalCorrectType": 1.0,
+      "FinalCorrectSeverity": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 0.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}
