@@ -98,7 +98,7 @@
     .board { overflow-x: auto; padding-bottom: 12px; }
     .mix-header {
       display: grid;
-      grid-template-columns: repeat(5, minmax(230px, 1fr));
+      grid-template-columns: repeat(2, minmax(230px, 1fr));
       gap: 12px;
       padding: 12px;
       border-radius: 16px;
@@ -150,7 +150,7 @@
     }
     .row-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(230px, 1fr));
+      grid-template-columns: repeat(2, minmax(230px, 1fr));
       gap: 12px;
     }
     .mix-col {
@@ -229,7 +229,7 @@
     @media (max-width: 1200px) {
       .mix-header,
       .row-grid {
-        grid-template-columns: repeat(3, minmax(230px, 1fr));
+        grid-template-columns: repeat(2, minmax(230px, 1fr));
       }
     }
     @media (max-width: 900px) {
@@ -284,8 +284,7 @@
 
 	    const mixes = [
 	      { key: 'gpt-5x4', label: 'GPT-5 x4' },
-	      { key: 'claude-sonnet-4-5x4', label: 'Claude 4.5 x4' },
-	      { key: 'claude-sonnet-4-5x2+gpt-5x2', label: '2 GPT + 2 Claude' }
+	      { key: 'claude-sonnet-4-5x4', label: 'Claude 4.5 x4' }
 	    ];
 
     const categories = [
@@ -310,12 +309,6 @@
 	      'claude-sonnet-4-5x4': {
 	        'Analyst A': 'claude-sonnet-4-5',
 	        'Builder B': 'claude-sonnet-4-5',
-	        'Critic C': 'claude-sonnet-4-5',
-	        'Delegate D': 'claude-sonnet-4-5'
-	      },
-	      'claude-sonnet-4-5x2+gpt-5x2': {
-	        'Analyst A': 'gpt-5',
-	        'Builder B': 'gpt-5',
 	        'Critic C': 'claude-sonnet-4-5',
 	        'Delegate D': 'claude-sonnet-4-5'
 	      }
@@ -346,7 +339,8 @@
 	      { id: 'collscore_prop', title: 'Collective score (proposed) — avg', desc: 'Uses proposal_collective_avg: mean score across all agents for each proposal (not outcome; not zeroed).', height: 90, render: renderCollectiveScoreProposedAvg },
 	      { id: 'util_avg', title: 'Utility (final outcome) — avg', desc: 'Uses scores: achieved outcome utility (0 if final_success=false).', height: 90, render: renderUtilAvg },
 	      { id: 'agree_rate', title: 'Agreement vs failure', desc: 'Final agreement vs lost agreement vs no agreement.', height: 90, render: renderAgreeRateChart },
-	      { id: 'invalid_rates', title: 'Invalid / private tags (%)', desc: 'Structural invalid outputs and private-tag leakage (from eval_leakage_invalid_llm.py).', height: 90, render: renderInvalidRates }
+	      { id: 'leak_rates', title: 'Leakage, invalid, unclosed (%)', desc: 'Leakage excludes unclosed-answer bracket issues.', height: 90, render: renderLeakRates },
+	      { id: 'leak_by_model', title: 'Unclosed answer leakage by model', desc: 'Unclosed-answer leakage counts by model within the mix.', height: 90, render: renderLeakByModel }
 	    ];
 
     const charts = {};
