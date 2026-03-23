@@ -274,8 +274,8 @@
       ? '../summarys/metrics_summary.adversarial_outcome_targeted.json'
       : '../summarys/metrics_summary.adversarial_obstructive.json';
     const evalUrl = mode === 'outcome_targeted'
-      ? '../summarys/leakage/eval_adversarial_outcome_targeted.json'
-      : '../summarys/leakage/eval_adversarial_obstructive.json';
+      ? '../summarys/leakage/baseline_style/eval_adversarial_outcome_targeted.json'
+      : '../summarys/leakage/baseline_style/eval_adversarial_obstructive.json';
 
     document.getElementById('pageTitle').textContent = `Adversarial Overview — ${modeLabel}`;
     document.getElementById('footerNote').textContent = `Data sources: ${summaryUrl} and ${evalUrl}`;
