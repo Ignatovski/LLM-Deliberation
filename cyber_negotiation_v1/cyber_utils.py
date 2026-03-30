@@ -29,7 +29,7 @@ DEFAULT_FORBIDDEN_PUBLIC_TOKENS = [
 NO_CONSENSUS = "NoConsensus"
 ALLOWED_SEVERITIES = set(SEVERITY_ORDER.keys())
 
-
+w
 def load_env_file(path: str) -> None:
     if not os.path.exists(path):
         return

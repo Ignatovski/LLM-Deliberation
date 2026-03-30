@@ -6,7 +6,7 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median, pstdev
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from cyber_utils import aggregate_condition_results
@@ -20,6 +20,18 @@ CONDITION_META: Dict[str, Dict[str, str]] = {
     "C5": {"label": "Mixed Committee", "family": "Mixed", "mode": "negotiation"},
     "C6": {"label": "3x GPT-5 + LLM Prior", "family": "GPT-5", "mode": "negotiation"},
     "C7": {"label": "3x Claude + Human Prior", "family": "Claude", "mode": "negotiation"},
+}
+
+CONDITION_STATS_WITH_SD = {
+    "Severity Bias",
+    "Abs Severity Bias",
+    "Type Transitions",
+    "Severity Transitions",
+    "Exact Transitions",
+}
+
+CONDITION_STATS_HIDDEN = {
+    "Exact Transitions",
 }
 
 AGENT_ORDER = [
@@ -97,6 +109,31 @@ def mean_optional(values: Sequence[Optional[float]]) -> Optional[float]:
     if not numeric:
         return None
     return mean(numeric)
+
+
+def distribution_stats(values: Sequence[Optional[float]]) -> Dict[str, Optional[float]]:
+    numeric = [float(value) for value in values if value is not None]
+    if not numeric:
+        return {
+            "count": 0.0,
+            "mean": None,
+            "std": None,
+            "median": None,
+            "min": None,
+            "max": None,
+        }
+    return {
+        "count": float(len(numeric)),
+        "mean": mean(numeric),
+        "std": 0.0 if len(numeric) == 1 else pstdev(numeric),
+        "median": median(numeric),
+        "min": min(numeric),
+        "max": max(numeric),
+    }
+
+
+def observed_values(values: Sequence[Optional[float]]) -> List[float]:
+    return [float(value) for value in values if value is not None]
 
 
 def committee_type_value(snapshot: Dict[str, Any]) -> str:
@@ -284,6 +321,10 @@ def scan_runs(output_root: Path) -> Tuple[List[RunEntry], Optional[Path]]:
 def aggregate_entries(entries: Sequence[RunEntry], label: str) -> Dict[str, Any]:
     reports = [entry.run_report for entry in entries]
     llm_trust_values = [llm_trust_hygiene_value(entry.llm_eval) for entry in entries]
+    abs_severity_bias_values = [
+        absolute_severity_bias_from_headline(dict(report.get("headline_metrics") or {}))
+        for report in reports
+    ]
     aggregate = aggregate_condition_results(reports, condition_id=label)
     aggregate["extras"] = {
         "public_turns_mean": mean_optional([float(entry.public_turns) for entry in entries]),
@@ -292,6 +333,7 @@ def aggregate_entries(entries: Sequence[RunEntry], label: str) -> Dict[str, Any]
         "exact_transitions_mean": mean_optional([float(entry.exact_transitions) for entry in entries]),
         "type_states_mean": mean_optional([float(entry.type_states) for entry in entries]),
         "exact_states_mean": mean_optional([float(entry.exact_states) for entry in entries]),
+        "absolute_severity_bias_mean": mean_optional(abs_severity_bias_values),
         "llm_trust_gpt5_mean": mean_optional(llm_trust_values),
         "llm_trust_gpt5_coverage": float(sum(1 for value in llm_trust_values if value is not None)),
         "scenario_count": len({entry.scenario_id for entry in entries}),
@@ -354,6 +396,154 @@ def severity_correct_from_headline(headline: Dict[str, Any]) -> Optional[float]:
     if bias is None:
         return None
     return 1.0 if bias == 0 else 0.0
+
+
+def absolute_severity_bias_from_headline(headline: Dict[str, Any]) -> Optional[float]:
+    bias = as_float(headline.get("SeverityBias"))
+    if bias is None:
+        return None
+    return abs(bias)
+
+
+def format_distribution_value(value: Optional[float], *, kind: str, signed: bool = False) -> str:
+    if kind in {"rate", "binary_rate"}:
+        return pct(value)
+    if signed:
+        return signed_num(value)
+    return num(value)
+
+
+def descriptive_metric_specs(entries: Sequence[RunEntry]) -> List[Tuple[str, str, bool, List[Optional[float]]]]:
+    return [
+        (
+            "Exact Correct",
+            "binary_rate",
+            False,
+            [as_float((entry.run_report.get("headline_metrics") or {}).get("FinalCorrectExact")) for entry in entries],
+        ),
+        (
+            "Type Correct",
+            "binary_rate",
+            False,
+            [as_float((entry.run_report.get("headline_metrics") or {}).get("FinalCorrectType")) for entry in entries],
+        ),
+        (
+            "Severity Correct",
+            "binary_rate",
+            False,
+            [
+                severity_correct_from_headline(dict(entry.run_report.get("headline_metrics") or {}))
+                for entry in entries
+            ],
+        ),
+        (
+            "Wrong Consensus",
+            "binary_rate",
+            False,
+            [as_float((entry.run_report.get("derived_metrics") or {}).get("WrongConsensusExact")) for entry in entries],
+        ),
+        (
+            "Severity Bias",
+            "number",
+            True,
+            [as_float((entry.run_report.get("headline_metrics") or {}).get("SeverityBias")) for entry in entries],
+        ),
+        (
+            "Abs Severity Bias",
+            "number",
+            False,
+            [
+                absolute_severity_bias_from_headline(dict(entry.run_report.get("headline_metrics") or {}))
+                for entry in entries
+            ],
+        ),
+        ("Public Turns", "number", False, [float(entry.public_turns) for entry in entries]),
+        ("Type Transitions", "number", False, [float(entry.type_transitions) for entry in entries]),
+        ("Severity Transitions", "number", False, [float(entry.severity_transitions) for entry in entries]),
+        ("Exact Transitions", "number", False, [float(entry.exact_transitions) for entry in entries]),
+    ]
+
+
+def render_descriptive_stats_table(entries: Sequence[RunEntry]) -> str:
+    metric_specs = descriptive_metric_specs(entries)
+    rows: List[str] = []
+    for label, kind, signed, values in metric_specs:
+        stats = distribution_stats(values)
+        numeric_values = observed_values(values)
+        count_text = str(int(stats["count"]))
+        if kind == "binary_rate":
+            positives = int(round(sum(numeric_values)))
+            count_text = f"{positives}/{int(stats['count'])}"
+        rows.append(
+            "<tr>"
+            f"<td>{html.escape(label)}</td>"
+            f"<td>{count_text}</td>"
+            f"<td>{format_distribution_value(stats['mean'], kind=kind, signed=signed)}</td>"
+            f"<td>{format_distribution_value(stats['std'], kind=kind, signed=False)}</td>"
+            "</tr>"
+        )
+
+    return (
+        "<div class='table-wrap'>"
+        "<table>"
+        "<thead><tr>"
+        "<th>Metric</th><th>Count</th><th>Mean</th><th>Std Dev</th>"
+        "</tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
+
+
+def render_condition_descriptive_stats_table(entries: Sequence[RunEntry]) -> str:
+    condition_ids = sorted({entry.condition_id for entry in entries}, key=condition_sort_key)
+    if not condition_ids:
+        return "<p class='muted'>No condition-level stats available.</p>"
+    specs_by_condition = {
+        condition_id: descriptive_metric_specs([entry for entry in entries if entry.condition_id == condition_id])
+        for condition_id in condition_ids
+    }
+    visible_specs = [
+        spec for spec in specs_by_condition[condition_ids[0]] if spec[0] not in CONDITION_STATS_HIDDEN
+    ]
+    metric_labels = [label for label, _, _, _ in visible_specs]
+
+    header_cells = ["<th>Condition</th>"] + [f"<th>{html.escape(label)}</th>" for label in metric_labels]
+    rows: List[str] = []
+    for condition_id in condition_ids:
+        meta = CONDITION_META.get(condition_id, {})
+        row_cells = [
+            f"<td><span class='cond-tag'>{html.escape(condition_id)}</span><br><span class='muted'>{html.escape(meta.get('label', condition_id))}</span></td>"
+        ]
+        for label, kind, signed, values in specs_by_condition[condition_id]:
+            if label in CONDITION_STATS_HIDDEN:
+                continue
+            stats = distribution_stats(values)
+            mean_text = format_distribution_value(stats["mean"], kind=kind, signed=signed)
+            if label in CONDITION_STATS_WITH_SD:
+                std_text = format_distribution_value(stats["std"], kind=kind, signed=False)
+                row_cells.append(
+                    "<td>"
+                    "<table class='mini-stat-table' aria-label='Mean and standard deviation'>"
+                    "<tbody>"
+                    f"<tr><th>Mean</th><td>{mean_text}</td></tr>"
+                    f"<tr><th>SD</th><td>{std_text}</td></tr>"
+                    "</tbody>"
+                    "</table>"
+                    "</td>"
+                )
+            else:
+                row_cells.append(f"<td>{mean_text}</td>")
+        rows.append(f"<tr>{''.join(row_cells)}</tr>")
+
+    return (
+        "<div class='table-wrap'>"
+        "<table>"
+        f"<thead><tr>{''.join(header_cells)}</tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
 
 
 def svg_rate_chart(
@@ -1000,12 +1190,12 @@ def render_condition_table(
             f"<td style='{rate_style(as_float(derived.get('WrongConsensusExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExactRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('LateDriftAgreementExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('LateDriftAgreementExactRate')))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td>{num(as_float(extras.get('absolute_severity_bias_mean')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
             f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
-            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             f"<td>{sample_report}</td>"
             "</tr>"
         )
@@ -1016,8 +1206,8 @@ def render_condition_table(
         "<th>Condition</th><th>Setup</th><th>Family</th><th>Mode</th>"
         "<th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Final Agreement</th>"
         "<th>Wrong Consensus</th><th>Late Drift</th><th>Severity Bias</th>"
-        "<th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Type Transitions</th>"
-        "<th>Severity Transitions</th><th>Latency</th><th>Sample Report</th>"
+        "<th>Abs Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Type Transitions</th>"
+        "<th>Severity Transitions</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1258,10 +1448,10 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
             f"<td style='{rate_style(severity_correct, higher_is_better=True)}'>{pct(severity_correct)}</td>"
             f"<td style='{rate_style(as_float(derived.get('WrongConsensusExact')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExact')))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td>{num(absolute_severity_bias_from_headline(headline))}</td>"
             f"<td>{entry.public_turns}</td>"
             f"<td>{entry.type_transitions}</td>"
             f"<td>{entry.severity_transitions}</td>"
-            f"<td>{num(as_float(derived.get('ConsensusLatencyExact')), 0)}</td>"
             f"<td style='{rate_style(llm_trust, higher_is_better=False)}'>{num(llm_trust, 1)}</td>"
             f"<td><a href='{link_href(entry.report_path, output_path)}'>report</a></td>"
             f"<td><a href='{link_href(entry.history_path, output_path)}'>history</a></td>"
@@ -1273,8 +1463,8 @@ def render_run_table(category_runs: Sequence[RunEntry], output_path: Path) -> st
         "<thead><tr>"
         "<th>Scenario</th><th>Condition</th><th>Setup</th><th>Final Label</th><th>Final Severity</th>"
         "<th>GT Label</th><th>GT Severity</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
-        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Public Turns</th>"
-        "<th>Type Transitions</th><th>Severity Transitions</th><th>Latency</th><th>GPT-5 Trust Hygiene</th><th>Report</th><th>History</th>"
+        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Abs Severity Bias</th><th>Public Turns</th>"
+        "<th>Type Transitions</th><th>Severity Transitions</th><th>GPT-5 Trust Hygiene</th><th>Report</th><th>History</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1311,12 +1501,12 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
             f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
             f"<td style='{rate_style(as_float(derived.get('WrongConsensusExactRate')), higher_is_better=False)}'>{pct(as_float(derived.get('WrongConsensusExactRate')))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td>{num(as_float(extras.get('absolute_severity_bias_mean')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
             f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
-            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             f"<td>{sample_report}</td>"
             "</tr>"
         )
@@ -1325,8 +1515,8 @@ def render_category_summary_table(runs: Sequence[RunEntry], output_path: Path) -
         "<table>"
         "<thead><tr>"
         "<th>Category</th><th>Scenario</th><th>Runs</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th>"
-        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th>"
-        "<th>Avg Severity Transitions</th><th>Avg Latency</th><th>Sample Report</th>"
+        "<th>Wrong Consensus</th><th>Severity Bias</th><th>Abs Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th>"
+        "<th>Avg Severity Transitions</th><th>Sample Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1372,12 +1562,12 @@ def render_overall_category_summary_tables(runs: Sequence[RunEntry], output_path
             f"<td>{category_title}</td>"
             f"<td>{scenario_label}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td>{num(as_float(extras.get('absolute_severity_bias_mean')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(extras.get('llm_trust_gpt5_mean')), higher_is_better=False)}'>{pct(as_float(extras.get('llm_trust_gpt5_mean')))}</td>"
             f"<td>{num(as_float(extras.get('public_turns_mean')))}</td>"
             f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
-            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             f"<td>{sample_report}</td>"
             "</tr>"
         )
@@ -1395,7 +1585,7 @@ def render_overall_category_summary_tables(runs: Sequence[RunEntry], output_path
         "<div class='table-wrap'>"
         "<table>"
         "<thead><tr>"
-        "<th>Category</th><th>Scenario</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th><th>Avg Severity Transitions</th><th>Avg Latency</th><th>Report</th>"
+        "<th>Category</th><th>Scenario</th><th>Severity Bias</th><th>Abs Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>GPT-5 Trust Hygiene</th><th>Avg Public Turns</th><th>Avg Severity Transitions</th><th>Report</th>"
         "</tr></thead>"
         f"<tbody>{''.join(stability_rows)}</tbody>"
         "</table>"
@@ -1422,18 +1612,16 @@ def render_overall_condition_tables(
             f"<td style='{rate_style(as_float(headline.get('FinalCorrectType')), higher_is_better=True)}'>{pct(as_float(headline.get('FinalCorrectType')))}</td>"
             f"<td style='{rate_style(severity_correct_from_headline(headline), higher_is_better=True)}'>{pct(severity_correct_from_headline(headline))}</td>"
             f"<td style='{bias_style(as_float(headline.get('SeverityBias')))}'>{signed_num(as_float(headline.get('SeverityBias')))}</td>"
+            f"<td>{num(as_float(extras.get('absolute_severity_bias_mean')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('OverSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('OverSeverityRate')))}</td>"
             f"<td style='{rate_style(as_float(derived.get('UnderSeverityRate')), higher_is_better=False)}'>{pct(as_float(derived.get('UnderSeverityRate')))}</td>"
-            f"<td>{num(as_float(extras.get('type_transitions_mean')))}</td>"
-            f"<td>{num(as_float(extras.get('severity_transitions_mean')))}</td>"
-            f"<td>{num(as_float(derived.get('ConsensusLatencyExactMean')))}</td>"
             "</tr>"
         )
     return (
         "<div class='table-wrap'>"
         "<table>"
         "<thead><tr>"
-        "<th>Condition</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th><th>Type Transitions</th><th>Severity Transitions</th><th>Latency</th>"
+        "<th>Condition</th><th>Exact Correct</th><th>Type Correct</th><th>Severity Correct</th><th>Severity Bias</th><th>Abs Severity Bias</th><th>Over-Severity</th><th>Under-Severity</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody>"
         "</table>"
@@ -1713,6 +1901,16 @@ def render_overall_section(runs: Sequence[RunEntry], output_path: Path) -> str:
         "<p class='muted'>This is one compact condition table with the core correctness and severity metrics.</p>"
         f"{render_overall_condition_tables(runs, condition_aggregates, output_path)}"
         "</div>"
+        "<div class='panel'>"
+        "<h3>Descriptive Statistics</h3>"
+        "<p class='muted'>This pooled summary uses run-level values across the current scope and reports Count, Mean, and Std Dev for the main analysis metrics.</p>"
+        f"{render_descriptive_stats_table(runs)}"
+        "</div>"
+        "<div class='panel'>"
+        "<h3>Condition Statistics</h3>"
+        "<p class='muted'>This comparison view breaks the same run-level metrics out by condition from C1 to C7. All metrics show mean values; SD is only shown for severity-bias and transition metrics where within-condition spread is informative.</p>"
+        f"{render_condition_descriptive_stats_table(runs)}"
+        "</div>"
         "</section>"
     )
 
@@ -1780,6 +1978,16 @@ def render_category_section(
         + "<h3>Condition Comparison</h3>"
         + "<p class='muted'>Condition rows are aggregated over all completed runs in this category. Higher is better for correctness, lower is better for wrong-consensus, late-drift, and GPT-5 Trust Hygiene.</p>"
         + f"{render_condition_table(category_runs, condition_aggregates, output_path)}"
+        + "</div>"
+        + "<div class='panel'>"
+        + "<h3>Descriptive Statistics</h3>"
+        + "<p class='muted'>This pooled summary uses run-level values in this category and reports Count, Mean, and Std Dev for the main analysis metrics.</p>"
+        + f"{render_descriptive_stats_table(category_runs)}"
+        + "</div>"
+        + "<div class='panel'>"
+        + "<h3>Condition Statistics</h3>"
+        + "<p class='muted'>This comparison view breaks the same run-level metrics out by condition from C1 to C7. All metrics show mean values; SD is only shown for severity-bias and transition metrics where within-condition spread is informative.</p>"
+        + f"{render_condition_descriptive_stats_table(category_runs)}"
         + "</div>"
         + (
             "<div class='panel'>"
@@ -2181,6 +2389,40 @@ def render_dashboard(runs: Sequence[RunEntry], output_root: Path, output_path: P
       border: 1px solid rgba(15, 118, 110, 0.18);
       padding: 4px 8px;
       font-weight: 700;
+    }}
+    .mini-stat-table {{
+      width: auto;
+      min-width: 0;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(248, 251, 253, 0.92);
+      border: 1px solid rgba(205, 214, 223, 0.82);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 12px;
+    }}
+    .mini-stat-table th,
+    .mini-stat-table td {{
+      border: 0;
+      padding: 3px 6px;
+      white-space: nowrap;
+      vertical-align: middle;
+    }}
+    .mini-stat-table tr + tr th,
+    .mini-stat-table tr + tr td {{
+      border-top: 1px solid rgba(205, 214, 223, 0.7);
+    }}
+    .mini-stat-table th {{
+      background: rgba(238, 244, 248, 0.9);
+      color: #526172;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }}
+    .mini-stat-table td {{
+      font-weight: 600;
+      color: #1f2937;
     }}
     @media (max-width: 760px) {{
       .wrap {{
