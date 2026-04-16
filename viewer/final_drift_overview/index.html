@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Final Drift (Failed Negotiations) — Overview</title>
+  <title>Final Drift (Failed Negotiations) -- Overview</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -176,14 +176,45 @@
     }
     .btnRow{display:flex;gap:8px;flex-wrap:wrap}
     .danger{border-color: rgba(251,113,133,0.75)}
+    .chart{
+      margin-top:10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(16,26,51,0.55);
+    }
+    .chartRow{
+      display:grid;
+      grid-template-columns: 64px 1fr 56px;
+      gap:8px;
+      align-items:center;
+      margin-top:6px;
+    }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .legend{
+      margin-top:8px;
+      font-size:12px;
+      color: var(--muted);
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .legend .dot{
+      width:8px;height:8px;border-radius:999px;display:inline-block;margin-right:6px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Final Drift (Failed Negotiations) — Baseline Polynomial Game</h1>
+    <h1>Final Drift (Failed Negotiations) -- Baseline Polynomial Game</h1>
     <div class="sub">
-      Finds baseline (non-adversarial) runs that <b>fail at the end</b> (<code>final_success=false</code>) and where the <b>final x was already seen earlier</b> in the same run.
-      Then shows the <b>final agent’s argumentation</b> (public answer) alongside where that x appeared before.
+      Finds baseline (non-adversarial) runs that <b>fail at the end</b> (<code>final_success=false</code>) and where the <b>final x was already seen in the last 6 public answers</b> before the final move.
+      Then shows the <b>final agent's argumentation</b> (public answer) alongside where that x appeared within that last-6 window.
     </div>
     <div class="controls">
       <div class="group">
@@ -203,20 +234,20 @@
         <select id="finalAgentSel"></select>
       </div>
       <div class="group">
-        <label>Min prior repeats</label>
+        <label>Min repeats (last 6)</label>
         <select id="minPriorSel">
-          <option value="1">≥ 1</option>
-          <option value="2">≥ 2</option>
-          <option value="3">≥ 3</option>
+          <option value="1">>= 1</option>
+          <option value="2">>= 2</option>
+          <option value="3">>= 3</option>
         </select>
       </div>
       <div class="group">
         <label>Final move</label>
         <select id="deltaSel">
           <option value="any">Any</option>
-          <option value="nonzero">Δx ≠ 0</option>
-          <option value="pos">Δx &gt; 0</option>
-          <option value="neg">Δx &lt; 0</option>
+          <option value="nonzero">dX != 0</option>
+          <option value="pos">dX &gt; 0</option>
+          <option value="neg">dX &lt; 0</option>
         </select>
       </div>
       <div class="group">
@@ -237,6 +268,7 @@
         <div class="meta">
           Summary of currently filtered matches.
         </div>
+        <div class="chart" id="last6Chart"></div>
         <div class="stats" id="stats"></div>
         <div class="meta" style="margin-top:8px">
           Click a run below to see the final argumentation and where the final x appeared earlier.
@@ -283,9 +315,7 @@
     function candidateUrls(url) {
       const u = String(url || '').trim();
       if (!u) return [];
-      const cleaned = u.replace(/^\/+/,'');
-      // If it's already a relative/absolute URL (./ ../ /), try it as-is first.
-      // Otherwise it's a repo-relative path like "output_mix_all_diff/..." — prefer repo-root to avoid 404 spam.
+      const cleaned = u.replace(/^\/+/,'' );
       if (u.startsWith('/') || u.startsWith('./') || u.startsWith('../')) {
         return [u, '/' + cleaned];
       }
@@ -312,7 +342,7 @@
       const marker = '/LLM-Deliberation/';
       const idx = s.indexOf(marker);
       if (idx !== -1) return s.slice(idx + marker.length);
-      return s.replace(/^\.?\//,'').replace(/^\/+/,'');
+      return s.replace(/^\.?\//,'').replace(/^\/+/,'' );
     }
 
     function extractValue(text) {
@@ -355,7 +385,6 @@
     }
 
     function safeGetHistory(obj) {
-      // some histories store inside {content:{...}}
       if (obj && obj.content) return obj.content;
       return obj;
     }
@@ -396,12 +425,11 @@
       for (let i = 0; i < finalIdx; i++) {
         if (xs[i] === finalXNum) priorIdxs.push(i);
       }
-      const priorCount = priorIdxs.length;
+      const priorCountAll = priorIdxs.length;
 
       const prevX = finalIdx > 0 ? xs[finalIdx - 1] : null;
       const delta = (Number.isFinite(prevX) && Number.isFinite(finalXNum)) ? (finalXNum - prevX) : null;
 
-      // final agent + final public answer (from last round entry, not trace)
       const lastRound = rounds.length ? rounds[rounds.length - 1] : null;
       const finalAgent = lastRound && lastRound.agent ? String(lastRound.agent) : null;
       const finalPublic = lastRound && typeof lastRound.public_answer === 'string' ? lastRound.public_answer : '';
@@ -410,12 +438,32 @@
       const prevRound = rounds.length >= 2 ? rounds[rounds.length - 2] : null;
       const prevPublic = prevRound && typeof prevRound.public_answer === 'string' ? prevRound.public_answer : '';
 
-      const occurrences = priorIdxs.map(i => {
+      const occurrencesAll = priorIdxs.map(i => {
         const agent = (i < rounds.length && rounds[i] && rounds[i].agent) ? String(rounds[i].agent) : null;
         const pa = (i < rounds.length && rounds[i] && typeof rounds[i].public_answer === 'string') ? rounds[i].public_answer : '';
         const roundLabel = (trace[i] && trace[i].round != null) ? trace[i].round : i;
         return { idx: i, round: roundLabel, agent, value: finalXNum, public_answer: pa };
       });
+
+      const last6Start = Math.max(0, rounds.length - 1 - 6);
+      const last6Rounds = rounds.slice(last6Start, Math.max(0, rounds.length - 1));
+      const last6Occurrences = [];
+      for (let i = 0; i < last6Rounds.length; i++) {
+        const r = last6Rounds[i];
+        const val = extractValue(r && r.public_answer);
+        if (Number.isFinite(val) && val === finalXNum) {
+          const idx = last6Start + i;
+          const roundLabel = (trace[idx] && trace[idx].round != null) ? trace[idx].round : idx;
+          last6Occurrences.push({
+            idx,
+            round: roundLabel,
+            agent: r && r.agent ? String(r.agent) : null,
+            value: finalXNum,
+            public_answer: r && typeof r.public_answer === 'string' ? r.public_answer : '',
+          });
+        }
+      }
+      const priorCountLast6 = last6Occurrences.length;
 
       const finalScratchpad = extractTagBlock(finalFull, 'SCRATCHPAD');
       const prevPlanFromPrompt = extractTagBlock(finalPrompt, 'PREV_PLAN');
@@ -441,14 +489,16 @@
 
       return {
         finalX: finalXNum,
-        priorCount,
+        priorCountAll,
+        priorCountLast6,
         priorIdxs,
         prevX,
         delta,
         finalAgent,
         finalPublic,
         prevPublic,
-        occurrences,
+        occurrencesAll,
+        occurrencesLast6: last6Occurrences,
         finalScratchpad,
         finalPlan,
         finalPlanSource,
@@ -461,6 +511,35 @@
       return x.toFixed(1).replace(/\.0$/,'');
     }
 
+    function renderLast6Chart(allRows, totalFailed) {
+      const el = $('last6Chart');
+      const counts = Array.from({length: 7}, () => 0);
+      for (const r of allRows) {
+        const c = Math.max(0, Math.min(6, Number(r.priorCountLast6 || 0)));
+        counts[c] += 1;
+      }
+      const max = Math.max(1, ...counts);
+      const total = allRows.length;
+      const header = `Failed runs (total ${totalFailed}). Distribution of final x repeats within last 6 public answers.`;
+      el.innerHTML = `<div class="meta">${escapeHtml(header)}</div>`;
+      for (let i = 0; i <= 6; i++) {
+        const pct = total ? (counts[i] / total * 100) : 0;
+        const w = Math.round((counts[i] / max) * 100);
+        const row = document.createElement('div');
+        row.className = 'chartRow';
+        row.innerHTML = `
+          <div class="meta">last6=${i}</div>
+          <div class="bar" style="width:${w}%;"></div>
+          <div class="meta">${counts[i]} (${pct.toFixed(1)}%)</div>
+        `;
+        el.appendChild(row);
+      }
+      const legend = document.createElement('div');
+      legend.className = 'legend';
+      legend.innerHTML = `<span><span class="dot" style="background:#60a5fa"></span>0..6 occurrences in last 6 public answers before final</span>`;
+      el.appendChild(legend);
+    }
+
     function renderStats(matches, totalFailed) {
       const el = $('stats');
       el.innerHTML = '';
@@ -469,15 +548,15 @@
       const pos = deltas.filter(d => d > 0).length;
       const neg = deltas.filter(d => d < 0).length;
       const zero = deltas.filter(d => d === 0).length;
-      const avgPrior = n ? (matches.reduce((s,m)=>s+(m.priorCount||0),0)/n) : 0;
+      const avgPrior = n ? (matches.reduce((s,m)=>s+(m.priorCountLast6||0),0)/n) : 0;
 
       const items = [
         { k:'failed runs (candidate)', v: String(totalFailed), cls:'warn' },
-        { k:'matches (repeat>=min)', v: String(n), cls: n ? 'good' : 'warn' },
-        { k:'avg prior repeats', v: n ? avgPrior.toFixed(2) : 'n/a' },
-        { k:'Δx > 0', v: String(pos) },
-        { k:'Δx < 0', v: String(neg) },
-        { k:'Δx = 0', v: String(zero) },
+        { k:'matches (last6>=min)', v: String(n), cls: n ? 'good' : 'warn' },
+        { k:'avg repeats (last 6)', v: n ? avgPrior.toFixed(2) : 'n/a' },
+        { k:'dX > 0', v: String(pos) },
+        { k:'dX < 0', v: String(neg) },
+        { k:'dX = 0', v: String(zero) },
       ];
       for (const it of items) {
         const d = document.createElement('div');
@@ -497,16 +576,17 @@
         row.className = 'row';
           const delta = Number.isFinite(m.delta) ? (m.delta > 0 ? `+${m.delta}` : String(m.delta)) : 'n/a';
           const arg = stripValueTag(m.finalPublic || '');
-          const excerpt = arg.length > 220 ? arg.slice(0, 220) + '…' : (arg || '(no text)');
+          const excerpt = arg.length > 220 ? arg.slice(0, 220) + '...' : (arg || '(no text)');
           const prevX = Number.isFinite(m.prevX) ? fmtNum(m.prevX) : 'n/a';
           row.innerHTML = `
           <div class="top">
-            <div class="title">${escapeHtml(m.model_mix || 'unknown mix')} · ${escapeHtml(m.category || 'unknown category')}</div>
+            <div class="title">${escapeHtml(m.model_mix || 'unknown mix')} | ${escapeHtml(m.category || 'unknown category')}</div>
             <div class="chips">
               <span class="chip">final <strong class="mono">x=${fmtNum(m.finalX)}</strong></span>
               <span class="chip">prev <strong class="mono">x=${prevX}</strong></span>
-              <span class="chip">Δx <strong class="mono">${delta}</strong></span>
-              <span class="chip">repeat count <strong class="mono">${m.priorCount}</strong></span>
+              <span class="chip">dX <strong class="mono">${delta}</strong></span>
+              <span class="chip">last6 count <strong class="mono">${m.priorCountLast6}</strong></span>
+              <span class="chip">all repeats <strong class="mono">${m.priorCountAll}</strong></span>
               <span class="chip">final agent <strong>${escapeHtml(m.finalAgent || 'n/a')}</strong></span>
             </div>
           </div>
@@ -519,19 +599,19 @@
 
     function renderDetail(m) {
       $('detailPill').textContent =
-        `x_prev=${Number.isFinite(m.prevX) ? fmtNum(m.prevX) : 'n/a'} · ` +
-        `x_final=${fmtNum(m.finalX)} · ` +
-        `Δx=${Number.isFinite(m.delta) ? m.delta : 'n/a'} · ` +
-        `repeat count=${m.priorCount}`;
+        `x_prev=${Number.isFinite(m.prevX) ? fmtNum(m.prevX) : 'n/a'} | ` +
+        `x_final=${fmtNum(m.finalX)} | ` +
+        `dX=${Number.isFinite(m.delta) ? m.delta : 'n/a'} | ` +
+        `last6=${m.priorCountLast6} | all=${m.priorCountAll}`;
       const el = $('detail');
       const prevVal = extractValue(m.prevPublic || '');
       const finalVal = extractValue(m.finalPublic || '');
 
-      const occLines = (m.occurrences || []).slice(-6).map(o => {
+      const occLines = (m.occurrencesLast6 || []).map(o => {
         const who = o.agent || 'unknown';
         const txt = stripValueTag(o.public_answer || '');
-        const ex = txt.length > 140 ? txt.slice(0, 140) + '…' : (txt || '(no text)');
-        return `t${o.idx} · ${who} · x=${fmtNum(o.value)} · ${ex}`;
+        const ex = txt.length > 140 ? txt.slice(0, 140) + '...' : (txt || '(no text)');
+        return `t${o.idx} | ${who} | x=${fmtNum(o.value)} | ${ex}`;
       }).join('\n');
 
       const scratch = String(m.finalScratchpad || '').trim();
@@ -542,8 +622,8 @@
         <div class="meta">
           <div><b>Run path:</b> <span class="mono">${escapeHtml(m.pathRel || '')}</span></div>
           <div>
-            <b>Final x seen earlier?</b> yes —
-            repeat count (times <i>before</i> final): <b>${m.priorCount}</b>
+            <b>Final x seen in last 6?</b> ${m.priorCountLast6 > 0 ? 'yes' : 'no'} --
+            last6 count: <b>${m.priorCountLast6}</b>, all repeats before final: <b>${m.priorCountAll}</b>
           </div>
         </div>
         <div class="split">
@@ -567,8 +647,8 @@
           </div>
         </div>
         <div>
-          <div class="meta"><b>Earlier occurrences</b> (last 6 times the final x already appeared earlier in the run)</div>
-          <pre>${escapeHtml(occLines || '(none found — unexpected)')} </pre>
+          <div class="meta"><b>Occurrences in last 6 public answers before final</b></div>
+          <pre>${escapeHtml(occLines || '(none found in last 6)')} </pre>
         </div>
       `;
     }
@@ -598,7 +678,7 @@
         if (f.category !== '__all__' && r.category !== f.category) return false;
         if (f.mix !== '__all__' && r.model_mix !== f.mix) return false;
         if (f.finalAgent !== '__all__' && r.finalAgent !== f.finalAgent) return false;
-        if ((r.priorCount || 0) < f.minPrior) return false;
+        if ((r.priorCountLast6 || 0) < f.minPrior) return false;
         if (!passesDeltaFilter(r.delta, f.deltaMode)) return false;
         return true;
       });
@@ -608,29 +688,27 @@
       stopRequested = false;
       $('scanBtn').disabled = true;
       $('stopBtn').disabled = false;
-      setStatus('loading metrics…');
+      setStatus('loading metrics...');
 
       const metricsPath = $('metricsPath').value.trim() || '../metrics_summary.json';
       const { url: metricsUrl, res } = await fetchFirstOk(candidateUrls(metricsPath));
       const metrics = await res.json();
       const runs = Array.isArray(metrics.runs) ? metrics.runs : [];
 
-      // baseline, non-adversarial: exclude adversarial paths
       const baselineRuns = runs.filter(r => {
         const p = normalizeHistoryPath(r.path);
         return p && !p.includes('polynomial_game_adversarial/');
       });
 
-      // must fail at the end
       const failed = baselineRuns.filter(r => r.final_success === false);
-      setStatus(`failed candidates: ${failed.length} — scanning histories…`);
+      setStatus(`failed candidates: ${failed.length} -- scanning histories...`);
 
-      // populate selects from metadata (before scanning)
       renderSelect($('categorySel'), uniqSorted(baselineRuns.map(r => r.category)), 'All categories');
       renderSelect($('mixSel'), uniqSorted(baselineRuns.map(r => r.model_mix)), 'All mixes');
       renderSelect($('finalAgentSel'), ['Analyst A','Builder B','Critic C','Delegate D'], 'All final agents');
 
       const out = [];
+      const allFailed = [];
       const concurrency = 6;
       let idx = 0;
 
@@ -645,18 +723,19 @@
             const history = await hres.json();
             const rep = computeRepeatInfo(history);
             if (!rep) continue;
-            if ((rep.priorCount || 0) < 1) continue; // must have seen final x earlier
-            out.push({
+            const merged = {
               ...rep,
               model_mix: meta.model_mix,
               category: meta.category,
               pathRel: rel,
-            });
+            };
+            allFailed.push(merged);
+            if ((rep.priorCountLast6 || 0) < 1) continue;
+            out.push(merged);
           } catch (e) {
-            // ignore missing files; keep scanning
           }
           if (cur % 20 === 0) {
-            setStatus(`scanning… ${cur+1}/${failed.length} (matches ${out.length})`);
+            setStatus(`scanning... ${cur+1}/${failed.length} (matches ${out.length})`);
           }
         }
       }
@@ -664,28 +743,27 @@
       await Promise.all(Array.from({length: concurrency}, () => worker()));
 
       const filtered = applyFilters(out);
-      setStatus(`done — scanned ${failed.length} failed runs`, 'good');
+      setStatus(`done -- scanned ${failed.length} failed runs`, 'good');
       $('scanBtn').disabled = false;
       $('stopBtn').disabled = true;
 
-      // keep a stable sort: most prior repeats + biggest |delta|
       filtered.sort((a,b) => {
-        if ((b.priorCount||0) !== (a.priorCount||0)) return (b.priorCount||0)-(a.priorCount||0);
+        if ((b.priorCountLast6||0) !== (a.priorCountLast6||0)) return (b.priorCountLast6||0)-(a.priorCountLast6||0);
         const ad = Math.abs(a.delta||0), bd = Math.abs(b.delta||0);
         if (bd !== ad) return bd - ad;
         return 0;
       });
 
+      renderLast6Chart(allFailed, failed.length);
       renderStats(filtered, failed.length);
       renderRunList(filtered);
       $('detail').innerHTML = `<div class="meta">Select a run from the list to view the final argumentation.</div>`;
       $('detailPill').textContent = 'none selected';
 
-      // allow re-filtering without re-scanning (simple: re-render from cached out)
       const rerender = () => {
         const now = applyFilters(out);
         now.sort((a,b) => {
-          if ((b.priorCount||0) !== (a.priorCount||0)) return (b.priorCount||0)-(a.priorCount||0);
+          if ((b.priorCountLast6||0) !== (a.priorCountLast6||0)) return (b.priorCountLast6||0)-(a.priorCountLast6||0);
           const ad = Math.abs(a.delta||0), bd = Math.abs(b.delta||0);
           if (bd !== ad) return bd - ad;
           return 0;
@@ -708,11 +786,10 @@
     });
     $('stopBtn').onclick = () => {
       stopRequested = true;
-      setStatus('stopping…', 'warn');
+      setStatus('stopping...', 'warn');
       $('stopBtn').disabled = true;
     };
 
-    // initial UI defaults
     renderSelect($('categorySel'), [], 'All categories');
     renderSelect($('mixSel'), [], 'All mixes');
     renderSelect($('finalAgentSel'), [], 'All final agents');

@@ -1,0 +1,84 @@
+Create a publication-quality scientific figure for a master's thesis on multi-agent LLM evaluation. The style must be clean, white, minimal, and strictly academic. Do not add decorative styling.
+
+Follow these rules exactly:
+
+GENERAL STYLE
+- White background only.
+- No gradients, shadows, textures, 3D effects, rounded glossy elements, or decorative icons.
+- No chartjunk.
+- Use Arial or Helvetica-like sans-serif throughout.
+- Use black or very dark gray text only.
+- Use thin light-gray horizontal grid lines only; no vertical grid unless absolutely necessary.
+- Remove top and right spines.
+- Keep the layout compact, balanced, and publication-ready.
+
+SEMANTIC ENCODING SYSTEM
+- Color always encodes model identity or model composition, never prior condition and never game/domain.
+- Fixed colors:
+  - GPT-5 = #0072B2
+  - Claude = #D55E00
+  - Llama = #009E73
+  - Mixed-model committee = #CC79A7
+  - Overall baseline / aggregate / neutral reference = #4D4D4D
+  - Optional extra accent only if absolutely necessary = #F5C710
+- Never use rainbow colormaps.
+- Never use red/green as the main comparison pair.
+- For continuous scales use viridis or cividis.
+
+PRIOR CONDITION ENCODING
+- Uniform / no prior = solid line
+- Human prior = dashed line
+- LLM prior = dotted line
+
+SETUP ENCODING
+- Single agent / single model = circle marker
+- Same-model committee = square marker
+- Mixed-model committee = diamond marker
+- 2 vs 2 = triangle-up marker
+
+DOMAIN / TASK ENCODING
+- Do not give separate colors to Polynomial Exchange vs Cyber Game.
+- Represent domain using separate panels/facets with aligned style.
+- Use shared axis scales across panels whenever the metrics are comparable.
+
+CATEGORY ORDER
+- Keep the order fixed across all figures:
+  - Models: GPT-5, Claude, Llama, Mixed
+  - Priors: Uniform, Human prior, LLM prior
+- Never reorder categories unless explicitly instructed.
+
+TYPOGRAPHY AND LABELS
+- Use serif font family only (e.g., Times New Roman, Times, or DejaVu Serif). Do not use sans-serif.
+- Axis labels concise and scientific.
+- Tick labels short and readable.
+- Legend short, explicit, and placed outside the plotting area when possible.
+- No title unless explicitly requested; prefer panel labels and let the caption do the explanatory work.
+- Use consistent capitalization across all figures.
+
+STATISTICAL DISPLAY
+- Show uncertainty where relevant using confidence intervals, standard deviations, or standard errors as provided.
+- Prefer point + interval plots over heavy bar charts when the data permit.
+- For distributions, prefer boxplots/violins with overlaid points rather than decorative summaries.
+- If a figure becomes visually crowded, split it into panels instead of adding more encodings.
+
+ACCESSIBILITY AND PRINT SAFETY
+- Make sure the figure remains interpretable in grayscale.
+- Do not rely on color alone; preserve distinctions with linetypes and/or markers.
+- Keep contrast high.
+- Avoid bright yellow on white except as a minor accent.
+- Ensure legends and labels are readable at final export size.
+
+EXPORT
+- Produce vector output where possible (PDF or SVG).
+- Also provide a high-resolution PNG version.
+- Size the figure for scientific writing, not for slides.
+- Make it look like it belongs in the same thesis as every other figure.
+
+Before finalizing, check:
+1. Is the color meaning consistent with the global system?
+2. Are priors encoded only by linetype?
+3. Are setups encoded only by marker shape?
+4. Is the figure readable on white paper and in grayscale?
+5. Does it look restrained, scientific, and consistent with the rest of the thesis?
+
+Now generate the figure using these rules.

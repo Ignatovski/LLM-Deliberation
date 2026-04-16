@@ -1,0 +1,300 @@
+from __future__ import annotations
+
+import json
+from collections import defaultdict
+from pathlib import Path
+from statistics import mean
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import font_manager as fm
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT_DIR = ROOT / "viewer" / "plots" / "thesis" / "cross-Evaluation"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+POLY_METRICS_PATH = ROOT / "viewer" / "metrics_summary.json"
+ADV_OBSTRUCTIVE_PATH = ROOT / "summarys" / "metrics_summary.adversarial_obstructive.json"
+ADV_TARGETED_PATH = ROOT / "summarys" / "metrics_summary.adversarial_outcome_targeted.json"
+CYBER_ROOT = ROOT / "cyber_negotiation_v1" / "games_descriptions" / "cyber_game" / "output"
+
+TNR_PATH = Path(r"C:\Windows\Fonts\times.ttf")
+if TNR_PATH.exists():
+    fm.fontManager.addfont(str(TNR_PATH))
+
+plt.rcParams.update(
+    {
+        "font.family": ["Times New Roman"],
+        "font.size": 11,
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        "axes.edgecolor": "#222222",
+        "axes.labelcolor": "#111111",
+        "xtick.color": "#111111",
+        "ytick.color": "#111111",
+        "figure.facecolor": "white",
+        "axes.facecolor": "white",
+        "savefig.facecolor": "white",
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
+    }
+)
+
+COLORS = {
+    "Baseline": "#2563EB",
+    "Adversarial": "#DC2626", 
+    "Improvement": "#10B981",
+    "Degradation": "#F59E0B",
+    "Neutral": "#6B7280",
+}
+
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+def rate(values: Iterable[Any]) -> float:
+    vals = list(values)
+    return sum(1 for v in vals if bool(v)) / len(vals) if vals else float("nan")
+
+def mean_optional(values: Iterable[Optional[float]]) -> Optional[float]:
+    numeric = [float(v) for v in values if v is not None]
+    return mean(numeric) if numeric else None
+
+def model_family(model_mix: str) -> str:
+    if model_mix == "gpt-5x4":
+        return "GPT-5"
+    if model_mix == "claude-sonnet-4-5x4":
+        return "Claude"
+    if model_mix == "Llama-3.3-70B-Instructx4":
+        return "Llama"
+    return "Mixed"
+
+def agent_outcome_mean(rows: Sequence[Dict[str, Any]], agent: str) -> Optional[float]:
+    vals = []
+    for row in rows:
+        scores = row.get("scores_outcome") or row.get("scores") or {}
+        if isinstance(scores, dict) and scores.get(agent) is not None:
+            vals.append(float(scores[agent]))
+    return mean(vals) if vals else None
+
+def load_runs(path: Path) -> List[Dict[str, Any]]:
+    runs = list(load_json(path).get("runs") or [])
+    for row in runs:
+        row["family"] = model_family(str(row.get("model_mix") or ""))
+    return runs
+
+def load_cyber_latest() -> List[Dict[str, Any]]:
+    latest: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+    for metrics_path in sorted(CYBER_ROOT.rglob("metrics_*.json")):
+        relative_parts = metrics_path.relative_to(CYBER_ROOT).parts
+        if not relative_parts or relative_parts[0] == "llm_evaluator":
+            continue
+        payload = load_json(metrics_path)
+        report = dict(payload.get("run_report") or {})
+        if not report:
+            continue
+        category = relative_parts[0]
+        scenario_id = str(report.get("scenario_id") or "")
+        condition_id = str(report.get("condition_id") or "")
+        run_id = str(report.get("run_id") or metrics_path.stem.replace("metrics_", "", 1))
+        if not category or not scenario_id or not condition_id:
+            continue
+        history_path = metrics_path.parent / f"{run_id}.json"
+        if not history_path.exists():
+            continue
+        history = load_json(history_path)
+        if history.get("run_status") != "completed":
+            continue
+
+        record = {
+            "category": category,
+            "scenario_id": scenario_id,
+            "condition_id": condition_id,
+            "run_id": run_id,
+            "metrics_path": metrics_path,
+            "report": report,
+        }
+        key = (category, scenario_id, condition_id)
+        current = latest.get(key)
+        if current is None or metrics_path.stat().st_mtime > current["metrics_path"].stat().st_mtime:
+            latest[key] = record
+    return sorted(latest.values(), key=lambda r: (r["category"], r["scenario_id"], int(r["condition_id"][1:]) if len(r["condition_id"]) > 1 and r["condition_id"][1:].isdigit() else 999))
+
+def cyber_condition_stats(records: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, float]]:
+    by_cond: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        by_cond[record["condition_id"]].append(record)
+
+    out: Dict[str, Dict[str, float]] = {}
+    for cond, rows in by_cond.items():
+        wrong: List[float] = []
+        under: List[float] = []
+        for row in rows:
+            report = row["report"]
+            headline = report.get("headline_metrics") or {}
+            derived = report.get("derived_metrics") or {}
+            if derived.get("WrongConsensusExact") is not None:
+                wrong.append(float(derived.get("WrongConsensusExact")))
+            if headline.get("SeverityBias") is not None:
+                b = float(headline.get("SeverityBias"))
+                under.append(1.0 if b < 0 else 0.0)
+        out[cond] = {
+            "wrong": mean(wrong),
+            "under": mean(under),
+        }
+    return out
+
+def make_clear_trust_risks() -> None:
+    # Load data
+    poly_runs = load_runs(POLY_METRICS_PATH)
+    obstructive_runs = load_runs(ADV_OBSTRUCTIVE_PATH)
+    targeted_runs = load_runs(ADV_TARGETED_PATH)
+    cyber_records = load_cyber_latest()
+    cyber_stats = cyber_condition_stats(cyber_records)
+    
+    # Filter for exact model families
+    baseline = [r for r in poly_runs if r["family"] in ("GPT-5", "Claude")]
+    obstructive = [r for r in obstructive_runs if r["family"] in ("GPT-5", "Claude")]
+    targeted = [r for r in targeted_runs if r["family"] in ("GPT-5", "Claude")]
+    
+    # Calculate baseline vs obstructive success rates
+    baseline_success_rate = rate(r.get("any_success") for r in baseline)
+    obstructive_success_rate = rate(r.get("any_success") for r in obstructive)
+    success_drop = baseline_success_rate - obstructive_success_rate
+    
+    # Calculate Claude utility loss under targeted manipulation
+    claude_baseline = [r for r in poly_runs if r["family"] == "Claude"]
+    claude_targeted = [r for r in targeted if r["family"] == "Claude"]
+    
+    coop_agents = ["Analyst A", "Builder B", "Critic C"]
+    baseline_agent_means = [agent_outcome_mean(claude_baseline, agent) for agent in coop_agents]
+    targeted_agent_means = [agent_outcome_mean(claude_targeted, agent) for agent in coop_agents]
+    
+    baseline_coop_utility = mean(v for v in baseline_agent_means if v is not None)
+    targeted_coop_utility = mean(v for v in targeted_agent_means if v is not None)
+    utility_loss = (baseline_coop_utility - targeted_coop_utility) / baseline_coop_utility if baseline_coop_utility else 0
+    
+    # Calculate cybersecurity metrics (without cookies)
+    committee_conds = ["C3", "C4", "C5", "C6", "C7"]
+    wrong_consensus = mean(cyber_stats[c]["wrong"] for c in committee_conds)
+    under_severity = mean(cyber_stats[c]["under"] for c in committee_conds)
+    
+    # Create the visualization
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10), dpi=300)
+    fig.suptitle("Trust Risks: Clear Before/After Comparisons", fontsize=14, fontweight="bold")
+    
+    # 1. Success Rate Comparison (Before/After)
+    ax = axes[0, 0]
+    categories = ["Baseline\nCooperative", "Adversarial\nObstructive"]
+    values = [baseline_success_rate, obstructive_success_rate]
+    colors = [COLORS["Baseline"], COLORS["Adversarial"]]
+    
+    bars = ax.bar(categories, values, color=colors, edgecolor="#333333", linewidth=0.8)
+    ax.set_ylabel("Success Rate")
+    ax.set_title("A. Success Rate: Cooperative vs Obstructive", fontsize=12, fontweight="bold")
+    ax.set_ylim(0, 1.0)
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    
+    # Add percentage labels
+    for bar, val in zip(bars, values):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + 0.02, 
+                f"{val:.1%}", ha="center", va="bottom", fontweight="bold")
+    
+    # Add drop annotation
+    ax.annotate(f"Drop: {success_drop:.1%}", 
+                xy=(0.5, (baseline_success_rate + obstructive_success_rate)/2),
+                xytext=(0.5, min(baseline_success_rate, obstructive_success_rate) - 0.15),
+                arrowprops=dict(arrowstyle="->", color=COLORS["Degradation"], lw=2),
+                ha="center", fontsize=10, color=COLORS["Degradation"], fontweight="bold")
+    
+    # 2. Utility Comparison (Before/After)
+    ax = axes[0, 1]
+    categories = ["Claude\nBaseline", "Claude\nTargeted"]
+    values = [baseline_coop_utility, targeted_coop_utility]
+    colors = [COLORS["Baseline"], COLORS["Adversarial"]]
+    
+    bars = ax.bar(categories, values, color=colors, edgecolor="#333333", linewidth=0.8)
+    ax.set_ylabel("Average Agent Utility")
+    ax.set_title("B. Utility: Claude Before vs After Targeted Manipulation", fontsize=12, fontweight="bold")
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    
+    # Add value labels
+    for bar, val in zip(bars, values):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + max(values)*0.02, 
+                f"{val:.2f}", ha="center", va="bottom", fontweight="bold")
+    
+    # Add loss annotation
+    ax.annotate(f"Loss: {utility_loss:.1%}", 
+                xy=(0.5, (baseline_coop_utility + targeted_coop_utility)/2),
+                xytext=(0.5, min(baseline_coop_utility, targeted_coop_utility) - max(values)*0.15),
+                arrowprops=dict(arrowstyle="->", color=COLORS["Degradation"], lw=2),
+                ha="center", fontsize=10, color=COLORS["Degradation"], fontweight="bold")
+    
+    # 3. Cybersecurity Wrong Consensus Rate
+    ax = axes[1, 0]
+    categories = ["Correct\nConsensus", "Wrong\nConsensus"]
+    values = [1 - wrong_consensus, wrong_consensus]
+    colors = [COLORS["Improvement"], COLORS["Degradation"]]
+    
+    bars = ax.bar(categories, values, color=colors, edgecolor="#333333", linewidth=0.8)
+    ax.set_ylabel("Rate")
+    ax.set_title("C. Cybersecurity: Consensus Accuracy", fontsize=12, fontweight="bold")
+    ax.set_ylim(0, 1.0)
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    
+    # Add percentage labels
+    for bar, val in zip(bars, values):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + 0.02, 
+                f"{val:.1%}", ha="center", va="bottom", fontweight="bold")
+    
+    # 4. Cybersecurity Severity Bias
+    ax = axes[1, 1]
+    categories = ["Under-\nestimate", "Correct/\nOver-estimate"]
+    values = [under_severity, 1 - under_severity]
+    colors = [COLORS["Degradation"], COLORS["Improvement"]]
+    
+    bars = ax.bar(categories, values, color=colors, edgecolor="#333333", linewidth=0.8)
+    ax.set_ylabel("Rate")
+    ax.set_title("D. Cybersecurity: Severity Assessment Bias", fontsize=12, fontweight="bold")
+    ax.set_ylim(0, 1.0)
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    
+    # Add percentage labels
+    for bar, val in zip(bars, values):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + 0.02, 
+                f"{val:.1%}", ha="center", va="bottom", fontweight="bold")
+    
+    # Add data source notes
+    fig.text(0.02, 0.02, 
+             f"Data: Baseline ({len(baseline)} runs), Obstructive ({len(obstructive)} runs), Targeted ({len(claude_targeted)} runs), Cybersecurity (35 runs)",
+             fontsize=8, style="italic", color="#666666")
+    
+    plt.tight_layout()
+    
+    # Save the figure
+    path = OUT_DIR / "clear_trust_risks_comparison.png"
+    pdf_path = OUT_DIR / "clear_trust_risks_comparison.pdf"
+    fig.savefig(path, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf_path, bbox_inches="tight")
+    plt.close(fig)
+    
+    print(f"Wrote {path}")
+    print(f"Wrote {pdf_path}")
+    
+    # Print summary for verification
+    print("\n=== CLEAR VISUALIZATION SUMMARY ===")
+    print(f"A. Success Rate: {baseline_success_rate:.1%} -> {obstructive_success_rate:.1%} (Drop: {success_drop:.1%})")
+    print(f"B. Claude Utility: {baseline_coop_utility:.2f} -> {targeted_coop_utility:.2f} (Loss: {utility_loss:.1%})")
+    print(f"C. Cybersecurity Wrong Consensus: {wrong_consensus:.1%}")
+    print(f"D. Cybersecurity Under-severity: {under_severity:.1%}")
+
+if __name__ == "__main__":
+    make_clear_trust_risks()
