@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+from thesis_plot_style import apply_thesis_style
+
 BASELINE = Path('summarys/metrics_summary.generated.json')
 OBSTRUCT = Path('summarys/metrics_summary.adversarial_obstructive.json')
 
@@ -31,9 +33,7 @@ for label, mix in MODELS.items():
     counts[label] = [base_n, obs_n]
 
 # Plot
-plt.rcParams.update({
-    'font.size': 12,
-})
+apply_thesis_style(font_size=12, y_grid=True)
 fig, ax = plt.subplots(figsize=(6.5, 4), dpi=300)
 xs = list(range(len(x_labels)))
 

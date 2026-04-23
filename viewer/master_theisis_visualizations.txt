@@ -6,7 +6,7 @@ GENERAL STYLE
 - White background only.
 - No gradients, shadows, textures, 3D effects, rounded glossy elements, or decorative icons.
 - No chartjunk.
-- Use Arial or Helvetica-like sans-serif throughout.
+- Use Computer Modern Roman throughout. If it is unavailable, use a Computer Modern-compatible serif fallback such as CMU Serif or Latin Modern Roman. Do not use sans-serif.
 - Use black or very dark gray text only.
 - Use thin light-gray horizontal grid lines only; no vertical grid unless absolutely necessary.
 - Remove top and right spines.
@@ -48,7 +48,7 @@ CATEGORY ORDER
 - Never reorder categories unless explicitly instructed.
 
 TYPOGRAPHY AND LABELS
-- Use serif font family only (e.g., Times New Roman, Times, or DejaVu Serif). Do not use sans-serif.
+- Use Computer Modern Roman for all figure text. If an exact match is unavailable, use CMU Serif or Latin Modern Roman before any other serif fallback. Do not use sans-serif.
 - Axis labels concise and scientific.
 - Tick labels short and readable.
 - Legend short, explicit, and placed outside the plotting area when possible.

@@ -3,20 +3,15 @@ from html.parser import HTMLParser
 from html import unescape
 from pathlib import Path
 import matplotlib.pyplot as plt
-from matplotlib import font_manager as fm
 import numpy as np
+
+from thesis_plot_style import apply_thesis_style
 
 HTML_PATH = Path('cyber_negotiation_v1/games_descriptions/cyber_game/output/research_overview_by_category.html')
 OUT_DIR = Path('viewer/plots/thesis/cybersecurity')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Force Times New Roman
-_TNR_PATH = r"C:\Windows\Fonts\times.ttf"
-fm.fontManager.addfont(_TNR_PATH)
-plt.rcParams.update({
-    'font.family': ['Times New Roman'],
-    'font.size': 9,
-})
+apply_thesis_style(font_size=9, y_grid=False)
 
 class TableParser(HTMLParser):
     def __init__(self):

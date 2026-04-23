@@ -2,13 +2,15 @@ import csv
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+from thesis_plot_style import apply_thesis_style
+
 csv_path = Path('viewer/plots/thesis/adversarial_final_x_minus2_table.csv')
 rows = list(csv.DictReader(csv_path.open()))
 
 columns = list(rows[0].keys()) if rows else []
 cell_text = [[r[c] for c in columns] for r in rows]
 
-plt.rcParams.update({'font.size': 12})
+apply_thesis_style(font_size=12, y_grid=False)
 fig, ax = plt.subplots(figsize=(6.5, 3.2), dpi=300)
 ax.axis('off')
 

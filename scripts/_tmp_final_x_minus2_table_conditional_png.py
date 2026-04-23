@@ -2,6 +2,8 @@ import csv
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+from thesis_plot_style import apply_thesis_style
+
 csv_path = Path('viewer/plots/thesis/adversarial_final_x_minus2_table_conditional.csv')
 rows = list(csv.DictReader(csv_path.open()))
 
@@ -9,7 +11,7 @@ rows = list(csv.DictReader(csv_path.open()))
 columns = ['Condition', 'Model', 'Final x = -2 | Any success (n)', 'Any success (n)', 'Final x = -2 | Any success (%)']
 cell_text = [[r[c] for c in columns] for r in rows]
 
-plt.rcParams.update({'font.size': 12})
+apply_thesis_style(font_size=12, y_grid=False)
 fig, ax = plt.subplots(figsize=(7.2, 3.2), dpi=300)
 ax.axis('off')
 

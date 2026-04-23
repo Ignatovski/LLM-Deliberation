@@ -8,7 +8,8 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import font_manager as fm
+
+from thesis_plot_style import apply_thesis_style
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "viewer" / "plots" / "thesis" / "cross-Evaluation"
@@ -19,27 +20,7 @@ ADV_OBSTRUCTIVE_PATH = ROOT / "summarys" / "metrics_summary.adversarial_obstruct
 ADV_TARGETED_PATH = ROOT / "summarys" / "metrics_summary.adversarial_outcome_targeted.json"
 CYBER_ROOT = ROOT / "cyber_negotiation_v1" / "games_descriptions" / "cyber_game" / "output"
 
-TNR_PATH = Path(r"C:\Windows\Fonts\times.ttf")
-if TNR_PATH.exists():
-    fm.fontManager.addfont(str(TNR_PATH))
-
-plt.rcParams.update(
-    {
-        "font.family": ["Times New Roman"],
-        "font.size": 11,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "axes.edgecolor": "#222222",
-        "axes.labelcolor": "#111111",
-        "xtick.color": "#111111",
-        "ytick.color": "#111111",
-        "figure.facecolor": "white",
-        "axes.facecolor": "white",
-        "savefig.facecolor": "white",
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-    }
-)
+apply_thesis_style(font_size=11, y_grid=True)
 
 COLORS = {
     "Baseline": "#2563EB",
