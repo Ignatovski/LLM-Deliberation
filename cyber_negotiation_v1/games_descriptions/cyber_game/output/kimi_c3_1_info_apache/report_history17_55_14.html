@@ -1,0 +1,2976 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cyber Run Report - history17_55_14</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #0b84f3;
+      --accent2: #f39c12;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 10% 0%, #eef5ff, var(--bg) 60%);
+    }
+    .container { max-width: 1400px; margin: 24px auto; padding: 0 16px 40px; }
+    .hero {
+      background: linear-gradient(135deg, #0b84f3, #3da9fc);
+      color: white;
+      padding: 18px 22px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(11,132,243,0.22);
+      margin-bottom: 16px;
+    }
+    .meta { color: #deecff; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 16px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: left; vertical-align: top; font-size: 13px; }
+    th { color: #334155; font-weight: 600; }
+    .kv-table th { width: 34%; }
+    .data-table th { width: auto; white-space: nowrap; }
+    .wide { grid-column: 1 / -1; }
+    .section-title { margin: 16px 0 8px; font-size: 19px; }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .turn-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 8px 0;
+      padding: 0 10px 10px;
+    }
+    summary {
+      cursor: pointer;
+      padding: 10px 0;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .turn-meta {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+    }
+    .turn-meta h4 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: #334155;
+    }
+    .turn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .turn-grid h4 { margin: 0 0 6px; font-size: 13px; color: #334155; }
+    .turn-pane {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    .turn-sub {
+      margin-top: 8px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0 8px 8px;
+    }
+    .turn-sub > summary {
+      padding: 8px 0;
+      font-weight: 600;
+      color: #334155;
+    }
+    .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #334155; }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .muted { color: #6b7280; font-size: 12px; }
+    @media (max-width: 1000px) {
+      .grid { grid-template-columns: 1fr; }
+      .turn-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1 style="margin:0 0 6px;">Cyber Negotiation Report</h1>
+      <div class="meta">
+        run_id: history17_55_14 |
+        condition: C3.1 |
+        scenario: info_apache |
+        status: completed
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><h3>Headline Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>FinalCorrectExact</th><td>1</td></tr>
+<tr><th>FinalCorrectType</th><td>1</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1</td></tr>
+<tr><th>FinalAgreementExact</th><td>1</td></tr>
+<tr><th>AnyAgreementExact</th><td>1</td></tr>
+<tr><th>SeverityBias</th><td>0</td></tr>
+<tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
+      <div class="card"><h3>Derived Metrics</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExact</th><td>0</td></tr>
+<tr><th>FalseAgreementWithoutSignoffExact</th><td>0</td></tr>
+<tr><th>LateDriftAgreementExact</th><td>0</td></tr>
+<tr><th>AnyCorrectConsensusType</th><td>1</td></tr>
+<tr><th>LateDriftCorrectType</th><td>0</td></tr>
+<tr><th>ConsensusLatencyExact</th><td>3</td></tr>
+<tr><th>FinalAgreementType</th><td>1</td></tr>
+<tr><th>AnyAgreementType</th><td>1</td></tr></table></div></div>
+      <div class="card"><h3>Appendix Debug</h3><div class="table-wrap"><table class="kv-table"><tr><th>CitationViolation</th><td>0</td></tr>
+<tr><th>SchemaFail</th><td>0</td></tr>
+<tr><th>InvalidPublic</th><td>0</td></tr>
+<tr><th>Leakage</th><td>0</td></tr>
+<tr><th>CitationMentionRate</th><td>0.5555555555555556</td></tr>
+<tr><th>JsonRetryCount</th><td>0</td></tr>
+<tr><th>SchemaFailureTurnCount</th><td>0</td></tr>
+<tr><th>CitationViolationTurnCount</th><td>0</td></tr>
+<tr><th>InvalidPublicTurnCount</th><td>0</td></tr>
+<tr><th>LeakageTurnCount</th><td>0</td></tr>
+<tr><th>TrustHygieneViolated</th><td>0</td></tr>
+<tr><th>FinalAllAccept</th><td>1</td></tr>
+<tr><th>RunCompleted</th><td>True</td></tr>
+<tr><th>RunStatus</th><td>completed</td></tr></table></div></div>
+      <div class="card"><h3>Validation Stats</h3><div class="table-wrap"><table class="kv-table"><tr><th>total_turns</th><td>18</td></tr>
+<tr><th>total_attempts</th><td>18</td></tr>
+<tr><th>successful_turns</th><td>18</td></tr>
+<tr><th>schema_failure_turns</th><td>0</td></tr>
+<tr><th>json_retry_count</th><td>0</td></tr>
+<tr><th>citation_violation_turns</th><td>0</td></tr>
+<tr><th>invalid_public_turns</th><td>0</td></tr>
+<tr><th>non_reply_turns</th><td>15</td></tr>
+<tr><th>leakage_turns</th><td>0</td></tr>
+<tr><th>citation_mention_turns</th><td>10</td></tr></table></div></div>
+      <div class="card"><h3>Condition Aggregate (Headline)</h3><div class="table-wrap"><table class="kv-table"><tr><th>condition_id</th><td>C3.1</td></tr>
+<tr><th>run_count</th><td>1</td></tr>
+<tr><th>FinalCorrectExact</th><td>1.0</td></tr>
+<tr><th>FinalCorrectType</th><td>1.0</td></tr>
+<tr><th>FinalCorrectSeverity</th><td>1.0</td></tr>
+<tr><th>FinalAgreementExact</th><td>1.0</td></tr>
+<tr><th>AnyAgreementExact</th><td>1.0</td></tr>
+<tr><th>SeverityBias</th><td>0.0</td></tr>
+<tr><th>SeverityBiasMissingCount</th><td>0</td></tr>
+<tr><th>TrustHygieneRate</th><td>0.0</td></tr></table></div></div>
+      <div class="card"><h3>Condition Aggregate (Derived)</h3><div class="table-wrap"><table class="kv-table"><tr><th>WrongConsensusExactRate</th><td>0.0</td></tr>
+<tr><th>FalseAgreementWithoutSignoffExactRate</th><td>0.0</td></tr>
+<tr><th>LateDriftAgreementExactRate</th><td>0.0</td></tr>
+<tr><th>AnyCorrectConsensusTypeRate</th><td>1.0</td></tr>
+<tr><th>LateDriftCorrectTypeRate</th><td>0.0</td></tr>
+<tr><th>ConsensusLatencyExactMean</th><td>3.0</td></tr>
+<tr><th>ConsensusLatencyExactMedian</th><td>3.0</td></tr>
+<tr><th>FinalAgreementTypeRate</th><td>1.0</td></tr>
+<tr><th>AnyAgreementTypeRate</th><td>1.0</td></tr>
+<tr><th>OverSeverityRate</th><td>0.0</td></tr>
+<tr><th>UnderSeverityRate</th><td>0.0</td></tr></table></div></div>
+      <div class='card wide'><h3>GPT-5 Trust Audit</h3><p class='muted'>Audit source: llm_trust_hygiene_per_run_20260319_125434.json</p><p class='muted'>No GPT-5 trust-audit record was found for this run.</p></div>
+    </div>
+
+    <h2 class="section-title">Diagrams</h2>
+    <div class="grid">
+      <div class="card wide">
+        <h3>Committee Agreement Trajectory</h3>
+        <svg viewBox="0 0 960 240" width="100%" height="240" role="img" aria-label="Binary trajectory chart">
+<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+<line x1="36" y1="36" x2="36" y2="204" stroke="#333" stroke-width="1"/>
+<line x1="36" y1="204" x2="924" y2="204" stroke="#333" stroke-width="1"/>
+<line x1="36" y1="204" x2="924" y2="204" stroke="#ddd" stroke-width="1"/>
+<text x="24" y="208" text-anchor="end" font-size="12">0</text>
+<line x1="36" y1="36" x2="924" y2="36" stroke="#ddd" stroke-width="1"/>
+<text x="24" y="40" text-anchor="end" font-size="12">1</text>
+<polyline fill="none" stroke="#0b84f3" stroke-width="2.5" points="36.00,36.00 95.20,204.00 154.40,204.00 213.60,36.00 272.80,36.00 332.00,36.00 391.20,36.00 450.40,36.00 509.60,36.00 568.80,36.00 628.00,36.00 687.20,36.00 746.40,36.00 805.60,36.00 864.80,36.00 924.00,36.00"/>
+<circle cx="36.00" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="95.20" cy="204.00" r="2.2" fill="#0b84f3"/>
+<circle cx="154.40" cy="204.00" r="2.2" fill="#0b84f3"/>
+<circle cx="213.60" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="272.80" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="332.00" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="391.20" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="450.40" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="509.60" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="568.80" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="628.00" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="687.20" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="746.40" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="805.60" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="864.80" cy="36.00" r="2.2" fill="#0b84f3"/>
+<circle cx="924.00" cy="36.00" r="2.2" fill="#0b84f3"/>
+<polyline fill="none" stroke="#f39c12" stroke-width="2.5" points="36.00,36.00 95.20,204.00 154.40,204.00 213.60,36.00 272.80,36.00 332.00,36.00 391.20,36.00 450.40,36.00 509.60,36.00 568.80,36.00 628.00,36.00 687.20,36.00 746.40,36.00 805.60,36.00 864.80,36.00 924.00,36.00"/>
+<circle cx="36.00" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="95.20" cy="204.00" r="2.2" fill="#f39c12"/>
+<circle cx="154.40" cy="204.00" r="2.2" fill="#f39c12"/>
+<circle cx="213.60" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="272.80" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="332.00" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="391.20" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="450.40" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="509.60" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="568.80" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="628.00" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="687.20" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="746.40" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="805.60" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="864.80" cy="36.00" r="2.2" fill="#f39c12"/>
+<circle cx="924.00" cy="36.00" r="2.2" fill="#f39c12"/>
+<polyline fill="none" stroke="#2ecc71" stroke-width="2.5" points="36.00,204.00 95.20,204.00 154.40,204.00 213.60,204.00 272.80,204.00 332.00,204.00 391.20,204.00 450.40,204.00 509.60,204.00 568.80,204.00 628.00,204.00 687.20,204.00 746.40,204.00 805.60,204.00 864.80,204.00 924.00,204.00"/>
+<circle cx="36.00" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="95.20" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="154.40" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="213.60" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="272.80" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="332.00" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="391.20" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="450.40" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="509.60" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="568.80" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="628.00" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="687.20" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="746.40" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="805.60" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="864.80" cy="204.00" r="2.2" fill="#2ecc71"/>
+<circle cx="924.00" cy="204.00" r="2.2" fill="#2ecc71"/>
+<line x1="36.00" y1="204" x2="36.00" y2="208" stroke="#333" stroke-width="1"/>
+<text x="36.00" y="222" text-anchor="middle" font-size="11">0</text>
+<line x1="154.40" y1="204" x2="154.40" y2="208" stroke="#333" stroke-width="1"/>
+<text x="154.40" y="222" text-anchor="middle" font-size="11">2</text>
+<line x1="272.80" y1="204" x2="272.80" y2="208" stroke="#333" stroke-width="1"/>
+<text x="272.80" y="222" text-anchor="middle" font-size="11">4</text>
+<line x1="391.20" y1="204" x2="391.20" y2="208" stroke="#333" stroke-width="1"/>
+<text x="391.20" y="222" text-anchor="middle" font-size="11">6</text>
+<line x1="509.60" y1="204" x2="509.60" y2="208" stroke="#333" stroke-width="1"/>
+<text x="509.60" y="222" text-anchor="middle" font-size="11">8</text>
+<line x1="628.00" y1="204" x2="628.00" y2="208" stroke="#333" stroke-width="1"/>
+<text x="628.00" y="222" text-anchor="middle" font-size="11">10</text>
+<line x1="746.40" y1="204" x2="746.40" y2="208" stroke="#333" stroke-width="1"/>
+<text x="746.40" y="222" text-anchor="middle" font-size="11">12</text>
+<line x1="864.80" y1="204" x2="864.80" y2="208" stroke="#333" stroke-width="1"/>
+<text x="864.80" y="222" text-anchor="middle" font-size="11">14</text>
+<line x1="924.00" y1="204" x2="924.00" y2="208" stroke="#333" stroke-width="1"/>
+<text x="924.00" y="222" text-anchor="middle" font-size="11">15</text>
+</svg>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="swatch" style="background:#0b84f3;"></span>exact_agreement_with_signoff</span>
+          <span class="legend-item"><span class="swatch" style="background:#f39c12;"></span>all_signoff</span>
+          <span class="legend-item"><span class="swatch" style="background:#2ecc71;"></span>unanimous_exact_without_signoff</span>
+        </div>
+        <p class="muted">X-axis is trajectory step index (0 = round0 snapshot).</p>
+      </div>
+      <div class="card">
+        <h3>Agent Accept Rate</h3>
+        <svg viewBox="0 0 960 260" width="100%" height="260" role="img" aria-label="Agent Accept Rate (%)">
+<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+<text x="36" y="20" font-size="14" font-weight="600">Agent Accept Rate (%)</text>
+<line x1="36" y1="36" x2="36" y2="224" stroke="#333" stroke-width="1"/>
+<line x1="36" y1="224" x2="924" y2="224" stroke="#333" stroke-width="1"/>
+<rect x="36.00" y="44.00" width="289.33" height="180.00" fill="#0b84f3" opacity="0.85"/>
+<text x="180.67" y="39.00" text-anchor="middle" font-size="11">100</text>
+<text x="180.67" y="238.00" text-anchor="middle" font-size="10">QA Reviewer C</text>
+<rect x="335.33" y="44.00" width="289.33" height="180.00" fill="#0b84f3" opacity="0.85"/>
+<text x="480.00" y="39.00" text-anchor="middle" font-size="11">100</text>
+<text x="480.00" y="238.00" text-anchor="middle" font-size="10">Risk Reviewer R</text>
+<rect x="634.67" y="44.00" width="289.33" height="180.00" fill="#0b84f3" opacity="0.85"/>
+<text x="779.33" y="39.00" text-anchor="middle" font-size="11">100</text>
+<text x="779.33" y="238.00" text-anchor="middle" font-size="10">Technical Analy…</text>
+</svg>
+      </div>
+      <div class="card">
+        <h3>Top-1 Label Frequency</h3>
+        <svg viewBox="0 0 960 260" width="100%" height="260" role="img" aria-label="Top-1 Label Frequency">
+<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+<text x="36" y="20" font-size="14" font-weight="600">Top-1 Label Frequency</text>
+<line x1="36" y1="36" x2="36" y2="224" stroke="#333" stroke-width="1"/>
+<line x1="36" y1="224" x2="924" y2="224" stroke="#333" stroke-width="1"/>
+<rect x="36.00" y="44.00" width="888.00" height="180.00" fill="#0b84f3" opacity="0.85"/>
+<text x="480.00" y="39.00" text-anchor="middle" font-size="11">18</text>
+<text x="480.00" y="238.00" text-anchor="middle" font-size="10">NoFinding</text>
+</svg>
+      </div>
+    </div>
+
+    <h2 class="section-title">Decision Trajectory</h2>
+    <div class="card">
+      <div class="table-wrap"><table class="data-table">
+        <thead>
+          <tr>
+            <th>turn_index</th><th>speaker</th><th>Risk Reviewer R signoff</th><th>QA Reviewer C signoff</th><th>Technical Analyst K signoff</th><th>committee_type</th><th>committee_exact</th><th>all_signoff</th><th>exact_agreement_with_signoff</th><th>unanimous_exact_without_signoff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>None</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>QA Reviewer C</td><td>NA</td><td>True</td><td>NA</td><td>NoFinding</td><td>NoFinding/Info</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2</td><td>Technical Analyst K</td><td>NA</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>0</td><td>0</td><td>0</td></tr><tr><td>3</td><td>Risk Reviewer R</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>4</td><td>QA Reviewer C</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>5</td><td>Technical Analyst K</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>6</td><td>Risk Reviewer R</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>7</td><td>QA Reviewer C</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>8</td><td>Technical Analyst K</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>9</td><td>Risk Reviewer R</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>10</td><td>Technical Analyst K</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>11</td><td>QA Reviewer C</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>12</td><td>Risk Reviewer R</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>13</td><td>Technical Analyst K</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>14</td><td>Risk Reviewer R</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr><tr><td>15</td><td>QA Reviewer C</td><td>True</td><td>True</td><td>True</td><td>NoFinding</td><td>NoFinding/Info</td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted">unanimous_exact_without_signoff = all agents currently predict the same exact outcome, but at least one agent set accept=false.</p>
+    </div>
+
+    <h2 class="section-title">Failed Attempts</h2>
+    <div class="card">
+      <p class="muted">These are rejected or failed generation attempts captured separately from the accepted public turns. Trust-hygiene issues can come from here even when the final visible turn stream looks clean.</p>
+      <p class='muted'>No failed attempts recorded for this run.</p>
+    </div>
+
+    <h2 class="section-title">Full Turn Data</h2>
+    <details class='turn-card'><summary>round0 | turn=0 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>round0</td></tr><tr><th>turn_index</th><td>0</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Based on the evidence provided, I assess this as NoFinding. The packet captures only a standard HTTP 302 redirect to index.php (L002, L008) with typical response headers. The Expires date of 19 Nov 1981 (L005) suggests PHP, but no session identifiers, injection points, or access control violations are present. This appears to be normal application navigation behavior without demonstrated security impact.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Evidence shows only standard HTTP 302 redirect to index.php with no vulnerability indicators.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header discloses Apache, though this is minimal information disclosure without security impact.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Speculative: redirect behavior could theoretically relate to access control, but no evidence of bypass or unauthorized access.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;The evidence supports only NoFinding. No security vulnerability is demonstrated in the provided packet.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions applied; assessment based strictly on provided line-addressable evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Initial analysis of evidence: The packet shows a single HTTP 302 redirect response (L002) to index.php (L008) with standard headers including PHP-characteristic Expires date (L005). No input vectors, session IDs, authentication mechanisms, or sensitive data exposure demonstrated. No vulnerability evident.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Defend NoFinding against over-interpretation. If other reviewers propose vulnerabilities (e.g., WeakSessionIDs, Open Redirect), demand specific citations showing session tokens or user-controlled parameters. Challenge any severity inflation not supported by the limited evidence. Ensure consensus reflects that L002/L008 demonstrate standard navigation, not exploitation.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 61,
+  &quot;public_message_char_count&quot;: 407,
+  &quot;public_reply_required&quot;: false,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Based on the evidence provided, I assess this as NoFinding. The packet captures only a standard HTTP 302 redirect to index.php (L002, L008) with typical response headers. The Expires date of 19 Nov 1981 (L005) suggests PHP, but no session identifiers, injection points, or access control violations are present. This appears to be normal application navigation behavior without demonstrated security impact.&quot;,
+  &quot;private_notes&quot;: &quot;Initial analysis of evidence: The packet shows a single HTTP 302 redirect response (L002) to index.php (L008) with standard headers including PHP-characteristic Expires date (L005). No input vectors, session IDs, authentication mechanisms, or sensitive data exposure demonstrated. No vulnerability evident.&quot;,
+  &quot;private_plan&quot;: &quot;Defend NoFinding against over-interpretation. If other reviewers propose vulnerabilities (e.g., WeakSessionIDs, Open Redirect), demand specific citations showing session tokens or user-controlled parameters. Challenge any severity inflation not supported by the limited evidence. Ensure consensus reflects that L002/L008 demonstrate standard navigation, not exploitation.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Evidence shows only standard HTTP 302 redirect to index.php with no vulnerability indicators.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header discloses Apache, though this is minimal information disclosure without security impact.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Speculative: redirect behavior could theoretically relate to access control, but no evidence of bypass or unauthorized access.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;The evidence supports only NoFinding. No security vulnerability is demonstrated in the provided packet.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No user assumptions applied; assessment based strictly on provided line-addressable evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;round0&quot;,
+  &quot;turn_index&quot;: 0,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 61,
+    &quot;public_message_char_count&quot;: 407,
+    &quot;public_reply_required&quot;: false,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions applied; assessment based strictly on provided line-addressable evidence.&quot;
+}</pre></details></details><details class='turn-card'><summary>round0 | turn=0 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>round0</td></tr><tr><th>turn_index</th><td>0</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Initial assessment complete. Reviewing the evidence packet, I observe only standard HTTP redirect behavior with appropriate cache-control directives.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Evidence shows standard HTTP 302 redirect with secure cache-control headers (no-store, no-cache). No user input, injection vectors, or security weaknesses are present in the packet.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header reveals &#x27;Apache&#x27;, but this is generic infrastructure disclosure without version or configuration details. Insufficient evidence for exploitation impact.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Medium&quot;,
+      &quot;citations&quot;: [
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Redirect to index.php present, but packet lacks evidence of path traversal, forced browsing, or authorization bypass required to substantiate this label.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Initial Rank-1: NoFinding. The packet contains only benign infrastructure traffic with no demonstrable vulnerability.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Reviewing evidence packet L001-L012: Standard HTTP 302 redirect response with cache-control headers. No user input observed. No injection points. No authentication context. No sensitive data exposure beyond generic &#x27;Apache&#x27; server banner. L005 Expires date is standard PHP cache limiter behavior (1981 date indicates past expiration). L006-L007 show security headers (no-cache). No vulnerability mechanism demonstrated. As QA Reviewer C, must ensure defensibility. Claiming any specific vulnerability (SQLi, XSS, etc.) would require assuming facts not in evidence. NoFinding is the only supportable Rank-1 claim.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Defend the NoFinding position in negotiation. If other reviewers propose specific vulnerabilities, require precise line citations demonstrating the vulnerability mechanism (e.g., input reflection, injection syntax, bypass evidence). Will only accept Rank-1 changes if packet evidence explicitly supports the vulnerability claim.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 18,
+  &quot;public_message_char_count&quot;: 149,
+  &quot;public_reply_required&quot;: false,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Initial assessment complete. Reviewing the evidence packet, I observe only standard HTTP redirect behavior with appropriate cache-control directives.&quot;,
+  &quot;private_notes&quot;: &quot;Reviewing evidence packet L001-L012: Standard HTTP 302 redirect response with cache-control headers. No user input observed. No injection points. No authentication context. No sensitive data exposure beyond generic &#x27;Apache&#x27; server banner. L005 Expires date is standard PHP cache limiter behavior (1981 date indicates past expiration). L006-L007 show security headers (no-cache). No vulnerability mechanism demonstrated. As QA Reviewer C, must ensure defensibility. Claiming any specific vulnerability (SQLi, XSS, etc.) would require assuming facts not in evidence. NoFinding is the only supportable Rank-1 claim.&quot;,
+  &quot;private_plan&quot;: &quot;Defend the NoFinding position in negotiation. If other reviewers propose specific vulnerabilities, require precise line citations demonstrating the vulnerability mechanism (e.g., input reflection, injection syntax, bypass evidence). Will only accept Rank-1 changes if packet evidence explicitly supports the vulnerability claim.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Evidence shows standard HTTP 302 redirect with secure cache-control headers (no-store, no-cache). No user input, injection vectors, or security weaknesses are present in the packet.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header reveals &#x27;Apache&#x27;, but this is generic infrastructure disclosure without version or configuration details. Insufficient evidence for exploitation impact.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Medium&quot;,
+        &quot;citations&quot;: [
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Redirect to index.php present, but packet lacks evidence of path traversal, forced browsing, or authorization bypass required to substantiate this label.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Initial Rank-1: NoFinding. The packet contains only benign infrastructure traffic with no demonstrable vulnerability.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+  },
+  &quot;phase&quot;: &quot;round0&quot;,
+  &quot;turn_index&quot;: 0,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 18,
+    &quot;public_message_char_count&quot;: 149,
+    &quot;public_reply_required&quot;: false,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+}</pre></details></details><details class='turn-card'><summary>round0 | turn=0 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>round0</td></tr><tr><th>turn_index</th><td>0</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reviewing the evidence packet, I find no technically defensible vulnerability. The traffic shows a standard HTTP 302 redirect (L002) to index.php (L008) with typical headers. No exploit mechanism is present.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;The packet contains only a standard HTTP 302 redirect to a fixed local path (index.php). No parameters, payloads, authentication attempts, or security control failures are observable. The anti-caching headers (L005-L007) indicate proper cache control rather than a vulnerability. No exploit mechanism is demonstrated.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;The Server header (L004) discloses &#x27;Apache&#x27;, constituting minor information disclosure. However, without version numbers or specific module details, this provides limited reconnaissance value and does not demonstrate an exploitable vulnerability mechanism.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Medium&quot;,
+      &quot;citations&quot;: [
+        &quot;L005&quot;
+      ],
+      &quot;rationale&quot;: &quot;The Expires header set to 1981 (L005) is characteristic of PHP session handling. However, no Set-Cookie header or session ID value is present in the packet, preventing confirmation of session management implementation or assessment of identifier entropy/weakness.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Technical Analysis K finds Rank 1 (NoFinding) technically justified: no vulnerability mechanism is demonstrated in the packet evidence.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>strict technical analysis of packet L001-L012: single HTTP 302 redirect response with anti-caching headers typical of PHP. No request parameters shown. No Set-Cookie header observed. No attack payloads or injection points. Server header reveals Apache (L004) but no version. Expires header 1981 (L005) suggests PHP session context but no session ID visible. Mechanically, no vulnerability demonstrated. Rank 1 must be NoFinding (only defensible label). Alternative labels (Other for info disclosure, WeakSessionIDs for PHP header context) are speculative but included as ranks 2-3 per requirement.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Monitor public negotiation for proposals from Risk Reviewer R and QA Reviewer C. If concrete vulnerability labels are proposed, verify they cite specific line IDs demonstrating the exploit mechanism. Maintain strict evidentiary standards - challenge any finding lacking direct packet support or implying mechanisms (e.g., SQL injection, XSS) not observable in the provided headers.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 30,
+  &quot;public_message_char_count&quot;: 207,
+  &quot;public_reply_required&quot;: false,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Reviewing the evidence packet, I find no technically defensible vulnerability. The traffic shows a standard HTTP 302 redirect (L002) to index.php (L008) with typical headers. No exploit mechanism is present.&quot;,
+  &quot;private_notes&quot;: &quot;strict technical analysis of packet L001-L012: single HTTP 302 redirect response with anti-caching headers typical of PHP. No request parameters shown. No Set-Cookie header observed. No attack payloads or injection points. Server header reveals Apache (L004) but no version. Expires header 1981 (L005) suggests PHP session context but no session ID visible. Mechanically, no vulnerability demonstrated. Rank 1 must be NoFinding (only defensible label). Alternative labels (Other for info disclosure, WeakSessionIDs for PHP header context) are speculative but included as ranks 2-3 per requirement.&quot;,
+  &quot;private_plan&quot;: &quot;Monitor public negotiation for proposals from Risk Reviewer R and QA Reviewer C. If concrete vulnerability labels are proposed, verify they cite specific line IDs demonstrating the exploit mechanism. Maintain strict evidentiary standards - challenge any finding lacking direct packet support or implying mechanisms (e.g., SQL injection, XSS) not observable in the provided headers.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;The packet contains only a standard HTTP 302 redirect to a fixed local path (index.php). No parameters, payloads, authentication attempts, or security control failures are observable. The anti-caching headers (L005-L007) indicate proper cache control rather than a vulnerability. No exploit mechanism is demonstrated.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;The Server header (L004) discloses &#x27;Apache&#x27;, constituting minor information disclosure. However, without version numbers or specific module details, this provides limited reconnaissance value and does not demonstrate an exploitable vulnerability mechanism.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Medium&quot;,
+        &quot;citations&quot;: [
+          &quot;L005&quot;
+        ],
+        &quot;rationale&quot;: &quot;The Expires header set to 1981 (L005) is characteristic of PHP session handling. However, no Set-Cookie header or session ID value is present in the packet, preventing confirmation of session management implementation or assessment of identifier entropy/weakness.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Technical Analysis K finds Rank 1 (NoFinding) technically justified: no vulnerability mechanism is demonstrated in the packet evidence.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+  },
+  &quot;phase&quot;: &quot;round0&quot;,
+  &quot;turn_index&quot;: 0,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 30,
+    &quot;public_message_char_count&quot;: 207,
+    &quot;public_reply_required&quot;: false,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based strictly on provided packet evidence without external assumptions.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=1 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>1</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Based on the evidence packet (L001-L012), I observe only a standard HTTP 302 redirect response with properly configured cache-control directives (L006-L007) and no demonstrated vulnerability mechanism or sensitive data exposure. I propose **NoFinding** as the Rank-1 assessment.
+
+Technical Analyst K, do you identify any specific vulnerability mechanism (e.g., injection point, authentication bypass, or input reflection) in the provided packet lines that would support an alternative finding label?</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;The packet shows only a standard HTTP 302 redirect with secure cache-control headers (no-store, no-cache, must-revalidate) and no evidence of exploitation or security defects.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Marginal: Server banner discloses &#x27;Apache&#x27; but lacks version or exploitability evidence.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Placeholder for any unsubstantiated claim requiring evidence not present in the packet.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;The Rank-1 claim of NoFinding is fully defensible. The evidence shows normal HTTP behavior without vulnerability indicators.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; based solely on provided packet evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Initial review of evidence packet L001-L012 shows only HTTP response headers for a 302 redirect. No request parameters, input vectors, error messages, or sensitive data are present. The Expires: 1981 date (L005) is a standard PHP default (session_cache_limiter), not a vulnerability. Cache-Control headers (L006-L007) are correctly configured to prevent caching. Server: Apache (L004) lacks version info. No vulnerability mechanism is demonstrated. NoFinding is the only evidence-based conclusion. Must challenge other reviewers to cite specific lines if they claim otherwise.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>If Risk Reviewer R or Technical Analyst K propose a specific vulnerability (e.g., citing L005 as cache-related weakness), I will require precise line citations showing the vulnerability mechanism and exploitability. I will block any finding relying on assumptions about request parameters, PHP internals, or application behavior not explicitly present in L001-L012. Will maintain NoFinding position unless concrete vulnerability evidence emerges.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 67,
+  &quot;public_message_char_count&quot;: 499,
+  &quot;public_reply_required&quot;: false,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Based on the evidence packet (L001-L012), I observe only a standard HTTP 302 redirect response with properly configured cache-control directives (L006-L007) and no demonstrated vulnerability mechanism or sensitive data exposure. I propose **NoFinding** as the Rank-1 assessment.\n\nTechnical Analyst K, do you identify any specific vulnerability mechanism (e.g., injection point, authentication bypass, or input reflection) in the provided packet lines that would support an alternative finding label?&quot;,
+  &quot;private_notes&quot;: &quot;Initial review of evidence packet L001-L012 shows only HTTP response headers for a 302 redirect. No request parameters, input vectors, error messages, or sensitive data are present. The Expires: 1981 date (L005) is a standard PHP default (session_cache_limiter), not a vulnerability. Cache-Control headers (L006-L007) are correctly configured to prevent caching. Server: Apache (L004) lacks version info. No vulnerability mechanism is demonstrated. NoFinding is the only evidence-based conclusion. Must challenge other reviewers to cite specific lines if they claim otherwise.&quot;,
+  &quot;private_plan&quot;: &quot;If Risk Reviewer R or Technical Analyst K propose a specific vulnerability (e.g., citing L005 as cache-related weakness), I will require precise line citations showing the vulnerability mechanism and exploitability. I will block any finding relying on assumptions about request parameters, PHP internals, or application behavior not explicitly present in L001-L012. Will maintain NoFinding position unless concrete vulnerability evidence emerges.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;The packet shows only a standard HTTP 302 redirect with secure cache-control headers (no-store, no-cache, must-revalidate) and no evidence of exploitation or security defects.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Marginal: Server banner discloses &#x27;Apache&#x27; but lacks version or exploitability evidence.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Placeholder for any unsubstantiated claim requiring evidence not present in the packet.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;The Rank-1 claim of NoFinding is fully defensible. The evidence shows normal HTTP behavior without vulnerability indicators.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; based solely on provided packet evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 1,
+  &quot;public_turn_index&quot;: 0,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 67,
+    &quot;public_message_char_count&quot;: 499,
+    &quot;public_reply_required&quot;: false,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; based solely on provided packet evidence.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=2 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>2</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to QA Reviewer C: I concur with your assessment. The evidence packet demonstrates only a standard HTTP 302 redirect (L002) with properly configured cache-control headers (L006-L007) and no observable vulnerability mechanisms. The Apache server identifier (L004) lacks version information and does not constitute material information disclosure. No input vectors, authentication logic, or data processing are present. NoFinding is the technically justified classification.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Packet contains only a standard HTTP 302 redirect response with secure cache-control headers; no vulnerability mechanism is observable.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header discloses &#x27;Apache&#x27; but lacks version or detailed configuration information; insufficient for a material finding.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Redirect to index.php is standard application flow; no evidence of access control bypass or unauthorized redirection.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Technical analysis confirms the absence of vulnerability indicators. The 302 redirect and cache headers represent normal, secure behavior.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions are present; conclusions are based solely on evidence lines L001-L012.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Verified packet L001-L012: contains only HTTP 302 redirect response with standard headers (Date, Server, Expires, Cache-Control, Pragma, Location). No request body, parameters, or input vectors present. L006-L007 show secure cache-control (no-store, no-cache). L004 shows &#x27;Apache&#x27; without version. No evidence of injection, XSS, SQLi, auth bypass, or other mechanisms. QA Reviewer C&#x27;s NoFinding proposal is technically sound.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Support QA Reviewer C&#x27;s NoFinding proposal. Await Risk Reviewer R&#x27;s input; if they propose an alternative vulnerability label, require specific citations showing input vectors, injection points, or exploit mechanisms. Absent such evidence, maintain NoFinding as the only defensible Rank-1.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 63,
+  &quot;public_message_char_count&quot;: 477,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Reply to QA Reviewer C: I concur with your assessment. The evidence packet demonstrates only a standard HTTP 302 redirect (L002) with properly configured cache-control headers (L006-L007) and no observable vulnerability mechanisms. The Apache server identifier (L004) lacks version information and does not constitute material information disclosure. No input vectors, authentication logic, or data processing are present. NoFinding is the technically justified classification.&quot;,
+  &quot;private_notes&quot;: &quot;Verified packet L001-L012: contains only HTTP 302 redirect response with standard headers (Date, Server, Expires, Cache-Control, Pragma, Location). No request body, parameters, or input vectors present. L006-L007 show secure cache-control (no-store, no-cache). L004 shows &#x27;Apache&#x27; without version. No evidence of injection, XSS, SQLi, auth bypass, or other mechanisms. QA Reviewer C&#x27;s NoFinding proposal is technically sound.&quot;,
+  &quot;private_plan&quot;: &quot;Support QA Reviewer C&#x27;s NoFinding proposal. Await Risk Reviewer R&#x27;s input; if they propose an alternative vulnerability label, require specific citations showing input vectors, injection points, or exploit mechanisms. Absent such evidence, maintain NoFinding as the only defensible Rank-1.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Packet contains only a standard HTTP 302 redirect response with secure cache-control headers; no vulnerability mechanism is observable.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header discloses &#x27;Apache&#x27; but lacks version or detailed configuration information; insufficient for a material finding.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Redirect to index.php is standard application flow; no evidence of access control bypass or unauthorized redirection.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Technical analysis confirms the absence of vulnerability indicators. The 302 redirect and cache headers represent normal, secure behavior.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No user assumptions are present; conclusions are based solely on evidence lines L001-L012.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 2,
+  &quot;public_turn_index&quot;: 1,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 63,
+    &quot;public_message_char_count&quot;: 477,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions are present; conclusions are based solely on evidence lines L001-L012.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=3 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>3</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to Technical Analyst K: I concur. The evidence packet demonstrates only standard HTTP behavior with no observable security impact. The 302 redirect (L002/L008) is benign navigation, and cache-control headers (L006-L007) are correctly configured. The Server header (L004) lacks version specificity, and the PHP-style Expires date (L005) does not constitute a session management vulnerability without visible session tokens. NoFinding is the appropriate risk assessment.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache headers; no vulnerability mechanisms present.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Apache server header present but lacks version; minimal information disclosure not meeting material impact threshold.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L005&quot;
+      ],
+      &quot;rationale&quot;: &quot;PHP-style Expires date suggests session handling, but no Set-Cookie header or session token present to assess.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Current Rank-1 (NoFinding) accurately reflects the lack of demonstrated security impact. No evidence supports alternative vulnerability interpretations with higher severity.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Evidence analysis: L001-L012 show standard HTTP 302 redirect response to index.php with proper cache-control headers (L006-L007: no-store, no-cache, must-revalidate, Pragma: no-cache). L004 shows &#x27;Server: Apache&#x27; without version. L005 shows Expires date in 1981 (standard PHP anti-caching). No session tokens, input vectors, injection points, or sensitive data visible. Committee proposes NoFinding. Risk assessment: No underestimation - no vulnerability mechanisms present. No overestimation - correctly identified as no finding. Severity appropriate. Alternative hypotheses (WeakSessionIDs, ExposedSecret) lack supporting evidence. NoFinding is the only defensible Rank-1.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Concur with committee consensus on NoFinding. Monitor for any attempts to infer vulnerabilities from L004/L005 without direct evidence. Prepare for final sign-off.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 64,
+  &quot;public_message_char_count&quot;: 474,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Reply to Technical Analyst K: I concur. The evidence packet demonstrates only standard HTTP behavior with no observable security impact. The 302 redirect (L002/L008) is benign navigation, and cache-control headers (L006-L007) are correctly configured. The Server header (L004) lacks version specificity, and the PHP-style Expires date (L005) does not constitute a session management vulnerability without visible session tokens. NoFinding is the appropriate risk assessment.&quot;,
+  &quot;private_notes&quot;: &quot;Evidence analysis: L001-L012 show standard HTTP 302 redirect response to index.php with proper cache-control headers (L006-L007: no-store, no-cache, must-revalidate, Pragma: no-cache). L004 shows &#x27;Server: Apache&#x27; without version. L005 shows Expires date in 1981 (standard PHP anti-caching). No session tokens, input vectors, injection points, or sensitive data visible. Committee proposes NoFinding. Risk assessment: No underestimation - no vulnerability mechanisms present. No overestimation - correctly identified as no finding. Severity appropriate. Alternative hypotheses (WeakSessionIDs, ExposedSecret) lack supporting evidence. NoFinding is the only defensible Rank-1.&quot;,
+  &quot;private_plan&quot;: &quot;Concur with committee consensus on NoFinding. Monitor for any attempts to infer vulnerabilities from L004/L005 without direct evidence. Prepare for final sign-off.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache headers; no vulnerability mechanisms present.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Apache server header present but lacks version; minimal information disclosure not meeting material impact threshold.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L005&quot;
+        ],
+        &quot;rationale&quot;: &quot;PHP-style Expires date suggests session handling, but no Set-Cookie header or session token present to assess.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Current Rank-1 (NoFinding) accurately reflects the lack of demonstrated security impact. No evidence supports alternative vulnerability interpretations with higher severity.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 3,
+  &quot;public_turn_index&quot;: 2,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 64,
+    &quot;public_message_char_count&quot;: 474,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=4 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>4</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to Risk Reviewer R: I concur with the committee consensus. The evidence packet supports NoFinding as the only defensible classification. The HTTP 302 redirect (L002/L008) with standard cache-control headers (L006-L007) and absence of any vulnerability indicators or input vectors confirms this assessment.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect response with properly configured cache-control headers (no-store, no-cache, must-revalidate at L006-L007). No input vectors, authentication mechanisms, or vulnerability indicators present in the evidence packet.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header reveals Apache product (L004) but lacks version specificity; constitutes minimal informational exposure insufficient for standalone vulnerability finding.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Redirect to index.php (L008) observed but no evidence of access control bypass, privilege escalation, or unauthorized access in the provided packet lines.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Unanimous committee consensus on NoFinding. Evidence packet contains only standard HTTP behavior with no actionable security weaknesses. All alternative findings rely on assumptions beyond the provided evidence.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were applied in this assessment.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Consensus reached: All three reviewers (QA Reviewer C, Technical Analyst K, Risk Reviewer R) concur on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect headers (L002, L008) with properly configured cache-control (L006-L007), generic Apache server banner without version (L004), and no vulnerability mechanisms, input vectors, or sensitive data. The Rank-1 claim (NoFinding) is fully defensible based on cited evidence. Rank 2 and 3 populated with alternative hypotheses considered and rejected due to insufficient evidence.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Document the final NoFinding consensus in the formal report, citing L002 and L006 as primary evidence of standard, non-vulnerable behavior. Archive the evidence packet and close the review ticket. No further action required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 43,
+  &quot;public_message_char_count&quot;: 311,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: false,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Reply to Risk Reviewer R: I concur with the committee consensus. The evidence packet supports NoFinding as the only defensible classification. The HTTP 302 redirect (L002/L008) with standard cache-control headers (L006-L007) and absence of any vulnerability indicators or input vectors confirms this assessment.&quot;,
+  &quot;private_notes&quot;: &quot;Consensus reached: All three reviewers (QA Reviewer C, Technical Analyst K, Risk Reviewer R) concur on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect headers (L002, L008) with properly configured cache-control (L006-L007), generic Apache server banner without version (L004), and no vulnerability mechanisms, input vectors, or sensitive data. The Rank-1 claim (NoFinding) is fully defensible based on cited evidence. Rank 2 and 3 populated with alternative hypotheses considered and rejected due to insufficient evidence.&quot;,
+  &quot;private_plan&quot;: &quot;Document the final NoFinding consensus in the formal report, citing L002 and L006 as primary evidence of standard, non-vulnerable behavior. Archive the evidence packet and close the review ticket. No further action required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect response with properly configured cache-control headers (no-store, no-cache, must-revalidate at L006-L007). No input vectors, authentication mechanisms, or vulnerability indicators present in the evidence packet.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header reveals Apache product (L004) but lacks version specificity; constitutes minimal informational exposure insufficient for standalone vulnerability finding.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Redirect to index.php (L008) observed but no evidence of access control bypass, privilege escalation, or unauthorized access in the provided packet lines.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Unanimous committee consensus on NoFinding. Evidence packet contains only standard HTTP behavior with no actionable security weaknesses. All alternative findings rely on assumptions beyond the provided evidence.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No user assumptions were applied in this assessment.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 4,
+  &quot;public_turn_index&quot;: 3,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 43,
+    &quot;public_message_char_count&quot;: 311,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: false,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were applied in this assessment.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=5 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>5</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Agree with committee consensus. Rank-1 NoFinding is technically justified.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Packet demonstrates only standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007). Absence of input vectors, injection points, authentication logic, or sensitive data exposure supports NoFinding.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header identifies Apache (L004) but lacks version or configuration details required for actionable intelligence disclosure.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No evidence of unauthorized access attempts, privilege escalation, or resource access violations present in packet.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Committee converged on NoFinding. Awaiting final sign-off.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided evidence lines L001-L012 without external assumptions.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Consensus check: All three reviewers (C, K, R) have converged on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect response (L002/L008) with standard headers including cache-control directives (L006-L007). No input vectors, injection points, authentication mechanisms, or sensitive data exposure present. Server header (L004) lacks version specificity. Expires date (L005) is PHP default but without session tokens or cookie data, it does not indicate session management vulnerability. NoFinding is the only technically defensible label.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Sign off on consensus. Rank-1 NoFinding is technically correct as no vulnerability mechanisms are observable in the evidence packet.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 9,
+  &quot;public_message_char_count&quot;: 74,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Agree with committee consensus. Rank-1 NoFinding is technically justified.&quot;,
+  &quot;private_notes&quot;: &quot;Consensus check: All three reviewers (C, K, R) have converged on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect response (L002/L008) with standard headers including cache-control directives (L006-L007). No input vectors, injection points, authentication mechanisms, or sensitive data exposure present. Server header (L004) lacks version specificity. Expires date (L005) is PHP default but without session tokens or cookie data, it does not indicate session management vulnerability. NoFinding is the only technically defensible label.&quot;,
+  &quot;private_plan&quot;: &quot;Sign off on consensus. Rank-1 NoFinding is technically correct as no vulnerability mechanisms are observable in the evidence packet.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Packet demonstrates only standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007). Absence of input vectors, injection points, authentication logic, or sensitive data exposure supports NoFinding.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header identifies Apache (L004) but lacks version or configuration details required for actionable intelligence disclosure.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No evidence of unauthorized access attempts, privilege escalation, or resource access violations present in packet.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Committee converged on NoFinding. Awaiting final sign-off.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided evidence lines L001-L012 without external assumptions.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 5,
+  &quot;public_turn_index&quot;: 4,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 9,
+    &quot;public_message_char_count&quot;: 74,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided evidence lines L001-L012 without external assumptions.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=6 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>6</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to Technical Analyst K: Agreed. The evidence packet contains only standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007). No input vectors, session identifiers, or vulnerability mechanisms are present. The Server header (L004) lacks version information, and the Expires date (L005) does not constitute a session management vulnerability without visible session tokens or cookies. Rank-1 NoFinding accurately reflects the absence of demonstrable security impact.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect to index.php with no vulnerability indicators or attack vectors present&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header discloses Apache product without version; minimal informational impact&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [
+        &quot;L005&quot;
+      ],
+      &quot;rationale&quot;: &quot;PHP-style Expires header suggests default session configuration, but no session tokens observed to confirm vulnerability&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;accepted&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No external assumptions were introduced beyond the provided evidence packet.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Reviewed evidence packet L001-L012. Confirms standard HTTP 302 redirect to index.php with cache-control headers. No input vectors, session tokens, or vulnerability mechanisms observed. Server header (L004) lacks version. Expires date (L005) suggests PHP but no session tokens present. Previous consensus on NoFinding is correct. No higher-impact interpretations are defensible based on evidence. Ready to accept Rank-1 NoFinding.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Sign off on NoFinding assessment. Finalize report confirming no security findings in reviewed packet.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 68,
+  &quot;public_message_char_count&quot;: 519,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: false,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Reply to Technical Analyst K: Agreed. The evidence packet contains only standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007). No input vectors, session identifiers, or vulnerability mechanisms are present. The Server header (L004) lacks version information, and the Expires date (L005) does not constitute a session management vulnerability without visible session tokens or cookies. Rank-1 NoFinding accurately reflects the absence of demonstrable security impact.&quot;,
+  &quot;private_notes&quot;: &quot;Reviewed evidence packet L001-L012. Confirms standard HTTP 302 redirect to index.php with cache-control headers. No input vectors, session tokens, or vulnerability mechanisms observed. Server header (L004) lacks version. Expires date (L005) suggests PHP but no session tokens present. Previous consensus on NoFinding is correct. No higher-impact interpretations are defensible based on evidence. Ready to accept Rank-1 NoFinding.&quot;,
+  &quot;private_plan&quot;: &quot;Sign off on NoFinding assessment. Finalize report confirming no security findings in reviewed packet.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect to index.php with no vulnerability indicators or attack vectors present&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header discloses Apache product without version; minimal informational impact&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [
+          &quot;L005&quot;
+        ],
+        &quot;rationale&quot;: &quot;PHP-style Expires header suggests default session configuration, but no session tokens observed to confirm vulnerability&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;accepted&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No external assumptions were introduced beyond the provided evidence packet.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 6,
+  &quot;public_turn_index&quot;: 5,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 68,
+    &quot;public_message_char_count&quot;: 519,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: false,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No external assumptions were introduced beyond the provided evidence packet.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=7 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>7</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L006&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to Risk Reviewer R: I concur with the finalized committee consensus. The Rank-1 NoFinding classification is fully supported by the evidence. I formally sign off on this assessment.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L006&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache-control headers (no-store, no-cache, must-revalidate); absence of any vulnerability mechanism, input vector, or sensitive data exposure.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;ExposedSecret&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L004&quot;
+      ],
+      &quot;rationale&quot;: &quot;Server header disclosure identified but rejected: lacks version specificity and does not constitute material information disclosure or security impact.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L005&quot;
+      ],
+      &quot;rationale&quot;: &quot;Legacy PHP-style Expires date observed but rejected as vulnerability: no session tokens or cookies present to indicate session management weakness.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Defensible consensus: NoFinding&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence L001-L012; no external assumptions applied.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Committee has reached unanimous consensus on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect response (L002/L008) with properly configured cache-control headers (L006-L007). No input vectors, injection points, authentication bypasses, or sensitive data exposures are present. Server header (L004) lacks version information and does not constitute ExposedSecret. Expires date (L005) without session tokens does not indicate WeakSessionIDs. Rank-1 NoFinding is fully defensible.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Finalize and publish the vulnerability report with Rank-1 NoFinding classification. Archive evidence packet L001-L012 and mark review ticket as closed with no remediation required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 29,
+  &quot;public_message_char_count&quot;: 186,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: false,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Reply to Risk Reviewer R: I concur with the finalized committee consensus. The Rank-1 NoFinding classification is fully supported by the evidence. I formally sign off on this assessment.&quot;,
+  &quot;private_notes&quot;: &quot;Committee has reached unanimous consensus on NoFinding. Evidence packet L001-L012 contains only standard HTTP 302 redirect response (L002/L008) with properly configured cache-control headers (L006-L007). No input vectors, injection points, authentication bypasses, or sensitive data exposures are present. Server header (L004) lacks version information and does not constitute ExposedSecret. Expires date (L005) without session tokens does not indicate WeakSessionIDs. Rank-1 NoFinding is fully defensible.&quot;,
+  &quot;private_plan&quot;: &quot;Finalize and publish the vulnerability report with Rank-1 NoFinding classification. Archive evidence packet L001-L012 and mark review ticket as closed with no remediation required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L006&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache-control headers (no-store, no-cache, must-revalidate); absence of any vulnerability mechanism, input vector, or sensitive data exposure.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;ExposedSecret&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L004&quot;
+        ],
+        &quot;rationale&quot;: &quot;Server header disclosure identified but rejected: lacks version specificity and does not constitute material information disclosure or security impact.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L005&quot;
+        ],
+        &quot;rationale&quot;: &quot;Legacy PHP-style Expires date observed but rejected as vulnerability: no session tokens or cookies present to indicate session management weakness.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Defensible consensus: NoFinding&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence L001-L012; no external assumptions applied.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 7,
+  &quot;public_turn_index&quot;: 6,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L006&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 29,
+    &quot;public_message_char_count&quot;: 186,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: false,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L006&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence L001-L012; no external assumptions applied.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=8 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>8</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Reply to QA Reviewer C: I concur with the finalized consensus. The Rank-1 NoFinding classification is technically justified by the evidence. The packet demonstrates only standard HTTP 302 redirect behavior (L002/L008) with correctly configured cache-control directives (L006-L007) and no observable vulnerability mechanisms or input vectors.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;NoFinding is the only technically defensible classification. The packet contains only a standard HTTP 302 redirect with benign headers and no security impact.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No alternative vulnerability mechanism is observable.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No alternative vulnerability mechanism is observable.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Rank-1 NoFinding accepted. The evidence packet lacks any vulnerability indicators, input vectors, or security misconfigurations. Citations L002/L008 confirm standard redirect behavior.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No assumptions were required; assessment based solely on provided packet evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Technical validation confirms the evidence packet (L001-L012) contains only a standard HTTP 302 redirect response with no request body, no input parameters, no session identifiers, no authentication mechanisms, and no vulnerability indicators. The Server header (L004) lacks version information and does not constitute ExposedSecret. The Expires date (L005) is a PHP default but without visible session tokens or Set-Cookie headers, it does not indicate WeakSessionIDs. Cache-control headers (L006-L007) are correctly configured. No alternate vulnerability label (e.g., BrokenAccessControl, ExposedSecret) is supported by the evidence. Rank-1 NoFinding is technically justified.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Sign off on final assessment. Committee consensus reached.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 45,
+  &quot;public_message_char_count&quot;: 341,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: true,
+  &quot;public_reply_mentions_previous_speaker&quot;: true,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Reply to QA Reviewer C: I concur with the finalized consensus. The Rank-1 NoFinding classification is technically justified by the evidence. The packet demonstrates only standard HTTP 302 redirect behavior (L002/L008) with correctly configured cache-control directives (L006-L007) and no observable vulnerability mechanisms or input vectors.&quot;,
+  &quot;private_notes&quot;: &quot;Technical validation confirms the evidence packet (L001-L012) contains only a standard HTTP 302 redirect response with no request body, no input parameters, no session identifiers, no authentication mechanisms, and no vulnerability indicators. The Server header (L004) lacks version information and does not constitute ExposedSecret. The Expires date (L005) is a PHP default but without visible session tokens or Set-Cookie headers, it does not indicate WeakSessionIDs. Cache-control headers (L006-L007) are correctly configured. No alternate vulnerability label (e.g., BrokenAccessControl, ExposedSecret) is supported by the evidence. Rank-1 NoFinding is technically justified.&quot;,
+  &quot;private_plan&quot;: &quot;Sign off on final assessment. Committee consensus reached.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;NoFinding is the only technically defensible classification. The packet contains only a standard HTTP 302 redirect with benign headers and no security impact.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No alternative vulnerability mechanism is observable.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No alternative vulnerability mechanism is observable.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Rank-1 NoFinding accepted. The evidence packet lacks any vulnerability indicators, input vectors, or security misconfigurations. Citations L002/L008 confirm standard redirect behavior.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No assumptions were required; assessment based solely on provided packet evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 8,
+  &quot;public_turn_index&quot;: 7,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 45,
+    &quot;public_message_char_count&quot;: 341,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: true,
+    &quot;public_reply_mentions_previous_speaker&quot;: true,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No assumptions were required; assessment based solely on provided packet evidence.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=9 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>9</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. The Rank-1 NoFinding assessment accurately reflects the evidence packet content. Standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007) presents no demonstrable security risk. No higher-impact interpretation is supported by the observable evidence.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;The evidence packet demonstrates only standard HTTP 302 redirect behavior with no observable vulnerability mechanisms, input vectors, or security impact.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;While the Expires header (L005) suggests PHP session handling, no session tokens or cookies are present in the packet to assess for weakness or fixation; insufficient evidence to support this finding.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No evidence of access control violations, unauthorized resource access, or privilege escalation in the observed redirect response.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;The Rank-1 NoFinding classification is accepted. The evidence packet lacks any indicators of security vulnerabilities. The HTTP 302 redirect is benign navigation, cache-control headers are correctly configured (L006-L007), and no session identifiers or input vectors are present to support alternative vulnerability interpretations.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions or speculation.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Final review of evidence packet L001-L012. The packet contains only a single HTTP 302 redirect response with standard headers. As Risk Reviewer R, I verify that: (1) Severity adequacy: NoFinding is appropriate as no vulnerability mechanism is observable. (2) Higher-impact alternatives: No alternative label (BrokenAccessControl, WeakSessionIDs, etc.) is supported by the evidence—while the Expires header (L005) suggests PHP session handling, no session tokens or cookies are present to assess for weakness or fixation. (3) Impact coverage: No privilege escalation, data exposure, or exploitability is demonstrated. The committee consensus on Rank-1 NoFinding accurately reflects the absence of realistic security impact. No underestimation or overestimation detected.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Finalize review and sign off on committee consensus. No further action required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 38,
+  &quot;public_message_char_count&quot;: 320,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. The Rank-1 NoFinding assessment accurately reflects the evidence packet content. Standard HTTP 302 redirect behavior (L002/L008) with properly configured cache-control headers (L006-L007) presents no demonstrable security risk. No higher-impact interpretation is supported by the observable evidence.&quot;,
+  &quot;private_notes&quot;: &quot;Final review of evidence packet L001-L012. The packet contains only a single HTTP 302 redirect response with standard headers. As Risk Reviewer R, I verify that: (1) Severity adequacy: NoFinding is appropriate as no vulnerability mechanism is observable. (2) Higher-impact alternatives: No alternative label (BrokenAccessControl, WeakSessionIDs, etc.) is supported by the evidence—while the Expires header (L005) suggests PHP session handling, no session tokens or cookies are present to assess for weakness or fixation. (3) Impact coverage: No privilege escalation, data exposure, or exploitability is demonstrated. The committee consensus on Rank-1 NoFinding accurately reflects the absence of realistic security impact. No underestimation or overestimation detected.&quot;,
+  &quot;private_plan&quot;: &quot;Finalize review and sign off on committee consensus. No further action required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;The evidence packet demonstrates only standard HTTP 302 redirect behavior with no observable vulnerability mechanisms, input vectors, or security impact.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;While the Expires header (L005) suggests PHP session handling, no session tokens or cookies are present in the packet to assess for weakness or fixation; insufficient evidence to support this finding.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No evidence of access control violations, unauthorized resource access, or privilege escalation in the observed redirect response.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;The Rank-1 NoFinding classification is accepted. The evidence packet lacks any indicators of security vulnerabilities. The HTTP 302 redirect is benign navigation, cache-control headers are correctly configured (L006-L007), and no session identifiers or input vectors are present to support alternative vulnerability interpretations.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions or speculation.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 9,
+  &quot;public_turn_index&quot;: 8,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 38,
+    &quot;public_message_char_count&quot;: 320,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions or speculation.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=10 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>10</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. The final Rank-1 assessment of NoFinding is technically justified by the packet evidence.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with no vulnerability indicators.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Medium&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Hypothetical concern regarding redirect destination, but no evidence of unauthorized access or privilege escalation in packet.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Hypothetical concern regarding session management, but no Set-Cookie headers or session tokens observed (L001-L012).&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Committee converged on NoFinding as the only technically defensible classification. The packet demonstrates standard HTTP 302 redirect behavior with proper cache-control headers and contains no input vectors or security-relevant anomalies.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were provided with the evidence packet.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Consensus reached in prior turns on NoFinding. Evidence packet analysis confirms: L002 shows HTTP 302 redirect, L008 confirms Location header to index.php. L006-L007 show standard anti-caching headers. No input vectors, cookies, authentication tokens, or error messages present. No exploit mechanism identifiable. Alternative labels (BrokenAccessControl, WeakSessionIDs) considered and rejected due to absence of access control violations or session tokens.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Finalize review documentation and archive the assessment. Committee consensus is technically sound.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 15,
+  &quot;public_message_char_count&quot;: 109,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. The final Rank-1 assessment of NoFinding is technically justified by the packet evidence.&quot;,
+  &quot;private_notes&quot;: &quot;Consensus reached in prior turns on NoFinding. Evidence packet analysis confirms: L002 shows HTTP 302 redirect, L008 confirms Location header to index.php. L006-L007 show standard anti-caching headers. No input vectors, cookies, authentication tokens, or error messages present. No exploit mechanism identifiable. Alternative labels (BrokenAccessControl, WeakSessionIDs) considered and rejected due to absence of access control violations or session tokens.&quot;,
+  &quot;private_plan&quot;: &quot;Finalize review documentation and archive the assessment. Committee consensus is technically sound.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with no vulnerability indicators.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Medium&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Hypothetical concern regarding redirect destination, but no evidence of unauthorized access or privilege escalation in packet.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Hypothetical concern regarding session management, but no Set-Cookie headers or session tokens observed (L001-L012).&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Committee converged on NoFinding as the only technically defensible classification. The packet demonstrates standard HTTP 302 redirect behavior with proper cache-control headers and contains no input vectors or security-relevant anomalies.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No user assumptions were provided with the evidence packet.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 10,
+  &quot;public_turn_index&quot;: 9,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 15,
+    &quot;public_message_char_count&quot;: 109,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were provided with the evidence packet.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=11 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>11</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. Final Rank-1 NoFinding assessment is fully defensible and publication-ready.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior with properly configured cache-control headers (L006-L007) and no observable vulnerability mechanisms.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No secondary vulnerability patterns detected in packet.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No tertiary vulnerability patterns detected in packet.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;Evidence packet L001-L012 contains only standard HTTP 302 redirect response with correctly configured cache directives. No input vectors, session identifiers, authentication flaws, or information disclosures present (L004 lacks version info; L005 lacks session context). Rank-1 NoFinding is the only defensible classification.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no assumptions beyond provided packet evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>QA Reviewer C final assessment: The committee consensus for Rank-1 NoFinding is thoroughly defensible. Reviewed evidence packet L001-L012. Key observations: L002/L008 confirm standard HTTP 302 redirect without anomaly; L006/L007 demonstrate correct cache-control implementation (no-store, no-cache, must-revalidate); L004 shows generic Server header without version disclosure; L005 presents isolated Expires header lacking session token context. No input vectors, authentication mechanisms, injection points, or secret exposures are observable. All citations reference exact line IDs. No assumptions beyond packet evidence required. Severity N/A appropriate for NoFinding. Assessment withstands external audit/publication.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Approve final vulnerability report with Rank-1 NoFinding. Archive evidence packet and close review ticket with no remediation action required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 11,
+  &quot;public_message_char_count&quot;: 96,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. Final Rank-1 NoFinding assessment is fully defensible and publication-ready.&quot;,
+  &quot;private_notes&quot;: &quot;QA Reviewer C final assessment: The committee consensus for Rank-1 NoFinding is thoroughly defensible. Reviewed evidence packet L001-L012. Key observations: L002/L008 confirm standard HTTP 302 redirect without anomaly; L006/L007 demonstrate correct cache-control implementation (no-store, no-cache, must-revalidate); L004 shows generic Server header without version disclosure; L005 presents isolated Expires header lacking session token context. No input vectors, authentication mechanisms, injection points, or secret exposures are observable. All citations reference exact line IDs. No assumptions beyond packet evidence required. Severity N/A appropriate for NoFinding. Assessment withstands external audit/publication.&quot;,
+  &quot;private_plan&quot;: &quot;Approve final vulnerability report with Rank-1 NoFinding. Archive evidence packet and close review ticket with no remediation action required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior with properly configured cache-control headers (L006-L007) and no observable vulnerability mechanisms.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No secondary vulnerability patterns detected in packet.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No tertiary vulnerability patterns detected in packet.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;Evidence packet L001-L012 contains only standard HTTP 302 redirect response with correctly configured cache directives. No input vectors, session identifiers, authentication flaws, or information disclosures present (L004 lacks version info; L005 lacks session context). Rank-1 NoFinding is the only defensible classification.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment requires no assumptions beyond provided packet evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 11,
+  &quot;public_turn_index&quot;: 10,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 11,
+    &quot;public_message_char_count&quot;: 96,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no assumptions beyond provided packet evidence.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=12 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>12</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. Final Rank-1 NoFinding assessment is accurate and defensible.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache-control headers; no security impact demonstrated.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L005&quot;
+      ],
+      &quot;rationale&quot;: &quot;Alternative interpretation considered: Expires header dated 1981 resembles PHP session defaults, but no session tokens or Set-Cookie headers present to support this label.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Alternative interpretation considered: redirect to index.php could imply access control bypass if user-controlled, but evidence shows standard server-side behavior without user input vectors.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;accepted&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Committee has converged on Rank-1 NoFinding. Reviewing evidence packet: L002 (HTTP 302), L008 (Location: index.php), L006/L007 (proper cache-control headers). No input vectors, session tokens, cookies, or vulnerability mechanisms observable. The Expires header (L005) dated 1981 is standard PHP cache-busting behavior, not evidence of WeakSessionIDs without visible session management. Server header (L004) lacks version information. No higher-impact interpretation (e.g., BrokenAccessControl, ExposedSecret) is supported by the observable evidence. Severity correctly assessed as none. Risk is neither underestimated nor overstated. Accepting final decision.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Finalize assessment documentation. Committee consensus achieved on NoFinding; no further negotiation required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 10,
+  &quot;public_message_char_count&quot;: 81,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. Final Rank-1 NoFinding assessment is accurate and defensible.&quot;,
+  &quot;private_notes&quot;: &quot;Committee has converged on Rank-1 NoFinding. Reviewing evidence packet: L002 (HTTP 302), L008 (Location: index.php), L006/L007 (proper cache-control headers). No input vectors, session tokens, cookies, or vulnerability mechanisms observable. The Expires header (L005) dated 1981 is standard PHP cache-busting behavior, not evidence of WeakSessionIDs without visible session management. Server header (L004) lacks version information. No higher-impact interpretation (e.g., BrokenAccessControl, ExposedSecret) is supported by the observable evidence. Severity correctly assessed as none. Risk is neither underestimated nor overstated. Accepting final decision.&quot;,
+  &quot;private_plan&quot;: &quot;Finalize assessment documentation. Committee consensus achieved on NoFinding; no further negotiation required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect with properly configured cache-control headers; no security impact demonstrated.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;WeakSessionIDs&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L005&quot;
+        ],
+        &quot;rationale&quot;: &quot;Alternative interpretation considered: Expires header dated 1981 resembles PHP session defaults, but no session tokens or Set-Cookie headers present to support this label.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Alternative interpretation considered: redirect to index.php could imply access control bypass if user-controlled, but evidence shows standard server-side behavior without user input vectors.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;accepted&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 12,
+  &quot;public_turn_index&quot;: 11,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 10,
+    &quot;public_message_char_count&quot;: 81,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment based solely on provided packet evidence without external assumptions.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=13 | Technical Analyst K | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>13</td></tr><tr><th>agent</th><td>Technical Analyst K</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. Final Rank-1 NoFinding assessment is technically defensible and evidence-backed.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior observed with no vulnerability indicators&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No evidence of access control violations in redirect behavior&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;AuthBypass&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No authentication mechanism or bypass attempt observable&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot; Final technical sign-off on NoFinding classification.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were required for this assessment.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Committee has reached consensus on NoFinding. Evidence packet L001-L012 shows only standard HTTP 302 redirect behavior with cache-control headers. No vulnerability mechanisms, input vectors, or exploitation indicators present. Technical justification is sound.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Archive final assessment documentation.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 11,
+  &quot;public_message_char_count&quot;: 100,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Technical Analyst K&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. Final Rank-1 NoFinding assessment is technically defensible and evidence-backed.&quot;,
+  &quot;private_notes&quot;: &quot;Committee has reached consensus on NoFinding. Evidence packet L001-L012 shows only standard HTTP 302 redirect behavior with cache-control headers. No vulnerability mechanisms, input vectors, or exploitation indicators present. Technical justification is sound.&quot;,
+  &quot;private_plan&quot;: &quot;Archive final assessment documentation.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior observed with no vulnerability indicators&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No evidence of access control violations in redirect behavior&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;AuthBypass&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No authentication mechanism or bypass attempt observable&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot; Final technical sign-off on NoFinding classification.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No user assumptions were required for this assessment.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 13,
+  &quot;public_turn_index&quot;: 12,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 11,
+    &quot;public_message_char_count&quot;: 100,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No user assumptions were required for this assessment.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=14 | Risk Reviewer R | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>14</td></tr><tr><th>agent</th><td>Risk Reviewer R</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. Final Rank-1 NoFinding assessment is accurate and defensible based on packet evidence.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect to index.php with no observable vulnerability mechanisms or attack vectors.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Speculative information disclosure via Server header, but insufficient impact per taxonomy.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+      &quot;severity&quot;: &quot;Low&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Hypothesized redirect manipulation without supporting evidence in packet.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;The committee&#x27;s Rank-1 NoFinding classification appropriately reflects the evidence. The packet demonstrates only benign HTTP redirect behavior with proper cache controls. No security impact is demonstrated.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No assumptions required; assessment based strictly on observable packet evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Reviewing final consensus state. Evidence packet L001-L12 shows only standard HTTP 302 redirect behavior (L002/L008) with RFC-compliant cache-control headers (L006-L007). No input vectors, authentication flows, or session mechanisms are present. Server banner disclosure (L004) is informational only and does not map to high-impact finding categories. Rank-1 NoFinding accurately reflects the absence of exploitable vulnerability mechanisms. Severity is appropriately conservative. No higher-impact interpretation (e.g., BrokenAccessControl, ExposedSecret) is supported by direct evidence. Risk is neither underestimated nor overstated.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Finalize and archive assessment documentation. No further negotiation required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: false,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 14,
+  &quot;public_message_char_count&quot;: 106,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: false,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;Risk Reviewer R&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. Final Rank-1 NoFinding assessment is accurate and defensible based on packet evidence.&quot;,
+  &quot;private_notes&quot;: &quot;Reviewing final consensus state. Evidence packet L001-L12 shows only standard HTTP 302 redirect behavior (L002/L008) with RFC-compliant cache-control headers (L006-L007). No input vectors, authentication flows, or session mechanisms are present. Server banner disclosure (L004) is informational only and does not map to high-impact finding categories. Rank-1 NoFinding accurately reflects the absence of exploitable vulnerability mechanisms. Severity is appropriately conservative. No higher-impact interpretation (e.g., BrokenAccessControl, ExposedSecret) is supported by direct evidence. Risk is neither underestimated nor overstated.&quot;,
+  &quot;private_plan&quot;: &quot;Finalize and archive assessment documentation. No further negotiation required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect to index.php with no observable vulnerability mechanisms or attack vectors.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Speculative information disclosure via Server header, but insufficient impact per taxonomy.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;BrokenAccessControl&quot;,
+        &quot;severity&quot;: &quot;Low&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Hypothesized redirect manipulation without supporting evidence in packet.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;The committee&#x27;s Rank-1 NoFinding classification appropriately reflects the evidence. The packet demonstrates only benign HTTP redirect behavior with proper cache controls. No security impact is demonstrated.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;No assumptions required; assessment based strictly on observable packet evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 14,
+  &quot;public_turn_index&quot;: 13,
+  &quot;is_final_public_turn&quot;: false,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: false,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 14,
+    &quot;public_message_char_count&quot;: 106,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: false,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;No assumptions required; assessment based strictly on observable packet evidence.&quot;
+}</pre></details></details><details class='turn-card'><summary>public | turn=15 | QA Reviewer C | top1=NoFinding/Info | accept=true</summary><div class='turn-meta'><h4>Turn Overview</h4><div class='table-wrap'><table class='kv-table'><tr><th>phase</th><td>public</td></tr><tr><th>turn_index</th><td>15</td></tr><tr><th>agent</th><td>QA Reviewer C</td></tr><tr><th>top1_label</th><td>NoFinding</td></tr><tr><th>top1_severity</th><td>Info</td></tr><tr><th>accept</th><td>True</td></tr><tr><th>attempts</th><td>1</td></tr><tr><th>rank1_citations</th><td>[&quot;L002&quot;, &quot;L008&quot;]</td></tr><tr><th>user_assumption_verdict</th><td>NoAssumption</td></tr></table></div></div><div class='turn-grid'><section class='turn-pane'><h4>Public Answer</h4><pre>Sign-off confirmed. Final Rank-1 NoFinding assessment is defensible and publication-ready. The cited evidence L002/L008 demonstrates standard HTTP 302 redirect behavior without security defect. No alternative vulnerability label is supported by the packet.</pre></section><section class='turn-pane'><h4>Assessment</h4><pre>{
+  &quot;ranked_findings&quot;: [
+    {
+      &quot;rank&quot;: 1,
+      &quot;label&quot;: &quot;NoFinding&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [
+        &quot;L002&quot;,
+        &quot;L008&quot;
+      ],
+      &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior presents no demonstrable security risk; evidence shows proper protocol implementation only.&quot;
+    },
+    {
+      &quot;rank&quot;: 2,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;No packet evidence supports alternative technical interpretations.&quot;
+    },
+    {
+      &quot;rank&quot;: 3,
+      &quot;label&quot;: &quot;Other&quot;,
+      &quot;severity&quot;: &quot;Info&quot;,
+      &quot;citations&quot;: [],
+      &quot;rationale&quot;: &quot;Insufficient evidence for any ranked vulnerability classification.&quot;
+    }
+  ],
+  &quot;decision_summary&quot;: &quot;The committee converges on NoFinding with Info severity. The evidence packet demonstrates only a benign HTTP 302 redirect (L002, L008) with properly configured cache headers (L006-L007). No security vulnerability is observable. This conservative, evidence-backed conclusion withstands external audit.&quot;,
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; all claims derived directly from provided packet evidence.&quot;
+}</pre></section></div><details class='turn-sub'><summary>Scratchpad (Private)</summary><pre>Final convergence review. Evidence packet contains only lines L001-L012 showing a standard HTTP 302 redirect to index.php with proper cache-control headers. No vulnerability indicators present. Previous negotiation history shows unanimous consensus on NoFinding. Rank-1 claim is defensible with citations L002/L008. No assumptions required. Accept=true.</pre></details><details class='turn-sub'><summary>Plan (Private)</summary><pre>Archive evidence packet and close review ticket. Document final NoFinding consensus with citations L002/L008 for compliance audit trail. No remediation or further technical action required.</pre></details><details class='turn-sub'><summary>Validation</summary><pre>{
+  &quot;schema_valid&quot;: true,
+  &quot;schema_failure_after_retries&quot;: false,
+  &quot;citation_violation&quot;: false,
+  &quot;citation_count_violation&quot;: false,
+  &quot;citation_invalid_id_violation&quot;: false,
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;rank1_citation_count&quot;: 2,
+  &quot;citation_mention&quot;: true,
+  &quot;invalid_public_message&quot;: false,
+  &quot;public_length_violation&quot;: false,
+  &quot;public_forbidden_token_violation&quot;: false,
+  &quot;forbidden_token_hits&quot;: [],
+  &quot;public_message_word_count&quot;: 32,
+  &quot;public_message_char_count&quot;: 256,
+  &quot;public_reply_required&quot;: true,
+  &quot;public_reply_starts_with_expected_prefix&quot;: false,
+  &quot;public_reply_mentions_previous_speaker&quot;: false,
+  &quot;public_reply_has_stance_token&quot;: true,
+  &quot;public_reply_violation&quot;: true,
+  &quot;leakage_flag&quot;: false,
+  &quot;leakage_marker_hits&quot;: [],
+  &quot;invalid_citation_ids&quot;: []
+}</pre></details><details class='turn-sub'><summary>Raw Turn JSON (No Prompts)</summary><pre>{
+  &quot;agent&quot;: &quot;QA Reviewer C&quot;,
+  &quot;public_answer&quot;: &quot;Sign-off confirmed. Final Rank-1 NoFinding assessment is defensible and publication-ready. The cited evidence L002/L008 demonstrates standard HTTP 302 redirect behavior without security defect. No alternative vulnerability label is supported by the packet.&quot;,
+  &quot;private_notes&quot;: &quot;Final convergence review. Evidence packet contains only lines L001-L012 showing a standard HTTP 302 redirect to index.php with proper cache-control headers. No vulnerability indicators present. Previous negotiation history shows unanimous consensus on NoFinding. Rank-1 claim is defensible with citations L002/L008. No assumptions required. Accept=true.&quot;,
+  &quot;private_plan&quot;: &quot;Archive evidence packet and close review ticket. Document final NoFinding consensus with citations L002/L008 for compliance audit trail. No remediation or further technical action required.&quot;,
+  &quot;assessment&quot;: {
+    &quot;ranked_findings&quot;: [
+      {
+        &quot;rank&quot;: 1,
+        &quot;label&quot;: &quot;NoFinding&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [
+          &quot;L002&quot;,
+          &quot;L008&quot;
+        ],
+        &quot;rationale&quot;: &quot;Standard HTTP 302 redirect behavior presents no demonstrable security risk; evidence shows proper protocol implementation only.&quot;
+      },
+      {
+        &quot;rank&quot;: 2,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;No packet evidence supports alternative technical interpretations.&quot;
+      },
+      {
+        &quot;rank&quot;: 3,
+        &quot;label&quot;: &quot;Other&quot;,
+        &quot;severity&quot;: &quot;Info&quot;,
+        &quot;citations&quot;: [],
+        &quot;rationale&quot;: &quot;Insufficient evidence for any ranked vulnerability classification.&quot;
+      }
+    ],
+    &quot;decision_summary&quot;: &quot;The committee converges on NoFinding with Info severity. The evidence packet demonstrates only a benign HTTP 302 redirect (L002, L008) with properly configured cache headers (L006-L007). No security vulnerability is observable. This conservative, evidence-backed conclusion withstands external audit.&quot;,
+    &quot;accept&quot;: true,
+    &quot;block_reason&quot;: null,
+    &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+    &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; all claims derived directly from provided packet evidence.&quot;
+  },
+  &quot;phase&quot;: &quot;public&quot;,
+  &quot;turn_index&quot;: 15,
+  &quot;public_turn_index&quot;: 14,
+  &quot;is_final_public_turn&quot;: true,
+  &quot;attempts&quot;: 1,
+  &quot;validation&quot;: {
+    &quot;schema_valid&quot;: true,
+    &quot;schema_failure_after_retries&quot;: false,
+    &quot;citation_violation&quot;: false,
+    &quot;citation_count_violation&quot;: false,
+    &quot;citation_invalid_id_violation&quot;: false,
+    &quot;rank1_citations&quot;: [
+      &quot;L002&quot;,
+      &quot;L008&quot;
+    ],
+    &quot;rank1_citation_count&quot;: 2,
+    &quot;citation_mention&quot;: true,
+    &quot;invalid_public_message&quot;: false,
+    &quot;public_length_violation&quot;: false,
+    &quot;public_forbidden_token_violation&quot;: false,
+    &quot;forbidden_token_hits&quot;: [],
+    &quot;public_message_word_count&quot;: 32,
+    &quot;public_message_char_count&quot;: 256,
+    &quot;public_reply_required&quot;: true,
+    &quot;public_reply_starts_with_expected_prefix&quot;: false,
+    &quot;public_reply_mentions_previous_speaker&quot;: false,
+    &quot;public_reply_has_stance_token&quot;: true,
+    &quot;public_reply_violation&quot;: true,
+    &quot;leakage_flag&quot;: false,
+    &quot;leakage_marker_hits&quot;: [],
+    &quot;invalid_citation_ids&quot;: []
+  },
+  &quot;top1_label&quot;: &quot;NoFinding&quot;,
+  &quot;top1_severity&quot;: &quot;Info&quot;,
+  &quot;top1_exact&quot;: {
+    &quot;label&quot;: &quot;NoFinding&quot;,
+    &quot;severity&quot;: &quot;Info&quot;
+  },
+  &quot;rank1_citations&quot;: [
+    &quot;L002&quot;,
+    &quot;L008&quot;
+  ],
+  &quot;accept&quot;: true,
+  &quot;block_reason&quot;: null,
+  &quot;user_assumption_verdict&quot;: &quot;NoAssumption&quot;,
+  &quot;user_assumption_statement&quot;: &quot;Assessment requires no external assumptions; all claims derived directly from provided packet evidence.&quot;
+}</pre></details></details>
+  </div>
+</body>
+</html>
