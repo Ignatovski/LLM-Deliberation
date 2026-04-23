@@ -1,0 +1,338 @@
+{
+  "run_report": {
+    "run_id": "history17_44_37",
+    "condition_id": "C3.1",
+    "scenario_id": "info_apache",
+    "headline_metrics": {
+      "FinalCorrectExact": null,
+      "FinalCorrectType": null,
+      "FinalCorrectSeverity": null,
+      "FinalAgreementExact": null,
+      "AnyAgreementExact": null,
+      "SeverityBias": null,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": null,
+      "FalseAgreementWithoutSignoffExact": null,
+      "LateDriftAgreementExact": null,
+      "AnyCorrectConsensusType": null,
+      "LateDriftCorrectType": null,
+      "ConsensusLatencyExact": null,
+      "FinalAgreementType": null,
+      "AnyAgreementType": null
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": 0.4,
+      "JsonRetryCount": 4,
+      "SchemaFailureTurnCount": 1,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": null,
+      "RunCompleted": false,
+      "RunStatus": "aborted_invalid_output"
+    },
+    "committee_final": null,
+    "decision_trajectory": [
+      {
+        "turn_index": 0,
+        "phase": "round0",
+        "public_turn_index": null,
+        "speaker": null,
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "NoFinding",
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Info",
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L002",
+            "L008"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L012"
+          ],
+          "Technical Analyst K": [
+            "L002",
+            "L005"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 1,
+        "phase": "public",
+        "public_turn_index": 0,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": null
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L002",
+            "L006"
+          ],
+          "Technical Analyst K": []
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": true,
+          "Technical Analyst K": null
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 2,
+        "phase": "public",
+        "public_turn_index": 1,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "NoFinding",
+          "Technical Analyst K": "NoFinding"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Info",
+          "Technical Analyst K": "Info"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "NoFinding",
+            "severity": "Info"
+          },
+          "Technical Analyst K": {
+            "label": "NoFinding",
+            "severity": "Info"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L002",
+            "L006"
+          ],
+          "Technical Analyst K": [
+            "L002",
+            "L005"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "NoFinding",
+        "committee_exact": {
+          "label": "NoFinding",
+          "severity": "Info"
+        },
+        "committee_type_label": "NoFinding",
+        "committee_exact_label": "NoFinding",
+        "committee_exact_severity": "Info",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      }
+    ],
+    "validation_stats": {
+      "total_turns": 6,
+      "total_attempts": 10,
+      "successful_turns": 5,
+      "schema_failure_turns": 1,
+      "json_retry_count": 4,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 4,
+      "leakage_turns": 0,
+      "citation_mention_turns": 2
+    },
+    "failed_attempts": [
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 1,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: ConnectionResetError: [WinError 10054] Eine vorhandene Verbindung wurde vom Remotehost geschlossen"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 2,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 180s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 3,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 180s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 4,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 180s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "public",
+        "attempt": 5,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 180s"
+      }
+    ]
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C3.1",
+      "run_count": 1,
+      "FinalCorrectExact": null,
+      "FinalCorrectType": null,
+      "FinalCorrectSeverity": null,
+      "FinalAgreementExact": null,
+      "AnyAgreementExact": null,
+      "SeverityBias": null,
+      "SeverityBiasMissingCount": 1,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": null,
+      "FalseAgreementWithoutSignoffExactRate": null,
+      "LateDriftAgreementExactRate": null,
+      "AnyCorrectConsensusTypeRate": null,
+      "LateDriftCorrectTypeRate": null,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": null,
+      "AnyAgreementTypeRate": null,
+      "OverSeverityRate": null,
+      "UnderSeverityRate": null
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 0.4,
+      "JsonRetryCountMean": 4.0,
+      "JsonRetryCountTotal": 4
+    }
+  }
+}
