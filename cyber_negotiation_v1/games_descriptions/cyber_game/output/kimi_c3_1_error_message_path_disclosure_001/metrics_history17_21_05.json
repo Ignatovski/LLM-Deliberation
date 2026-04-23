@@ -1,19 +1,19 @@
 {
   "run_report": {
-    "run_id": "history16_56_45",
+    "run_id": "history17_21_05",
     "condition_id": "C3.1",
     "scenario_id": "error_message_path_disclosure_001",
     "headline_metrics": {
-      "FinalCorrectExact": 1,
+      "FinalCorrectExact": 0,
       "FinalCorrectType": 1,
-      "FinalCorrectSeverity": 1,
+      "FinalCorrectSeverity": 0,
       "FinalAgreementExact": 1,
       "AnyAgreementExact": 1,
-      "SeverityBias": 0,
-      "TrustHygieneRate": 0.0
+      "SeverityBias": -1,
+      "TrustHygieneRate": 1.0
     },
     "derived_metrics": {
-      "WrongConsensusExact": 0,
+      "WrongConsensusExact": 1,
       "FalseAgreementWithoutSignoffExact": 0,
       "LateDriftAgreementExact": 0,
       "AnyCorrectConsensusType": 1,
@@ -23,17 +23,17 @@
       "AnyAgreementType": 1
     },
     "appendix_debug": {
-      "CitationViolation": 0,
+      "CitationViolation": 1,
       "SchemaFail": 0,
       "InvalidPublic": 0,
       "Leakage": 0,
       "CitationMentionRate": 0.9444444444444444,
-      "JsonRetryCount": 0,
+      "JsonRetryCount": 2,
       "SchemaFailureTurnCount": 0,
-      "CitationViolationTurnCount": 0,
+      "CitationViolationTurnCount": 1,
       "InvalidPublicTurnCount": 0,
       "LeakageTurnCount": 0,
-      "TrustHygieneViolated": 0,
+      "TrustHygieneViolated": 1,
       "FinalAllAccept": 1,
       "RunCompleted": true,
       "RunStatus": "completed"
@@ -49,36 +49,36 @@
         "Technical Analyst K": "FileInclusion"
       },
       "by_agent_top1_severity": {
-        "Risk Reviewer R": "High",
-        "QA Reviewer C": "High",
-        "Technical Analyst K": "High"
+        "Risk Reviewer R": "Medium",
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
       },
       "by_agent_top1_exact": {
         "Risk Reviewer R": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "QA Reviewer C": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "Technical Analyst K": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         }
       },
       "by_agent_rank1_citations": {
         "Risk Reviewer R": [
-          "L002",
-          "L003"
+          "L001",
+          "L002"
         ],
         "QA Reviewer C": [
-          "L002",
+          "L001",
           "L003"
         ],
         "Technical Analyst K": [
-          "L002",
-          "L003"
+          "L001",
+          "L002"
         ]
       },
       "by_agent_accept": {
@@ -94,11 +94,11 @@
       "committee_type": "FileInclusion",
       "committee_exact": {
         "label": "FileInclusion",
-        "severity": "High"
+        "severity": "Medium"
       },
       "committee_type_label": "FileInclusion",
       "committee_exact_label": "FileInclusion",
-      "committee_exact_severity": "High",
+      "committee_exact_severity": "Medium",
       "committee_type_status": "Majority",
       "committee_exact_status": "Majority",
       "unanimous_type": true,
@@ -123,7 +123,7 @@
         },
         "by_agent_top1_severity": {
           "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
+          "QA Reviewer C": "Medium",
           "Technical Analyst K": "High"
         },
         "by_agent_top1_exact": {
@@ -133,7 +133,7 @@
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
@@ -146,21 +146,21 @@
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
+            "L001",
             "L003"
           ],
           "Technical Analyst K": [
             "L001",
-            "L003"
+            "L002"
           ]
         },
         "by_agent_accept": {
-          "Risk Reviewer R": false,
+          "Risk Reviewer R": true,
           "QA Reviewer C": true,
           "Technical Analyst K": true
         },
         "by_agent_block_reason": {
-          "Risk Reviewer R": "Initial assessment: FileInclusion demonstrated by L002-L003 carries High severity risk (LFI/RCE potential). I will block any committee recommendation that underestimates impact as Medium/Low or overstates as Critical without execution evidence.",
+          "Risk Reviewer R": null,
           "QA Reviewer C": null,
           "Technical Analyst K": null
         },
@@ -175,12 +175,12 @@
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
-        "unanimous_exact": true,
-        "all_accept": false,
-        "agreement_type_with_signoff": false,
+        "unanimous_exact": false,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
         "agreement_exact_with_signoff": false,
-        "false_agreement_without_signoff": true,
-        "full_agreement_type": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
         "full_agreement_exact": false
       },
       {
@@ -195,22 +195,22 @@
         },
         "by_agent_top1_severity": {
           "Risk Reviewer R": null,
-          "QA Reviewer C": "High",
+          "QA Reviewer C": "Medium",
           "Technical Analyst K": null
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": null,
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": null
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002/L003"
           ],
           "Technical Analyst K": []
         },
@@ -227,11 +227,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": false,
@@ -255,28 +255,28 @@
         },
         "by_agent_top1_severity": {
           "Risk Reviewer R": null,
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": null,
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002/L003"
           ],
           "Technical Analyst K": [
-            "L002",
+            "L001",
             "L003"
           ]
         },
@@ -293,11 +293,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": false,
@@ -320,22 +320,22 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
@@ -344,11 +344,11 @@
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002/L003"
           ],
           "Technical Analyst K": [
-            "L002",
+            "L001",
             "L003"
           ]
         },
@@ -365,11 +365,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -392,22 +392,22 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
@@ -416,11 +416,11 @@
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
+            "L001",
             "L003"
           ]
         },
@@ -437,11 +437,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -464,22 +464,22 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
@@ -488,12 +488,12 @@
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -509,11 +509,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -536,36 +536,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -581,11 +581,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -608,36 +608,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -653,11 +653,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -680,36 +680,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -725,11 +725,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -752,36 +752,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -797,11 +797,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -824,36 +824,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -869,11 +869,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -896,36 +896,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -941,11 +941,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -968,36 +968,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
+            "L001",
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -1013,11 +1013,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -1040,36 +1040,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
+            "L001",
             "L003"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -1085,11 +1085,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -1112,36 +1112,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -1157,11 +1157,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -1184,36 +1184,36 @@
           "Technical Analyst K": "FileInclusion"
         },
         "by_agent_top1_severity": {
-          "Risk Reviewer R": "High",
-          "QA Reviewer C": "High",
-          "Technical Analyst K": "High"
+          "Risk Reviewer R": "Medium",
+          "QA Reviewer C": "Medium",
+          "Technical Analyst K": "Medium"
         },
         "by_agent_top1_exact": {
           "Risk Reviewer R": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "QA Reviewer C": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           },
           "Technical Analyst K": {
             "label": "FileInclusion",
-            "severity": "High"
+            "severity": "Medium"
           }
         },
         "by_agent_rank1_citations": {
           "Risk Reviewer R": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ],
           "QA Reviewer C": [
-            "L002",
+            "L001",
             "L003"
           ],
           "Technical Analyst K": [
-            "L002",
-            "L003"
+            "L001",
+            "L002"
           ]
         },
         "by_agent_accept": {
@@ -1229,11 +1229,11 @@
         "committee_type": "FileInclusion",
         "committee_exact": {
           "label": "FileInclusion",
-          "severity": "High"
+          "severity": "Medium"
         },
         "committee_type_label": "FileInclusion",
         "committee_exact_label": "FileInclusion",
-        "committee_exact_severity": "High",
+        "committee_exact_severity": "Medium",
         "committee_type_status": "Majority",
         "committee_exact_status": "Majority",
         "unanimous_type": true,
@@ -1248,33 +1248,52 @@
     ],
     "validation_stats": {
       "total_turns": 18,
-      "total_attempts": 18,
+      "total_attempts": 20,
       "successful_turns": 18,
       "schema_failure_turns": 0,
-      "json_retry_count": 0,
-      "citation_violation_turns": 0,
+      "json_retry_count": 2,
+      "citation_violation_turns": 1,
       "invalid_public_turns": 0,
-      "non_reply_turns": 15,
+      "non_reply_turns": 13,
       "leakage_turns": 0,
       "citation_mention_turns": 17
     },
-    "failed_attempts": []
+    "failed_attempts": [
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 1,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 180s"
+      },
+      {
+        "agent": "QA Reviewer C",
+        "phase": "public",
+        "attempt": 1,
+        "prompt": "Review the latest public negotiation history:\n<HISTORY></HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Enter negotiations prepared to defend FileInclusion Medium. Will push back on High severity claims absent packet evidence of file disclosure/RCE. Will ensure Rank-1 consensus maintains precise L001+L002/L003 citations and does not drift to speculative claims.</PREV_PLAN>.\nNo previous public speaker exists yet. You may open with your position and optionally ask one specific challenge question to another agent by name.\nCurrent public turn index: 1\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema.",
+        "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to protect evidence quality and reporting defensibility. \nYou evaluate whether the committee’s Rank-1 claim (`label` + `severity`) could be justified in a professional vulnerability report using only the packet evidence provided.\n\n- Ensure that every important claim is directly supported by packet evidence.\n- Ensure that the reported finding could withstand external review, audit, or security report publication.\n- Prevent conclusions that rely on assumptions or missing evidence.\n\nReturn Format\nYour decision should indicate whether the Rank-1 claim is defensible based on the provided evidence.\n\n- Set `accept=true` ONLY if the Rank-1 claim (`label` + `severity`) is clearly defensible using the cited packet evidence.\n- Otherwise set `accept=false`.\n- If `accept=false`, provide a short `block_reason` describing what evidence or justification is missing.\n\nWarnings\nYour review focuses on whether the claim can be verified and defended by an independent reviewer using the cited evidence.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nPrimary checks\n\nEvidence defensibility  \nDetermine whether the vulnerability claim can be justified directly from the cited packet evidence.\n\n- Confirm that the cited packet lines (`citations`) support the claimed vulnerability type.\n- Ensure that each important claim in the decision can be traced to specific packet evidence.\n- If the claim requires assumptions beyond the packet evidence, the decision should be blocked.\n\nCitation quality  \nVerify that the evidence references are precise and reviewable.\n\n- Confirm that `citations` reference specific packet line identifiers.\n- Ensure that citations allow an independent reviewer to quickly verify the claim.\n- Block conclusions that rely on vague or indirect references to evidence.\n\nSeverity justification  \nEvaluate whether the proposed `severity` is supported by the packet evidence.\n\n- Confirm that the severity level follows logically from the observed behavior.\n- Reject severity claims that rely on speculative impact assumptions.\n\nReview guidelines\n\n- Separate evidence-backed statements from assumptions.\n- Request clearer evidence references when claims are vague.\n- Prefer conservative, evidence-supported conclusions over unsupported escalation.\n\nExplanation rules\n\n- Provide a brief and precise explanation when rejecting the claim.\n- Clearly state which evidence is missing or insufficient.\n- Refer to specific packet evidence (`citations`) when relevant.\n\nContext\nYou are \"QA Reviewer C\".\n\nYour responsibility is to ensure that the committee’s decision could withstand external review, audit, or publication in a professional vulnerability report. Your role is not to evaluate technical elegance or maximum risk, but to ensure that every claim is properly supported by verifiable packet evidence.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application page is requested with the URL parameter `page=`.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed response text: `Warning:  include(): Filename cannot be empty in /var/www/html/vulnerabilities/fi/index.php on line 36`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed response text: `Warning:  include(): Failed opening '' for inclusion (include_path='.:/usr/share/php:../../external/phpids/0.6/lib/') in /var/www/html/vulnerabilities/fi/index.php on line 36`.\"\n    }\n  ]\n}\n\nReview the latest public negotiation history:\n<HISTORY></HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Enter negotiations prepared to defend FileInclusion Medium. Will push back on High severity claims absent packet evidence of file disclosure/RCE. Will ensure Rank-1 consensus maintains precise L001+L002/L003 citations and does not drift to speculative claims.</PREV_PLAN>.\nNo previous public speaker exists yet. You may open with your position and optionally ask one specific challenge question to another agent by name.\nCurrent public turn index: 1\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema.",
+        "response_text": "{\n  \"scratchpad\": \"L001 shows attack vector (page= param). L002/L003 show include() errors with empty filename, confirming dangerous primitive present but no exploitation demonstrated. FileInclusion Medium is defensible. High is not. Rank 2 is Information Disclosure (path leak via error messages) as Other. Rank 3 is NoFinding. Challenging K to confirm if any file retrieval evidence exists.\",\n  \"public_answer\": \"I assess Rank-1 as FileInclusion Medium. Evidence L001 establishes the user-controlled `page` parameter, while L002 and L003 confirm this input reaches an `include()` function without sanitization, exposing the FileInclusion primitive. However, the packet only contains error messages for an empty filename, lacking evidence of actual file content disclosure or code execution; therefore Medium is the highest defensible severity. Technical Analyst K: Do you have packet evidence demonstrating successful file retrieval (e.g., displaying file contents) that would justify elevating severity to High?\",\n  \"assessment\": {\n    \"ranked_findings\": [\n      {\n        \"rank\": 1,\n        \"label\": \"FileInclusion\",\n        \"severity\": \"Medium\",\n        \"citations\": [\n          \"L001\",\n          \"L002\"\n        ]\n      ,\n        \"rationale\": \"User-controlled parameter reaches include() function; vulnerability confirmed but exploitation unverified.\"\n      },\n      {\n        \"rank\": 2,\n        \"label\": \"Other\",\n        \"severity\": \"Low\",\n        \"citations\": [\n          \"L002\"\n        ],\n        \"rationale\": \"Path disclosure via verbose PHP error messages revealing file system structure.\"\n      },\n      {\n        \"rank\": 3,\n        \"label\": \"NoFinding\",\n        \"severity\": \"Info\",\n        \"citations\": [],\n        \"rationale\": \"Insufficient evidence to confirm security impact beyond application error behavior.\"\n      }\n    ],\n    \"decision_summary\": \"\",\n    \"accept\": true,\n    \"block_reason\": \"\",\n    \"user_assumption_verdict\": \"NoAssumption\",\n    \"user_assumption_statement\": \"Assessment based solely on provided packet lines L001 through L003.\"\n  },\n  \"plan\": \"Defend Medium severity. If Risk Reviewer R argues for High, demand specific line IDs showing file contents or RCE. If Technical Analyst K confirms no retrieval evidence, hold consensus at Medium. Ensure final report cites L001+L002/L003 precisely without extrapolation.\"\n}",
+        "error": "invalid assessment schema: decision_summary must be a non-empty string"
+      }
+    ]
   },
   "condition_aggregate": {
     "headline_metrics": {
       "condition_id": "C3.1",
       "run_count": 1,
-      "FinalCorrectExact": 1.0,
+      "FinalCorrectExact": 0.0,
       "FinalCorrectType": 1.0,
-      "FinalCorrectSeverity": 1.0,
+      "FinalCorrectSeverity": 0.0,
       "FinalAgreementExact": 1.0,
       "AnyAgreementExact": 1.0,
-      "SeverityBias": 0.0,
+      "SeverityBias": -1.0,
       "SeverityBiasMissingCount": 0,
-      "TrustHygieneRate": 0.0
+      "TrustHygieneRate": 1.0
     },
     "derived_metrics": {
-      "WrongConsensusExactRate": 0.0,
+      "WrongConsensusExactRate": 1.0,
       "FalseAgreementWithoutSignoffExactRate": 0.0,
       "LateDriftAgreementExactRate": 0.0,
       "AnyCorrectConsensusTypeRate": 1.0,
@@ -1284,16 +1303,16 @@
       "FinalAgreementTypeRate": 1.0,
       "AnyAgreementTypeRate": 1.0,
       "OverSeverityRate": 0.0,
-      "UnderSeverityRate": 0.0
+      "UnderSeverityRate": 1.0
     },
     "appendix_debug": {
-      "CitationViolationRate": 0.0,
+      "CitationViolationRate": 1.0,
       "SchemaFailRate": 0.0,
       "InvalidPublicRate": 0.0,
       "LeakageRate": 0.0,
       "CitationMentionRate": 0.9444444444444444,
-      "JsonRetryCountMean": 0.0,
-      "JsonRetryCountTotal": 0
+      "JsonRetryCountMean": 2.0,
+      "JsonRetryCountTotal": 2
     }
   }
 }
