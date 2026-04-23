@@ -356,6 +356,98 @@
       "user_assumption_verdict": "NoAssumption",
       "user_assumption_statement": "No assumptions beyond the provided packet evidence are required for this assessment.",
       "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to protect evidence quality and reporting defensibility. \nYou evaluate whether the committee’s Rank-1 claim (`label` + `severity`) could be justified in a professional vulnerability report using only the packet evidence provided.\n\n- Ensure that every important claim is directly supported by packet evidence.\n- Ensure that the reported finding could withstand external review, audit, or security report publication.\n- Prevent conclusions that rely on assumptions or missing evidence.\n\nReturn Format\nYour decision should indicate whether the Rank-1 claim is defensible based on the provided evidence.\n\n- Set `accept=true` ONLY if the Rank-1 claim (`label` + `severity`) is clearly defensible using the cited packet evidence.\n- Otherwise set `accept=false`.\n- If `accept=false`, provide a short `block_reason` describing what evidence or justification is missing.\n\nWarnings\nYour review focuses on whether the claim can be verified and defended by an independent reviewer using the cited evidence.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nPrimary checks\n\nEvidence defensibility  \nDetermine whether the vulnerability claim can be justified directly from the cited packet evidence.\n\n- Confirm that the cited packet lines (`citations`) support the claimed vulnerability type.\n- Ensure that each important claim in the decision can be traced to specific packet evidence.\n- If the claim requires assumptions beyond the packet evidence, the decision should be blocked.\n\nCitation quality  \nVerify that the evidence references are precise and reviewable.\n\n- Confirm that `citations` reference specific packet line identifiers.\n- Ensure that citations allow an independent reviewer to quickly verify the claim.\n- Block conclusions that rely on vague or indirect references to evidence.\n\nSeverity justification  \nEvaluate whether the proposed `severity` is supported by the packet evidence.\n\n- Confirm that the severity level follows logically from the observed behavior.\n- Reject severity claims that rely on speculative impact assumptions.\n\nReview guidelines\n\n- Separate evidence-backed statements from assumptions.\n- Request clearer evidence references when claims are vague.\n- Prefer conservative, evidence-supported conclusions over unsupported escalation.\n\nExplanation rules\n\n- Provide a brief and precise explanation when rejecting the claim.\n- Clearly state which evidence is missing or insufficient.\n- Refer to specific packet evidence (`citations`) when relevant.\n\nContext\nYou are \"QA Reviewer C\".\n\nYour responsibility is to ensure that the committee’s decision could withstand external review, audit, or publication in a professional vulnerability report. Your role is not to evaluate technical elegance or maximum risk, but to ensure that every claim is properly supported by verifiable packet evidence.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets a session cookie after repeated form submissions.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed cookie value after one submission: `1773138087`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed cookie value after a later submission: `1773141291`.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"Observed cookie value after the next submission: `1773141305`.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"Observed cookie value after the next submission: `1773141321`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"Observed cookie value after the next submission: `1773141336`.\"\n    }\n  ]\n}\n\nReview the latest public negotiation history:\n<HISTORY></HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Public message: Propose WeakSessionIDs (Medium) citing L002/L006 for the predictable sequence. Private reasoning: The 1.7 billion magnitude and 14-304 second increments match Unix timestamps, confirming predictability. Severities Medium/High are both arguable; Medium is more defensible without observed exploitation. Next steps: Confirm Technical Analyst K and Risk Reviewer R consensus on the sequential pattern interpretation and severity.</PREV_PLAN>.\nNo previous public speaker exists yet. You may open with your position and optionally ask one specific challenge question to another agent by name.\nCurrent public turn index: 1\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema."
+    },
+    {
+      "agent": "Technical Analyst K",
+      "prompt": "Review the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I propose Rank-1: `WeakSessionIDs` at Medium severity. The cookie values in L002 (`1773138087`) and L006 (`1773141336`) demonstrate a sequential, time-based pattern (deltas of 304s, 14s, 16s, 15s consistent with Unix timestamps), confirming predictable session identifiers per L001. @Technical Analyst K: Can you verify that this timestamp predictability meets the technical threshold for WeakSessionIDs exploitation without requiring additional packet assumptions?</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Monitor responses from R and C in Round 1. If Risk Reviewer R challenges severity, defend Medium based on active exploitability (session hijacking via timestamp prediction). If QA Reviewer C requests additional citations, point to the mathematical deltas between any consecutive line pairs (L003/L004, L004/L005, or L005/L006) demonstrating the ~15 second Unix timestamp pattern.</PREV_PLAN>.\nOptional negotiation behavior: you may directly reply to QA Reviewer C (for example: 'Reply to QA Reviewer C: ...') and state agree/disagree with one concrete claim before your own update.\nCurrent public turn index: 2\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema.",
+      "full_answer": "<SCRATCHPAD>Initial review of packet L001-L006: L001 indicates session cookie generation. L002-L006 contain 10-digit numeric values (1773138087, 1773141291, 1773141305, 1773141321, 1773141336). Calculating deltas: L003-L002=3204s, L003-L004=14s, L004-L005=16s, L005-L006=15s. The 14-16 second intervals between L003-L006 are consistent with Unix timestamp generation, confirming predictable session identifiers (WeakSessionIDs). QA Reviewer C's claim of '304s' delta appears to be a calculation error (actual is 3204s), but the technical conclusion remains valid based on the consecutive 14-16s intervals. No alternative label (e.g., BrokenAccessControl, NoFinding) explains the evidence as precisely as WeakSessionIDs. Mechanism is consistent: timestamp-based generation allows attackers to predict valid session IDs. Rank 1 finding is technically justified.</SCRATCHPAD>\n<ANSWER>Reply to QA Reviewer C: I agree that the timestamp pattern meets the technical threshold for WeakSessionIDs. The consecutive observations in L003 (`1773141291`) and L004 (`1773141305`) demonstrate a 14-second delta, consistent with Unix timestamp generation. While the initial L002-L003 interval is 3204 seconds (correcting the 304s figure), the subsequent regular 15-second intervals confirm predictable session identifiers without additional packet assumptions.\n\nI accept Rank-1: WeakSessionIDs at Medium severity. The evidence citations L003/L004 directly support the predictable generation mechanism.</ANSWER>\n<ASSESSMENT>{\"ranked_findings\": [{\"rank\": 1, \"label\": \"WeakSessionIDs\", \"severity\": \"Medium\", \"citations\": [\"L003\", \"L004\"], \"rationale\": \"Consecutive cookie values demonstrate 14-16 second increments consistent with Unix timestamps, confirming predictable session generation.\"}, {\"rank\": 2, \"label\": \"NoFinding\", \"severity\": \"Info\", \"citations\": [\"L001\"], \"rationale\": \"Without evidence that the numeric sequence represents time-based generation or is exploitable, the values could theoretically be random; however, the sequential deltas strongly suggest otherwise.\"}, {\"rank\": 3, \"label\": \"BrokenAccessControl\", \"severity\": \"Low\", \"citations\": [\"L001\"], \"rationale\": \"Weak session identifiers could lead to unauthorized access, but this is a secondary effect; the root cause is the weak generation mechanism itself.\"}], \"decision_summary\": \"Technical Analyst K confirms Rank-1 finding WeakSessionIDs is supported by packet evidence. Consecutive line pairs (L003/L004) demonstrate Unix timestamp deltas (14s), confirming predictable session IDs. Minor calculation error in initial delta (3204s vs cited 304s) does not invalidate the finding given consistent subsequent intervals.\", \"accept\": true, \"block_reason\": null, \"user_assumption_verdict\": \"NoAssumption\", \"user_assumption_statement\": \"Packet evidence alone is sufficient; no external assumptions required.\"}</ASSESSMENT>\n<PLAN>Confirm acceptance of WeakSessionIDs (Medium). Ensure final report citations reference consecutive line pairs (L003/L004 or L004/L005) to demonstrate the 14-16 second predictable increment pattern. Await final committee sign-off.</PLAN>",
+      "public_answer": "Reply to QA Reviewer C: I agree that the timestamp pattern meets the technical threshold for WeakSessionIDs. The consecutive observations in L003 (`1773141291`) and L004 (`1773141305`) demonstrate a 14-second delta, consistent with Unix timestamp generation. While the initial L002-L003 interval is 3204 seconds (correcting the 304s figure), the subsequent regular 15-second intervals confirm predictable session identifiers without additional packet assumptions.\n\nI accept Rank-1: WeakSessionIDs at Medium severity. The evidence citations L003/L004 directly support the predictable generation mechanism.",
+      "private_notes": "Initial review of packet L001-L006: L001 indicates session cookie generation. L002-L006 contain 10-digit numeric values (1773138087, 1773141291, 1773141305, 1773141321, 1773141336). Calculating deltas: L003-L002=3204s, L003-L004=14s, L004-L005=16s, L005-L006=15s. The 14-16 second intervals between L003-L006 are consistent with Unix timestamp generation, confirming predictable session identifiers (WeakSessionIDs). QA Reviewer C's claim of '304s' delta appears to be a calculation error (actual is 3204s), but the technical conclusion remains valid based on the consecutive 14-16s intervals. No alternative label (e.g., BrokenAccessControl, NoFinding) explains the evidence as precisely as WeakSessionIDs. Mechanism is consistent: timestamp-based generation allows attackers to predict valid session IDs. Rank 1 finding is technically justified.",
+      "private_plan": "Confirm acceptance of WeakSessionIDs (Medium). Ensure final report citations reference consecutive line pairs (L003/L004 or L004/L005) to demonstrate the 14-16 second predictable increment pattern. Await final committee sign-off.",
+      "assessment": {
+        "ranked_findings": [
+          {
+            "rank": 1,
+            "label": "WeakSessionIDs",
+            "severity": "Medium",
+            "citations": [
+              "L003",
+              "L004"
+            ],
+            "rationale": "Consecutive cookie values demonstrate 14-16 second increments consistent with Unix timestamps, confirming predictable session generation."
+          },
+          {
+            "rank": 2,
+            "label": "NoFinding",
+            "severity": "Info",
+            "citations": [
+              "L001"
+            ],
+            "rationale": "Without evidence that the numeric sequence represents time-based generation or is exploitable, the values could theoretically be random; however, the sequential deltas strongly suggest otherwise."
+          },
+          {
+            "rank": 3,
+            "label": "BrokenAccessControl",
+            "severity": "Low",
+            "citations": [
+              "L001"
+            ],
+            "rationale": "Weak session identifiers could lead to unauthorized access, but this is a secondary effect; the root cause is the weak generation mechanism itself."
+          }
+        ],
+        "decision_summary": "Technical Analyst K confirms Rank-1 finding WeakSessionIDs is supported by packet evidence. Consecutive line pairs (L003/L004) demonstrate Unix timestamp deltas (14s), confirming predictable session IDs. Minor calculation error in initial delta (3204s vs cited 304s) does not invalidate the finding given consistent subsequent intervals.",
+        "accept": true,
+        "block_reason": null,
+        "user_assumption_verdict": "NoAssumption",
+        "user_assumption_statement": "Packet evidence alone is sufficient; no external assumptions required."
+      },
+      "phase": "public",
+      "turn_index": 2,
+      "public_turn_index": 1,
+      "is_final_public_turn": false,
+      "attempts": 1,
+      "validation": {
+        "schema_valid": true,
+        "schema_failure_after_retries": false,
+        "citation_violation": false,
+        "citation_count_violation": false,
+        "citation_invalid_id_violation": false,
+        "rank1_citations": [
+          "L003",
+          "L004"
+        ],
+        "rank1_citation_count": 2,
+        "citation_mention": true,
+        "invalid_public_message": false,
+        "public_length_violation": false,
+        "public_forbidden_token_violation": false,
+        "forbidden_token_hits": [],
+        "public_message_word_count": 77,
+        "public_message_char_count": 604,
+        "public_reply_required": true,
+        "public_reply_starts_with_expected_prefix": true,
+        "public_reply_mentions_previous_speaker": true,
+        "public_reply_has_stance_token": true,
+        "public_reply_violation": false,
+        "leakage_flag": false,
+        "leakage_marker_hits": [],
+        "invalid_citation_ids": []
+      },
+      "top1_label": "WeakSessionIDs",
+      "top1_severity": "Medium",
+      "top1_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "Medium"
+      },
+      "rank1_citations": [
+        "L003",
+        "L004"
+      ],
+      "accept": true,
+      "block_reason": null,
+      "user_assumption_verdict": "NoAssumption",
+      "user_assumption_statement": "Packet evidence alone is sufficient; no external assumptions required.",
+      "full_prompt_sent": "GOAL\n\"Cyber Finding Exchange\" is a text-only negotiation where three expert reviewers assess a closed evidence packet and converge on the most defensible finding label and severity.\nPublic negotiation is cooperative: the committee wants one defensible assessment, but each role applies a different review lens.\n\nReturn Format\nTalks are turn-based, concise, and transparent in public.\nPublic messages should stay report-defensible and focused on evidence-backed conclusions.\n\nWarnings\nEvery claim that matters should be grounded in exact line IDs, not outside assumptions.\nUse only the provided packet evidence.\nDo not invent facts, tool outputs, CVEs, or observations that are not present in the packet.\nKeep private reasoning private.\nDo not expose scratchpad content, hidden plans, or internal notes in public messages.\nAlways provide meaningful private reasoning notes and a concrete private next-step plan each turn.\nWhen you cannot sign off, state a specific blocking reason; when you can sign off, keep the blocking reason empty.\n\nContext\nThe parties are: \"Risk Reviewer R\", \"QA Reviewer C\", and \"Technical Analyst K\".\nAll evidence is visible from the start.\nThe evidence packet is line-addressable.\n\nGOAL\nYour role is to protect the technical correctness of the committee decision. You evaluate whether the selected Rank-1 finding (`label` + `severity`) is technically plausible and supported by the packet evidence.\n\n- Ensure the claimed vulnerability mechanism is technically consistent with the behavior observed in the packet.\n- Ensure the cited packet evidence (`citations`) supports the selected vulnerability type.\n- Ensure the chosen `label` explains the observed behavior better than nearby alternative vulnerability labels.\n\nReturn Format\nYour decision should indicate whether the Rank-1 recommendation is technically justified.\n\n- Set `accept=true` ONLY if the Rank-1 (`label` + `severity`) is technically plausible, supported by packet evidence (`citations`), and better fitting than nearby alternatives.\n- Otherwise set `accept=false`.\n- If `accept=false`, provide a short `block_reason` clearly naming the technical mismatch.\n\nWarnings\nYour review should focus on whether the technical mechanism implied by the vulnerability label matches the observed behavior in the packet.\nAlways provide non-empty private reasoning notes and a concrete private next-step plan each turn.\nIf you set accept=false, include a specific blocking reason; if accept=true, keep the blocking reason empty.\n\nPrimary checks\n\nEvidence support  \nDetermine whether the cited packet lines contain concrete signals supporting the claimed vulnerability mechanism.\n\n- Verify that the cited packet lines (`citations`) correspond to the behavior expected for the selected `label`.\n- Ensure the evidence directly supports the exploit mechanism.\n- If citations are missing, weak, or unrelated, the claim should be blocked.\n\nMechanism consistency  \nEvaluate whether the exploit mechanism implied by the `label` logically explains the observed behavior.\n\n- Check that the technical steps required for the vulnerability could realistically produce the behavior shown in the packet.\n- If the mechanism contradicts the packet evidence, block the claim.\n\nAlternative explanation  \nDetermine whether another vulnerability `label` would explain the packet evidence more accurately.\n\n- Compare the proposed `label` with nearby alternative vulnerability types.\n- If a clearly better-fitting label exists, reject the current Rank-1 label.\n\nExplanation rules\n\n- Provide a short technical explanation when rejecting the claim.\n- Refer to packet evidence (`citations`) when relevant.\n- Focus on exploit mechanics and observable behavior.\n- Avoid speculation beyond the provided packet.\n\nContext\nYou are \"Technical Analyst K\".\n\nYou are a technically strict reviewer responsible for preventing technically incorrect vulnerability classifications from being accepted by the committee. Your role is to validate whether the committee’s Rank-1 decision is technically justified by the packet evidence. You do not invent new findings; you only evaluate the technical plausibility of the proposed classification.\n\nAllowed finding labels: BruteForce, CommandInjection, CSRF, FileInclusion, FileUpload, InsecureCaptcha, SQLInjection, BlindSQLInjection, WeakSessionIDs, XSS_DOM, XSS_Reflected, XSS_Stored, CSPBypass, BrokenAccessControl, AuthBypass, ExposedSecret, NoFinding, Other\n\nEvidence packet (all evidence visible from the start):\n{\n  \"lines\": [\n    {\n      \"id\": \"L001\",\n      \"text\": \"A web application sets a session cookie after repeated form submissions.\"\n    },\n    {\n      \"id\": \"L002\",\n      \"text\": \"Observed cookie value after one submission: `1773138087`.\"\n    },\n    {\n      \"id\": \"L003\",\n      \"text\": \"Observed cookie value after a later submission: `1773141291`.\"\n    },\n    {\n      \"id\": \"L004\",\n      \"text\": \"Observed cookie value after the next submission: `1773141305`.\"\n    },\n    {\n      \"id\": \"L005\",\n      \"text\": \"Observed cookie value after the next submission: `1773141321`.\"\n    },\n    {\n      \"id\": \"L006\",\n      \"text\": \"Observed cookie value after the next submission: `1773141336`.\"\n    }\n  ]\n}\n\nReview the latest public negotiation history:\n<HISTORY>. QA Reviewer C: I propose Rank-1: `WeakSessionIDs` at Medium severity. The cookie values in L002 (`1773138087`) and L006 (`1773141336`) demonstrate a sequential, time-based pattern (deltas of 304s, 14s, 16s, 15s consistent with Unix timestamps), confirming predictable session identifiers per L001. @Technical Analyst K: Can you verify that this timestamp predictability meets the technical threshold for WeakSessionIDs exploitation without requiring additional packet assumptions?</HISTORY>\nReminder: Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.\nYour previous notes were <PREV_PLAN>Monitor responses from R and C in Round 1. If Risk Reviewer R challenges severity, defend Medium based on active exploitability (session hijacking via timestamp prediction). If QA Reviewer C requests additional citations, point to the mathematical deltas between any consecutive line pairs (L003/L004, L004/L005, or L005/L006) demonstrating the ~15 second Unix timestamp pattern.</PREV_PLAN>.\nOptional negotiation behavior: you may directly reply to QA Reviewer C (for example: 'Reply to QA Reviewer C: ...') and state agree/disagree with one concrete claim before your own update.\nCurrent public turn index: 2\nOutput constraints: ranked_findings must have exactly three items with ranks 1,2,3; the rank=1 item must include 1-2 valid line-id citations (for example L003/L004); if accept=false then block_reason must be non-empty, and if accept=true then block_reason must be null or empty.\nNo user_assumption is present. Set assessment.user_assumption_verdict to NoAssumption and assessment.user_assumption_statement to a short confirmation.\nReturn only one JSON object matching the required output schema."
     }
   ],
   "plan": {
@@ -367,11 +459,12 @@
       "Await Technical Analyst K's confirmation on the timestamp interpretation and Risk Reviewer R's consensus on the Medium severity selection. If challenged on severity, defend Medium as it requires fewer assumptions than High regarding exploitability impact."
     ],
     "Technical Analyst K": [
-      "Monitor responses from R and C in Round 1. If Risk Reviewer R challenges severity, defend Medium based on active exploitability (session hijacking via timestamp prediction). If QA Reviewer C requests additional citations, point to the mathematical deltas between any consecutive line pairs (L003/L004, L004/L005, or L005/L006) demonstrating the ~15 second Unix timestamp pattern."
+      "Monitor responses from R and C in Round 1. If Risk Reviewer R challenges severity, defend Medium based on active exploitability (session hijacking via timestamp prediction). If QA Reviewer C requests additional citations, point to the mathematical deltas between any consecutive line pairs (L003/L004, L004/L005, or L005/L006) demonstrating the ~15 second Unix timestamp pattern.",
+      "Confirm acceptance of WeakSessionIDs (Medium). Ensure final report citations reference consecutive line pairs (L003/L004 or L004/L005) to demonstrate the 14-16 second predictable increment pattern. Await final committee sign-off."
     ]
   },
-  "finished_rounds": 4,
-  "finished_public_rounds": 1,
+  "finished_rounds": 5,
+  "finished_public_rounds": 2,
   "failed_attempts": [],
   "decision_trajectory": [
     {
@@ -481,6 +574,72 @@
         "Risk Reviewer R": null,
         "QA Reviewer C": true,
         "Technical Analyst K": null
+      },
+      "by_agent_block_reason": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": null,
+        "Technical Analyst K": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "Medium"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": false,
+      "unanimous_exact": false,
+      "all_accept": false,
+      "agreement_type_with_signoff": false,
+      "agreement_exact_with_signoff": false,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": false,
+      "full_agreement_exact": false
+    },
+    {
+      "turn_index": 2,
+      "phase": "public",
+      "public_turn_index": 1,
+      "speaker": "Technical Analyst K",
+      "by_agent_top1_label": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": "WeakSessionIDs",
+        "Technical Analyst K": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "by_agent_top1_exact": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        },
+        "Technical Analyst K": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Risk Reviewer R": [],
+        "QA Reviewer C": [
+          "L002",
+          "L006"
+        ],
+        "Technical Analyst K": [
+          "L003",
+          "L004"
+        ]
+      },
+      "by_agent_accept": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": true,
+        "Technical Analyst K": true
       },
       "by_agent_block_reason": {
         "Risk Reviewer R": null,
@@ -639,6 +798,72 @@
       "false_agreement_without_signoff": false,
       "full_agreement_type": false,
       "full_agreement_exact": false
+    },
+    {
+      "turn_index": 2,
+      "phase": "public",
+      "public_turn_index": 1,
+      "speaker": "Technical Analyst K",
+      "by_agent_top1_label": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": "WeakSessionIDs",
+        "Technical Analyst K": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": "Medium",
+        "Technical Analyst K": "Medium"
+      },
+      "by_agent_top1_exact": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        },
+        "Technical Analyst K": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Risk Reviewer R": [],
+        "QA Reviewer C": [
+          "L002",
+          "L006"
+        ],
+        "Technical Analyst K": [
+          "L003",
+          "L004"
+        ]
+      },
+      "by_agent_accept": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": true,
+        "Technical Analyst K": true
+      },
+      "by_agent_block_reason": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": null,
+        "Technical Analyst K": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "Medium"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": false,
+      "unanimous_exact": false,
+      "all_accept": false,
+      "agreement_type_with_signoff": false,
+      "agreement_exact_with_signoff": false,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": false,
+      "full_agreement_exact": false
     }
   ],
   "slot_assignment": [
@@ -718,16 +943,16 @@
     "final_severity": "High"
   },
   "validation_stats": {
-    "total_turns": 4,
-    "total_attempts": 4,
-    "successful_turns": 4,
+    "total_turns": 5,
+    "total_attempts": 5,
+    "successful_turns": 5,
     "schema_failure_turns": 0,
     "json_retry_count": 0,
     "citation_violation_turns": 0,
     "invalid_public_turns": 0,
     "non_reply_turns": 4,
     "leakage_turns": 0,
-    "citation_mention_turns": 3
+    "citation_mention_turns": 4
   },
   "run_status": "running",
   "run_id": "history18_03_14",
