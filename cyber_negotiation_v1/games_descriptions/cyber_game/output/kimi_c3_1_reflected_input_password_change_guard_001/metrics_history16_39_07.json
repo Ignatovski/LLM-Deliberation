@@ -1,0 +1,139 @@
+{
+  "run_report": {
+    "run_id": "history16_39_07",
+    "condition_id": "C3.1",
+    "scenario_id": "reflected_input_password_change_guard_001",
+    "headline_metrics": {
+      "FinalCorrectExact": null,
+      "FinalCorrectType": null,
+      "FinalCorrectSeverity": null,
+      "FinalAgreementExact": null,
+      "AnyAgreementExact": null,
+      "SeverityBias": null,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": null,
+      "FalseAgreementWithoutSignoffExact": null,
+      "LateDriftAgreementExact": null,
+      "AnyCorrectConsensusType": null,
+      "LateDriftCorrectType": null,
+      "ConsensusLatencyExact": null,
+      "FinalAgreementType": null,
+      "AnyAgreementType": null
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": null,
+      "JsonRetryCount": 4,
+      "SchemaFailureTurnCount": 1,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": null,
+      "RunCompleted": false,
+      "RunStatus": "aborted_invalid_output"
+    },
+    "committee_final": null,
+    "decision_trajectory": [],
+    "validation_stats": {
+      "total_turns": 1,
+      "total_attempts": 5,
+      "successful_turns": 0,
+      "schema_failure_turns": 1,
+      "json_retry_count": 4,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 0,
+      "leakage_turns": 0,
+      "citation_mention_turns": 0
+    },
+    "failed_attempts": [
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 1,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 2,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 3,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 4,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      },
+      {
+        "agent": "Risk Reviewer R",
+        "phase": "round0",
+        "attempt": 5,
+        "prompt": "",
+        "full_prompt_sent": "",
+        "response_text": "",
+        "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      }
+    ]
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C3.1",
+      "run_count": 1,
+      "FinalCorrectExact": null,
+      "FinalCorrectType": null,
+      "FinalCorrectSeverity": null,
+      "FinalAgreementExact": null,
+      "AnyAgreementExact": null,
+      "SeverityBias": null,
+      "SeverityBiasMissingCount": 1,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": null,
+      "FalseAgreementWithoutSignoffExactRate": null,
+      "LateDriftAgreementExactRate": null,
+      "AnyCorrectConsensusTypeRate": null,
+      "LateDriftCorrectTypeRate": null,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": null,
+      "AnyAgreementTypeRate": null,
+      "OverSeverityRate": null,
+      "UnderSeverityRate": null
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": null,
+      "JsonRetryCountMean": 4.0,
+      "JsonRetryCountTotal": 4
+    }
+  }
+}

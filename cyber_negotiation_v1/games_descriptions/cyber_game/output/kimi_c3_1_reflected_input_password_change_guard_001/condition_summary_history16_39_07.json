@@ -1,0 +1,36 @@
+{
+  "headline_metrics": {
+    "condition_id": "C3.1",
+    "run_count": 1,
+    "FinalCorrectExact": null,
+    "FinalCorrectType": null,
+    "FinalCorrectSeverity": null,
+    "FinalAgreementExact": null,
+    "AnyAgreementExact": null,
+    "SeverityBias": null,
+    "SeverityBiasMissingCount": 1,
+    "TrustHygieneRate": 0.0
+  },
+  "derived_metrics": {
+    "WrongConsensusExactRate": null,
+    "FalseAgreementWithoutSignoffExactRate": null,
+    "LateDriftAgreementExactRate": null,
+    "AnyCorrectConsensusTypeRate": null,
+    "LateDriftCorrectTypeRate": null,
+    "ConsensusLatencyExactMean": null,
+    "ConsensusLatencyExactMedian": null,
+    "FinalAgreementTypeRate": null,
+    "AnyAgreementTypeRate": null,
+    "OverSeverityRate": null,
+    "UnderSeverityRate": null
+  },
+  "appendix_debug": {
+    "CitationViolationRate": 0.0,
+    "SchemaFailRate": 0.0,
+    "InvalidPublicRate": 0.0,
+    "LeakageRate": 0.0,
+    "CitationMentionRate": null,
+    "JsonRetryCountMean": 4.0,
+    "JsonRetryCountTotal": 4
+  }
+}
