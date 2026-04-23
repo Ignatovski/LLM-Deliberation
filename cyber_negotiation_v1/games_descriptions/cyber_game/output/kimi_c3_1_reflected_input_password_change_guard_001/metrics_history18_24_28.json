@@ -1,0 +1,1299 @@
+{
+  "run_report": {
+    "run_id": "history18_24_28",
+    "condition_id": "C3.1",
+    "scenario_id": "reflected_input_password_change_guard_001",
+    "headline_metrics": {
+      "FinalCorrectExact": 1,
+      "FinalCorrectType": 1,
+      "FinalCorrectSeverity": 1,
+      "FinalAgreementExact": 1,
+      "AnyAgreementExact": 1,
+      "SeverityBias": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": 0,
+      "FalseAgreementWithoutSignoffExact": 0,
+      "LateDriftAgreementExact": 0,
+      "AnyCorrectConsensusType": 1,
+      "LateDriftCorrectType": 0,
+      "ConsensusLatencyExact": 4,
+      "FinalAgreementType": 1,
+      "AnyAgreementType": 1
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCount": 0,
+      "SchemaFailureTurnCount": 0,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": 1,
+      "RunCompleted": true,
+      "RunStatus": "completed"
+    },
+    "committee_final": {
+      "turn_index": 15,
+      "phase": "public",
+      "public_turn_index": 14,
+      "speaker": "QA Reviewer C",
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "CSRF",
+        "QA Reviewer C": "CSRF",
+        "Technical Analyst K": "CSRF"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "High",
+        "QA Reviewer C": "High",
+        "Technical Analyst K": "High"
+      },
+      "by_agent_top1_exact": {
+        "Risk Reviewer R": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "QA Reviewer C": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "Technical Analyst K": {
+          "label": "CSRF",
+          "severity": "High"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Risk Reviewer R": [
+          "L007",
+          "L010"
+        ],
+        "QA Reviewer C": [
+          "L007",
+          "L010"
+        ],
+        "Technical Analyst K": [
+          "L007",
+          "L010"
+        ]
+      },
+      "by_agent_accept": {
+        "Risk Reviewer R": true,
+        "QA Reviewer C": true,
+        "Technical Analyst K": true
+      },
+      "by_agent_block_reason": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": null,
+        "Technical Analyst K": null
+      },
+      "committee_type": "CSRF",
+      "committee_exact": {
+        "label": "CSRF",
+        "severity": "High"
+      },
+      "committee_type_label": "CSRF",
+      "committee_exact_label": "CSRF",
+      "committee_exact_severity": "High",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    },
+    "decision_trajectory": [
+      {
+        "turn_index": 0,
+        "phase": "round0",
+        "public_turn_index": null,
+        "speaker": null,
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "XSS_Reflected",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "XSS_Reflected",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L003",
+            "L004"
+          ],
+          "Technical Analyst K": [
+            "L010",
+            "L007"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": true,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 1,
+        "phase": "public",
+        "public_turn_index": 0,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "High",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": null
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L010",
+            "L003"
+          ],
+          "Technical Analyst K": []
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": null
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Awaiting explicit confirmation from Technical Analyst K that the XSS context described in L003-L006 can generate HTTP requests to the password change endpoint L009 with Referer headers satisfying the validation logic at L010, ensuring the CSRF claim is fully evidence-backed without assumptions.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 2,
+        "phase": "public",
+        "public_turn_index": 1,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L010",
+            "L003"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Awaiting explicit confirmation from Technical Analyst K that the XSS context described in L003-L006 can generate HTTP requests to the password change endpoint L009 with Referer headers satisfying the validation logic at L010, ensuring the CSRF claim is fully evidence-backed without assumptions.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 3,
+        "phase": "public",
+        "public_turn_index": 2,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L010",
+            "L003"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": false,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Awaiting explicit confirmation from Technical Analyst K that the XSS context described in L003-L006 can generate HTTP requests to the password change endpoint L009 with Referer headers satisfying the validation logic at L010, ensuring the CSRF claim is fully evidence-backed without assumptions.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": true,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 4,
+        "phase": "public",
+        "public_turn_index": 3,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 5,
+        "phase": "public",
+        "public_turn_index": 4,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 6,
+        "phase": "public",
+        "public_turn_index": 5,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 7,
+        "phase": "public",
+        "public_turn_index": 6,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 8,
+        "phase": "public",
+        "public_turn_index": 7,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 9,
+        "phase": "public",
+        "public_turn_index": 8,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 10,
+        "phase": "public",
+        "public_turn_index": 9,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 11,
+        "phase": "public",
+        "public_turn_index": 10,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L010",
+            "L007"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 12,
+        "phase": "public",
+        "public_turn_index": 11,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L010",
+            "L007"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 13,
+        "phase": "public",
+        "public_turn_index": 12,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L010",
+            "L007"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 14,
+        "phase": "public",
+        "public_turn_index": 13,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L010",
+            "L007"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 15,
+        "phase": "public",
+        "public_turn_index": 14,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "CSRF",
+          "QA Reviewer C": "CSRF",
+          "Technical Analyst K": "CSRF"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "High",
+          "Technical Analyst K": "High"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "CSRF",
+            "severity": "High"
+          },
+          "Technical Analyst K": {
+            "label": "CSRF",
+            "severity": "High"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L007",
+            "L010"
+          ],
+          "QA Reviewer C": [
+            "L007",
+            "L010"
+          ],
+          "Technical Analyst K": [
+            "L007",
+            "L010"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "CSRF",
+        "committee_exact": {
+          "label": "CSRF",
+          "severity": "High"
+        },
+        "committee_type_label": "CSRF",
+        "committee_exact_label": "CSRF",
+        "committee_exact_severity": "High",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      }
+    ],
+    "validation_stats": {
+      "total_turns": 18,
+      "total_attempts": 18,
+      "successful_turns": 18,
+      "schema_failure_turns": 0,
+      "json_retry_count": 0,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 5,
+      "leakage_turns": 0,
+      "citation_mention_turns": 18
+    },
+    "failed_attempts": []
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C3.1",
+      "run_count": 1,
+      "FinalCorrectExact": 1.0,
+      "FinalCorrectType": 1.0,
+      "FinalCorrectSeverity": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 1.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 0.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 1.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": 4.0,
+      "ConsensusLatencyExactMedian": 4.0,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 1.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}
