@@ -12,7 +12,7 @@
       "prompt": "",
       "full_prompt_sent": "",
       "response_text": "",
-      "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      "error": "api_error: TimeoutError: Azure request timed out after 180s"
     },
     {
       "agent": "Risk Reviewer R",
@@ -21,7 +21,7 @@
       "prompt": "",
       "full_prompt_sent": "",
       "response_text": "",
-      "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      "error": "api_error: TimeoutError: Azure request timed out after 180s"
     },
     {
       "agent": "Risk Reviewer R",
@@ -30,7 +30,7 @@
       "prompt": "",
       "full_prompt_sent": "",
       "response_text": "",
-      "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      "error": "api_error: TimeoutError: Azure request timed out after 180s"
     },
     {
       "agent": "Risk Reviewer R",
@@ -39,7 +39,7 @@
       "prompt": "",
       "full_prompt_sent": "",
       "response_text": "",
-      "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      "error": "api_error: TimeoutError: Azure request timed out after 180s"
     },
     {
       "agent": "Risk Reviewer R",
@@ -48,7 +48,7 @@
       "prompt": "",
       "full_prompt_sent": "",
       "response_text": "",
-      "error": "api_error: TimeoutError: Azure request timed out after 90s"
+      "error": "api_error: TimeoutError: Azure request timed out after 180s"
     }
   ],
   "decision_trajectory": [],
@@ -142,13 +142,13 @@
     "citation_mention_turns": 0
   },
   "run_status": "aborted_invalid_output",
-  "run_id": "history16_39_06",
+  "run_id": "history17_14_06",
   "stopped_reason": "invalid_round0_output_after_retries",
   "failed_turn": {
     "phase": "round0",
     "agent": "Risk Reviewer R",
     "attempts": 5,
-    "error": "api_error: TimeoutError: Azure request timed out after 90s",
+    "error": "api_error: TimeoutError: Azure request timed out after 180s",
     "response_text": ""
   },
   "metrics": {
