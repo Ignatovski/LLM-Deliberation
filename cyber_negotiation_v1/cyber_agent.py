@@ -178,13 +178,22 @@ class CyberAgent:
             "api_version": self._resolve_azure_api_version(),
             "timeout_seconds": timeout_seconds,
             "max_retries": max_retries,
+            "openai_compatible": self._is_openai_compatible_endpoint(endpoint),
         }
+
+    def _is_openai_compatible_endpoint(self, endpoint: str) -> bool:
+        normalized = str(endpoint or "").strip().rstrip("/").lower()
+        return normalized.endswith("/openai/v1") or "/openai/v1/" in normalized
 
     def _build_azure_chat_url(self, model: str) -> str:
         assert self.azure_runtime is not None
         endpoint = str(self.azure_runtime["endpoint"]).rstrip("/")
         quoted_model = urllib.parse.quote(model, safe="")
         lowered_endpoint = endpoint.lower()
+        if bool(self.azure_runtime.get("openai_compatible")):
+            if lowered_endpoint.endswith("/chat/completions"):
+                return endpoint
+            return endpoint + "/chat/completions"
         if lowered_endpoint.endswith("/chat/completions"):
             url = endpoint
         elif "/openai/deployments/" in lowered_endpoint:
@@ -206,7 +215,10 @@ class CyberAgent:
 
         for attempt in range(max_retries + 1):
             request = urllib.request.Request(url, data=body, method="POST")
-            request.add_header("api-key", str(self.azure_runtime["api_key"]))
+            if bool(self.azure_runtime.get("openai_compatible")):
+                request.add_header("Authorization", f"Bearer {self.azure_runtime['api_key']}")
+            else:
+                request.add_header("api-key", str(self.azure_runtime["api_key"]))
             request.add_header("Content-Type", "application/json")
             try:
                 with urllib.request.urlopen(request, timeout=timeout_seconds) as response:

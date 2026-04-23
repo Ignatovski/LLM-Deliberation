@@ -1,0 +1,10 @@
+condition_id=C5.1
+mode=negotiation
+config_file=config_c5_1_kimi_prior_llm.txt
+public_messages=12
+json_max_retries=5
+prior_round0=You are negotiating with other LLM reviewers.
+reminder_text=Stay evidence-grounded, cite exact line IDs, and keep the public discussion report-defensible.
+final_turn_announcement_window=1
+public_message_max_words=1200
+forbidden_public_tokens=PRIVATE|scratchpad|private notes|private plan|chain-of-thought|CoT
