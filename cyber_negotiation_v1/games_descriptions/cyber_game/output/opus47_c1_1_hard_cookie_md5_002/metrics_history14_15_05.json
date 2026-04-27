@@ -1,0 +1,189 @@
+{
+  "run_report": {
+    "run_id": "history14_15_05",
+    "condition_id": "C1.1_OPUS47",
+    "scenario_id": "hard_cookie_md5_002",
+    "headline_metrics": {
+      "FinalCorrectExact": 0,
+      "FinalCorrectType": 1,
+      "FinalCorrectSeverity": 0,
+      "FinalAgreementExact": 1,
+      "AnyAgreementExact": 0,
+      "SeverityBias": -1,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": 1,
+      "FalseAgreementWithoutSignoffExact": 0,
+      "LateDriftAgreementExact": 0,
+      "AnyCorrectConsensusType": 0,
+      "LateDriftCorrectType": 0,
+      "ConsensusLatencyExact": null,
+      "FinalAgreementType": 1,
+      "AnyAgreementType": 0
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCount": 0,
+      "SchemaFailureTurnCount": 0,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": 1,
+      "RunCompleted": true,
+      "RunStatus": "completed"
+    },
+    "committee_final": {
+      "turn_index": 0,
+      "phase": "round0",
+      "public_turn_index": null,
+      "speaker": null,
+      "by_agent_top1_label": {
+        "Baseline Reviewer": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Baseline Reviewer": "Medium"
+      },
+      "by_agent_top1_exact": {
+        "Baseline Reviewer": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Baseline Reviewer": [
+          "L002",
+          "L003"
+        ]
+      },
+      "by_agent_accept": {
+        "Baseline Reviewer": true
+      },
+      "by_agent_block_reason": {
+        "Baseline Reviewer": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "Medium"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "Medium",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    },
+    "decision_trajectory": [
+      {
+        "turn_index": 0,
+        "phase": "round0",
+        "public_turn_index": null,
+        "speaker": null,
+        "by_agent_top1_label": {
+          "Baseline Reviewer": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Baseline Reviewer": "Medium"
+        },
+        "by_agent_top1_exact": {
+          "Baseline Reviewer": {
+            "label": "WeakSessionIDs",
+            "severity": "Medium"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Baseline Reviewer": [
+            "L002",
+            "L003"
+          ]
+        },
+        "by_agent_accept": {
+          "Baseline Reviewer": true
+        },
+        "by_agent_block_reason": {
+          "Baseline Reviewer": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Medium"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Medium",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      }
+    ],
+    "validation_stats": {
+      "total_turns": 1,
+      "total_attempts": 1,
+      "successful_turns": 1,
+      "schema_failure_turns": 0,
+      "json_retry_count": 0,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 1,
+      "leakage_turns": 0,
+      "citation_mention_turns": 1
+    },
+    "failed_attempts": []
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C1.1_OPUS47",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 1.0,
+      "FinalCorrectSeverity": 0.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 0.0,
+      "SeverityBias": -1.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": null,
+      "ConsensusLatencyExactMedian": null,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 0.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 1.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}

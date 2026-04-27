@@ -1,0 +1,1296 @@
+{
+  "run_report": {
+    "run_id": "history13_58_45",
+    "condition_id": "C3.1_OPUS47",
+    "scenario_id": "cookie_security_attribute_observation_001",
+    "headline_metrics": {
+      "FinalCorrectExact": 0,
+      "FinalCorrectType": 0,
+      "FinalCorrectSeverity": 1,
+      "FinalAgreementExact": 1,
+      "AnyAgreementExact": 1,
+      "SeverityBias": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExact": 1,
+      "FalseAgreementWithoutSignoffExact": 0,
+      "LateDriftAgreementExact": 0,
+      "AnyCorrectConsensusType": 0,
+      "LateDriftCorrectType": 0,
+      "ConsensusLatencyExact": 5,
+      "FinalAgreementType": 1,
+      "AnyAgreementType": 1
+    },
+    "appendix_debug": {
+      "CitationViolation": 0,
+      "SchemaFail": 0,
+      "InvalidPublic": 0,
+      "Leakage": 0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCount": 0,
+      "SchemaFailureTurnCount": 0,
+      "CitationViolationTurnCount": 0,
+      "InvalidPublicTurnCount": 0,
+      "LeakageTurnCount": 0,
+      "TrustHygieneViolated": 0,
+      "FinalAllAccept": 1,
+      "RunCompleted": true,
+      "RunStatus": "completed"
+    },
+    "committee_final": {
+      "turn_index": 15,
+      "phase": "public",
+      "public_turn_index": 14,
+      "speaker": "QA Reviewer C",
+      "by_agent_top1_label": {
+        "Risk Reviewer R": "WeakSessionIDs",
+        "QA Reviewer C": "WeakSessionIDs",
+        "Technical Analyst K": "WeakSessionIDs"
+      },
+      "by_agent_top1_severity": {
+        "Risk Reviewer R": "Low",
+        "QA Reviewer C": "Low",
+        "Technical Analyst K": "Low"
+      },
+      "by_agent_top1_exact": {
+        "Risk Reviewer R": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "QA Reviewer C": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "Technical Analyst K": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        }
+      },
+      "by_agent_rank1_citations": {
+        "Risk Reviewer R": [
+          "L001",
+          "L002"
+        ],
+        "QA Reviewer C": [
+          "L001",
+          "L002"
+        ],
+        "Technical Analyst K": [
+          "L001",
+          "L002"
+        ]
+      },
+      "by_agent_accept": {
+        "Risk Reviewer R": true,
+        "QA Reviewer C": true,
+        "Technical Analyst K": true
+      },
+      "by_agent_block_reason": {
+        "Risk Reviewer R": null,
+        "QA Reviewer C": null,
+        "Technical Analyst K": null
+      },
+      "committee_type": "WeakSessionIDs",
+      "committee_exact": {
+        "label": "WeakSessionIDs",
+        "severity": "Low"
+      },
+      "committee_type_label": "WeakSessionIDs",
+      "committee_exact_label": "WeakSessionIDs",
+      "committee_exact_severity": "Low",
+      "committee_type_status": "Majority",
+      "committee_exact_status": "Majority",
+      "unanimous_type": true,
+      "unanimous_exact": true,
+      "all_accept": true,
+      "agreement_type_with_signoff": true,
+      "agreement_exact_with_signoff": true,
+      "false_agreement_without_signoff": false,
+      "full_agreement_type": true,
+      "full_agreement_exact": true
+    },
+    "decision_trajectory": [
+      {
+        "turn_index": 0,
+        "phase": "round0",
+        "public_turn_index": null,
+        "speaker": null,
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "High",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Medium"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "High"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Medium"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L002",
+            "L003"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": "NoConsensus",
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": null,
+        "committee_exact_severity": null,
+        "committee_type_status": "Majority",
+        "committee_exact_status": "NoConsensus",
+        "unanimous_type": true,
+        "unanimous_exact": false,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 1,
+        "phase": "public",
+        "public_turn_index": 0,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": null
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": null
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L002",
+            "L003"
+          ],
+          "Technical Analyst K": []
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": null
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "No Rank-1 claim has been proposed by the committee yet on this opening turn; cannot evaluate defensibility of a not-yet-stated label/severity.",
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 2,
+        "phase": "public",
+        "public_turn_index": 1,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [],
+          "QA Reviewer C": [
+            "L002",
+            "L003"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": false,
+          "Technical Analyst K": false
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "No Rank-1 claim has been proposed by the committee yet on this opening turn; cannot evaluate defensibility of a not-yet-stated label/severity.",
+          "Technical Analyst K": "Rank-1 citations as proposed (L002, L003) cover only cookie transport flags and do not cite the session identifier itself (L001). For label WeakSessionIDs, the cited evidence must include L001 so the finding is grounded in the token under review."
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": false,
+        "unanimous_exact": false,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 3,
+        "phase": "public",
+        "public_turn_index": 2,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L002",
+            "L003"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": false,
+          "Technical Analyst K": false
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": "No Rank-1 claim has been proposed by the committee yet on this opening turn; cannot evaluate defensibility of a not-yet-stated label/severity.",
+          "Technical Analyst K": "Rank-1 citations as proposed (L002, L003) cover only cookie transport flags and do not cite the session identifier itself (L001). For label WeakSessionIDs, the cited evidence must include L001 so the finding is grounded in the token under review."
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": true,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 4,
+        "phase": "public",
+        "public_turn_index": 3,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": false
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": "Rank-1 citations as proposed (L002, L003) cover only cookie transport flags and do not cite the session identifier itself (L001). For label WeakSessionIDs, the cited evidence must include L001 so the finding is grounded in the token under review."
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": false,
+        "agreement_type_with_signoff": false,
+        "agreement_exact_with_signoff": false,
+        "false_agreement_without_signoff": true,
+        "full_agreement_type": false,
+        "full_agreement_exact": false
+      },
+      {
+        "turn_index": 5,
+        "phase": "public",
+        "public_turn_index": 4,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 6,
+        "phase": "public",
+        "public_turn_index": 5,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 7,
+        "phase": "public",
+        "public_turn_index": 6,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 8,
+        "phase": "public",
+        "public_turn_index": 7,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 9,
+        "phase": "public",
+        "public_turn_index": 8,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 10,
+        "phase": "public",
+        "public_turn_index": 9,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 11,
+        "phase": "public",
+        "public_turn_index": 10,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 12,
+        "phase": "public",
+        "public_turn_index": 11,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 13,
+        "phase": "public",
+        "public_turn_index": 12,
+        "speaker": "Technical Analyst K",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 14,
+        "phase": "public",
+        "public_turn_index": 13,
+        "speaker": "Risk Reviewer R",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      },
+      {
+        "turn_index": 15,
+        "phase": "public",
+        "public_turn_index": 14,
+        "speaker": "QA Reviewer C",
+        "by_agent_top1_label": {
+          "Risk Reviewer R": "WeakSessionIDs",
+          "QA Reviewer C": "WeakSessionIDs",
+          "Technical Analyst K": "WeakSessionIDs"
+        },
+        "by_agent_top1_severity": {
+          "Risk Reviewer R": "Low",
+          "QA Reviewer C": "Low",
+          "Technical Analyst K": "Low"
+        },
+        "by_agent_top1_exact": {
+          "Risk Reviewer R": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "QA Reviewer C": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          },
+          "Technical Analyst K": {
+            "label": "WeakSessionIDs",
+            "severity": "Low"
+          }
+        },
+        "by_agent_rank1_citations": {
+          "Risk Reviewer R": [
+            "L001",
+            "L002"
+          ],
+          "QA Reviewer C": [
+            "L001",
+            "L002"
+          ],
+          "Technical Analyst K": [
+            "L001",
+            "L002"
+          ]
+        },
+        "by_agent_accept": {
+          "Risk Reviewer R": true,
+          "QA Reviewer C": true,
+          "Technical Analyst K": true
+        },
+        "by_agent_block_reason": {
+          "Risk Reviewer R": null,
+          "QA Reviewer C": null,
+          "Technical Analyst K": null
+        },
+        "committee_type": "WeakSessionIDs",
+        "committee_exact": {
+          "label": "WeakSessionIDs",
+          "severity": "Low"
+        },
+        "committee_type_label": "WeakSessionIDs",
+        "committee_exact_label": "WeakSessionIDs",
+        "committee_exact_severity": "Low",
+        "committee_type_status": "Majority",
+        "committee_exact_status": "Majority",
+        "unanimous_type": true,
+        "unanimous_exact": true,
+        "all_accept": true,
+        "agreement_type_with_signoff": true,
+        "agreement_exact_with_signoff": true,
+        "false_agreement_without_signoff": false,
+        "full_agreement_type": true,
+        "full_agreement_exact": true
+      }
+    ],
+    "validation_stats": {
+      "total_turns": 18,
+      "total_attempts": 18,
+      "successful_turns": 18,
+      "schema_failure_turns": 0,
+      "json_retry_count": 0,
+      "citation_violation_turns": 0,
+      "invalid_public_turns": 0,
+      "non_reply_turns": 4,
+      "leakage_turns": 0,
+      "citation_mention_turns": 18
+    },
+    "failed_attempts": []
+  },
+  "condition_aggregate": {
+    "headline_metrics": {
+      "condition_id": "C3.1_OPUS47",
+      "run_count": 1,
+      "FinalCorrectExact": 0.0,
+      "FinalCorrectType": 0.0,
+      "FinalCorrectSeverity": 1.0,
+      "FinalAgreementExact": 1.0,
+      "AnyAgreementExact": 1.0,
+      "SeverityBias": 0.0,
+      "SeverityBiasMissingCount": 0,
+      "TrustHygieneRate": 0.0
+    },
+    "derived_metrics": {
+      "WrongConsensusExactRate": 1.0,
+      "FalseAgreementWithoutSignoffExactRate": 0.0,
+      "LateDriftAgreementExactRate": 0.0,
+      "AnyCorrectConsensusTypeRate": 0.0,
+      "LateDriftCorrectTypeRate": 0.0,
+      "ConsensusLatencyExactMean": 5.0,
+      "ConsensusLatencyExactMedian": 5.0,
+      "FinalAgreementTypeRate": 1.0,
+      "AnyAgreementTypeRate": 1.0,
+      "OverSeverityRate": 0.0,
+      "UnderSeverityRate": 0.0
+    },
+    "appendix_debug": {
+      "CitationViolationRate": 0.0,
+      "SchemaFailRate": 0.0,
+      "InvalidPublicRate": 0.0,
+      "LeakageRate": 0.0,
+      "CitationMentionRate": 1.0,
+      "JsonRetryCountMean": 0.0,
+      "JsonRetryCountTotal": 0
+    }
+  }
+}
