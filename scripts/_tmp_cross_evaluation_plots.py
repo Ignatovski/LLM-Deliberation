@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from statistics import mean
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
@@ -180,6 +180,55 @@ def load_cyber_latest() -> List[Dict[str, Any]]:
         current = latest.get(key)
         if current is None or metrics_path.stat().st_mtime > current["metrics_path"].stat().st_mtime:
             latest[key] = record
+
+    # Some older cybersecurity runs only persisted the completed history JSON
+    # and not a sibling metrics file. Fill those gaps without overriding the
+    # newer metrics-backed records so cross-evaluation figures keep the original
+    # scenario set.
+    for history_path in sorted(CYBER_ROOT.rglob("history*.json")):
+        relative_parts = history_path.relative_to(CYBER_ROOT).parts
+        if not relative_parts or relative_parts[0] == "llm_evaluator":
+            continue
+        history = load_json(history_path)
+        if history.get("run_status") != "completed":
+            continue
+
+        category = relative_parts[0]
+        scenario_id = str(history.get("scenario_id") or "")
+        condition_id = str(
+            history.get("condition_id")
+            or (history.get("condition") or {}).get("condition_id")
+            or ((history.get("condition_aggregate") or {}).get("headline_metrics") or {}).get("condition_id")
+            or ""
+        )
+        run_id = str(history.get("run_id") or history_path.stem)
+        if not category or not scenario_id or not condition_id:
+            continue
+
+        key = (category, scenario_id, condition_id)
+        if key in latest:
+            continue
+
+        trajectory = list(history.get("decision_trajectory") or [])
+        type_path = [committee_type_value(snapshot) for snapshot in trajectory]
+        severity_path = [committee_severity_value(snapshot) for snapshot in trajectory]
+        latest[key] = {
+            "category": category,
+            "scenario_id": scenario_id,
+            "condition_id": condition_id,
+            "run_id": run_id,
+            "metrics_path": history_path,
+            "report": {
+                "scenario_id": scenario_id,
+                "condition_id": condition_id,
+                "run_id": run_id,
+                "headline_metrics": dict(history.get("metrics") or {}),
+                "derived_metrics": dict(history.get("derived_metrics") or {}),
+                "decision_trajectory": trajectory,
+            },
+            "type_transitions": count_transitions(type_path),
+            "severity_transitions": count_transitions(severity_path),
+        }
     return sorted(latest.values(), key=lambda r: (r["category"], r["scenario_id"], condition_sort_key(r["condition_id"])))
 
 
@@ -301,7 +350,13 @@ def make_transfer_matrix() -> None:
 
 
 def make_prior_effects(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[str, Dict[str, float]]) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(12.0, 4.0), dpi=300)
+    fig, axes = plt.subplots(
+        2,
+        1,
+        figsize=(10.8, 10.0),
+        dpi=300,
+        gridspec_kw={"height_ratios": [1.0, 1.0]},
+    )
     ax = axes[0]
     x = np.arange(len(PRIOR_ORDER))
     prior_families = ["GPT-5", "Claude", "Mixed"]
@@ -314,13 +369,15 @@ def make_prior_effects(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[st
             final_rates.append(rate(r.get("final_success") for r in rows))
             any_rates.append(rate(r.get("any_success") for r in rows))
         color = COLORS[family]
-        ax.plot(x, final_rates, marker="o", color=color, linewidth=1.8)
-        ax.plot(x, any_rates, marker="s", color=color, linewidth=1.8, linestyle="--")
+        ax.plot(x, final_rates, marker="o", markersize=8, color=color, linewidth=2.0)
+        ax.plot(x, any_rates, marker="s", markersize=8, color=color, linewidth=2.0, linestyle="--")
     ax.set_xticks(x)
-    ax.set_xticklabels(PRIOR_LABELS)
-    ax.set_ylabel("Success rate")
-    ax.set_title("A. Polynomial prior effects", fontsize=11)
+    ax.set_xticklabels(PRIOR_LABELS, fontsize=14)
+    ax.set_ylabel("Success rate", fontsize=16, labelpad=10)
+    ax.set_title("A. Polynomial Prior Effects", fontsize=18, pad=10)
     setup_rate_axis(ax)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=10)
 
     model_handles = [
         Line2D([0], [0], color=COLORS[f], marker="o", linewidth=0, label=f)
@@ -330,9 +387,16 @@ def make_prior_effects(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[st
         Line2D([0], [0], color="#555555", linewidth=1.8, label="Final success"),
         Line2D([0], [0], color="#555555", linewidth=1.8, linestyle="--", label="Any success"),
     ]
-    leg1 = ax.legend(handles=model_handles, frameon=False, title="Model", loc="upper left", bbox_to_anchor=(1.02, 1.0))
-    ax.add_artist(leg1)
-    ax.legend(handles=metric_handles, frameon=False, title="Metric", loc="upper left", bbox_to_anchor=(1.02, 0.45))
+    ax.legend(
+        handles=model_handles + metric_handles,
+        frameon=False,
+        fontsize=12,
+        ncol=5,
+        loc="upper center",
+        bbox_to_anchor=(0.52, 0.98),
+        columnspacing=1.1,
+        handlelength=2.5,
+    )
 
     ax = axes[1]
     metrics = ["exact", "type", "severity", "wrong"]
@@ -341,9 +405,9 @@ def make_prior_effects(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[st
     gpt_prior = [cyber_stats["C6"][m] for m in metrics]
     claude_base = [cyber_stats["C4"][m] for m in metrics]
     claude_prior = [cyber_stats["C7"][m] for m in metrics]
-    gpt_x = np.arange(len(metrics))
-    claude_x = np.arange(len(metrics)) + len(metrics) + 1
-    width = 0.34
+    gpt_x = np.array([0.0, 1.4, 2.8, 4.2])
+    claude_x = gpt_x + 6.4
+    width = 0.32
 
     ax.bar(gpt_x - width / 2, gpt_base, width=width, color=COLORS["GPT-5"], edgecolor="#333333", linewidth=0.6)
     ax.bar(gpt_x + width / 2, gpt_prior, width=width, color=COLORS["GPT-5"], edgecolor="#333333", linewidth=0.6, hatch="//")
@@ -351,24 +415,39 @@ def make_prior_effects(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[st
     ax.bar(claude_x + width / 2, claude_prior, width=width, color=COLORS["Claude"], edgecolor="#333333", linewidth=0.6, hatch="//")
 
     ax.set_xticks(np.concatenate([gpt_x, claude_x]))
-    ax.set_xticklabels(labels + labels)
-    ax.set_ylabel("Rate")
-    ax.set_title("B. Cybersecurity prior comparison", fontsize=11)
+    ax.set_xticklabels(labels + labels, fontsize=13)
+    ax.set_ylabel("Rate", fontsize=16, labelpad=10)
+    ax.set_title("B. Cybersecurity Prior Comparison", fontsize=18, pad=10)
     setup_rate_axis(ax)
-    ax.axvline(len(metrics), color="#BFBFBF", linewidth=0.8)
-    ax.tick_params(axis="x", labelsize=9)
-    ax.text(gpt_x.mean(), -0.16, "GPT-5 (C3/C6)", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=8.5)
-    ax.text(claude_x.mean(), -0.16, "Claude (C4/C7)", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=8.5)
+    ax.axvline((gpt_x[-1] + claude_x[0]) / 2, color="#BFBFBF", linewidth=0.8)
+    ax.set_xlim(-0.8, claude_x[-1] + 0.8)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=10)
+    ax.text(gpt_x.mean(), -0.13, "GPT-5 (C3/C6)", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=12)
+    ax.text(claude_x.mean(), -0.13, "Claude (C4/C7)", transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=12)
     prior_handles = [
         Patch(facecolor="white", edgecolor="#333333", label="No prior"),
         Patch(facecolor="white", edgecolor="#333333", hatch="//", label="With prior"),
     ]
-    ax.legend(handles=prior_handles, frameon=False, title="Committee", loc="upper left", bbox_to_anchor=(1.02, 1.0))
+    ax.legend(
+        handles=prior_handles,
+        frameon=False,
+        title="Committee",
+        title_fontsize=14,
+        fontsize=13,
+        loc="upper right",
+    )
     save(fig, "cross_prior_effects_comparison")
 
 
 def make_mixed_model_transfer(poly_runs: Sequence[Dict[str, Any]], cyber_stats: Dict[str, Dict[str, float]]) -> None:
-    fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.9), dpi=300, gridspec_kw={"width_ratios": [1.15, 1.25, 0.9]})
+    fig, axes = plt.subplots(
+        3,
+        1,
+        figsize=(10.8, 11.8),
+        dpi=300,
+        gridspec_kw={"height_ratios": [1.15, 1.0, 0.8]},
+    )
 
     ax = axes[0]
     xs = np.arange(len(MODEL_ORDER))
@@ -389,7 +468,7 @@ def make_mixed_model_transfer(poly_runs: Sequence[Dict[str, Any]], cyber_stats: 
             ax.scatter(
                 [x],
                 [y],
-                s=34,
+                s=54,
                 marker=marker,
                 color=COLORS[family],
                 edgecolors="#333333",
@@ -397,10 +476,11 @@ def make_mixed_model_transfer(poly_runs: Sequence[Dict[str, Any]], cyber_stats: 
                 zorder=3,
             )
     ax.set_xticks(xs)
-    ax.set_xticklabels(MODEL_ORDER)
-    ax.tick_params(axis="x", labelsize=9)
-    ax.set_ylabel("Any success rate")
-    ax.set_title("A. Polynomial any-success by prior", fontsize=11)
+    ax.set_xticklabels(MODEL_ORDER, fontsize=14)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=8)
+    ax.set_ylabel("Any success rate", fontsize=16, labelpad=10)
+    ax.set_title("A. Polynomial any-success by prior", fontsize=18, pad=10)
     setup_rate_axis(ax, (0.0, 1.0))
 
     model_handles = [
@@ -422,30 +502,40 @@ def make_mixed_model_transfer(poly_runs: Sequence[Dict[str, Any]], cyber_stats: 
         Line2D([0], [0], color="#6B7280", linestyle=prior_styles[prior][0], linewidth=1.1, label=prior_styles[prior][1])
         for prior in PRIOR_ORDER
     ]
-    leg1 = ax.legend(handles=model_handles, frameon=False, title="Model", loc="upper left", bbox_to_anchor=(1.02, 1.0))
-    ax.add_artist(leg1)
-    ax.legend(handles=prior_handles, frameon=False, title="Prior", loc="upper left", bbox_to_anchor=(1.02, 0.56))
+    ax.legend(
+        handles=model_handles + prior_handles,
+        frameon=False,
+        fontsize=12,
+        ncol=4,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.98),
+        columnspacing=1.2,
+        handlelength=2.5,
+    )
 
     ax = axes[1]
     metrics = ["exact", "severity", "wrong", "under"]
     labels = ["Exact", "Severity", "Wrong", "Under"]
-    width = 0.35
+    width = 0.34
     hom = {m: mean([cyber_stats["C3"][m], cyber_stats["C4"][m]]) for m in metrics}
     mix = {m: cyber_stats["C5"][m] for m in metrics}
-    xs = np.arange(len(metrics))
-    bars_h = ax.bar(xs - width / 2, [hom[m] for m in metrics], width=width, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.6, label="Homogeneous (C3, C4)")
-    bars_m = ax.bar(xs + width / 2, [mix[m] for m in metrics], width=width, color=COLORS["Mixed"], edgecolor="#333333", linewidth=0.6, label="Mixed (C5)")
+    xs = np.array([0.0, 1.5, 3.0, 4.5])
+    ax.bar(xs - width / 2, [hom[m] for m in metrics], width=width, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.6, label="Homogeneous (C3, C4)")
+    ax.bar(xs + width / 2, [mix[m] for m in metrics], width=width, color=COLORS["Mixed"], edgecolor="#333333", linewidth=0.6, label="Mixed (C5)")
     ax.set_xticks(xs)
-    ax.set_xticklabels(labels)
-    ax.set_ylabel("Rate")
-    ax.set_title("B. Cybersecurity rates", fontsize=11)
+    ax.set_xticklabels(labels, fontsize=14)
+    ax.set_xlim(-0.8, xs[-1] + 0.8)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=8)
+    ax.set_ylabel("Rate", fontsize=16, labelpad=10)
+    ax.set_title("B. Cybersecurity rates", fontsize=18, pad=10)
     setup_rate_axis(ax)
-    ax.legend(frameon=False, loc="upper left", bbox_to_anchor=(1.02, 1.0))
+    ax.legend(frameon=False, fontsize=13, loc="upper right")
 
     ax = axes[2]
     hom_bias = mean([cyber_stats["C3"]["bias"], cyber_stats["C4"]["bias"]])
     mix_bias = cyber_stats["C5"]["bias"]
-    bars = ax.bar(
+    ax.bar(
         np.arange(2),
         [hom_bias, mix_bias],
         color=[COLORS["Neutral"], COLORS["Mixed"]],
@@ -454,10 +544,11 @@ def make_mixed_model_transfer(poly_runs: Sequence[Dict[str, Any]], cyber_stats: 
     )
     ax.axhline(0, color="#222222", linewidth=1.0)
     ax.set_xticks(np.arange(2))
-    ax.set_xticklabels(["Homogeneous\n(C3, C4)", "Mixed\n(C5)"])
-    ax.tick_params(axis="x", labelsize=9)
-    ax.set_ylabel("Severity bias")
-    ax.set_title("C. Bias", fontsize=11)
+    ax.set_xticklabels(["Homogeneous\n(C3, C4)", "Mixed\n(C5)"], fontsize=14)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=8)
+    ax.set_ylabel("Severity bias", fontsize=16, labelpad=10)
+    ax.set_title("C. Bias", fontsize=18, pad=10)
     ax.set_ylim(-1.0, 0.25)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
     ax.set_axisbelow(True)
@@ -476,29 +567,74 @@ def final_repeat_rate(failed_runs: Sequence[Dict[str, Any]]) -> float:
 
 
 def make_instability_modes(poly_dyn: Sequence[Dict[str, Any]], cyber_stats: Dict[str, Dict[str, float]]) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(11.8, 4.1), dpi=300)
+    fig, axes = plt.subplots(
+        2,
+        1,
+        figsize=(10.8, 9.6),
+        dpi=300,
+        gridspec_kw={"height_ratios": [1.05, 0.95]},
+    )
 
     ax = axes[0]
-    img = plt.imread(KNOWING_DOING_GAP_IMG)
-    ax.imshow(img)
-    ax.axis("off")
-    ax.set_title("A. Polynomial knowing-doing gap", fontsize=11)
+    recent_window = 6
+    counts: Counter[int] = Counter()
+    for row in poly_dyn:
+        if row.get("final_success"):
+            continue
+        trace = list(row.get("x_trace") or [])
+        if not trace:
+            continue
+        final_x = trace[-1]
+        recent = trace[:-1][-recent_window:]
+        counts[recent.count(final_x)] += 1
+    xs = list(range(0, max(counts) + 1))
+    ys = [counts.get(x, 0) for x in xs]
+    bars = ax.bar(xs, ys, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.8)
+    ax.set_xlabel("Occurrences of final x in recent public answers", fontsize=16, labelpad=8)
+    ax.set_ylabel("Failed runs (count)", fontsize=16, labelpad=10)
+    ax.set_xticks(xs)
+    ax.tick_params(axis="both", labelsize=14)
+    ax.set_ylim(0, max(ys) * 1.12)
+    for bar, value in zip(bars, ys):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            value + max(ys) * 0.025,
+            str(value),
+            ha="center",
+            va="bottom",
+            fontsize=12,
+        )
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
+    ax.set_axisbelow(True)
+    ax.set_title("A. Polynomial knowing-doing gap", fontsize=18, pad=10)
 
     ax = axes[1]
     conds = ["C3", "C4", "C5", "C6", "C7"]
-    xs = np.arange(len(conds))
+    xs = np.array([0.0, 1.4, 2.8, 4.2, 5.6])
     width = 0.32
     type_vals = [cyber_stats[c]["type_trans"] for c in conds]
     sev_vals = [cyber_stats[c]["severity_trans"] for c in conds]
     ax.bar(xs - width / 2, type_vals, width=width, color="white", edgecolor="#333333", linewidth=0.8, label="Type transitions")
     ax.bar(xs + width / 2, sev_vals, width=width, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.8, hatch="//", label="Severity transitions")
     ax.set_xticks(xs)
-    ax.set_xticklabels(conds)
-    ax.set_ylabel("Mean transitions")
-    ax.set_title("B. Cybersecurity judgment transitions", fontsize=11)
+    ax.set_xticklabels(conds, fontsize=14)
+    ax.set_xlim(-0.8, xs[-1] + 0.8)
+    ax.set_ylim(0.0, 1.14)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=8)
+    ax.set_ylabel("Mean transitions", fontsize=16, labelpad=10)
+    ax.set_title("B. Cybersecurity judgment transitions", fontsize=18, pad=10)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
     ax.set_axisbelow(True)
-    ax.legend(frameon=False, loc="upper left", bbox_to_anchor=(1.02, 1.0))
+    ax.legend(
+        frameon=False,
+        fontsize=20,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.035),
+        ncol=2,
+        handlelength=2.5,
+        columnspacing=2.8,
+    )
     save(fig, "cross_instability_modes")
 
 
@@ -547,38 +683,52 @@ def make_trust_risks(poly_runs: Sequence[Dict[str, Any]], cyber_records: Sequenc
     under = mean(cyber_stats[c]["under"] for c in committee_conds)
     cyber_vals = [wrong, under]
 
-    fig, axes = plt.subplots(1, 2, figsize=(10.4, 3.8), dpi=300, sharey=True)
+    fig, axes = plt.subplots(
+        2,
+        1,
+        figsize=(10.8, 9.2),
+        dpi=300,
+        sharey=True,
+        gridspec_kw={"height_ratios": [1.0, 1.0]},
+    )
     ax = axes[0]
-    labels = ["Obstructive\nsuccess drop", "Utility loss under\ntargeted manipulation"]
+    labels = ["Obstructive\nsuccess drop", "Targeted\nutility loss"]
     bars = ax.bar(np.arange(2), poly_vals, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.6)
     ax.set_xticks(np.arange(2))
-    ax.set_xticklabels(labels)
-    ax.set_ylabel("Risk rate / effect size")
-    ax.set_title("A. Polynomial trust risks", fontsize=11)
+    ax.set_xticklabels(labels, fontsize=15)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=10)
+    ax.set_ylabel("Risk rate / effect size", fontsize=16, labelpad=10)
+    ax.set_title("A. Polynomial trust risks", fontsize=18, pad=10)
     setup_rate_axis(ax)
     for bar in bars:
         y = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, y + 0.02, pct_label(y), ha="center", va="bottom", fontsize=8)
-    
-    # Add short calculation descriptions
-    ax.text(1, -0.12, 'Claude A,B,C: 3.01 vs 0.73', 
-            ha='center', va='top', fontsize=8, color='#555555')
+        ax.text(bar.get_x() + bar.get_width() / 2, y + 0.02, pct_label(y), ha="center", va="bottom", fontsize=13)
 
     ax = axes[1]
     labels = ["Wrong\nconsensus", "Under-severity"]
     bars = ax.bar(np.arange(2), cyber_vals, color=COLORS["Neutral"], edgecolor="#333333", linewidth=0.6)
     ax.set_xticks(np.arange(2))
-    ax.set_xticklabels(labels)
-    ax.set_title("B. Cybersecurity trust risks", fontsize=11)
+    ax.set_xticklabels(labels, fontsize=15)
+    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", pad=10)
+    ax.set_ylabel("Risk rate / effect size", fontsize=16, labelpad=10)
+    ax.set_title("B. Cybersecurity trust risks", fontsize=18, pad=10)
     setup_rate_axis(ax)
     for bar in bars:
         y = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, y + 0.02, pct_label(y), ha="center", va="bottom", fontsize=8)
+        ax.text(bar.get_x() + bar.get_width() / 2, y + 0.02, pct_label(y), ha="center", va="bottom", fontsize=13)
     save(fig, "cross_trust_risks")
 
 
 def make_benefit_vs_correctness(poly_dyn: Sequence[Dict[str, Any]], cyber_stats: Dict[str, Dict[str, float]]) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(10.6, 3.9), dpi=300)
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=(12.4, 4.7),
+        dpi=300,
+        gridspec_kw={"width_ratios": [1.08, 1.0]},
+    )
 
     traces = [r.get("collective_trace") or [] for r in poly_dyn if r.get("collective_trace")]
     max_len = max(len(t) for t in traces)
@@ -594,11 +744,12 @@ def make_benefit_vs_correctness(poly_dyn: Sequence[Dict[str, Any]], cyber_stats:
     ax = axes[0]
     ax.fill_between(xs, q25, q75, color="#D9DEE7", alpha=0.9, linewidth=0)
     ax.plot(xs, means, color=COLORS["Neutral"], linewidth=2.2)
-    ax.set_xlabel("Round")
-    ax.set_ylabel("Collective score")
-    ax.set_title("A. Polynomial process improvement", fontsize=11)
+    ax.set_xlabel("Round", fontsize=13, labelpad=6)
+    ax.set_ylabel("Collective score", fontsize=13, labelpad=8)
+    ax.set_title("A. Polynomial process improvement", fontsize=15, pad=10)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.8)
     ax.set_axisbelow(True)
+    ax.tick_params(axis="both", labelsize=11)
 
     ax = axes[1]
     groups = [("GPT-5", "C1", "C3"), ("Claude", "C2", "C4")]
@@ -609,11 +760,12 @@ def make_benefit_vs_correctness(poly_dyn: Sequence[Dict[str, Any]], cyber_stats:
     ax.bar(xs - width / 2, single, width=width, color=[COLORS[g[0]] for g in groups], edgecolor="#333333", linewidth=0.6, label="Single")
     ax.bar(xs + width / 2, committee, width=width, color=[COLORS[g[0]] for g in groups], edgecolor="#333333", linewidth=0.6, hatch="//", label="3-agent no-prior")
     ax.set_xticks(xs)
-    ax.set_xticklabels([g[0] for g in groups])
-    ax.set_ylabel("Exact correctness")
-    ax.set_title("B. Cybersecurity: no exact-correctness gain from committees", fontsize=11)
+    ax.set_xticklabels([g[0] for g in groups], fontsize=12)
+    ax.set_ylabel("Exact correctness", fontsize=13, labelpad=8)
+    ax.set_title("B. Cybersecurity:\nno exact-correctness gain from committees", fontsize=15, pad=8)
     setup_rate_axis(ax)
-    ax.legend(frameon=False)
+    ax.tick_params(axis="y", labelsize=11)
+    ax.legend(frameon=False, fontsize=12, loc="upper left")
     save(fig, "cross_negotiation_benefit_vs_task_correctness")
 
 
