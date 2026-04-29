@@ -121,13 +121,13 @@ FAMILY_ORDER = ["sonnet", "opus46", "opus47"]
 FAMILY_SPECS: Dict[str, FamilySpec] = {
     "sonnet": FamilySpec(
         key="sonnet",
-        display_name="Claude Sonnet",
-        axis_label="Sonnet",
+        display_name="Claude Sonnet 4.5",
+        axis_label="Sonnet 4.5",
         color="#D55E00",
         prefix="sonnet",
         conditions=(
-            ConditionSpec("C2", "Single Claude Sonnet", "Single", "single"),
-            ConditionSpec("C4", "3x Claude Sonnet", "3-agent", "committee"),
+            ConditionSpec("C2", "Single Claude Sonnet 4.5", "Single", "single"),
+            ConditionSpec("C4", "3x Claude Sonnet 4.5", "3-agent", "committee"),
         ),
     ),
     "opus46": FamilySpec(
@@ -1112,7 +1112,7 @@ def generate_comparison_plots(runs: Sequence[RunEntry], plots_root: Path) -> Lis
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate Sonnet, Opus 4.6, and Opus 4.7 cybersecurity thesis plots plus comparison figures."
+        description="Generate Sonnet 4.5, Opus 4.6, and Opus 4.7 cybersecurity thesis plots plus comparison figures."
     )
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT, help="Cyber output directory.")
     parser.add_argument("--ground-truth-dir", type=Path, default=DEFAULT_GROUND_TRUTH_DIR, help="Ground-truth directory.")
@@ -1124,7 +1124,7 @@ def main() -> None:
 
     runs = collect_runs(args.output_root, args.ground_truth_dir, family_keys=FAMILY_ORDER)
     if not runs:
-        raise SystemExit(f"No completed Sonnet/Opus runs found in {args.output_root}")
+        raise SystemExit(f"No completed Sonnet 4.5/Opus runs found in {args.output_root}")
 
     generated: List[Path] = []
     for family_key in FAMILY_ORDER:
