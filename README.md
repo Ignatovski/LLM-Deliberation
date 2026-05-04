@@ -79,24 +79,11 @@ The retained analysis pipeline is centered on:
 Typical workflow:
 
 ```powershell
-py -3 scripts/build_metrics_summary.py `
-  polynomial/outputs/output_mix_all_diff `
-  polynomial/outputs/output_mix_split `
-  polynomial/outputs/polynomial_game/output `
-  polynomial/outputs/polynomial_game/output_claude `
-  polynomial/outputs/polynomial_game/output_llama `
-  polynomial/outputs/polynomial_game_all_AI/output `
-  polynomial/outputs/polynomial_game_all_AI/output_claude `
-  polynomial/outputs/polynomial_game_all_AI/output_llama `
-  polynomial/outputs/polynomial_game_human/output `
-  polynomial/outputs/polynomial_game_human/output_claude `
-  polynomial/outputs/polynomial_game_human/output_llama `
-  --output viewer/metrics_summary.json
-py -3 scripts/build_dynamics_summary.py --summary viewer/metrics_summary.json --out viewer/dynamics_summary.json
-py -3 scripts/build_metrics_summary.py polynomial/outputs/polynomial_game_adversarial/output/obstructive --output summarys/metrics_summary.adversarial_obstructive.json
-py -3 scripts/build_metrics_summary.py polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted --output summarys/metrics_summary.adversarial_outcome_targeted.json
+py -3 scripts/rebuild_polynomial_summaries.py
 py -3 scripts/regenerate_thesis_root_plots.py
 ```
+
+`scripts/rebuild_polynomial_summaries.py` regenerates the baseline metrics summary, the dynamics summary, the history manifest, and the adversarial polynomial summaries from the consolidated `polynomial/outputs/` tree.
 
 Some cyber-specific and leakage-specific analyses use additional scripts in `scripts/` and documentation in `cyber_negotiation_v1/docs/`.
 
