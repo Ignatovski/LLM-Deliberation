@@ -23,7 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from faiss_utility import AnswerComparator
+from polynomial.tools.faiss_utility import AnswerComparator
 from evaluation.plot_similarity import compute_agent_matrices, load_embeddings, plot_matrices
 
 

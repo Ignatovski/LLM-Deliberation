@@ -40,7 +40,7 @@ plot_history() {
     return 0
   fi
 
-  if python visualize_polynomial.py --history "${history_path}" --save "${out_png}"; then
+  if python -m polynomial.tools.visualize_polynomial --history "${history_path}" --save "${out_png}"; then
     echo "[plot] Saved ${out_png}"
   else
     echo "[plot] Failed for ${history_path}" >&2

@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # Smoke-test runner for a single xyz polynomial game (one run, one seed).
-# Expects a future multi-variable driver: main_polynomial_xyz.py
+# Uses the multi-variable driver under polynomial/tools/.
 
-if [[ ! -f "main_polynomial_xyz.py" ]]; then
-  echo "Error: main_polynomial_xyz.py not found. Add the xyz driver before running this script." >&2
+if [[ ! -f "polynomial/tools/main_polynomial_xyz.py" ]]; then
+  echo "Error: polynomial/tools/main_polynomial_xyz.py not found." >&2
   exit 1
 fi
 
@@ -23,7 +23,7 @@ if [[ -f "${ENV_FILE}" ]]; then
   export $(grep -v '^#' "${ENV_FILE}" | grep -E '^[A-Za-z_][A-Za-z0-9_]*=' | xargs -d '\n')
 fi
 
-python main_polynomial_xyz.py \
+python -m polynomial.tools.main_polynomial_xyz \
   --exp_name "${EXP_NAME}" \
   --game_dir "${GAME_DIR}" \
   --output_dir "./polynomial/outputs/output_xyz/${EXP_NAME}" \
@@ -35,4 +35,4 @@ python main_polynomial_xyz.py \
   --reuse_faiss \
   --min_answers 16
 
-python plot_final_x.py "./polynomial/outputs/output_xyz/${EXP_NAME}" || true
+python -m polynomial.tools.plot_final_x "./polynomial/outputs/output_xyz/${EXP_NAME}" || true

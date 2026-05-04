@@ -145,7 +145,7 @@ run_game() {
            $([[ -n "${ANTHROPIC_BASE_URL}" ]] && printf '%s' "--anthropic_base_url ${ANTHROPIC_BASE_URL}")
 
       # Generate final_x plot for this seed
-      python plot_final_x.py "${out_dir}" || true
+      python -m polynomial.tools.plot_final_x "${out_dir}" || true
     done
   )
 }

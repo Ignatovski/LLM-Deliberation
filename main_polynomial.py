@@ -15,7 +15,6 @@ import shutil
 import time
 import uuid
 from pathlib import Path
-from faiss_utility import AnswerComparator
 from typing import Dict, List, Tuple
 
 from agent import Agent
@@ -27,7 +26,8 @@ from evaluation.plot_similarity import (
     compute_agent_matrices,
     plot_matrices,
 )
-from visualize_polynomial import load_trace as load_poly_trace, load_thresholds
+from polynomial.tools.faiss_utility import AnswerComparator
+from polynomial.tools.visualize_polynomial import load_trace as load_poly_trace, load_thresholds
 import matplotlib.pyplot as plt
 
 def load_env_file(path: str) -> None:

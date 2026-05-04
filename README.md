@@ -22,13 +22,16 @@ This repository is maintained as a thesis artifact repository. It keeps the code
 LLM-Deliberation/
   main_polynomial.py
   main_polynomial_json.py
-  main_polynomial_xyz.py
   polynomial/
+    tools/
+      main_polynomial_xyz.py
+      visualize_polynomial.py
+      plot_final_x.py
+      faiss_utility.py
     outputs/
     archive/
     reference_images/
   polynomial_utils.py
-  visualize_polynomial.py
   games_descriptions/
   summarys/
   viewer/plots/thesis/

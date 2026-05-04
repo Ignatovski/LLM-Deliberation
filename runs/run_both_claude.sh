@@ -110,7 +110,7 @@ run_game() {
            --min_answers 16
 
       # Generate final_x plot for this seed
-      python plot_final_x.py "${out_dir}" || true
+      python -m polynomial.tools.plot_final_x "${out_dir}" || true
     done
   )
 }

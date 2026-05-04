@@ -158,7 +158,7 @@ run_game() {
            $([[ "${USE_AZURE}" -eq 0 ]] && printf '%s' "--api_key ${OPENAI_API}")
 
       # Generate final_x plot for this seed
-      python plot_final_x.py "${out_dir}" || true
+      python -m polynomial.tools.plot_final_x "${out_dir}" || true
     done
   )
 }

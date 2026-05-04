@@ -414,7 +414,7 @@ def main():
     # similarity optional
     answer_comparator = None
     if args.faiss:
-        from faiss_utility import AnswerComparator  # lazy import to avoid faiss dependency when unused
+        from polynomial.tools.faiss_utility import AnswerComparator  # lazy import to avoid faiss dependency when unused
         answer_comparator = AnswerComparator()
 
     # run loop
