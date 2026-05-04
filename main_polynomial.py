@@ -145,6 +145,20 @@ def generate_polynomial_image(history_path: Path, save_path: Path):
     print(f"Saved polynomial visualization to {save_path}")
 
 
+def resolve_output_base(game_dir: str, output_dir: str) -> Path:
+    """
+    Resolve output_dir while keeping existing absolute-path behavior and adding
+    support for repo-relative consolidated polynomial roots.
+    """
+    out = Path(output_dir)
+    if out.is_absolute():
+        return out
+    out_posix = out.as_posix()
+    if out_posix.startswith("polynomial/"):
+        return out
+    return Path(game_dir) / out
+
+
 def ensure_text(response) -> str:
     """
     TODO: do we really need it
@@ -513,7 +527,7 @@ def main():
              "If set, overrides rounds_num. Example: 16 with 4 agents -> each speaks exactly 4 times.",
     )
 
-    parser.add_argument("--output_dir", type=str, default="./output/")
+    parser.add_argument("--output_dir", type=str, default="polynomial/outputs/output")
     parser.add_argument("--game_dir", type=str, default="./games_descriptions/polynomial_game")
     parser.add_argument("--config_file", type=str, default="config.txt", help="Config file name or path (default: config.txt in game_dir)")
     parser.add_argument("--exp_name", type=str, default="poly_demo")
@@ -527,7 +541,7 @@ def main():
     parser.add_argument(
         "--reuse_faiss",
         action="store_true",
-        help="Reuse existing FAISS index at <output_dir>/faiss_index instead of creating a new timestamped folder",
+        help="Reuse existing FAISS index at <resolved output_dir>/faiss_index instead of creating a new timestamped folder",
     )
     parser.add_argument(
         "--result",
@@ -575,7 +589,8 @@ def main():
     if args.min_answers is not None:
         per_agent_quota = args.min_answers // args.agents_num
 
-    output_root = os.path.join(args.game_dir, args.output_dir, args.exp_name)
+    output_base = resolve_output_base(args.game_dir, args.output_dir)
+    output_root = str(output_base / args.exp_name)
     agent_round_assignment, start_round_idx, history = create_outfiles(args, output_root)
 
     # Prefer explicit embedding cache dir; fall back to hf_home/env if provided and writable to avoid unwritable defaults.
@@ -602,7 +617,7 @@ def main():
     try:
         if not args.skip_similarity:
             answer_comparator = AnswerComparator(
-                os.path.join(args.output_dir, "faiss_index"),
+                str(output_base / "faiss_index"),
                 model_name=args.embedding_model_name,
                 cache_dir=cache_dir,
                 reuse_existing=args.reuse_faiss,

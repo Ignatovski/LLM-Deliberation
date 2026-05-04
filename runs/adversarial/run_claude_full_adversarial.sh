@@ -57,7 +57,7 @@ for mode in "${MODES[@]}"; do
   for game in "${GAMES[@]}"; do
     GAME_DIR="${ROOT}/${mode}/${game}"
     CONFIG_FILE="${GAME_DIR}/config_claude.txt"
-    OUTPUT_BASE="${ROOT}/output/${mode}/${game}/output_claude"
+    OUTPUT_BASE="${ROOT}/polynomial/outputs/polynomial_game_adversarial/output/${mode}/${game}/output_claude"
     INITIAL_FILE="${GAME_DIR}/initial_deal.txt"
     POLY_SRC_DIR="${ROOT}/${mode}/polynomial_game/polynomial_functions"
 

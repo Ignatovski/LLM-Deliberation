@@ -26,7 +26,7 @@ USE_AZURE=0
 AZURE_API="${AZURE_OPENAI_API_KEY:-}"
 AZURE_ENDPOINT="${AZURE_OPENAI_ENDPOINT:-}"
 
-OUTPUT_BASE="./output_llama"
+OUTPUT_BASE="./polynomial/outputs/output_llama"
 TEMP=1
 SUFFIX=1
 START=1

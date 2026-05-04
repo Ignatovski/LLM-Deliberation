@@ -61,9 +61,9 @@ def resolve_history_path(raw: str) -> Optional[Path]:
 def normalize_path_for_web(path: Path) -> str:
     root = _repo_root()
     try:
-        return str(path.resolve().relative_to(root.resolve()))
+        return str(path.resolve().relative_to(root.resolve())).replace("\\", "/")
     except Exception:
-        return str(path)
+        return str(path).replace("\\", "/")
 
 
 def load_profiles_for_history(history_path: Path) -> Optional[Dict[str, Dict[str, Any]]]:
@@ -295,7 +295,7 @@ def main() -> None:
         out_runs.append(dyn)
 
     out_obj = {
-        "generated_from": str(summary_path),
+        "generated_from": str(summary_path).replace("\\", "/"),
         "count": len(out_runs),
         "missing_history": missing,
         "skipped": skipped,

@@ -26,7 +26,7 @@ fi
 python main_polynomial_xyz.py \
   --exp_name "${EXP_NAME}" \
   --game_dir "${GAME_DIR}" \
-  --output_dir "./output_xyz/${EXP_NAME}" \
+  --output_dir "./polynomial/outputs/output_xyz/${EXP_NAME}" \
   --temp "${TEMP}" \
   --rounds_num "${ROUNDS}" \
   --max_step "${MAX_STEP}" \
@@ -35,4 +35,4 @@ python main_polynomial_xyz.py \
   --reuse_faiss \
   --min_answers 16
 
-python plot_final_x.py "./output_xyz/${EXP_NAME}" || true
+python plot_final_x.py "./polynomial/outputs/output_xyz/${EXP_NAME}" || true

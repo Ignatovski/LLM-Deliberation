@@ -26,7 +26,7 @@ AZURE_API="${AZURE_OPENAI_API_KEY:-}"
 AZURE_ENDPOINT="${AZURE_OPENAI_ENDPOINT:-}"
 USE_AZURE=0
 
-OUTPUT_BASE="./output_mix_split"
+OUTPUT_BASE="./polynomial/outputs/output_mix_split"
 TEMP=1
 SUFFIX=1
 START=1

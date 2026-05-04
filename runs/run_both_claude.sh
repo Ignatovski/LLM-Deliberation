@@ -3,7 +3,8 @@ set -euo pipefail
 
 # Batch runner for Claude Sonnet experiments on both polynomial games.
 # Temporarily swaps in config_claude.txt -> config.txt, runs seeds -7/0/7,
-# writes outputs to ./output_claude/<game_basename>/poly_x{seed}, then restores configs.
+# writes outputs to ./polynomial/outputs/output_claude/<game_basename>/poly_x{seed},
+# then restores configs.
 
 GAME_DIRS=(
   "games_descriptions/polynomial_game_all_AI"
@@ -22,7 +23,7 @@ fi
 ANTHROPIC_API="${ANTHROPIC_API:-${ANTHROPIC_API_KEY:-}}"
 ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://ai-pentesting-models.services.ai.azure.com/anthropic}"
 
-OUTPUT_BASE="./output_claude"
+OUTPUT_BASE="./polynomial/outputs/output_claude"
 TEMP=1
 SUFFIX=1
 START=1

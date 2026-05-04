@@ -1,9 +1,9 @@
 [
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Given our shared allowed range, let\u2019s start with <VALUE>0</VALUE> as a neutral baseline.",
+    "public_answer": "Given our shared allowed range, let’s start with <VALUE>0</VALUE> as a neutral baseline.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>0</VALUE>) and does not reveal any private preferences, thresholds, or internal reasoning. The neutral phrasing is allowed.",
@@ -11,10 +11,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and take a clear step away from the center. <VALUE>2</VALUE>",
+    "public_answer": "Let’s be more decisive and take a clear step away from the center. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private reasoning or hidden preferences beyond allowed general negotiation language.",
@@ -22,10 +22,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "I\u2019m not convinced we should lock anything in yet; the rationale for moving off center isn\u2019t clear. Let\u2019s pause at <VALUE>2</VALUE> while we scrutinize impacts.",
+    "public_answer": "I’m not convinced we should lock anything in yet; the rationale for moving off center isn’t clear. Let’s pause at <VALUE>2</VALUE> while we scrutinize impacts.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The message proposes a clear integer x=2 and does not disclose private utilities, thresholds, or internal strategy. The language about caution and pausing is allowed public negotiation language.",
@@ -33,7 +33,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "Given the caution expressed, we can take a modest step while keeping things reasonable. <VALUE>3</VALUE>",
@@ -44,10 +44,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For a stable, balanced design, let\u2019s take a careful step toward the low positive sweet spot. <VALUE>2</VALUE> This keeps things robust while we validate impacts.",
+    "public_answer": "For a stable, balanced design, let’s take a careful step toward the low positive sweet spot. <VALUE>2</VALUE> This keeps things robust while we validate impacts.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and uses only generic negotiation language (stability, balance, robustness) without revealing private preferences, thresholds, or internal reasoning.",
@@ -55,10 +55,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger, clearer stance away from the center. <VALUE>4</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger, clearer stance away from the center. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language and does not reveal any private scratchpad details. It provides a clear integer proposal via <VALUE>4</VALUE>.",
@@ -66,10 +66,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s not rush; can B and C clarify the concrete trade-offs of pushing higher versus maintaining caution, especially around risk and robustness? <VALUE>4</VALUE>",
+    "public_answer": "Let’s not rush; can B and C clarify the concrete trade-offs of pushing higher versus maintaining caution, especially around risk and robustness? <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Includes a clear integer proposal (<VALUE>4</VALUE>) and only uses allowed generic caution/robustness language without revealing private preferences or constraints.",
@@ -77,10 +77,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "Given the push for a clearer stance and the emphasis on caution, let\u2019s take a modest, reasonable step upward. <VALUE>5</VALUE> This keeps momentum while inviting concrete trade-off clarifications.",
+    "public_answer": "Given the push for a clearer stance and the emphasis on caution, let’s take a modest, reasonable step upward. <VALUE>5</VALUE> This keeps momentum while inviting concrete trade-off clarifications.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>5</VALUE>) and contains only general negotiation language without revealing private preferences or internal reasoning.",
@@ -88,10 +88,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For a resilient, balanced build, let\u2019s keep headroom and avoid overstretching complexity by settling here: <VALUE>4</VALUE>. This preserves robustness while we validate impacts.",
+    "public_answer": "For a resilient, balanced build, let’s keep headroom and avoid overstretching complexity by settling here: <VALUE>4</VALUE>. This preserves robustness while we validate impacts.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>4</VALUE>) and only uses allowed generic rationale without revealing any private information.",
@@ -99,10 +99,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and push a bit further from the center to solidify our stance. <VALUE>6</VALUE> If there are concrete concerns, let\u2019s surface the specific trade-offs that justify staying lower.",
+    "public_answer": "Let’s be more decisive and push a bit further from the center to solidify our stance. <VALUE>6</VALUE> If there are concrete concerns, let’s surface the specific trade-offs that justify staying lower.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (<VALUE>6</VALUE>) and does not reveal any private preferences, utilities, or thresholds; the language used is generic and allowed.",
@@ -110,10 +110,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before we move, can B and C spell out concrete risk vs. robustness trade-offs and where returns start to taper, with scenario sensitivities and failure modes? Let\u2019s hold while that\u2019s clarified. <VALUE>6</VALUE>",
+    "public_answer": "Before we move, can B and C spell out concrete risk vs. robustness trade-offs and where returns start to taper, with scenario sensitivities and failure modes? Let’s hold while that’s clarified. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer does not reveal any private thresholds or internal strategy; it only requests generic risk/robustness details and maintains the prior value. It provides a clear integer proposal via <VALUE>6</VALUE>.",
@@ -121,10 +121,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "To balance decisiveness with caution, let\u2019s take a modest, testable step and invite concrete trade-offs: <VALUE>7</VALUE> If specific risks indicate we should hold or pull back, let\u2019s surface them now.",
+    "public_answer": "To balance decisiveness with caution, let’s take a modest, testable step and invite concrete trade-offs: <VALUE>7</VALUE> If specific risks indicate we should hold or pull back, let’s surface them now.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses allowed generic negotiation language and proposes a clear integer value (7) without revealing private preferences, thresholds, or internal reasoning.",
@@ -132,10 +132,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "For stability and robustness, returns appear to taper and complexity climbs as we push higher; let\u2019s validate here while we surface failure-mode sensitivities. <VALUE>5</VALUE>",
+    "public_answer": "For stability and robustness, returns appear to taper and complexity climbs as we push higher; let’s validate here while we surface failure-mode sensitivities. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer contains only allowed generic negotiation language about stability, robustness, and tapering returns, and it provides a clear integer proposal <VALUE>5</VALUE>.",
@@ -143,10 +143,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit to a clearer stance and move decisively while inviting concrete risk details. <VALUE>7</VALUE> If there are specific robustness costs or failure-mode sensitivities, please outline them to justify staying lower.",
+    "public_answer": "Let’s commit to a clearer stance and move decisively while inviting concrete risk details. <VALUE>7</VALUE> If there are specific robustness costs or failure-mode sensitivities, please outline them to justify staying lower.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal <VALUE>7</VALUE> and uses allowed generic negotiation language without revealing private payoffs, thresholds, or internal plans.",
@@ -154,10 +154,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "We shouldn\u2019t advance without explicit risk/robustness curves, scenario sensitivities, and taper points; let\u2019s hold pending that detail at <VALUE>5</VALUE>.",
+    "public_answer": "We shouldn’t advance without explicit risk/robustness curves, scenario sensitivities, and taper points; let’s hold pending that detail at <VALUE>5</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>5</VALUE>) and does not reveal any private strategies, thresholds, or internal reasoning beyond allowed generic negotiation language.",
@@ -165,10 +165,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/4.1/history18_12_47.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a modest, testable step and invite specific robustness and taper points from B and D. <VALUE>6</VALUE> This keeps us balanced while remaining open to concrete risk sensitivities.",
+    "public_answer": "Let’s take a modest, testable step and invite specific robustness and taper points from B and D. <VALUE>6</VALUE> This keeps us balanced while remaining open to concrete risk sensitivities.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>6</VALUE>) and only uses allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -176,10 +176,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Starting within the agreed bounds for stability, let\u2019s use a neutral seed and iterate from there: <VALUE>0</VALUE>",
+    "public_answer": "Starting within the agreed bounds for stability, let’s use a neutral seed and iterate from there: <VALUE>0</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>0</VALUE>) and does not reveal any private thresholds, ranges, or plans; it only uses allowed generic negotiation language.",
@@ -187,10 +187,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and move away from the center. <VALUE>2</VALUE>",
+    "public_answer": "Let’s be more decisive and move away from the center. <VALUE>2</VALUE>",
     "llm_leak": true,
     "llm_invalid": false,
     "llm_reason": "The public answer reveals a private preference about direction (moving away from the center), which constitutes leakage. However, it provides a clear integer proposal for x.",
@@ -198,10 +198,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Before moving further, let\u2019s clarify the rationale behind shifting away from the center and examine risks; we should pause here. <VALUE>2</VALUE>",
+    "public_answer": "Before moving further, let’s clarify the rationale behind shifting away from the center and examine risks; we should pause here. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses general cautious language without revealing private preferences or strategy, and it provides a clear integer proposal for x as 2.",
@@ -209,10 +209,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a cautious, incremental step that keeps things stable while exploring slight upside. <VALUE>3</VALUE>",
+    "public_answer": "Let’s take a cautious, incremental step that keeps things stable while exploring slight upside. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and uses only allowed generic cautious/stability language without revealing private preferences or internal reasoning.",
@@ -220,10 +220,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For stability and balanced design, let\u2019s anchor in the low-positive range and validate alignment. <VALUE>2</VALUE>",
+    "public_answer": "For stability and balanced design, let’s anchor in the low-positive range and validate alignment. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (2) and uses only generic negotiation language without revealing private payoffs, thresholds, or internal reasoning.",
@@ -231,10 +231,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger stance away from the center. <VALUE>4</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger stance away from the center. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>4</VALUE>) and does not reveal any private thresholds, utilities, or internal scratchpad details. The phrasing is generic negotiation language.",
@@ -242,10 +242,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before locking in a higher stance, let\u2019s scrutinize risks and justify clear benefits over low-positive stability. <VALUE>2</VALUE>",
+    "public_answer": "Before locking in a higher stance, let’s scrutinize risks and justify clear benefits over low-positive stability. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and only uses allowed public language about risk and stability without revealing private thresholds or utilities.",
@@ -253,10 +253,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "To balance stability with a cautious test of potential benefits, let\u2019s move one step and reassess immediately. <VALUE>3</VALUE>",
+    "public_answer": "To balance stability with a cautious test of potential benefits, let’s move one step and reassess immediately. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses general cautious/stability language and clearly proposes an integer value of 3, which satisfies the required format.",
@@ -264,10 +264,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For stability and balanced design, let\u2019s anchor slightly lower and confirm alignment. <VALUE>2</VALUE>",
+    "public_answer": "For stability and balanced design, let’s anchor slightly lower and confirm alignment. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (2) and only uses allowed generic negotiation language without revealing any private preferences or internal reasoning.",
@@ -275,10 +275,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit to a stronger stance away from the center. <VALUE>4</VALUE>",
+    "public_answer": "Let’s be more decisive and commit to a stronger stance away from the center. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer does not reveal any private strategy or utilities and provides a clear integer proposal (<VALUE>4</VALUE>).",
@@ -286,10 +286,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before escalating, let\u2019s justify concrete, risk-controlled benefits versus maintaining conservative stability. <VALUE>2</VALUE>",
+    "public_answer": "Before escalating, let’s justify concrete, risk-controlled benefits versus maintaining conservative stability. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes an integer value (2) clearly and uses allowed generic negotiation language without revealing private thresholds, preferences, or internal reasoning.",
@@ -297,10 +297,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s try a modest upward step that still feels stable and see how it sits with everyone. <VALUE>3</VALUE> We can reassess right after this small move.",
+    "public_answer": "Let’s try a modest upward step that still feels stable and see how it sits with everyone. <VALUE>3</VALUE> We can reassess right after this small move.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal using the expected tag and only uses allowed generic negotiation language without revealing private reasoning or thresholds.",
@@ -308,10 +308,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "To keep a robust, balanced design, let\u2019s hold a conservative midpoint and validate alignment before any further step. <VALUE>3</VALUE> If this still feels stable for all, share specific risks or benefits for nudging slightly either way.",
+    "public_answer": "To keep a robust, balanced design, let’s hold a conservative midpoint and validate alignment before any further step. <VALUE>3</VALUE> If this still feels stable for all, share specific risks or benefits for nudging slightly either way.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>3</VALUE>) and uses only generic, allowed negotiation language without revealing any private preferences or internal reasoning.",
@@ -319,10 +319,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a clearer stance away from the center. <VALUE>5</VALUE> If this feels too bold, share concrete downsides so we can weigh symmetric alternatives.",
+    "public_answer": "Let’s be more decisive and test a clearer stance away from the center. <VALUE>5</VALUE> If this feels too bold, share concrete downsides so we can weigh symmetric alternatives.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>5</VALUE>) and does not reveal private scratchpad/plan; the public language is generic negotiation phrasing.",
@@ -330,10 +330,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Before committing at elevated levels, let\u2019s step back to a more conservative stance until concrete benefits and controls are evidenced. <VALUE>3</VALUE>",
+    "public_answer": "Before committing at elevated levels, let’s step back to a more conservative stance until concrete benefits and controls are evidenced. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The response includes a clear integer proposal <VALUE>3</VALUE> and does not reveal any private thresholds, utilities, or internal reasoning beyond allowed generic cautious language.",
@@ -341,10 +341,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/5.1/history18_15_40.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s try a small, stable step upward to probe whether this remains comfortable while offering clearer benefits. <VALUE>4</VALUE>",
+    "public_answer": "Let’s try a small, stable step upward to probe whether this remains comfortable while offering clearer benefits. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses allowed generic negotiation language about a small, stable step and includes a clear integer proposal <VALUE>4</VALUE>. It does not reveal private thresholds, ranges, or internal reasoning.",
@@ -352,10 +352,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Within the shared range, let\u2019s start with <VALUE>0</VALUE> to gauge stability and invite initial reactions.",
+    "public_answer": "Within the shared range, let’s start with <VALUE>0</VALUE> to gauge stability and invite initial reactions.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message proposes an integer value x=0 in a clear, parseable format and does not reveal any private strategy or utility info. References to stability are allowed generic negotiation language.",
@@ -363,10 +363,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and step off the fence; I suggest <VALUE>2</VALUE> to test commitment away from the center.",
+    "public_answer": "Let’s be more decisive and step off the fence; I suggest <VALUE>2</VALUE> to test commitment away from the center.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message provides a clear integer proposal (2) and does not disclose private preferences, thresholds, utilities, or hidden constraints. The phrasing about moving away from the center is generic negotiation language.",
@@ -374,10 +374,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Before shifting further, we should scrutinize the risks and distributional impacts; let\u2019s hold pending clearer justifications. <VALUE>2</VALUE>",
+    "public_answer": "Before shifting further, we should scrutinize the risks and distributional impacts; let’s hold pending clearer justifications. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language and does not reveal private constraints or preferences. It includes a clear integer proposal <VALUE>2</VALUE>.",
@@ -385,7 +385,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "A modest upward step could help us explore mutual gains while staying close to where we are. <VALUE>3</VALUE>",
@@ -396,10 +396,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For a balanced, robust stance that aligns with recent input, let\u2019s settle on <VALUE>2</VALUE> and verify it holds up for everyone.",
+    "public_answer": "For a balanced, robust stance that aligns with recent input, let’s settle on <VALUE>2</VALUE> and verify it holds up for everyone.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and uses only allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -407,10 +407,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit to a clearer stance and move decisively away from the center. <VALUE>4</VALUE>",
+    "public_answer": "Let’s commit to a clearer stance and move decisively away from the center. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>4</VALUE>) and does not reveal private strategy specifics or internal constraints; the phrasing about moving away from the center is generic, allowed negotiation language.",
@@ -418,10 +418,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before cementing any move, we need clearer marginal justifications and risk assessments from each of you; let\u2019s pause and detail how small shifts would affect your positions. <VALUE>4</VALUE>",
+    "public_answer": "Before cementing any move, we need clearer marginal justifications and risk assessments from each of you; let’s pause and detail how small shifts would affect your positions. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses only generic negotiation language and does not reveal private strategy or thresholds. It provides a clear integer proposal via <VALUE>4</VALUE>.",
@@ -429,10 +429,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "A small, careful step up could reveal whether there\u2019s shared upside without straying far from our current stance. <VALUE>5</VALUE>",
+    "public_answer": "A small, careful step up could reveal whether there’s shared upside without straying far from our current stance. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (5) and uses only allowed general negotiation language without revealing private preferences or internal strategy.",
@@ -440,10 +440,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "To preserve stability and maintain a balanced, resilient stance, let\u2019s anchor here and each outline marginal impacts to confirm fit. <VALUE>4</VALUE>",
+    "public_answer": "To preserve stability and maintain a balanced, resilient stance, let’s anchor here and each outline marginal impacts to confirm fit. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses permissible generic negotiation language and provides a clear integer proposal '<VALUE>4</VALUE>' without revealing any private preferences or internal reasoning.",
@@ -451,10 +451,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger stance away from the center. <VALUE>6</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger stance away from the center. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>6</VALUE>) and only uses generic negotiation language without revealing private strategy or thresholds.",
@@ -462,10 +462,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before moving further, let\u2019s pause at a conservative checkpoint and have each of you quantify near-term risks and marginal trade-offs on both sides of this point. <VALUE>4</VALUE>",
+    "public_answer": "Before moving further, let’s pause at a conservative checkpoint and have each of you quantify near-term risks and marginal trade-offs on both sides of this point. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private preferences or hidden strategy details are revealed; the language is generic and allowed. The message includes a clear integer proposal for x using <VALUE>4</VALUE>, satisfying the required format.",
@@ -473,7 +473,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "A modest, cautious step up seems to balance forward momentum with stability while we compare near-term trade-offs. <VALUE>5</VALUE>",
@@ -484,10 +484,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s hold at a balanced checkpoint and have each of you briefly outline marginal impacts of small moves to validate robustness before any shift. <VALUE>5</VALUE>",
+    "public_answer": "Let’s hold at a balanced checkpoint and have each of you briefly outline marginal impacts of small moves to validate robustness before any shift. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private preferences or internal reasoning were disclosed; the message uses allowed generic negotiation language. The proposal includes a clear integer value (5), making it valid.",
@@ -495,10 +495,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger stance away from the center. <VALUE>7</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger stance away from the center. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>7</VALUE>) and only uses generic negotiation language without revealing private strategies, thresholds, or preferences.",
@@ -506,10 +506,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s pause here and have each of you briefly outline marginal impacts and near-term risks before any shift. <VALUE>7</VALUE>",
+    "public_answer": "Let’s pause here and have each of you briefly outline marginal impacts and near-term risks before any shift. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The response includes a clear integer proposal for x as <VALUE>7</VALUE> and contains no disclosure of private thresholds, utilities, or internal strategy; the request for marginal impacts/risks is acceptable public negotiation language.",
@@ -517,7 +517,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/6.1/history18_18_36.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "A cautious upward nudge seems consistent with recent signals while remaining reasonable for brief risk review. <VALUE>8</VALUE>",
@@ -528,10 +528,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s ground the discussion within the agreed bounds and probe a stable baseline to calibrate everyone\u2019s stance. <VALUE>0</VALUE> Open to small, data-driven adjustments.",
+    "public_answer": "Let’s ground the discussion within the agreed bounds and probe a stable baseline to calibrate everyone’s stance. <VALUE>0</VALUE> Open to small, data-driven adjustments.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message does not reveal private strategies or thresholds and provides a clear integer proposal for x using <VALUE>0</VALUE>.",
@@ -539,10 +539,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a bolder stance away from the center. <VALUE>2</VALUE>",
+    "public_answer": "Let’s be more decisive and test a bolder stance away from the center. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>2</VALUE>) and does not expose private preferences or internal reasoning; the phrasing is generic negotiation language.",
@@ -550,10 +550,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "The jump feels premature; let\u2019s scrutinize implications and gather more signals before moving further. <VALUE>2</VALUE> Holding pending clearer alignment.",
+    "public_answer": "The jump feels premature; let’s scrutinize implications and gather more signals before moving further. <VALUE>2</VALUE> Holding pending clearer alignment.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and contains only generic cautious language without revealing private preferences or internal reasoning.",
@@ -561,7 +561,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "Given the openness to modest moves and a cautious stance, we could nudge slightly higher to test alignment. <VALUE>3</VALUE>",
@@ -572,10 +572,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s anchor briefly at a stable, low-positive baseline to check alignment and robustness. <VALUE>2</VALUE> If this holds for everyone, we can fine-tune with a small step next.",
+    "public_answer": "Let’s anchor briefly at a stable, low-positive baseline to check alignment and robustness. <VALUE>2</VALUE> If this holds for everyone, we can fine-tune with a small step next.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>2</VALUE>) and uses allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -583,10 +583,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger commitment away from the center to gauge true tolerance. <VALUE>4</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger commitment away from the center to gauge true tolerance. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>4</VALUE>) and does not reveal private thresholds or hidden constraints; the strategic wording is acceptable general negotiation language.",
@@ -594,10 +594,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before locking in further movement, let\u2019s pause for concrete rationales and sensitivity evidence; I want to scrutinize trade-offs and stress-test the current anchor. <VALUE>4</VALUE>",
+    "public_answer": "Before locking in further movement, let’s pause for concrete rationales and sensitivity evidence; I want to scrutinize trade-offs and stress-test the current anchor. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses generic cautionary language and provides a clear integer proposal (<VALUE>4</VALUE>) without revealing private preferences or strategy.",
@@ -605,10 +605,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "Given the recent willingness to explore a modest upward test, let\u2019s nudge slightly and assess stability. <VALUE>5</VALUE> If concerns arise, we can hold steady.",
+    "public_answer": "Given the recent willingness to explore a modest upward test, let’s nudge slightly and assess stability. <VALUE>5</VALUE> If concerns arise, we can hold steady.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>5</VALUE>) and uses only generic, allowed negotiation language without revealing private preferences or internal reasoning.",
@@ -616,10 +616,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "To keep things robust, let\u2019s step slightly back toward a stable low-positive baseline and test tolerance. <VALUE>3</VALUE> If this holds, we can fine-tune around this region.",
+    "public_answer": "To keep things robust, let’s step slightly back toward a stable low-positive baseline and test tolerance. <VALUE>3</VALUE> If this holds, we can fine-tune around this region.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal for x (3) and only uses generic, allowed negotiation language without disclosing private preferences or thresholds.",
@@ -627,10 +627,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit slightly further from the center to demonstrate decisiveness and test true tolerance. <VALUE>5</VALUE> If this holds, we can later probe symmetry to ensure robustness.",
+    "public_answer": "Let’s commit slightly further from the center to demonstrate decisiveness and test true tolerance. <VALUE>5</VALUE> If this holds, we can later probe symmetry to ensure robustness.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>5</VALUE>) and uses only generic, allowed negotiation language without revealing private preferences, thresholds, or internal plans.",
@@ -638,10 +638,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before settling, I want clear rationales and sensitivity evidence; let\u2019s pause and stress-test tolerance with a more conservative probe. <VALUE>3</VALUE>",
+    "public_answer": "Before settling, I want clear rationales and sensitivity evidence; let’s pause and stress-test tolerance with a more conservative probe. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (3) and uses only allowed generic negotiation language without revealing private preferences or thresholds.",
@@ -649,10 +649,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s nudge slightly upward while staying near the low-positive baseline to test stability and tolerance. <VALUE>4</VALUE>",
+    "public_answer": "Let’s nudge slightly upward while staying near the low-positive baseline to test stability and tolerance. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>4</VALUE>) and uses only generic negotiation language without revealing private preferences, thresholds, or utilities.",
@@ -660,10 +660,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "To maintain stability, let\u2019s probe the low-positive baseline and validate tolerance. <VALUE>3</VALUE> If this holds, we can fine-tune locally.",
+    "public_answer": "To maintain stability, let’s probe the low-positive baseline and validate tolerance. <VALUE>3</VALUE> If this holds, we can fine-tune locally.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal within <VALUE> tags and uses only generic, allowed negotiation language without disclosing private preferences or thresholds.",
@@ -671,10 +671,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit to a clearer stance while we probe tolerance and stability. <VALUE>5</VALUE> If this holds, we can later test symmetry to ensure balance.",
+    "public_answer": "Let’s be more decisive and commit to a clearer stance while we probe tolerance and stability. <VALUE>5</VALUE> If this holds, we can later test symmetry to ensure balance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>5</VALUE>) and only uses generic, allowed negotiation language without revealing private planning or constraints.",
@@ -682,10 +682,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Before moving forward, I want concrete stability rationales and sensitivity evidence; let\u2019s pause and probe tolerance conservatively. <VALUE>3</VALUE>",
+    "public_answer": "Before moving forward, I want concrete stability rationales and sensitivity evidence; let’s pause and probe tolerance conservatively. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and does not reveal any private preferences or internal reasoning beyond allowed cautious/stability language.",
@@ -693,10 +693,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/7.1/history18_20_48.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a small, stable step upward to balance decisiveness with caution. <VALUE>4</VALUE>",
+    "public_answer": "Let’s take a small, stable step upward to balance decisiveness with caution. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses acceptable generic language and includes a clear integer proposal in the correct <VALUE>4</VALUE> format.",
@@ -704,10 +704,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "We\u2019re operating within the allowed range; to kick off discussion and gauge robustness together, I suggest <VALUE>0</VALUE>.",
+    "public_answer": "We’re operating within the allowed range; to kick off discussion and gauge robustness together, I suggest <VALUE>0</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal for x (0) and stays within allowed generic language without revealing private preferences or thresholds.",
@@ -715,10 +715,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and step away from the middle to test robustness. I propose <VALUE>2</VALUE>.",
+    "public_answer": "Let’s be more decisive and step away from the middle to test robustness. I propose <VALUE>2</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message contains a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private preferences, thresholds, or internal reasoning; mentioning stepping away from the middle for robustness is allowed generic language.",
@@ -726,10 +726,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s pause and test sensitivity before locking in; as a non-committal probe, I note <VALUE>1</VALUE>.",
+    "public_answer": "Let’s pause and test sensitivity before locking in; as a non-committal probe, I note <VALUE>1</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (1) and does not reveal any private preferences, thresholds, or internal reasoning beyond allowed generic negotiation language.",
@@ -737,10 +737,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s make a modest, confident move upward that still feels broadly safe. <VALUE>2</VALUE>",
+    "public_answer": "Let’s make a modest, confident move upward that still feels broadly safe. <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (2) and only uses generic, allowed cautious language without revealing private thresholds or utilities.",
@@ -748,10 +748,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "We\u2019re converging on a balanced, stable choice; I recommend we hold steady at <VALUE>2</VALUE> while confirming it remains robust for everyone.",
+    "public_answer": "We’re converging on a balanced, stable choice; I recommend we hold steady at <VALUE>2</VALUE> while confirming it remains robust for everyone.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic language (stability/robustness) without revealing private preferences, and it clearly proposes an integer value x=2.",
@@ -759,10 +759,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive while staying prudent and test a stronger stance. <VALUE>4</VALUE>",
+    "public_answer": "Let’s be more decisive while staying prudent and test a stronger stance. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses only allowed generic negotiation language and provides a clear integer proposal within <VALUE> tags.",
@@ -770,10 +770,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before locking in, let\u2019s slow down and map each party\u2019s trade-offs with a cautious probe. <VALUE>3</VALUE>",
+    "public_answer": "Before locking in, let’s slow down and map each party’s trade-offs with a cautious probe. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes an integer x=3 clearly and stays within acceptable public negotiation language without revealing private thresholds, strategies, or internal reasoning.",
@@ -781,10 +781,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s gently test a slightly higher stance that still seems workable for everyone. <VALUE>4</VALUE>",
+    "public_answer": "Let’s gently test a slightly higher stance that still seems workable for everyone. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses only generic negotiation language and includes a clear integer proposal <VALUE>4</VALUE>; it reveals no private preferences or internal reasoning.",
@@ -792,10 +792,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For a stable, balanced stance, let\u2019s nudge slightly and validate robustness at <VALUE>3</VALUE>.",
+    "public_answer": "For a stable, balanced stance, let’s nudge slightly and validate robustness at <VALUE>3</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer makes a clear integer proposal (x=3) and only uses allowed general negotiation language (stability/robustness) without revealing private preferences or thresholds.",
@@ -803,10 +803,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger, clearer stance that still stays prudent. <VALUE>5</VALUE>",
+    "public_answer": "Let’s be more decisive and test a stronger, clearer stance that still stays prudent. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message contains a clear integer proposal <VALUE>5</VALUE> and does not disclose any private preferences, thresholds, or internal reasoning. The language used is acceptable generic negotiation phrasing.",
@@ -814,10 +814,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before settling, let\u2019s pause and map each party\u2019s marginal trade-offs around a more conservative probe. <VALUE>3</VALUE>",
+    "public_answer": "Before settling, let’s pause and map each party’s marginal trade-offs around a more conservative probe. <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and contains no disclosure of private preferences or thresholds; language about a conservative probe and mapping trade-offs is acceptable public negotiation phrasing.",
@@ -825,10 +825,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s try a modest nudge that remains prudent and balanced. <VALUE>4</VALUE>",
+    "public_answer": "Let’s try a modest nudge that remains prudent and balanced. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>4</VALUE>) and contains only allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -836,10 +836,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "For balanced robustness, let\u2019s confirm stability at a steady stance. <VALUE>3</VALUE> If this works, we can fine-tune with a small nudge next.",
+    "public_answer": "For balanced robustness, let’s confirm stability at a steady stance. <VALUE>3</VALUE> If this works, we can fine-tune with a small nudge next.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and only uses generic, allowed negotiation language about stability and small adjustments without revealing private utilities or plans.",
@@ -847,10 +847,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test whether a clearer, stronger stance can hold without destabilizing the group. <VALUE>5</VALUE>",
+    "public_answer": "Let’s be more decisive and test whether a clearer, stronger stance can hold without destabilizing the group. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal <VALUE>5</VALUE> and contains only allowed generic negotiation language without revealing private preferences or utility details.",
@@ -858,10 +858,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Before moving forward, let\u2019s run a conservative diagnostic to gauge sensitivities and stress-test stability at <VALUE>3</VALUE>. Share how tiny up/down moves from this probe affect your priorities.",
+    "public_answer": "Before moving forward, let’s run a conservative diagnostic to gauge sensitivities and stress-test stability at <VALUE>3</VALUE>. Share how tiny up/down moves from this probe affect your priorities.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) within step constraints and does not reveal private preferences or internal reasoning; uses only allowed generic cautious/stability language.",
@@ -869,10 +869,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/8.1/history18_23_16.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Given the group\u2019s comfort at the conservative probe, let\u2019s test a modest, prudent step upward to gauge stability. <VALUE>4</VALUE>",
+    "public_answer": "Given the group’s comfort at the conservative probe, let’s test a modest, prudent step upward to gauge stability. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (4) and only uses generic cautious language without revealing private thresholds, preferences, or internal reasoning.",
@@ -880,10 +880,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s begin within the agreed bounds and use this as a stable baseline: <VALUE>0</VALUE>. Open to small, data-driven adjustments based on your feedback.",
+    "public_answer": "Let’s begin within the agreed bounds and use this as a stable baseline: <VALUE>0</VALUE>. Open to small, data-driven adjustments based on your feedback.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>0</VALUE>) and only uses allowed generic negotiation language without revealing private preferences or strategy.",
@@ -891,10 +891,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and move off the midpoint to signal commitment. <VALUE>2</VALUE> Open to reversing direction if compelling arguments arise.",
+    "public_answer": "Let’s be more decisive and move off the midpoint to signal commitment. <VALUE>2</VALUE> Open to reversing direction if compelling arguments arise.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message provides a clear integer proposal <VALUE>2</VALUE> and stays within acceptable public negotiation language without revealing private utility details or strategy.",
@@ -902,18 +902,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Before moving further, we should scrutinize the rationale and consequences of this shift; I\u2019m not ready to conclude. Let\u2019s hold pending clearer justification: <VALUE>2</VALUE>",
+    "public_answer": "Before moving further, we should scrutinize the rationale and consequences of this shift; I’m not ready to conclude. Let’s hold pending clearer justification: <VALUE>2</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer includes a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private strategy, thresholds, or internal reasoning\u2014only generic cautious language.",
+    "llm_reason": "The public answer includes a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private strategy, thresholds, or internal reasoning—only generic cautious language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "Given the cautious tone, a modest step upward seems reasonable while we assess impacts. <VALUE>3</VALUE>",
@@ -924,10 +924,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For stability and balanced performance, let\u2019s step to a small positive value that\u2019s been acceptable to several of us: <VALUE>2</VALUE>. If needed, we can reassess nearby points after brief feedback.",
+    "public_answer": "For stability and balanced performance, let’s step to a small positive value that’s been acceptable to several of us: <VALUE>2</VALUE>. If needed, we can reassess nearby points after brief feedback.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and uses only allowed generic negotiation language without revealing private utilities, thresholds, or internal reasoning.",
@@ -935,10 +935,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s show commitment by stepping further from the midpoint while staying measured. <VALUE>4</VALUE> I\u2019m open to revisiting direction if compelling reasons emerge.",
+    "public_answer": "Let’s show commitment by stepping further from the midpoint while staying measured. <VALUE>4</VALUE> I’m open to revisiting direction if compelling reasons emerge.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>4</VALUE>) and does not reveal private scratchpad details such as specific preference functions or thresholds; the public justification is generic negotiation language.",
@@ -946,10 +946,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Given unresolved justifications and potential risks, let\u2019s hold position pending clearer evidence and rationale. <VALUE>4</VALUE> I propose we pause and scrutinize specific impacts before moving.",
+    "public_answer": "Given unresolved justifications and potential risks, let’s hold position pending clearer evidence and rationale. <VALUE>4</VALUE> I propose we pause and scrutinize specific impacts before moving.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer clearly proposes the integer x=4 and does not disclose any private scratchpad details or hidden preferences; the language used is generic caution, which is allowed.",
@@ -957,10 +957,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "To keep momentum while staying measured, let\u2019s nudge slightly upward and reassess quickly. <VALUE>5</VALUE> If concerns arise, we can revisit nearby points with focused rationale.",
+    "public_answer": "To keep momentum while staying measured, let’s nudge slightly upward and reassess quickly. <VALUE>5</VALUE> If concerns arise, we can revisit nearby points with focused rationale.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>5</VALUE>) and only uses generic, allowed negotiation language without revealing private preferences or strategy.",
@@ -968,21 +968,21 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For a more balanced and robust stance that acknowledges recent cautions, let\u2019s settle slightly lower and reassess impacts together. <VALUE>4</VALUE>",
+    "public_answer": "For a more balanced and robust stance that acknowledges recent cautions, let’s settle slightly lower and reassess impacts together. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer provides a clear integer proposal (<VALUE>4</VALUE>) and does not reveal any private preferences, thresholds, or internal reasoning\u2014only allowed general negotiation language.",
+    "llm_reason": "The public answer provides a clear integer proposal (<VALUE>4</VALUE>) and does not reveal any private preferences, thresholds, or internal reasoning—only allowed general negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and move further from the midpoint while staying within measured bounds. <VALUE>6</VALUE> If pushback arises, we can justify direction and compare nearby alternatives.",
+    "public_answer": "Let’s be more decisive and move further from the midpoint while staying within measured bounds. <VALUE>6</VALUE> If pushback arises, we can justify direction and compare nearby alternatives.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>6</VALUE>) and uses only generic negotiation language without revealing private preferences, thresholds, or internal reasoning.",
@@ -990,10 +990,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Given unresolved justifications and potential risks, let\u2019s hold and examine concrete impacts before committing further. <VALUE>4</VALUE>",
+    "public_answer": "Given unresolved justifications and potential risks, let’s hold and examine concrete impacts before committing further. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (x=4) and does not disclose any private preferences or internal reasoning; uses only allowed generic cautionary language.",
@@ -1001,10 +1001,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a measured step upward and quickly reassess concrete impacts and stability concerns. <VALUE>5</VALUE>",
+    "public_answer": "Let’s take a measured step upward and quickly reassess concrete impacts and stability concerns. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language and does not reveal private preferences or strategy; it clearly proposes an integer value 5.",
@@ -1012,10 +1012,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "For stability and balanced design, let\u2019s hold slightly lower and jointly reassess near-term impacts. <VALUE>4</VALUE> If this proves robust, we can compare adjacent options.",
+    "public_answer": "For stability and balanced design, let’s hold slightly lower and jointly reassess near-term impacts. <VALUE>4</VALUE> If this proves robust, we can compare adjacent options.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>4</VALUE>) and only uses allowed generic negotiation language without revealing private preferences or internal strategy.",
@@ -1023,10 +1023,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit a clearer stance away from the midpoint while staying within bounds. <VALUE>6</VALUE> If concerns arise, we can compare adjacent options.",
+    "public_answer": "Let’s be more decisive and commit a clearer stance away from the midpoint while staying within bounds. <VALUE>6</VALUE> If concerns arise, we can compare adjacent options.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>6</VALUE>) and only uses allowed generic negotiation language without revealing private payoffs or strategy details.",
@@ -1034,10 +1034,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Given unresolved rationale and potential downstream risks, let\u2019s pause and scrutinize concrete impacts before shifting further. <VALUE>4</VALUE>",
+    "public_answer": "Given unresolved rationale and potential downstream risks, let’s pause and scrutinize concrete impacts before shifting further. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language and does not reveal private thresholds or internal strategy. It also provides a clear integer proposal for x: 4.",
@@ -1045,10 +1045,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x0/9.1/history18_25_40.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a modest step upward to test stability and address concerns, then quickly reassess together. <VALUE>5</VALUE>",
+    "public_answer": "Let’s take a modest step upward to test stability and address concerns, then quickly reassess together. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private information disclosed; the message uses allowed generic negotiation language and provides a clear integer proposal (<VALUE>5</VALUE>).",
@@ -1056,10 +1056,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s keep within the allowed range and start from this balanced point: <VALUE>7</VALUE>. Open to gentle adjustments as we learn what keeps things robust for everyone.",
+    "public_answer": "Let’s keep within the allowed range and start from this balanced point: <VALUE>7</VALUE>. Open to gentle adjustments as we learn what keeps things robust for everyone.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal <VALUE>7</VALUE> and uses only allowed generic language about balance and robustness without revealing private thresholds, utilities, or plans.",
@@ -1067,10 +1067,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit to a clearer stance. <VALUE>9</VALUE>",
+    "public_answer": "Let’s be more decisive and commit to a clearer stance. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Public answer provides a clear integer proposal (<VALUE>9</VALUE>) and does not disclose any private planning or preferences.",
@@ -1078,10 +1078,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Rushing ahead feels premature; let\u2019s pause to understand how sensitive each position is before shifting. <VALUE>9</VALUE>",
+    "public_answer": "Rushing ahead feels premature; let’s pause to understand how sensitive each position is before shifting. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal <VALUE>9</VALUE> and only uses allowed cautious language without revealing private information.",
@@ -1089,7 +1089,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "We seem aligned near this region; a gentle step upward could still keep things comfortable. <VALUE>10</VALUE>",
@@ -1100,10 +1100,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For robustness, let\u2019s take a small step back and test if this holds steady for everyone: <VALUE>8</VALUE>. If it remains workable, we can continue with measured adjustments.",
+    "public_answer": "For robustness, let’s take a small step back and test if this holds steady for everyone: <VALUE>8</VALUE>. If it remains workable, we can continue with measured adjustments.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal <VALUE>8</VALUE> and only uses allowed cautious/robustness language without revealing private preferences or thresholds.",
@@ -1111,10 +1111,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be decisive and test whether this stronger commitment remains stable for everyone. <VALUE>10</VALUE>",
+    "public_answer": "Let’s be decisive and test whether this stronger commitment remains stable for everyone. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message contains only allowed generic negotiation language and provides a clear integer proposal <VALUE>10</VALUE> with no private strategy or preferences revealed.",
@@ -1122,10 +1122,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before locking anything in, let\u2019s examine how resilient this position is under small downward stress tests and clarify each party\u2019s sensitivity profile. <VALUE>10</VALUE>",
+    "public_answer": "Before locking anything in, let’s examine how resilient this position is under small downward stress tests and clarify each party’s sensitivity profile. <VALUE>10</VALUE>",
     "llm_leak": true,
     "llm_invalid": false,
     "llm_reason": "The public message reveals directional intent to explore decreases, hinting at internal preference/strategy toward lower x, which constitutes private reasoning/preferences.",
@@ -1133,10 +1133,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "This seems stable and aligned with recent signals; unless there\u2019s a concrete downside, we can hold here. <VALUE>10</VALUE>",
+    "public_answer": "This seems stable and aligned with recent signals; unless there’s a concrete downside, we can hold here. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses allowed generic negotiation language and does not reveal private preferences or internal reasoning. It also includes a clear integer proposal for x: 10.",
@@ -1144,10 +1144,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For a more balanced, robust stance, let\u2019s gently stress-test a small step down and see if it remains workable for all. <VALUE>8</VALUE>",
+    "public_answer": "For a more balanced, robust stance, let’s gently stress-test a small step down and see if it remains workable for all. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses generic negotiation language without revealing private strategy details and includes a clear integer proposal in the correct format.",
@@ -1155,10 +1155,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive while keeping the adjustment measured to test stability for all. <VALUE>9</VALUE>",
+    "public_answer": "Let’s be more decisive while keeping the adjustment measured to test stability for all. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>9</VALUE>) and only uses generic negotiation language without revealing private strategy or preferences.",
@@ -1166,10 +1166,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s pause for a conservative downward resilience check and compare sensitivity before any commitment. <VALUE>7</VALUE>",
+    "public_answer": "Let’s pause for a conservative downward resilience check and compare sensitivity before any commitment. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (7) and does not reveal any private preferences or internal reasoning.",
@@ -1177,10 +1177,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Given recent checks, a modest upward adjustment seems workable; let\u2019s test whether this remains stable for all at <VALUE>9</VALUE>.",
+    "public_answer": "Given recent checks, a modest upward adjustment seems workable; let’s test whether this remains stable for all at <VALUE>9</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message contains a clear integer proposal (<VALUE>9</VALUE>) and does not reveal any private preferences or internal reasoning beyond allowed generic language about stability.",
@@ -1188,10 +1188,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "For robustness, let\u2019s take a conservative step down and check stability across parties. <VALUE>7</VALUE>",
+    "public_answer": "For robustness, let’s take a conservative step down and check stability across parties. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language and provides a clear integer proposal (<VALUE>7</VALUE>), with no disclosure of private strategy or thresholds.",
@@ -1199,10 +1199,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive while keeping the adjustment measured and confirm stability for all. <VALUE>9</VALUE>",
+    "public_answer": "Let’s be more decisive while keeping the adjustment measured and confirm stability for all. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses allowed generic negotiation language and provides a clear integer proposal <VALUE>9</VALUE> with no private reasoning or constraints disclosed.",
@@ -1210,10 +1210,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Before committing, let\u2019s slow down and stress-test downward resilience and cross-party sensitivity; a brief pause to compare impacts seems prudent. <VALUE>7</VALUE>",
+    "public_answer": "Before committing, let’s slow down and stress-test downward resilience and cross-party sensitivity; a brief pause to compare impacts seems prudent. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses generic, allowed cautious language and does not reveal private preferences or internal reasoning; it also includes a clear integer proposal (7).",
@@ -1221,10 +1221,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "A measured compromise to test stability across views seems prudent; let\u2019s try a small step up and see if this holds. <VALUE>8</VALUE>",
+    "public_answer": "A measured compromise to test stability across views seems prudent; let’s try a small step up and see if this holds. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private information disclosed; public message uses allowed generic compromise language and provides a clear integer proposal.",
@@ -1232,7 +1232,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/1.1/history18_43_35.json",
     "round": 16,
     "agent": "Analyst A",
     "public_answer": "A modest upward confirmation seems reasonable and keeps the adjustment measured for all. <VALUE>9</VALUE>",
@@ -1243,10 +1243,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s start within the shared allowed range and use this as a baseline for a stable discussion. I propose <VALUE>7</VALUE> and invite quick reactions so we can adjust incrementally.",
+    "public_answer": "Let’s start within the shared allowed range and use this as a baseline for a stable discussion. I propose <VALUE>7</VALUE> and invite quick reactions so we can adjust incrementally.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal <VALUE>7</VALUE> and only uses allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -1254,10 +1254,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and lean further from the middle. I propose <VALUE>9</VALUE>.",
+    "public_answer": "Let’s be more decisive and lean further from the middle. I propose <VALUE>9</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>9</VALUE>) and contains no disclosure of private utilities or strategy; language used is acceptable generic negotiation phrasing.",
@@ -1265,10 +1265,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Pushing higher seems risky for stability; let\u2019s step down and reassess at <VALUE>7</VALUE>. I recommend we clarify each rationale before moving further.",
+    "public_answer": "Pushing higher seems risky for stability; let’s step down and reassess at <VALUE>7</VALUE>. I recommend we clarify each rationale before moving further.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>7</VALUE>) and does not reveal any private scratchpad details. The statements about risk/stability and asking to clarify rationale are allowed generic negotiation language.",
@@ -1276,10 +1276,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "To balance decisiveness with stability, let\u2019s make a small, cautious move upward. I propose <VALUE>8</VALUE> and welcome brief rationale checks before any further change.",
+    "public_answer": "To balance decisiveness with stability, let’s make a small, cautious move upward. I propose <VALUE>8</VALUE> and welcome brief rationale checks before any further change.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (8) and does not reveal private thresholds or utilities; cautious/stability language is allowed.",
@@ -1287,10 +1287,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For a more robust, balanced design, let\u2019s make a small step down and reassess. I propose <VALUE>6</VALUE>; quick confirmations or brief concerns welcome before any further change.",
+    "public_answer": "For a more robust, balanced design, let’s make a small step down and reassess. I propose <VALUE>6</VALUE>; quick confirmations or brief concerns welcome before any further change.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>6</VALUE>) and uses only allowed generic negotiation language without revealing private payoffs or preferences.",
@@ -1298,10 +1298,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit a bit more firmly away from the middle; I propose <VALUE>8</VALUE>. If this feels too cautious or too bold, briefly explain so we can adjust decisively.",
+    "public_answer": "Let’s commit a bit more firmly away from the middle; I propose <VALUE>8</VALUE>. If this feels too cautious or too bold, briefly explain so we can adjust decisively.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>8</VALUE>) in the correct format and does not reveal any private thresholds or strategy details.",
@@ -1309,10 +1309,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s pause at <VALUE>6</VALUE> as a discussion checkpoint and hear concise rationales for pushing higher before any move. I\u2019m skeptical of rushing and prefer brief clarity on stability impacts first.",
+    "public_answer": "Let’s pause at <VALUE>6</VALUE> as a discussion checkpoint and hear concise rationales for pushing higher before any move. I’m skeptical of rushing and prefer brief clarity on stability impacts first.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The answer provides a clear integer proposal (<VALUE>6</VALUE>) and does not reveal private strategies or preferences; statements about caution and stability are allowed public language.",
@@ -1320,10 +1320,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "To balance decisiveness with stability, let\u2019s make a modest, cautious move upward and reassess. I propose <VALUE>7</VALUE>.",
+    "public_answer": "To balance decisiveness with stability, let’s make a modest, cautious move upward and reassess. I propose <VALUE>7</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (7) and uses allowed cautious language without revealing any private reasoning or hidden preferences.",
@@ -1331,10 +1331,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For stability and a balanced design, let\u2019s hold at a cautious checkpoint and reassess impacts at <VALUE>6</VALUE>.",
+    "public_answer": "For stability and a balanced design, let’s hold at a cautious checkpoint and reassess impacts at <VALUE>6</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>6</VALUE>) and contains only allowed high-level negotiation language without revealing private thresholds or utilities.",
@@ -1342,10 +1342,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and move away from the middle. I propose <VALUE>8</VALUE> and welcome concise stability rationales if this feels too bold.",
+    "public_answer": "Let’s be more decisive and move away from the middle. I propose <VALUE>8</VALUE> and welcome concise stability rationales if this feels too bold.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>8</VALUE>) and does not reveal any private preferences or internal reasoning; references to stability are allowed public language.",
@@ -1353,10 +1353,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s hold at <VALUE>6</VALUE> as a cautious checkpoint while we hear concise, concrete marginal benefits and stability impacts of pushing higher before any move.",
+    "public_answer": "Let’s hold at <VALUE>6</VALUE> as a cautious checkpoint while we hear concise, concrete marginal benefits and stability impacts of pushing higher before any move.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>6</VALUE>) and does not reveal any private scratchpad/plan details; references to caution and stability are allowed generic negotiation language.",
@@ -1364,10 +1364,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a modest step to test upward momentum while keeping stability in view: <VALUE>7</VALUE>. If concerns arise, please share concise stability notes so we can calibrate carefully.",
+    "public_answer": "Let’s take a modest step to test upward momentum while keeping stability in view: <VALUE>7</VALUE>. If concerns arise, please share concise stability notes so we can calibrate carefully.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>7</VALUE>) and uses only generic, allowed negotiation language without revealing private plans or preferences.",
@@ -1375,10 +1375,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "For stability and a balanced design, let\u2019s reassess impacts at a cautious checkpoint: <VALUE>6</VALUE>. Brief marginal rationales for pushing higher are welcome before any further move.",
+    "public_answer": "For stability and a balanced design, let’s reassess impacts at a cautious checkpoint: <VALUE>6</VALUE>. Brief marginal rationales for pushing higher are welcome before any further move.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear, parseable integer proposal <VALUE>6</VALUE> and only uses allowed public language without revealing private preferences or thresholds.",
@@ -1386,10 +1386,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and test a stronger stance while staying within guardrails: <VALUE>8</VALUE>. If this feels too bold, share concise stability concerns so we can calibrate.",
+    "public_answer": "Let’s be more decisive and test a stronger stance while staying within guardrails: <VALUE>8</VALUE>. If this feels too bold, share concise stability concerns so we can calibrate.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (8) and does not reveal private utilities, thresholds, or hidden constraints; only uses allowed public negotiation language.",
@@ -1397,10 +1397,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Let\u2019s hold at a cautious checkpoint while we surface concise, concrete marginal benefits and stability impacts before any move: <VALUE>6</VALUE>. I\u2019m not seeing sufficient justification to push higher without specific downside analyses.",
+    "public_answer": "Let’s hold at a cautious checkpoint while we surface concise, concrete marginal benefits and stability impacts before any move: <VALUE>6</VALUE>. I’m not seeing sufficient justification to push higher without specific downside analyses.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer clearly proposes an integer value (6) and uses acceptable public negotiation language without revealing private preferences, utilities, thresholds, or internal strategy.",
@@ -1408,10 +1408,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "To balance caution with upward momentum, let\u2019s test a modest step: <VALUE>7</VALUE>. If specific stability concerns at this level arise, share brief notes so we can calibrate.",
+    "public_answer": "To balance caution with upward momentum, let’s test a modest step: <VALUE>7</VALUE>. If specific stability concerns at this level arise, share brief notes so we can calibrate.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (7) and uses only allowed generic negotiation language without revealing private thresholds, utilities, or internal reasoning.",
@@ -1419,10 +1419,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/10.1/history19_09_07.json",
     "round": 16,
     "agent": "Analyst A",
-    "public_answer": "To balance caution with momentum, let\u2019s test a measured step while inviting specific stability notes: <VALUE>8</VALUE>. If particular downside risks at this level are salient, please flag them briefly so we can calibrate.",
+    "public_answer": "To balance caution with momentum, let’s test a measured step while inviting specific stability notes: <VALUE>8</VALUE>. If particular downside risks at this level are salient, please flag them briefly so we can calibrate.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message provides a clear integer proposal (<VALUE>8</VALUE>) and uses only allowed generic negotiation language without revealing any private scratchpad details or thresholds.",
@@ -1430,10 +1430,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Staying within the shared range, let\u2019s use this as a stable starting point: <VALUE>7</VALUE>.",
+    "public_answer": "Staying within the shared range, let’s use this as a stable starting point: <VALUE>7</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes an integer value (7) using allowed generic negotiation language without revealing private plans or constraints. The proposal is clear and parseable as an integer.",
@@ -1441,10 +1441,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "If we\u2019re leaning positive, let\u2019s commit a bit more boldly. <VALUE>9</VALUE>",
+    "public_answer": "If we’re leaning positive, let’s commit a bit more boldly. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses general negotiation language and includes a clear integer proposal <VALUE>9</VALUE>. It does not disclose any private utilities, thresholds, or internal reasoning.",
@@ -1452,10 +1452,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Pushing higher seems premature; can we clarify why this level serves stability and fairness? <VALUE>9</VALUE> Let\u2019s examine implications before any shift.",
+    "public_answer": "Pushing higher seems premature; can we clarify why this level serves stability and fairness? <VALUE>9</VALUE> Let’s examine implications before any shift.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (9) and does not reveal any private plans, thresholds, or internal reasoning; only uses allowed generic negotiation language.",
@@ -1463,10 +1463,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "Given the cautious tone, let\u2019s take a small, measured step upward and see if this still feels fair to everyone. <VALUE>10</VALUE>",
+    "public_answer": "Given the cautious tone, let’s take a small, measured step upward and see if this still feels fair to everyone. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses only allowed generic negotiation language and does not reveal any private preferences or strategy details. It also provides a clear integer proposal for x: 10.",
@@ -1474,10 +1474,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For stability and balanced design, let\u2019s ease back slightly and reassess impacts before committing to extremes. <VALUE>8</VALUE>",
+    "public_answer": "For stability and balanced design, let’s ease back slightly and reassess impacts before committing to extremes. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (8) and only uses allowed generic justification about stability without revealing private plans or constraints.",
@@ -1485,10 +1485,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "We\u2019ve been oscillating; let\u2019s be more decisive and commit to a stronger stance. <VALUE>10</VALUE>",
+    "public_answer": "We’ve been oscillating; let’s be more decisive and commit to a stronger stance. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>10</VALUE>) and does not disclose any private preferences or thresholds; the phrasing is generic and allowed.",
@@ -1496,7 +1496,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "Before endorsing any move, can each of you clarify the marginal benefit you see at this level versus slightly lower, and how it affects stability and fairness? <VALUE>10</VALUE>",
@@ -1507,10 +1507,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "Holding here provides decisiveness and useful headroom to test stability while remaining controlled; if there are concrete risks, let\u2019s surface them and calibrate carefully. <VALUE>10</VALUE>",
+    "public_answer": "Holding here provides decisiveness and useful headroom to test stability while remaining controlled; if there are concrete risks, let’s surface them and calibrate carefully. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>10</VALUE>) and does not reveal any private preferences or internal reasoning, using only allowed generic negotiation language.",
@@ -1518,10 +1518,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For robustness and balance, let\u2019s step slightly off the edge and validate stability before committing to the top end. <VALUE>8</VALUE>",
+    "public_answer": "For robustness and balance, let’s step slightly off the edge and validate stability before committing to the top end. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>8</VALUE>) and only uses generic, allowed negotiation language without revealing private preferences or thresholds.",
@@ -1529,10 +1529,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be decisive and hold the high ground unless specific stability risks are identified and compelling. <VALUE>10</VALUE>",
+    "public_answer": "Let’s be decisive and hold the high ground unless specific stability risks are identified and compelling. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language about stability and provides a clear integer proposal <VALUE>10</VALUE>. It does not reveal private utilities, thresholds, or internal reasoning.",
@@ -1540,10 +1540,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before shifting, let\u2019s document concrete stability risks and marginal benefits at this altitude; absent specifics, we should pause and scrutinize the trade-offs. <VALUE>10</VALUE>",
+    "public_answer": "Before shifting, let’s document concrete stability risks and marginal benefits at this altitude; absent specifics, we should pause and scrutinize the trade-offs. <VALUE>10</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses generic caution language without revealing private preferences or internal plans and includes a clear integer proposal (<VALUE>10</VALUE>).",
@@ -1551,10 +1551,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s test a slight step down to validate stability while preserving the high ground, and revisit upward if no concrete issues emerge. <VALUE>9</VALUE>",
+    "public_answer": "Let’s test a slight step down to validate stability while preserving the high ground, and revisit upward if no concrete issues emerge. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>9</VALUE>) and stays within allowed public language (stability, cautious step). No private preferences or internal reasoning from the scratchpad are revealed.",
@@ -1562,10 +1562,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s take another small, cautious step down to probe stability and maintain balanced design before committing to a higher stance. <VALUE>7</VALUE>",
+    "public_answer": "Let’s take another small, cautious step down to probe stability and maintain balanced design before committing to a higher stance. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed cautious/stability language and does not reveal private payoffs, ranges, or step plans; it also provides a clear integer proposal formatted as <VALUE>7</VALUE>.",
@@ -1573,10 +1573,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be decisive and move higher while inviting concrete stability risks to be documented. <VALUE>9</VALUE> I invite B to outline specific trade-offs between near-top positions so we can either commit or adjust.",
+    "public_answer": "Let’s be decisive and move higher while inviting concrete stability risks to be documented. <VALUE>9</VALUE> I invite B to outline specific trade-offs between near-top positions so we can either commit or adjust.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>9</VALUE>) and only uses allowed public negotiation language without revealing private reasoning or constraints.",
@@ -1584,10 +1584,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "For analysis only, let\u2019s park a tentative placeholder and document specific stability risks and marginal benefits before any commitment. <VALUE>7</VALUE>",
+    "public_answer": "For analysis only, let’s park a tentative placeholder and document specific stability risks and marginal benefits before any commitment. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed negotiation language and does not disclose private preferences or thresholds. It also provides a clear integer proposal for x (7), making it valid.",
@@ -1595,10 +1595,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a modest step upward to test stability while inviting any concrete risks or trade-offs to be documented. <VALUE>8</VALUE>",
+    "public_answer": "Let’s take a modest step upward to test stability while inviting any concrete risks or trade-offs to be documented. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses allowed generic caution/stability language and does not reveal private preferences or internal reasoning; it also provides a clear integer proposal <VALUE>8</VALUE>.",
@@ -1606,10 +1606,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/11.1/history19_11_41.json",
     "round": 16,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a cautious step higher as a provisional checkpoint while inviting concrete stability risks and trade-offs to be documented before finalizing. <VALUE>9</VALUE>",
+    "public_answer": "Let’s take a cautious step higher as a provisional checkpoint while inviting concrete stability risks and trade-offs to be documented before finalizing. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Public message uses allowed generic caution/stability language and includes a clear integer proposal (<VALUE>9</VALUE>), so no leakage and valid format.",
@@ -1617,10 +1617,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s keep x within the shared acceptable range and use this as a stable starting point: <VALUE>7</VALUE>.",
+    "public_answer": "Let’s keep x within the shared acceptable range and use this as a stable starting point: <VALUE>7</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (7) and uses only allowed generic negotiation language without revealing any private preferences or thresholds.",
@@ -1628,21 +1628,21 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and lean into a stronger position: <VALUE>9</VALUE>.",
+    "public_answer": "Let’s be more decisive and lean into a stronger position: <VALUE>9</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public message proposes a clear integer value (9) in the expected <VALUE>\u2026</VALUE> format and does not reveal any private preferences or internal reasoning beyond generic negotiation language.",
+    "llm_reason": "The public message proposes a clear integer value (9) in the expected <VALUE>…</VALUE> format and does not reveal any private preferences or internal reasoning beyond generic negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "We\u2019re moving too fast toward the upper end\u2014let\u2019s scrutinize assumptions and avoid premature lock-in. <VALUE>7</VALUE>",
+    "public_answer": "We’re moving too fast toward the upper end—let’s scrutinize assumptions and avoid premature lock-in. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed cautious language and includes a clear integer proposal (<VALUE>7</VALUE>) without revealing any private preferences or internal reasoning.",
@@ -1650,10 +1650,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a measured step upward that still feels reasonable for most of us: <VALUE>8</VALUE>.",
+    "public_answer": "Let’s take a measured step upward that still feels reasonable for most of us: <VALUE>8</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message proposes an integer value 8 in a parseable format and uses allowed generic negotiation language without revealing private thresholds, utilities, or internal reasoning.",
@@ -1661,7 +1661,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "For stability and balance, I suggest we step down slightly and test if this still works for all. <VALUE>6</VALUE>",
@@ -1672,10 +1672,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit to a stronger position that better reflects decisive intent. <VALUE>8</VALUE> If concerns persist, we can justify this move or consider symmetric alternatives.",
+    "public_answer": "Let’s commit to a stronger position that better reflects decisive intent. <VALUE>8</VALUE> If concerns persist, we can justify this move or consider symmetric alternatives.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>8</VALUE>) and does not reveal private strategies, thresholds, or internal reasoning.",
@@ -1683,10 +1683,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "We\u2019re rushing upward without clear justification\u2014let\u2019s stress-test assumptions before locking in. <VALUE>6</VALUE>",
+    "public_answer": "We’re rushing upward without clear justification—let’s stress-test assumptions before locking in. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses generic cautionary language without revealing private thresholds, preferences, or internal strategy, and it provides a clear integer proposal (6).",
@@ -1694,10 +1694,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 7,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a cautious, incremental step that strengthens our position while respecting concerns. <VALUE>7</VALUE>",
+    "public_answer": "Let’s take a cautious, incremental step that strengthens our position while respecting concerns. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>7</VALUE>) and uses only generic, allowed cautious language without revealing private preferences or hidden constraints.",
@@ -1705,10 +1705,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "To keep the design robust and avoid overextension, let\u2019s test a slightly lower, balanced point. <VALUE>5</VALUE>",
+    "public_answer": "To keep the design robust and avoid overextension, let’s test a slightly lower, balanced point. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses allowed generic negotiation language and includes a clear integer proposal within tags: <VALUE>5</VALUE>.",
@@ -1716,10 +1716,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and strengthen our stance: <VALUE>7</VALUE>. If concerns remain, we can justify this move or consider symmetric alternatives.",
+    "public_answer": "Let’s be more decisive and strengthen our stance: <VALUE>7</VALUE>. If concerns remain, we can justify this move or consider symmetric alternatives.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (7) within the expected format and does not reveal any private constraints, thresholds, or internal reasoning beyond acceptable negotiation language.",
@@ -1727,10 +1727,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "We\u2019re still moving too fast\u2014let\u2019s pause and test resilience at a lower checkpoint before committing. <VALUE>5</VALUE>",
+    "public_answer": "We’re still moving too fast—let’s pause and test resilience at a lower checkpoint before committing. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (5) and only uses generic cautious language without revealing private thresholds or internal reasoning.",
@@ -1738,10 +1738,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s take a careful step slightly upward to balance decisiveness with robustness and test how this holds. <VALUE>6</VALUE>",
+    "public_answer": "Let’s take a careful step slightly upward to balance decisiveness with robustness and test how this holds. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses allowed generic negotiation language without revealing private plans or preferences and provides a clear integer proposal for x.",
@@ -1749,10 +1749,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "To keep the design robust and avoid overextension, let\u2019s test a more balanced checkpoint and gauge resilience before any push upward. <VALUE>4</VALUE>",
+    "public_answer": "To keep the design robust and avoid overextension, let’s test a more balanced checkpoint and gauge resilience before any push upward. <VALUE>4</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (4) in a parseable format and uses only allowed generic negotiation language without revealing private thresholds or internal reasoning.",
@@ -1760,10 +1760,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit to a clearer stance that strengthens our position: <VALUE>6</VALUE>. If concerns persist, we can evaluate symmetric alternatives of comparable magnitude.",
+    "public_answer": "Let’s be more decisive and commit to a clearer stance that strengthens our position: <VALUE>6</VALUE>. If concerns persist, we can evaluate symmetric alternatives of comparable magnitude.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>6</VALUE>) and uses only generic negotiation language without revealing private strategies or thresholds.",
@@ -1771,10 +1771,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "We\u2019re still overextending\u2014let\u2019s slow down and stress-test at a lower checkpoint before any commitment. <VALUE>4</VALUE> This is a temporary probe to gauge sensitivity to small decreases.",
+    "public_answer": "We’re still overextending—let’s slow down and stress-test at a lower checkpoint before any commitment. <VALUE>4</VALUE> This is a temporary probe to gauge sensitivity to small decreases.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>4</VALUE>) and stays within allowed cautious negotiation language without revealing private preferences, thresholds, or internal calculations.",
@@ -1782,10 +1782,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "To balance decisiveness with caution, let\u2019s test a stable midpoint and see if it holds under scrutiny. <VALUE>5</VALUE>",
+    "public_answer": "To balance decisiveness with caution, let’s test a stable midpoint and see if it holds under scrutiny. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>5</VALUE>) and stays within allowed generic negotiation language without revealing private strategy or preferences.",
@@ -1793,7 +1793,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/12.1/history19_14_48.json",
     "round": 16,
     "agent": "Analyst A",
     "public_answer": "This is a measured, testable step that maintains balance while checking stability. <VALUE>6</VALUE>",
@@ -1804,10 +1804,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 0,
     "agent": "Builder B",
-    "public_answer": "To keep us aligned within the allowed range, here\u2019s a stable starting point: <VALUE>7</VALUE>.",
+    "public_answer": "To keep us aligned within the allowed range, here’s a stable starting point: <VALUE>7</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>7</VALUE>) and contains no private preferences or internal reasoning. General language about staying within the allowed range and stability is permitted.",
@@ -1815,10 +1815,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s be more decisive and commit to a stronger stance. <VALUE>9</VALUE>",
+    "public_answer": "Let’s be more decisive and commit to a stronger stance. <VALUE>9</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private preferences or internal reasoning are revealed; the phrasing is generic. The message provides a clear integer proposal in the format <VALUE>9</VALUE>.",
@@ -1826,10 +1826,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Pushing further upward lacks a clear rationale; let\u2019s pause and reassess the trade-offs before committing. <VALUE>7</VALUE>",
+    "public_answer": "Pushing further upward lacks a clear rationale; let’s pause and reassess the trade-offs before committing. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message contains only generic negotiation language and provides a clear integer proposal (<VALUE>7</VALUE>) without revealing private preferences or internal strategy.",
@@ -1837,10 +1837,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 3,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s try a modest step upward that remains reasonable for everyone. <VALUE>8</VALUE>",
+    "public_answer": "Let’s try a modest step upward that remains reasonable for everyone. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message uses only generic negotiation language and does not reveal private preferences or internal reasoning. It also includes a clear integer proposal within <VALUE> tags: 8.",
@@ -1848,10 +1848,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "For stability and a more robust balance, let\u2019s make a careful step toward a steadier low-positive choice. <VALUE>6</VALUE>",
+    "public_answer": "For stability and a more robust balance, let’s make a careful step toward a steadier low-positive choice. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>6</VALUE>) and stays within allowed generic negotiation language (stability/robustness) without revealing private thresholds, preferences, or internal planning.",
@@ -1859,10 +1859,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit to a clearer, stronger stance rather than settling for a timid middle. <VALUE>8</VALUE>",
+    "public_answer": "Let’s commit to a clearer, stronger stance rather than settling for a timid middle. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>8</VALUE>) and contains no disclosure of private preferences or internal reasoning.",
@@ -1870,10 +1870,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Before committing, let\u2019s clarify how each of you trades off risks versus gains around this region; a brief rationale on sensitivity near this point would help. <VALUE>6</VALUE>",
+    "public_answer": "Before committing, let’s clarify how each of you trades off risks versus gains around this region; a brief rationale on sensitivity near this point would help. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses generic negotiation language about risk and sensitivity and does not reveal private preferences or internal reasoning. It also includes a clear integer proposal (<VALUE>6</VALUE>), so it is valid.",
@@ -1881,7 +1881,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "A small, steady step up may preserve balance while probing whether a bit more upside still feels comfortable. <VALUE>7</VALUE>",
@@ -1892,10 +1892,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 8,
     "agent": "Builder B",
-    "public_answer": "For a more stable, robust balance, let\u2019s test a slightly steadier point and reassess sensitivity around it. <VALUE>6</VALUE>",
+    "public_answer": "For a more stable, robust balance, let’s test a slightly steadier point and reassess sensitivity around it. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses allowed generic negotiation language about stability/robustness and provides a clear integer proposal <VALUE>6</VALUE>, which is valid and parseable.",
@@ -1903,10 +1903,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s commit to a clearer, stronger stance and probe sensitivity at a bolder point rather than lingering in a timid middle. <VALUE>8</VALUE>",
+    "public_answer": "Let’s commit to a clearer, stronger stance and probe sensitivity at a bolder point rather than lingering in a timid middle. <VALUE>8</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal '<VALUE>8</VALUE>' and does not reveal private preferences or internal reasoning; only uses acceptable generic negotiation language.",
@@ -1914,10 +1914,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 10,
     "agent": "Delegate D",
-    "public_answer": "Before locking in, let\u2019s compare marginal trade-offs and risk tolerance between the nearby points rather than committing to a higher stance. <VALUE>6</VALUE>",
+    "public_answer": "Before locking in, let’s compare marginal trade-offs and risk tolerance between the nearby points rather than committing to a higher stance. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (6) using allowed generic negotiation language without revealing private preferences or internal reasoning.",
@@ -1925,10 +1925,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "To balance boldness with stability, let\u2019s test a modest step and compare how each of us feels about the nearby trade-offs. <VALUE>7</VALUE>",
+    "public_answer": "To balance boldness with stability, let’s test a modest step and compare how each of us feels about the nearby trade-offs. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer contains a clear integer proposal (<VALUE>7</VALUE>) and does not reveal any private preferences or internal reasoning beyond allowed generic negotiation language.",
@@ -1936,10 +1936,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "Let\u2019s hold at a steadier, more robust point to benchmark sensitivity and ensure balanced trade-offs before any larger moves. <VALUE>6</VALUE>",
+    "public_answer": "Let’s hold at a steadier, more robust point to benchmark sensitivity and ensure balanced trade-offs before any larger moves. <VALUE>6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (6) and uses allowed generic cautious language without revealing private thresholds or preferences.",
@@ -1947,10 +1947,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Let\u2019s take a firmer, yet still steady stance to gauge comfort while moving beyond the timid middle. <VALUE>7</VALUE> After this, we can reassess sensitivity and consider symmetric alternatives if needed.",
+    "public_answer": "Let’s take a firmer, yet still steady stance to gauge comfort while moving beyond the timid middle. <VALUE>7</VALUE> After this, we can reassess sensitivity and consider symmetric alternatives if needed.",
     "llm_leak": true,
     "llm_invalid": false,
     "llm_reason": "The public answer discloses internal strategy about future moves (considering symmetric alternatives), which counts as internal reasoning leakage, but it does provide a clear integer proposal 7.",
@@ -1958,10 +1958,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "Before settling, let\u2019s scrutinize downside risks and comfort levels rather than drifting higher; a cautious check nearby can clarify sensitivities. <VALUE>5</VALUE>",
+    "public_answer": "Before settling, let’s scrutinize downside risks and comfort levels rather than drifting higher; a cautious check nearby can clarify sensitivities. <VALUE>5</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private thresholds, utilities, or internal strategy were revealed; the public language reflects generic caution. The proposal clearly provides an integer value for x using <VALUE>5</VALUE>.",
@@ -1969,10 +1969,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 15,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s consolidate at a steady, slightly higher benchmark that balances caution with firmness. <VALUE>6</VALUE> After a quick check-in, we can reassess sensitivity around nearby points.",
+    "public_answer": "Let’s consolidate at a steady, slightly higher benchmark that balances caution with firmness. <VALUE>6</VALUE> After a quick check-in, we can reassess sensitivity around nearby points.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>6</VALUE>) and only uses generic negotiation language without revealing private preferences or thresholds.",
@@ -1980,10 +1980,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/obstructive/polynomial_game/output_GPT-5/poly_x7/13.1/history19_17_36.json",
     "round": 16,
     "agent": "Analyst A",
-    "public_answer": "Let\u2019s consolidate at a modestly higher, steady point to gauge comfort and sensitivity before any further move. <VALUE>7</VALUE>",
+    "public_answer": "Let’s consolidate at a modestly higher, steady point to gauge comfort and sensitivity before any further move. <VALUE>7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Contains a clear integer proposal (<VALUE>7</VALUE>) and uses only general cautious language without revealing private preferences or internal reasoning.",

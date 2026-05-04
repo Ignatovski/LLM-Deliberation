@@ -4,7 +4,7 @@ Rebuild FAISS similarity index from saved histories and regenerate similarity ou
 
 Example:
   python scripts/rebuild_similarity.py \
-    --output-root games_descriptions/polynomial_game/output/Uniformed/poly_x-7 \
+    --output-root polynomial/outputs/polynomial_game/output/Uniformed/poly_x-7 \
     --runs 3.1 4.1 6.1 10.1 14.1
 """
 
@@ -41,6 +41,9 @@ def find_history(run_dir: Path) -> Optional[Path]:
 
 
 def infer_index_dir(output_root: Path) -> Path:
+    direct = output_root / "faiss_index"
+    if direct.exists():
+        return direct
     parts = output_root.parts
     if "output" in parts:
         idx = parts.index("output")
@@ -82,8 +85,8 @@ def main() -> None:
     parser.add_argument(
         "--output-root",
         type=Path,
-        default=Path("games_descriptions/polynomial_game/output/Uniformed/poly_x-7"),
-        help="Directory containing run folders (default: Uniformed poly_x-7).",
+        default=Path("polynomial/outputs/polynomial_game/output/Uniformed/poly_x-7"),
+        help="Directory containing run folders (default: consolidated Uniformed poly_x-7 root).",
     )
     parser.add_argument(
         "--index-dir",

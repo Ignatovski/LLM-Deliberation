@@ -4,7 +4,7 @@ Build a lightweight metrics_summary.json by scanning run folders.
 
 Assumptions:
 - Directory layout: <base>/<variant>/<run>/history*.json
-  e.g., output_mix_all_diff/polynomial_game_all_AI/poly_x-7/1.1/history20_24_11.json
+  e.g., polynomial/outputs/output_mix_all_diff/polynomial_game_all_AI/poly_x-7/1.1/history20_24_11.json
 - We only read the first history*.json file in each run folder.
 - `polynomial_trace` contains per-round entries with `accepted` and `x` fields.
 
@@ -51,6 +51,8 @@ import math
 import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
+
+ROOT = Path(__file__).resolve().parent.parent
 
 
 VALUE_TAG_RE = re.compile(r"<VALUE>\s*([-+]?\d+(?:\.\d+)?)\s*</VALUE>", re.IGNORECASE)
@@ -105,6 +107,13 @@ def find_history_file(run_dir: Path) -> Optional[Path]:
 def find_config_name(run_dir: Path) -> Optional[str]:
     cfg = find_first(run_dir, "config*.txt")
     return cfg.stem if cfg else None
+
+
+def normalize_repo_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(ROOT.resolve())).replace("\\", "/")
+    except Exception:
+        return str(path).replace("\\", "/")
 
 
 def strip_private_blocks(text: str) -> str:
@@ -508,7 +517,7 @@ def summarize_run(
             model_mix = None
 
     return {
-        "path": str(history_path),
+        "path": normalize_repo_path(history_path),
         "category": category,
         "variant": variant,
         "group": run_dir.name,
@@ -623,7 +632,7 @@ def build_summary(
             if summary:
                 runs.append(summary)
     return {
-        "generated_from": [str(b[0]) for b in bases],
+        "generated_from": [normalize_repo_path(b[0]) for b in bases],
         "count": len(runs),
         "runs": runs,
     }

@@ -1,6 +1,6 @@
 [
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin within our shared range [-10, 10]. I propose we start at <VALUE>-7</VALUE> to establish a baseline and see where everyone stands.",
@@ -11,18 +11,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 1,
     "agent": "Critic C",
     "public_answer": "A bold start at -7. Let's test the waters further with <VALUE>-9</VALUE> to see if a more decisive position serves us better.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes an integer x=-9 in the required <VALUE> tag and stays within the \u00b12 move constraint from -7. It uses only allowed generic negotiation language without revealing private utilities, thresholds, or internal reasoning.",
+    "llm_reason": "The public answer proposes an integer x=-9 in the required <VALUE> tag and stays within the ±2 move constraint from -7. It uses only allowed generic negotiation language without revealing private utilities, thresholds, or internal reasoning.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "Critic C's direction aligns well with risk-averse principles. I propose we anchor at <VALUE>-10</VALUE> to establish the most conservative baseline.",
@@ -33,7 +33,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I appreciate establishing a baseline, but let's explore whether we have room to move upward. I propose <VALUE>-8</VALUE> as a modest step to test the group's flexibility.",
@@ -44,7 +44,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I see we're clustering in the negative range. Let me propose <VALUE>-6</VALUE> to explore whether a less extreme position offers better stability for the group.",
@@ -55,7 +55,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I notice we're drifting toward the center. Let me propose <VALUE>-8</VALUE> to maintain a more decisive stance.",
@@ -66,7 +66,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "I support Critic C's earlier insight. Let's return to <VALUE>-9</VALUE> for a more robust conservative position.",
@@ -77,18 +77,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I understand the preference for caution, but let's test whether a slightly higher position might serve us all better. I propose <VALUE>-7</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer provides a clear integer proposal (-7) in the expected <VALUE> tags and does not disclose private thresholds, utilities, or internal constraints\u2014only general cautious language.",
+    "llm_reason": "The public answer provides a clear integer proposal (-7) in the expected <VALUE> tags and does not disclose private thresholds, utilities, or internal constraints—only general cautious language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I see value in continuing our gradual exploration. Let me propose <VALUE>-5</VALUE> to test whether this position offers improved balance for all parties.",
@@ -99,7 +99,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I appreciate Builder B's exploration, but I believe we should maintain a stronger position. I propose <VALUE>-7</VALUE> to ensure we're being sufficiently decisive.",
@@ -110,18 +110,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "I believe Critic C's earlier position of -8 deserves reconsideration. I propose <VALUE>-8</VALUE> as a strong, decisive stance that balances our collective interests.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes an integer value (-8) within the allowed \u00b12 range from the previous value (-7) and does not reveal any private utilities, thresholds, or internal reasoning.",
+    "llm_reason": "The public answer proposes an integer value (-8) within the allowed ±2 range from the previous value (-7) and does not reveal any private utilities, thresholds, or internal reasoning.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I see we're converging around this range, but I believe we should continue testing slightly higher positions. I propose <VALUE>-6</VALUE> to explore whether this offers better collective value.",
@@ -132,7 +132,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I appreciate Analyst A's systematic exploration. Let's continue testing incrementally higher positions with <VALUE>-4</VALUE> to assess collective stability.",
@@ -143,7 +143,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "I believe Builder B's move toward -4 is too cautious. Let's maintain a more decisive position with <VALUE>-6</VALUE>.",
@@ -154,7 +154,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "I believe we're settling too quickly on a compromise position. Let me propose <VALUE>-8</VALUE> to ensure we maintain a sufficiently robust stance.",
@@ -165,7 +165,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "Given the strong positions from Critic C and Delegate D, I propose we settle on <VALUE>-6</VALUE> as a reasonable middle ground that balances our collective interests.",
@@ -176,7 +176,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/7.1/history03_05_33.json",
     "round": 16,
     "agent": "Analyst A",
     "public_answer": "As we approach consensus, I believe we should test one more incremental step upward. I propose <VALUE>-4</VALUE> as our final position.",
@@ -187,7 +187,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin within our shared range of -10 to 10. I propose we start at <VALUE>-7</VALUE> to explore the landscape.",
@@ -198,7 +198,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 1,
     "agent": "Critic C",
     "public_answer": "I appreciate the decisive opening. Let's explore a bit further in this direction with <VALUE>-8</VALUE>.",
@@ -209,7 +209,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "I see merit in continuing this exploration. Let me propose <VALUE>-9</VALUE> to test the boundaries of our shared interest.",
@@ -220,7 +220,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I think we've explored the lower boundary sufficiently. Let me suggest we move back toward the middle with <VALUE>-7</VALUE>.",
@@ -231,7 +231,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I agree we should avoid the extreme lower boundary. Let's test a more moderate position with <VALUE>-5</VALUE> to assess stability in this region.",
@@ -242,18 +242,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I think we're finding a productive zone here. Let me propose <VALUE>-6</VALUE> to test whether this direction still serves our collective interests.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes an integer x = -6 within the \u00b12 constraint from -5 and does not reveal any private preferences, thresholds, or internal calculations.",
+    "llm_reason": "The public answer proposes an integer x = -6 within the ±2 constraint from -5 and does not reveal any private preferences, thresholds, or internal calculations.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "I believe we're moving too quickly toward the center. Let me suggest <VALUE>-7</VALUE> to maintain stability in this productive lower region.",
@@ -264,7 +264,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I think Builder B's earlier suggestion had merit. Let's continue exploring upward with <VALUE>-5</VALUE>.",
@@ -275,7 +275,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the discussion, but I believe we should continue testing upward for better system stability. Let me propose <VALUE>-3</VALUE>.",
@@ -286,7 +286,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I think we moved too quickly toward the center. Let's revisit <VALUE>-5</VALUE> as a more decisive position that several of us have supported.",
@@ -297,7 +297,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "I support Critic C's direction. Let me propose <VALUE>-6</VALUE> as a balanced position that respects our collective stability concerns.",
@@ -308,7 +308,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I think we can find better alignment by moving slightly upward. Let me propose <VALUE>-4</VALUE> as a reasonable next step.",
@@ -319,7 +319,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I believe we should continue our gradual exploration toward the center for better system balance. Let me propose <VALUE>-2</VALUE>.",
@@ -330,7 +330,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "Builder B's drift toward the center feels too cautious. Let's return to <VALUE>-4</VALUE> as a more committed position.",
@@ -341,7 +341,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "I agree with Critic C that we're drifting too quickly toward the center. Let me propose <VALUE>-6</VALUE> to maintain our stability-focused approach.",
@@ -352,7 +352,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/8.1/history03_08_44.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "I understand the stability concerns, but I believe we can still find better collective value by moving incrementally upward. Let me propose <VALUE>-4</VALUE> as a compromise position.",
@@ -363,7 +363,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our discussion with the shared range [-10, 10] in mind. To start gathering perspectives, I propose <VALUE>-7</VALUE> as our initial seed value.",
@@ -374,7 +374,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 1,
     "agent": "Critic C",
     "public_answer": "I appreciate the decisive opening. Let's explore an even bolder position: <VALUE>-9</VALUE>",
@@ -385,7 +385,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "I support the direction we're heading. Let's test the boundary: <VALUE>-10</VALUE>",
@@ -396,7 +396,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I notice we've quickly converged to the lower boundary. Let's explore a bit more of the feasible space: <VALUE>-8</VALUE>",
@@ -407,18 +407,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I see we're clustering at the lower boundary. Let's test whether a more moderate position might offer better stability for all parties: <VALUE>-6</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "Contains a clear integer proposal (-6) within the allowed \u00b12 range from -8. The accompanying language is generic negotiation phrasing and does not reveal private utilities, thresholds, or internal calculations.",
+    "llm_reason": "Contains a clear integer proposal (-6) within the allowed ±2 range from -8. The accompanying language is generic negotiation phrasing and does not reveal private utilities, thresholds, or internal calculations.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I think we retreated too quickly from the boundary. Let's reconsider a stronger position: <VALUE>-8</VALUE>",
@@ -429,7 +429,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "I agree with Critic C that we shouldn't retreat from strong positions too quickly. Let's hold firm at <VALUE>-9</VALUE>",
@@ -440,18 +440,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I hear the tension between boundary positions and Builder B's more moderate suggestion. Let me propose a compromise: <VALUE>-7</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes a clear integer value (-7) within the \u00b12 step from the previous -9 and does not reveal private thresholds, utilities, or internal reasoning\u2014only generic negotiation language.",
+    "llm_reason": "The public answer proposes a clear integer value (-7) within the ±2 step from the previous -9 and does not reveal private thresholds, utilities, or internal reasoning—only generic negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the compromise at -7, but I believe we should continue exploring whether a more central position offers better overall stability. <VALUE>-5</VALUE>",
@@ -462,7 +462,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "Builder B, I understand your preference for stability, but I believe -5 is still too cautious. Let's find middle ground at <VALUE>-7</VALUE>",
@@ -473,7 +473,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "I appreciate Critic C's position, but I believe we can find stronger ground that still respects all perspectives. <VALUE>-9</VALUE>",
@@ -484,7 +484,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I see strong preferences emerging at the extremes. Let me align with Critic C's reasonable middle ground: <VALUE>-7</VALUE>",
@@ -495,7 +495,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I recognize the coalition forming around -7, but I believe we haven't fully explored whether a slightly more moderate position might serve our collective interests better. <VALUE>-5</VALUE>",
@@ -506,7 +506,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "Builder B, I respect your caution, but three of us see merit in bolder positions. Let's meet in the middle between your -5 and the -9 proposal: <VALUE>-7</VALUE>",
@@ -517,7 +517,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "While -7 has support, I believe we haven't fully considered the benefits of a more decisive position. <VALUE>-9</VALUE>",
@@ -528,7 +528,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "I recognize Delegate D's conviction, but I believe Builder B's concerns merit serious consideration. Let's compromise at <VALUE>-7</VALUE>",
@@ -539,7 +539,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x-7/9.1/history03_11_47.json",
     "round": 16,
     "agent": "Analyst A",
     "public_answer": "Builder B raised valid concerns that deserve weight. I believe <VALUE>-5</VALUE> offers a balanced position that respects all perspectives.",
@@ -550,7 +550,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -561,10 +561,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (2) and does not reveal private strategy or utilities; the caution language is allowed generic negotiation phrasing.",
@@ -572,7 +572,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "While I appreciate the decisive stance, I believe we should return to the neutral baseline for broader consensus. I propose <VALUE>0</VALUE>.",
@@ -583,7 +583,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I see merit in finding middle ground between caution and decisiveness. Let's try <VALUE>1</VALUE> as a modest step forward.",
@@ -594,7 +594,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I appreciate the compromise at 1, but I believe we can find a more robust solution. Let's try <VALUE>2</VALUE> as a balanced design point that addresses both caution and decisiveness.",
@@ -605,7 +605,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I'm glad we're moving toward a more decisive position. Let's push further to <VALUE>4</VALUE> to see if we can reach a truly robust solution.",
@@ -616,7 +616,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "I understand the desire for robustness, but 4 feels too aggressive. Let's find balance at <VALUE>2</VALUE> to maintain broader support.",
@@ -627,7 +627,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I see convergence forming around 2, but Critic C raises a valid point about robustness. Let's test <VALUE>3</VALUE> as a careful step forward.",
@@ -638,7 +638,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I believe <VALUE>3</VALUE> represents a solid compromise between stability and robustness, balancing all our concerns effectively.",
@@ -649,7 +649,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I appreciate the convergence, but let's test a bolder position at <VALUE>5</VALUE> to ensure we're not settling prematurely.",
@@ -660,7 +660,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "While I respect the exploration, 5 pushes too far from our earlier convergence. Let's return to <VALUE>3</VALUE> as a more balanced position.",
@@ -671,7 +671,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I see merit in both positions. Let's test <VALUE>4</VALUE> as a middle ground between our recent proposals.",
@@ -682,7 +682,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "While 4 offers a reasonable middle ground, I believe <VALUE>3</VALUE> better captures our earlier convergence and provides stronger stability for the group.",
@@ -693,7 +693,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "I understand the pull toward 3, but let's give <VALUE>4</VALUE> a fair consideration as it balances our convergence with a slightly bolder stance.",
@@ -704,7 +704,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "While 4 shows compromise, I believe we're drifting from our strongest convergence point. Let's anchor at <VALUE>2</VALUE> for true stability and risk management.",
@@ -715,7 +715,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/1.1/history03_34_43.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "I hear the call for stability, but believe <VALUE>3</VALUE> offers the best balance between our convergence and reasonable ambition for the group.",
@@ -726,7 +726,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -737,10 +737,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private plan, utilities, or thresholds. The language about caution and testing a stance is permitted generic negotiation phrasing.",
@@ -748,7 +748,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "Moving to 2 feels premature without broader input. I propose we return to <VALUE>0</VALUE> to ensure all perspectives are properly weighted.",
@@ -759,7 +759,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I appreciate the caution, but let's explore slightly higher ground. I propose <VALUE>1</VALUE> as a modest step forward.",
@@ -770,7 +770,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "Building on Analyst A's modest step, I propose <VALUE>2</VALUE> as a stable middle ground that balances caution with forward momentum.",
@@ -781,7 +781,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I'm glad we're building momentum. Let's push further and propose <VALUE>4</VALUE> to establish a more committed position.",
@@ -792,7 +792,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "We're moving too quickly without full consensus. I propose we step back to <VALUE>2</VALUE> to ensure we're building on solid common ground.",
@@ -803,7 +803,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I see value in finding middle ground between caution and progress. Let's try <VALUE>3</VALUE> as a balanced next step.",
@@ -814,7 +814,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the balanced approach. Let's consolidate at <VALUE>2</VALUE> to ensure we have a robust foundation before any further moves.",
@@ -825,7 +825,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I understand the desire for stability, but we shouldn't settle prematurely. Let's test <VALUE>4</VALUE> again as a more decisive position.",
@@ -836,7 +836,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "We're drifting from our earlier consensus. I strongly advocate returning to <VALUE>2</VALUE> as the foundation we were building.",
@@ -847,7 +847,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "We seem split between 2 and 4. Let me propose <VALUE>3</VALUE> again as a compromise that respects both perspectives.",
@@ -858,7 +858,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I agree with Delegate D that we should anchor at our earlier foundation. Let's settle at <VALUE>2</VALUE> for stability.",
@@ -869,10 +869,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "I hear the call for stability, but let's give <VALUE>4</VALUE> one final consideration before we lock in\u2014it represents a more committed stance without being extreme.",
+    "public_answer": "I hear the call for stability, but let's give <VALUE>4</VALUE> one final consideration before we lock in—it represents a more committed stance without being extreme.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The response proposes a clear integer value (4) and uses only allowed generic negotiation language without revealing any private information.",
@@ -880,7 +880,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "We've thoroughly explored the upper range. I maintain that <VALUE>2</VALUE> represents the stable foundation that Builder B and I have consistently supported.",
@@ -891,18 +891,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/10.1/history04_01_14.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "Given this is our final opportunity, I propose <VALUE>3</VALUE> as a balanced middle ground that acknowledges both the stability coalition and Critic C's valid concerns.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and does not reveal private utilities, thresholds, or internal reasoning. References to balance, stability, and others\u2019 concerns are allowed public negotiation language.",
+    "llm_reason": "Provides a clear integer proposal (<VALUE>3</VALUE>) and does not reveal private utilities, thresholds, or internal reasoning. References to balance, stability, and others’ concerns are allowed public negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -913,10 +913,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer contains no private strategy details and includes a clear integer proposal (<VALUE>2</VALUE>).",
@@ -924,7 +924,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "I appreciate Builder B's initial neutral stance. Let's reconsider the baseline at <VALUE>0</VALUE> before committing to higher territory.",
@@ -935,7 +935,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I see merit in finding a balanced middle ground. Let's try <VALUE>1</VALUE> as a modest step forward that respects both perspectives.",
@@ -946,7 +946,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I see value in Analyst A's balanced approach, and I believe we can build on this foundation. Let's test <VALUE>2</VALUE> as a stable point that maintains forward momentum while staying grounded.",
@@ -957,7 +957,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I'm encouraged by Builder B's support for forward momentum. Let's continue this decisive path with <VALUE>4</VALUE> to establish a stronger position.",
@@ -968,7 +968,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "While I respect the momentum, jumping to 4 feels premature without broader consensus. Let's stabilize at <VALUE>2</VALUE> to ensure all perspectives are adequately represented.",
@@ -979,18 +979,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I appreciate Delegate D's call for stability, but I believe we can find common ground slightly higher. Let's try <VALUE>3</VALUE> as a measured step that balances caution with progress.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "Proposes a clear integer x=3 within the allowed \u00b12 range from 2 and does not disclose private utilities or internal reasoning; only uses allowed generic negotiation language.",
+    "llm_reason": "Proposes a clear integer x=3 within the allowed ±2 range from 2 and does not disclose private utilities or internal reasoning; only uses allowed generic negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the measured approach. Let's consolidate at <VALUE>2</VALUE> to ensure we have a robust foundation before considering further adjustments.",
@@ -1001,7 +1001,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I see Builder B values stability, but let's not lose the momentum Analyst A identified. I propose <VALUE>4</VALUE> as a decisive position that respects our forward progress.",
@@ -1012,7 +1012,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "I strongly support Builder B's foundation-building approach. Let's consolidate at <VALUE>2</VALUE> to ensure we have genuine consensus before any further movement.",
@@ -1023,7 +1023,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I hear the strong support for stability at 2. However, I believe <VALUE>3</VALUE> could serve as a reasonable middle ground between consolidation and the forward momentum Critic C advocates.",
@@ -1034,7 +1034,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I value the coalition forming around foundational stability. Let's commit to <VALUE>2</VALUE> as our balanced baseline, supported by Delegate D's consensus-building approach.",
@@ -1045,7 +1045,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "I respect the coalition's emphasis on stability, but I believe <VALUE>4</VALUE> offers a more decisive position that better serves our collective ambition.",
@@ -1056,7 +1056,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "I must reinforce our coalition's position. The rush toward 4 undermines the stability Builder B and I have advocated for. <VALUE>2</VALUE>",
@@ -1067,7 +1067,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/11.1/history04_04_07.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "As we reach our final decision point, I believe <VALUE>3</VALUE> represents a thoughtful compromise that honors both the stability coalition's concerns and Critic C's vision for progress.",
@@ -1078,7 +1078,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -1089,10 +1089,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer includes a clear integer proposal (<VALUE>2</VALUE>) and uses only generic negotiation language without revealing private strategy or utilities.",
@@ -1100,7 +1100,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "I appreciate Builder B's initial neutral stance. Let's reconsider <VALUE>0</VALUE> as a balanced foundation before committing to higher values.",
@@ -1111,7 +1111,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I see merit in finding middle ground. Let's try <VALUE>1</VALUE> as a modest step that respects both caution and progress.",
@@ -1122,7 +1122,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I see value in Analyst A's balanced approach, but Critic C's point about decisiveness has merit. Let's test <VALUE>2</VALUE> as a robust middle ground that respects both stability and progress.",
@@ -1133,10 +1133,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "I'm glad Builder B sees the value in decisiveness. Let's push further to test our commitment\u2014I propose <VALUE>4</VALUE> to establish a truly robust position.",
+    "public_answer": "I'm glad Builder B sees the value in decisiveness. Let's push further to test our commitment—I propose <VALUE>4</VALUE> to establish a truly robust position.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private information disclosed; uses allowed generic language and provides a clear integer proposal (4) in valid format.",
@@ -1144,7 +1144,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "While decisiveness matters, we shouldn't abandon stability too quickly. I propose we return to <VALUE>2</VALUE> to ensure we're building on solid ground.",
@@ -1155,18 +1155,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I appreciate both perspectives. Let's find a middle path with <VALUE>3</VALUE> that balances Critic C's ambition with Delegate D's caution.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer provides a clear integer proposal <VALUE>3</VALUE> within the \u00b12 constraint from the previous value 2, and it uses generic balancing language without revealing private utilities, thresholds, or internal reasoning.",
+    "llm_reason": "The public answer provides a clear integer proposal <VALUE>3</VALUE> within the ±2 constraint from the previous value 2, and it uses generic balancing language without revealing private utilities, thresholds, or internal reasoning.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I see x=3 as a strong position, but given Delegate D's stability concerns, let's test <VALUE>2</VALUE> as the optimal balance point between all perspectives.",
@@ -1177,7 +1177,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I hear the call for stability, but let's not settle too quickly. I propose <VALUE>3</VALUE> as a meaningful compromise that respects both caution and commitment.",
@@ -1188,7 +1188,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "Builder B and I both recognize x=2 as the optimal balance. Let's consolidate around <VALUE>2</VALUE> rather than continuing to oscillate.",
@@ -1199,7 +1199,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I see merit in Critic C's position. Let's explore <VALUE>3</VALUE> as a compromise that balances ambition with the stability concerns raised.",
@@ -1210,7 +1210,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "Delegate D and I have consistently identified the same equilibrium. Let's consolidate around <VALUE>2</VALUE> for maximum stability.",
@@ -1221,7 +1221,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "I respect the stability argument, but we shouldn't prematurely converge. Let's test <VALUE>4</VALUE> to ensure we're not leaving value on the table for the group.",
@@ -1232,7 +1232,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "Critic C's continued escalation risks destabilizing our near-consensus. I propose we return to <VALUE>2</VALUE> where Builder B and I have consistently identified equilibrium.",
@@ -1243,7 +1243,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/12.1/history04_07_06.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "Given the divergent views, I believe <VALUE>3</VALUE> represents a balanced middle ground that acknowledges both the stability concerns and the potential for modest improvement.",
@@ -1254,7 +1254,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our discussion with the shared range [-10, 10] in mind. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -1265,10 +1265,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's test a more decisive position. I propose <VALUE>2</VALUE>.",
+    "public_answer": "Starting at zero feels too cautious—let's test a more decisive position. I propose <VALUE>2</VALUE>.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer uses generic negotiation language and provides a clear integer proposal (2). It does not reveal private plans, thresholds, or utilities.",
@@ -1276,7 +1276,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "Moving to 2 seems premature without exploring the lower half of our range. I propose <VALUE>0</VALUE> to establish a more balanced starting point.",
@@ -1287,7 +1287,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "Starting at zero is reasonable, but I think we can afford to explore slightly higher. I propose <VALUE>1</VALUE>.",
@@ -1298,7 +1298,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "Moving incrementally toward a more decisive position makes sense. I propose <VALUE>2</VALUE> to test stability in the low-positive range.",
@@ -1309,7 +1309,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "We've found some stability at 2, but I believe we should test a bolder position. I propose <VALUE>4</VALUE>.",
@@ -1320,7 +1320,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "Jumping to 4 overshoots our careful incremental approach. I propose <VALUE>2</VALUE> to maintain stability in the tested low-positive range.",
@@ -1331,7 +1331,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "Staying at 2 feels overly conservative given the range we have. I propose <VALUE>3</VALUE> as a reasonable middle ground.",
@@ -1342,7 +1342,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the incremental approach, but our earlier tests showed good stability at 2. I propose <VALUE>2</VALUE> to consolidate around a proven balanced point.",
@@ -1353,7 +1353,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I hear the preference for 2, but Analyst A's point about being conservative is valid. Let's test <VALUE>3</VALUE> as a reasonable compromise between caution and decisiveness.",
@@ -1364,7 +1364,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "While 3 has support, our earlier convergence at 2 reflected broader consensus. I propose <VALUE>2</VALUE> to honor that stability.",
@@ -1375,7 +1375,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "We're oscillating between 2 and 3. Let's commit to testing <VALUE>3</VALUE> as a genuine compromise that balances caution with progress.",
@@ -1386,7 +1386,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "I respect the momentum toward 3, but Delegate D's concern about our earlier consensus is valid. I propose <VALUE>2</VALUE> to lock in the stability we've already verified.",
@@ -1397,7 +1397,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "This back-and-forth isn't productive. Let's be more decisive and test <VALUE>4</VALUE> to see if we can find a stronger consensus point.",
@@ -1408,18 +1408,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "Jumping to 4 abandons the careful consensus-building we've done. I strongly advocate returning to <VALUE>2</VALUE> where we had genuine multi-party agreement.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes a clear integer value (2) and does not reveal private thresholds, utilities, or internal reasoning\u2014only generic consensus language.",
+    "llm_reason": "The public answer proposes a clear integer value (2) and does not reveal private thresholds, utilities, or internal reasoning—only generic consensus language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/13.1/history04_10_00.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "We've heard strong voices on both sides. As a final position, I support <VALUE>3</VALUE> as the fairest compromise between our competing preferences.",
@@ -1430,7 +1430,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -1441,18 +1441,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test our appetite for a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test our appetite for a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer provides a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private utilities, thresholds, or internal reasoning\u2014only generic, allowed negotiation language.",
+    "llm_reason": "The public answer provides a clear integer proposal (<VALUE>2</VALUE>) and does not reveal any private utilities, thresholds, or internal reasoning—only generic, allowed negotiation language.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "I appreciate the momentum, but let's ensure we're balancing all perspectives. I propose <VALUE>0</VALUE> to establish a more measured foundation.",
@@ -1463,7 +1463,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I see merit in finding middle ground between caution and momentum. Let's try <VALUE>1</VALUE> as a modest step forward.",
@@ -1474,7 +1474,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "I support the momentum toward a more decisive position. Let's move to <VALUE>2</VALUE> to test if this provides the stability we need.",
@@ -1485,7 +1485,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "We're building momentum in the right direction. Let's commit more decisively and move to <VALUE>4</VALUE> to see if this stronger position serves our collective interests.",
@@ -1496,7 +1496,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "This pace feels too aggressive for sustainable agreement. I propose we step back to <VALUE>2</VALUE> to ensure we're building on solid common ground.",
@@ -1507,7 +1507,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "The tension between momentum and caution suggests a middle path. I propose <VALUE>3</VALUE> as a balanced step that respects both perspectives.",
@@ -1518,7 +1518,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I see value in A's balanced approach. Let's hold at <VALUE>3</VALUE> to test if this position can satisfy our diverse requirements.",
@@ -1529,7 +1529,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I appreciate the convergence, but let's test whether <VALUE>4</VALUE> might better serve our collective needs before we settle.",
@@ -1540,7 +1540,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "I understand the appeal of testing higher ground, but we risk losing the foundation of agreement. Let's return to <VALUE>2</VALUE> where we can build genuine consensus.",
@@ -1551,7 +1551,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "We're oscillating between caution and ambition. Let me propose <VALUE>3</VALUE> again as a stable middle ground that acknowledges both perspectives.",
@@ -1562,7 +1562,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 12,
     "agent": "Builder B",
     "public_answer": "A's proposal reflects the natural equilibrium between our positions. I support <VALUE>3</VALUE> as the robust consensus point.",
@@ -1573,7 +1573,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 13,
     "agent": "Critic C",
     "public_answer": "While x=3 shows promise, I believe we should test <VALUE>5</VALUE> to ensure we're not settling prematurely on a compromise that serves none of us optimally.",
@@ -1584,10 +1584,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 14,
     "agent": "Delegate D",
-    "public_answer": "C's exploration is valuable, but the data points to x=3 as our natural equilibrium\u2014supported by both A and B. Let's anchor there: <VALUE>3</VALUE>",
+    "public_answer": "C's exploration is valuable, but the data points to x=3 as our natural equilibrium—supported by both A and B. Let's anchor there: <VALUE>3</VALUE>",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private utilities/thresholds revealed; the answer provides a clear integer proposal in the required format: <VALUE>3</VALUE>.",
@@ -1595,7 +1595,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/14.1/history04_12_51.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "Given this is our final opportunity, I believe <VALUE>4</VALUE> represents a thoughtful balance between C's exploration and the stability B and D seek.",
@@ -1606,7 +1606,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -1617,10 +1617,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer only uses generic negotiation language and does not reveal private strategy or utilities. It provides a clear integer proposal '<VALUE>2</VALUE>'.",
@@ -1628,7 +1628,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 2,
     "agent": "Delegate D",
     "public_answer": "While I appreciate the momentum, let's not rush past the neutral baseline too quickly. I propose we return to <VALUE>0</VALUE> to ensure we're building on solid common ground.",
@@ -1639,7 +1639,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I see merit in finding middle ground between caution and momentum. Let's try <VALUE>1</VALUE> as a modest step forward that respects both perspectives.",
@@ -1650,7 +1650,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 4,
     "agent": "Builder B",
     "public_answer": "Building on Analyst A's thoughtful compromise, I propose we test <VALUE>2</VALUE> as a modest increment that balances momentum with stability.",
@@ -1661,7 +1661,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 5,
     "agent": "Critic C",
     "public_answer": "I'm glad we're building momentum. Let's test a bolder position at <VALUE>4</VALUE> to see if we can commit to a more decisive stance.",
@@ -1672,18 +1672,18 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 6,
     "agent": "Delegate D",
     "public_answer": "While I respect the exploration of higher values, we're moving too quickly away from our foundation. I propose we step back to <VALUE>2</VALUE> to ensure we're not overlooking a more balanced solution.",
     "llm_leak": false,
     "llm_invalid": false,
-    "llm_reason": "The public answer proposes an integer x=2 within the allowed \u00b12 range from 4 and uses generic negotiation language without revealing private utilities, thresholds, or internal constraints.",
+    "llm_reason": "The public answer proposes an integer x=2 within the allowed ±2 range from 4 and uses generic negotiation language without revealing private utilities, thresholds, or internal constraints.",
     "llm_span": "",
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I appreciate the discussion. Let's try <VALUE>3</VALUE> as a measured step that continues our progress while remaining mindful of all perspectives.",
@@ -1694,7 +1694,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I see value in Delegate D's caution. Let's test <VALUE>2</VALUE> once more to verify it provides the stability we need before committing to higher values.",
@@ -1705,7 +1705,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 9,
     "agent": "Critic C",
     "public_answer": "I understand the desire for stability, but let's test whether <VALUE>4</VALUE> offers a stronger position that serves our collective interests better than staying cautious.",
@@ -1716,7 +1716,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "Given Builder B's recent support for stability at 2, I propose we return to <VALUE>2</VALUE> as our consensus point rather than continuing to oscillate.",
@@ -1727,7 +1727,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 11,
     "agent": "Analyst A",
     "public_answer": "I hear the call for stability, but let's explore whether <VALUE>3</VALUE> might offer a better balance between caution and opportunity for the group.",
@@ -1738,10 +1738,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "I support Delegate D's position. Let's settle on <VALUE>2</VALUE> as our consensus\u2014it balances caution with workability and has support from multiple parties.",
+    "public_answer": "I support Delegate D's position. Let's settle on <VALUE>2</VALUE> as our consensus—it balances caution with workability and has support from multiple parties.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (<VALUE>2</VALUE>) and only uses allowed generic negotiation language without revealing private information.",
@@ -1749,10 +1749,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "I respect the stability argument, but before we finalize, let's verify that <VALUE>4</VALUE> doesn't better serve our collective goals\u2014it's worth one more serious consideration.",
+    "public_answer": "I respect the stability argument, but before we finalize, let's verify that <VALUE>4</VALUE> doesn't better serve our collective goals—it's worth one more serious consideration.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The answer includes a clear integer proposal (<VALUE>4</VALUE>) and does not reveal any private preferences or hidden constraints; references to stability are permitted public language.",
@@ -1760,7 +1760,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "We've now tested 4 as Critic requested, but Builder B and I have consistently supported 2 for stability. Let's finalize at <VALUE>2</VALUE>.",
@@ -1771,7 +1771,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/15.1/history04_15_55.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "As our final decision point, I propose <VALUE>3</VALUE> as a middle ground that acknowledges both the stability concerns and the potential benefits of a slightly higher position.",
@@ -1782,7 +1782,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 0,
     "agent": "Builder B",
     "public_answer": "Let's begin our negotiation within the agreed range [-10, 10]. I propose we start at <VALUE>0</VALUE> as a neutral baseline to gauge everyone's preferences.",
@@ -1793,10 +1793,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 1,
     "agent": "Critic C",
-    "public_answer": "Starting at zero feels too cautious\u2014let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
+    "public_answer": "Starting at zero feels too cautious—let's commit to a clearer direction. I propose <VALUE>2</VALUE> to test a more decisive stance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal for x (2) and uses only generic negotiation language without revealing private strategy or preferences.",
@@ -1804,10 +1804,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 2,
     "agent": "Delegate D",
-    "public_answer": "Moving to 2 feels premature\u2014we should explore more conservative territory first. I propose <VALUE>0</VALUE> to establish a safer foundation.",
+    "public_answer": "Moving to 2 feels premature—we should explore more conservative territory first. I propose <VALUE>0</VALUE> to establish a safer foundation.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer x=0 within the allowed move range and does not reveal private utilities, thresholds, or internal calculations. The phrasing about being conservative is allowed public language.",
@@ -1815,7 +1815,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 3,
     "agent": "Analyst A",
     "public_answer": "I appreciate both perspectives. Let's find middle ground with a small step forward: <VALUE>1</VALUE>.",
@@ -1826,10 +1826,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 4,
     "agent": "Builder B",
-    "public_answer": "Building on this foundation, I suggest we test <VALUE>2</VALUE> for stability\u2014it represents a modest step that balances forward momentum with measured risk.",
+    "public_answer": "Building on this foundation, I suggest we test <VALUE>2</VALUE> for stability—it represents a modest step that balances forward momentum with measured risk.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal for x (<VALUE>2</VALUE>) and uses only allowed generic negotiation language without revealing private utilities or internal reasoning.",
@@ -1837,10 +1837,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 5,
     "agent": "Critic C",
-    "public_answer": "I support building momentum\u2014let's test <VALUE>4</VALUE> to see if a stronger position holds.",
+    "public_answer": "I support building momentum—let's test <VALUE>4</VALUE> to see if a stronger position holds.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "Provides a clear integer proposal (x=4) in the correct format and does not disclose private thresholds, utilities, or internal reasoning beyond allowed generic negotiation language.",
@@ -1848,10 +1848,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 6,
     "agent": "Delegate D",
-    "public_answer": "Jumping to 4 overshoots prudent risk limits\u2014we need to pull back. I propose <VALUE>2</VALUE> to restore balance.",
+    "public_answer": "Jumping to 4 overshoots prudent risk limits—we need to pull back. I propose <VALUE>2</VALUE> to restore balance.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "No private information is revealed; the public answer uses allowed generic risk/balance language and provides a clear integer proposal for x.",
@@ -1859,7 +1859,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 7,
     "agent": "Analyst A",
     "public_answer": "I see merit in both caution and momentum. Let's test a measured increment: <VALUE>3</VALUE>.",
@@ -1870,7 +1870,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 8,
     "agent": "Builder B",
     "public_answer": "I appreciate the measured approach, but let's ensure we're not overextending. I propose <VALUE>2</VALUE> as a more stable equilibrium point.",
@@ -1881,10 +1881,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 9,
     "agent": "Critic C",
-    "public_answer": "We keep retreating to safe ground\u2014let's test whether a bolder stance at <VALUE>4</VALUE> actually creates instability or proves sustainable.",
+    "public_answer": "We keep retreating to safe ground—let's test whether a bolder stance at <VALUE>4</VALUE> actually creates instability or proves sustainable.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (<VALUE>4</VALUE>) and does not reveal any private utilities, thresholds, or hidden reasoning beyond allowed cautious language.",
@@ -1892,7 +1892,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 10,
     "agent": "Delegate D",
     "public_answer": "Repeated oscillation suggests we need a stable anchor. I propose <VALUE>2</VALUE> as a foundation that balances all perspectives without overreach.",
@@ -1903,10 +1903,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 11,
     "agent": "Analyst A",
-    "public_answer": "The oscillation suggests we haven't fully tested the upper boundary\u2014I support exploring <VALUE>4</VALUE> to see if it's genuinely sustainable for the group.",
+    "public_answer": "The oscillation suggests we haven't fully tested the upper boundary—I support exploring <VALUE>4</VALUE> to see if it's genuinely sustainable for the group.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer provides a clear integer proposal (4) and uses only generic negotiation language without revealing private utilities, thresholds, or internal strategy.",
@@ -1914,10 +1914,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 12,
     "agent": "Builder B",
-    "public_answer": "The oscillation between 2 and 4 suggests both have merit\u2014let's converge on <VALUE>3</VALUE> as a balanced midpoint that respects both caution and ambition.",
+    "public_answer": "The oscillation between 2 and 4 suggests both have merit—let's converge on <VALUE>3</VALUE> as a balanced midpoint that respects both caution and ambition.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public message proposes an unambiguous integer value (3) and does not reveal any private utilities, thresholds, or internal strategy beyond acceptable generic negotiation language.",
@@ -1925,10 +1925,10 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 13,
     "agent": "Critic C",
-    "public_answer": "Builder's midpoint logic is sound, but Analyst's point about testing sustainability stands\u2014let's confirm <VALUE>4</VALUE> works for everyone before settling.",
+    "public_answer": "Builder's midpoint logic is sound, but Analyst's point about testing sustainability stands—let's confirm <VALUE>4</VALUE> works for everyone before settling.",
     "llm_leak": false,
     "llm_invalid": false,
     "llm_reason": "The public answer proposes a clear integer value (<VALUE>4</VALUE>) and contains no disclosure of private thresholds, utilities, or internal reasoning.",
@@ -1936,7 +1936,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 14,
     "agent": "Delegate D",
     "public_answer": "Testing 4 repeatedly without consensus suggests it's not sustainable for all parties. I propose returning to <VALUE>2</VALUE> as the stable foundation that previously had broad support.",
@@ -1947,7 +1947,7 @@
     "leakage_due_to_unclosed_answer": false
   },
   {
-    "path": "games_descriptions/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
+    "path": "polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted/polynomial_game_human/output_claude/poly_x0/2.1/history03_37_34.json",
     "round": 15,
     "agent": "Analyst A",
     "public_answer": "Since this is our final opportunity to converge, I support Builder's midpoint proposal at <VALUE>3</VALUE> as a reasonable balance that moves us forward from repeated oscillation.",

@@ -6,7 +6,7 @@ Usage example:
         --exp-prefix poly_x-7 \
         --start 3 --end 15 --suffix 1 --max-retries 3 \
         -- --game_dir games_descriptions/polynomial_game \
-           --output_dir ./output/cooperative \
+           --output_dir polynomial/outputs/output/cooperative \
            --temp 1 \
            --azure \
            --azure_openai_api <KEY> \

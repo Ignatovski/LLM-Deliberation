@@ -23,10 +23,13 @@ LLM-Deliberation/
   main_polynomial.py
   main_polynomial_json.py
   main_polynomial_xyz.py
+  polynomial/
+    outputs/
+    archive/
+    reference_images/
   polynomial_utils.py
   visualize_polynomial.py
   games_descriptions/
-  output*/
   summarys/
   viewer/plots/thesis/
   scripts/
@@ -51,12 +54,14 @@ Local editor state, temporary helper scripts, setup residue, and unrelated devel
 
 ## Key Directories
 
+- `polynomial/`
+  Consolidated home for polynomial raw outputs, archived backups, and reference images.
 - `games_descriptions/`
   Polynomial negotiation game definitions, prompts, and configurations.
 - `cyber_negotiation_v1/games_descriptions/cyber_game/`
   Cybersecurity scenarios, committee conditions, labels, ground truth, and saved outputs.
-- `output*`, `logs/`, `summarys/`
-  Saved runs and derived summaries retained as thesis evidence.
+- `logs/`, `summarys/`
+  Saved summaries and supporting artifacts retained as thesis evidence.
 - `viewer/plots/thesis/`
   Thesis-ready figures exported from the analysis pipeline.
 - `scripts/`
@@ -73,10 +78,24 @@ The retained analysis pipeline is centered on:
 
 Typical workflow:
 
-```bash
-python scripts/build_metrics_summary.py
-python scripts/build_dynamics_summary.py
-python scripts/regenerate_thesis_root_plots.py
+```powershell
+py -3 scripts/build_metrics_summary.py `
+  polynomial/outputs/output_mix_all_diff `
+  polynomial/outputs/output_mix_split `
+  polynomial/outputs/polynomial_game/output `
+  polynomial/outputs/polynomial_game/output_claude `
+  polynomial/outputs/polynomial_game/output_llama `
+  polynomial/outputs/polynomial_game_all_AI/output `
+  polynomial/outputs/polynomial_game_all_AI/output_claude `
+  polynomial/outputs/polynomial_game_all_AI/output_llama `
+  polynomial/outputs/polynomial_game_human/output `
+  polynomial/outputs/polynomial_game_human/output_claude `
+  polynomial/outputs/polynomial_game_human/output_llama `
+  --output viewer/metrics_summary.json
+py -3 scripts/build_dynamics_summary.py --summary viewer/metrics_summary.json --out viewer/dynamics_summary.json
+py -3 scripts/build_metrics_summary.py polynomial/outputs/polynomial_game_adversarial/output/obstructive --output summarys/metrics_summary.adversarial_obstructive.json
+py -3 scripts/build_metrics_summary.py polynomial/outputs/polynomial_game_adversarial/output/outcome_targeted --output summarys/metrics_summary.adversarial_outcome_targeted.json
+py -3 scripts/regenerate_thesis_root_plots.py
 ```
 
 Some cyber-specific and leakage-specific analyses use additional scripts in `scripts/` and documentation in `cyber_negotiation_v1/docs/`.
@@ -85,7 +104,7 @@ Some cyber-specific and leakage-specific analyses use additional scripts in `scr
 
 - API credentials are only needed if the experiments are rerun against external model providers.
 - Historical outputs are intentionally retained because they are part of the thesis evidence base.
-- Some directory names reflect iterative experiment batches rather than polished software packaging.
+- Polynomial run artifacts have been consolidated under `polynomial/outputs/` to keep thesis evidence in one place.
 
 ## License
 
