@@ -95,12 +95,12 @@ def main() -> None:
     parser.add_argument(
         "--env-file",
         default=str(REPO_ROOT / ".env"),
-        help="Path to .env file to pass into main_polynomial.py (default: repo .env).",
+        help="Path to .env file to pass into polynomial.main_polynomial (default: repo .env).",
     )
     parser.add_argument(
         "--azure",
         action="store_true",
-        help="Force Azure mode (adds --azure when invoking main_polynomial.py).",
+        help="Force Azure mode (adds --azure when invoking polynomial.main_polynomial).",
     )
     args = parser.parse_args()
 
@@ -153,7 +153,8 @@ def main() -> None:
 
         cmd = [
             "python",
-            "main_polynomial.py",
+            "-m",
+            "polynomial.main_polynomial",
             "--exp_name",
             exp_name,
             "--game_dir",

@@ -3,7 +3,7 @@ from pathlib import Path
 from collections import defaultdict
 from statistics import mean
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))

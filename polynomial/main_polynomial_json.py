@@ -6,8 +6,8 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from agent import Agent
-from polynomial_utils import (
+from polynomial.core.agent import Agent
+from polynomial.core.polynomial_utils import (
     clamp_value,
     evaluate_all_agents,
     extract_value,
@@ -18,7 +18,7 @@ from polynomial_utils import (
     print_polynomial_profiles,
     read_config,
 )
-from save_utils import create_outfiles, save_conversation, write_file
+from polynomial.core.save_utils import create_outfiles, save_conversation, write_file
 
 
 JSON_PROMPT = """You must respond with ONE JSON object, nothing else:
@@ -653,7 +653,7 @@ if __name__ == "__main__":
 
 
 """
-python main_polynomial_json.py \
+python -m polynomial.main_polynomial_json \
   --game_dir games_descriptions/polynomial_game \
   --config_file config.txt \
   --output_dir output \

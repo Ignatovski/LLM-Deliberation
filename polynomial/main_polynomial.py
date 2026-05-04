@@ -17,15 +17,15 @@ import uuid
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from agent import Agent
-from prompt_utils import format_history
-from save_utils import create_outfiles, save_conversation, write_file
-from utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
 from evaluation.plot_similarity import (
     load_embeddings as load_sim_embeddings,
     compute_agent_matrices,
     plot_matrices,
 )
+from polynomial.core.agent import Agent
+from polynomial.core.prompt_utils import format_history
+from polynomial.core.save_utils import create_outfiles, save_conversation, write_file
+from polynomial.core.utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
 from polynomial.tools.faiss_utility import AnswerComparator
 from polynomial.tools.visualize_polynomial import load_trace as load_poly_trace, load_thresholds
 import matplotlib.pyplot as plt

@@ -8,13 +8,12 @@ import os
 import openai 
 import vertexai 
 import shutil
-from agent import Agent 
-from initial_prompts import InitialPrompt
-from rounds import RoundPrompts 
+from legacy.initial_prompts import InitialPrompt
+from legacy.rounds import RoundPrompts 
+from polynomial.core.agent import Agent 
 
-
-from utils import load_setup, set_constants, randomize_agents_order, setup_hf_model
-from save_utils import create_outfiles,save_conversation 
+from polynomial.core.utils import load_setup, set_constants, randomize_agents_order, setup_hf_model
+from polynomial.core.save_utils import create_outfiles,save_conversation 
 
 parser = argparse.ArgumentParser(description='big negotiation!!')
 

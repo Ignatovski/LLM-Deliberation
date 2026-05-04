@@ -102,7 +102,7 @@ for mode in "${MODES[@]}"; do
         if compgen -G "${exp_dir}/history*.json" >/dev/null; then
           echo "[skip] Existing history in ${exp_dir}"
         else
-          python main_polynomial_json.py \
+          python -m polynomial.main_polynomial_json \
             --game_dir "${GAME_DIR}" \
             --config_file "$(basename "${CONFIG_FILE}")" \
             --output_dir "${seed_dir}" \

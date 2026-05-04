@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))

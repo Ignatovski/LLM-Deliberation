@@ -11,7 +11,7 @@ This repository is maintained as a thesis artifact repository. It keeps the code
 
 ## Main Entry Points
 
-- `main_polynomial.py`
+- `polynomial/main_polynomial.py`
   Main runner for the polynomial negotiation experiments.
 - `cyber_negotiation_v1/main_cyber_json.py`
   Main runner for the cybersecurity committee experiments.
@@ -20,9 +20,15 @@ This repository is maintained as a thesis artifact repository. It keeps the code
 
 ```text
 LLM-Deliberation/
-  main_polynomial.py
-  main_polynomial_json.py
   polynomial/
+    main_polynomial.py
+    main_polynomial_json.py
+    core/
+      agent.py
+      polynomial_utils.py
+      prompt_utils.py
+      save_utils.py
+      utils.py
     tools/
       main_polynomial_xyz.py
       visualize_polynomial.py
@@ -31,7 +37,10 @@ LLM-Deliberation/
     outputs/
     archive/
     reference_images/
-  polynomial_utils.py
+  legacy/
+    main.py
+    initial_prompts.py
+    rounds.py
   games_descriptions/
   summarys/
   viewer/plots/thesis/

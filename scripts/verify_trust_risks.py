@@ -3,7 +3,7 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Dict, List, Optional, Sequence
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 POLY_METRICS_PATH = ROOT / "viewer" / "metrics_summary.json"
 ADV_OBSTRUCTIVE_PATH = ROOT / "summarys" / "metrics_summary.adversarial_obstructive.json"
 ADV_TARGETED_PATH = ROOT / "summarys" / "metrics_summary.adversarial_outcome_targeted.json"

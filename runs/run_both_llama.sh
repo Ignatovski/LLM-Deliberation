@@ -111,7 +111,7 @@ if command -v conda >/dev/null 2>&1; then
   conda activate llm_deli || true
 fi
 
-# Normalize output base to an absolute path so main_polynomial.py writes outside game_dir.
+# Normalize output base to an absolute path so polynomial.main_polynomial writes outside game_dir.
 mkdir -p "${OUTPUT_BASE}"
 OUTPUT_BASE_ABS="$(cd "${OUTPUT_BASE}" && pwd)"
 

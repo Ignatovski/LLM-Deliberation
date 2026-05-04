@@ -1,4 +1,4 @@
-from prompt_utils import format_history, build_first_slot
+from polynomial.core.prompt_utils import format_history, build_first_slot
 
 class RoundPrompts:
     def __init__(self,agent_name, p1_name, initial_deal, incentive=None, scratch_pad_function=None, window_size=6,target_agent='', rounds_num=24, agents_num=6):

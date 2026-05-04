@@ -1,5 +1,5 @@
 """
-Batch runner for main_polynomial.py with automatic exp_name sequencing and retries.
+Batch runner for polynomial.main_polynomial with automatic exp_name sequencing and retries.
 
 Usage example:
     python run_batch_polynomial.py \
@@ -47,7 +47,7 @@ def strip_exp_name(args: List[str]) -> List[str]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Batch runner for main_polynomial.py")
+    parser = argparse.ArgumentParser(description="Batch runner for polynomial.main_polynomial")
     parser.add_argument("--exp-prefix", default="", help="Prefix for exp_name (e.g., poly_x-7). If empty, exp_name will be <idx>.<suffix>.")
     parser.add_argument("--suffix", default="1", help="Suffix after the dot in exp_name (default: 1)")
     parser.add_argument("--start", type=int, default=1, help="Starting index (inclusive)")
@@ -56,7 +56,7 @@ def main():
     parser.add_argument(
         "main_args",
         nargs=argparse.REMAINDER,
-        help="Arguments to pass to main_polynomial.py (prefix with --)",
+        help="Arguments to pass to polynomial.main_polynomial (prefix with --)",
     )
     args = parser.parse_args()
 
@@ -67,7 +67,7 @@ def main():
             exp_name = f"{args.exp_prefix}_{idx}.{args.suffix}"
         else:
             exp_name = f"{idx}.{args.suffix}"
-        cmd = [sys.executable, "main_polynomial.py", "--exp_name", exp_name] + base_args
+        cmd = [sys.executable, "-m", "polynomial.main_polynomial", "--exp_name", exp_name] + base_args
         attempt = 0
         while True:
             attempt += 1

@@ -1,7 +1,7 @@
 """
 Minimal multivariate (x, y, z) polynomial negotiation driver.
 
-The flow mirrors main_polynomial.py but is intentionally slimmer:
+The flow mirrors polynomial/main_polynomial.py but is intentionally slimmer:
 - Supports COEFFS_X / COEFFS_Y / COEFFS_Z lines in polynomial_functions/<agent>.txt
 - Uses <VALUE>x,y,z</VALUE> triples, enforces per-coordinate max_step and domain bounds
 - Tracks utilities/acceptance per turn and saves a history JSON plus a small results file
@@ -17,10 +17,10 @@ import time
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from agent import Agent
-from prompt_utils import format_history
-from save_utils import process_answer, write_file
-from utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
+from polynomial.core.agent import Agent
+from polynomial.core.prompt_utils import format_history
+from polynomial.core.save_utils import process_answer, write_file
+from polynomial.core.utils import load_setup, randomize_agents_order, set_constants, setup_hf_model
 
 
 # --------- Polynomial helpers ---------

@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from polynomial_utils import evaluate_all_agents, load_polynomial  # noqa: E402
+from polynomial.core.polynomial_utils import evaluate_all_agents, load_polynomial  # noqa: E402
 
 
 def _repo_root() -> Path:

@@ -1,6 +1,6 @@
 # Polynomial visualization helper
 # -------------------------------
-# This script reads a history produced by main_polynomial.py and plots:
+# This script reads a history produced by polynomial/main_polynomial.py and plots:
 #   1) The negotiated x over time.
 #   2) Each agent's utility f_i(x) vs. its acceptance threshold.
 #   3) A decision strip showing whether x moved up/down/same and which agents accepted per round.
@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 def load_trace(history_path: Path) -> Tuple[List[Dict], Dict]:
     """
     Load the JSON file and pull out the polynomial_trace array plus the rest of the log.
-    polynomial_trace is appended by main_polynomial.py each time record_state(...) runs.
+    polynomial_trace is appended by polynomial/main_polynomial.py each time record_state(...) runs.
     """
     with history_path.open("r") as f:
         data = json.load(f)
@@ -26,7 +26,7 @@ def load_trace(history_path: Path) -> Tuple[List[Dict], Dict]:
     if not trace:
         raise ValueError(
             f"No polynomial_trace found in {history_path}. "
-            "Run main_polynomial.py with the updated logging."
+            "Run polynomial/main_polynomial.py with the updated logging."
         )
     return trace, data
 
